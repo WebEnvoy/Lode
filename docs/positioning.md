@@ -14,9 +14,8 @@ Lode 承载：
 - 任务封装：将多个站点能力组合成可复用流程；
 - 模板：面向常见业务场景的官方任务模板和示例配置。
 
-## 与其他仓库的关系
+## 跨仓边界
 
-- WebEnvoy Core 消费 Lode 中的能力定义；
-- Harbor 提供执行身份和浏览器 Runtime；
-- Lode 不应依赖 Harbor 的内部实现；
-- 用户私有任务和私有参数默认不进入公共 Lode。
+WebEnvoy Core 消费 Lode 中的能力定义；Harbor 提供执行身份和浏览器 Runtime。Lode 不依赖 Harbor 的内部实现，也不保存用户私有任务和私有参数。
+
+完整组织级仓库地图见 [WebEnvoy/.github 仓库地图](https://github.com/WebEnvoy/.github/blob/main/docs/repository-map.md)。

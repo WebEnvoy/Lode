@@ -24,12 +24,12 @@ Lode 负责沉淀和维护：
 - [任务包格式](docs/task-package-format.md)
 - [贡献模型](docs/contribution-model.md)
 
-## 相关仓库
+## 组织级文档
 
-- `WebEnvoy/WebEnvoy`：站点能力执行与编排层，包含 Core、API Server、SDK、CLI、MCP 和 Console；
-- `WebEnvoy/Harbor`：Agent-ready 指纹浏览器 / Profile Runtime / 执行身份浏览器；
-- `WebEnvoy/research`：组织级研究、调研、对比和决策候选仓库；
-- `WebEnvoy/.github`：组织主页、issue 模板、PR 模板和社区配置。
+完整仓库地图、跨仓关系和许可证边界由 `WebEnvoy/.github` 维护：
+
+- [仓库地图](https://github.com/WebEnvoy/.github/blob/main/docs/repository-map.md)
+- [许可证边界](https://github.com/WebEnvoy/.github/blob/main/docs/licensing.md)
 
 ## 状态
 
