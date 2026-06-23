@@ -16,7 +16,7 @@ Lode 要解决的问题包括：
 
 - 同一个网站入口、页面状态和操作路径被反复探索；
 - 成功经验不能沉淀成可复用能力；
-- 能力缺少输入输出、资源需求、前置检查和后置验证；
+- 能力缺少输入输出、结果归一化契约、资源需求、前置检查和后置验证；
 - 网站变化后，不知道哪些能力、任务模板和测试样例受到影响；
 - 公共能力和用户个人修改混在一起，难以升级、回滚和贡献；
 - 任务失败后，无法判断是能力资产失效、用户 overlay 问题、网站变化，还是运行环境问题；
@@ -29,6 +29,14 @@ Lode 要解决的问题包括：
 Lode 不只是保存说明文档。它要把站点知识、能力包、原子动作、任务封装、模板和测试样例组织成结构化资产。
 
 这些资产应该可以被 WebEnvoy Core 消费，也可以在 WebEnvoy App 的 Library 区域中被人类用户浏览、安装、配置、调试和维护。
+
+### 让能力结果可归一、可校验、可复用
+
+Lode 应为站点能力维护稳定的输出契约。能力资产不应只描述如何点击、如何请求或如何完成流程，也应声明结果应该如何被公共化表达。
+
+这包括 normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace 和脱敏 fixture。
+
+Lode 不保存真实 raw payload、账号凭据、Cookie、Token、完整请求响应或用户业务数据。它定义公共结果形态，让 WebEnvoy Core 可以在运行时校验、投影和封装结果。
 
 ### 让能力可版本管理
 
@@ -85,7 +93,7 @@ Lode 是能力资产真相源，不是产品入口，也不是执行运行时。
 - WebEnvoy App 负责 Library 工作台，提供资产浏览、安装、配置、探索、修复和上报入口；
 - WebEnvoy Core 负责解释和执行 Lode 资产，并记录任务运行事实；
 - Harbor 负责浏览器身份、Runtime Session、Viewer、人工接管和运行证据；
-- Lode 负责站点知识、能力包、任务模板、测试样例、版本和失效标记。
+- Lode 负责站点知识、能力包、任务模板、输出契约、测试样例、版本和失效标记。
 
 ```text
 WebEnvoy App / Library
@@ -100,7 +108,7 @@ Lode 不是浏览器运行时，不管理 Profile、Cookie、Runtime Session、V
 
 Lode 不是 App Shell，也不承载人类用户界面。
 
-Lode 不保存账号凭据、会话状态、具体任务输入、用户业务客户数据或未脱敏执行现场。
+Lode 不保存账号凭据、会话状态、具体任务输入、用户业务客户数据、真实 raw payload 或未脱敏执行现场。
 
 Lode 也不是业务策略系统。它不决定用户应该发布什么内容、联系谁、投放什么广告或如何运营账号。
 

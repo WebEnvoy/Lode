@@ -34,6 +34,8 @@ Lode 的知识与能力可以分为四层。
 - 删除内容；
 - 提交表单。
 
+站点能力还应声明输出契约。输出契约包括 normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace、失败分类和脱敏 fixture。Lode 定义这些公共结果形态，WebEnvoy Core 在运行时负责校验、投影和封装。
+
 ## 3. 原子动作
 
 原子动作回答：完成站点能力时底层有哪些可复用小动作？

@@ -12,6 +12,7 @@ sites/
     pages/
     apis/
     selectors/
+    results/
     fixtures/
     tests/
 ```
@@ -37,4 +38,6 @@ sites/
 - 站点知识应尽量结构化；
 - 不保存账号、Cookie、Token 或用户私有数据；
 - 页面变化应能形成摘要；
-- 风控页、验证码页、登录失效页等应作为可识别状态建模。
+- 风控页、验证码页、登录失效页等应作为可识别状态建模；
+- 站点能力输出应声明公共 normalized schema，而不是让 Core 或上游系统理解平台 raw 字段；
+- raw payload、截图、network 摘要和执行现场应通过引用进入结果，不应直接保存到站点包。
