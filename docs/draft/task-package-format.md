@@ -31,4 +31,5 @@ tasks/
 - 任务封装应声明输入、步骤、资源需求和验证方式；
 - 写入类任务必须包含写入前检查和写入后验证；
 - 任务不应保存用户私有业务参数；
-- 任务可以引用站点能力，但不应依赖 Harbor 内部实现。
+- 任务可以引用站点能力，但不应依赖 Harbor 内部实现；
+- 任务包应依赖站点能力的 normalized output contract，不应直接解析 API、DOM、network 或 Snapshot 的 raw payload。

@@ -19,7 +19,7 @@ Lode 的知识与能力可以分为四层。
 
 ## 2. 站点能力
 
-站点能力回答：如何完成一个标准网站动作？
+站点能力回答两个问题：如何完成一个标准网站动作，以及如何把来自 API、DOM、network、Snapshot 等不同来源的数据归一到同一个公共输出。
 
 例如：
 
@@ -34,7 +34,9 @@ Lode 的知识与能力可以分为四层。
 - 删除内容；
 - 提交表单。
 
-站点能力还应声明输出契约。输出契约包括 normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace、失败分类和脱敏 fixture。Lode 定义这些公共结果形态，WebEnvoy Core 在运行时负责校验、投影和封装。
+站点能力还应声明并维护输出契约和站点级归一化资产。输出契约包括 normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace、失败分类和脱敏 fixture。站点级归一化资产包括 source schema、extractor、parser、field mapper、normalizer、脱敏 raw fixture、normalized fixture 和 normalizer tests。
+
+normalizer 是能力资产的一部分，不是 Core 的站点私有逻辑。WebEnvoy Core 在运行时调用能力和 normalizer，负责校验、投影和封装公共结果。
 
 ## 3. 原子动作
 

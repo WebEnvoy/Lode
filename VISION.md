@@ -1,6 +1,6 @@
 # Lode Vision
 
-Lode 的长期愿景，是让网站经验、站点能力、任务模板和测试样例变成可安装、可版本化、可测试、可修复、可复用的能力资产。
+Lode 的长期愿景，是让网站经验、站点能力、站点级清洗与归一化规则、任务模板和测试样例变成可安装、可版本化、可测试、可修复、可复用的能力资产。
 
 WebEnvoy 体系中，Agent 不应该每次重新摸索同一个网站。一次成功探索、一次失败修复、一次页面变化识别，都应该沉淀为可演化的资产，让 WebEnvoy Core 可以稳定执行网页操作任务，让 WebEnvoy App 可以为人类用户提供能力浏览、配置、探索、维护和上报入口。
 
@@ -16,7 +16,7 @@ Lode 要解决的问题包括：
 
 - 同一个网站入口、页面状态和操作路径被反复探索；
 - 成功经验不能沉淀成可复用能力；
-- 能力缺少输入输出、结果归一化契约、资源需求、前置检查和后置验证；
+- 能力缺少输入输出、source schema、字段映射、normalizer、结果归一化契约、资源需求、前置检查和后置验证；
 - 网站变化后，不知道哪些能力、任务模板和测试样例受到影响；
 - 公共能力和用户个人修改混在一起，难以升级、回滚和贡献；
 - 任务失败后，无法判断是能力资产失效、用户 overlay 问题、网站变化，还是运行环境问题；
@@ -30,13 +30,13 @@ Lode 不只是保存说明文档。它要把站点知识、能力包、原子动
 
 这些资产应该可以被 WebEnvoy Core 消费，也可以在 WebEnvoy App 的 Library 区域中被人类用户浏览、安装、配置、调试和维护。
 
-### 让能力结果可归一、可校验、可复用
+### 让站点数据来源差异被资产化吸收
 
-Lode 应为站点能力维护稳定的输出契约。能力资产不应只描述如何点击、如何请求或如何完成流程，也应声明结果应该如何被公共化表达。
+小红书、抖音等站点的同一能力可能来自 API、页面 DOM、network response、移动端接口或浏览器 Snapshot。不同来源的 raw shape 往往不同，但 WebEnvoy Core 和上游系统不应分别理解这些私有结构。
 
-这包括 normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace 和脱敏 fixture。
+Lode 应为站点能力维护 source schema、extractor、parser、field mapper、normalizer、normalized result schema、collection item schema、comment item schema、dataset record schema、dedup_key、raw_payload_ref、evidence_ref、source_trace、脱敏 raw fixture、normalized fixture 和 normalizer tests。
 
-Lode 不保存真实 raw payload、账号凭据、Cookie、Token、完整请求响应或用户业务数据。它定义公共结果形态，让 WebEnvoy Core 可以在运行时校验、投影和封装结果。
+Lode 不保存真实生产 raw payload、账号凭据、Cookie、Token、完整请求响应或用户业务数据。它定义并版本化公共结果形态，以及从站点 raw source 到公共结果的清洗与归一化规则，让 WebEnvoy Core 可以在运行时调用、校验、投影和封装结果。
 
 ### 让能力可版本管理
 
@@ -93,7 +93,7 @@ Lode 是能力资产真相源，不是产品入口，也不是执行运行时。
 - WebEnvoy App 负责 Library 工作台，提供资产浏览、安装、配置、探索、修复和上报入口；
 - WebEnvoy Core 负责解释和执行 Lode 资产，并记录任务运行事实；
 - Harbor 负责浏览器身份、Runtime Session、Viewer、人工接管和运行证据；
-- Lode 负责站点知识、能力包、任务模板、输出契约、测试样例、版本和失效标记。
+- Lode 负责站点知识、能力包、任务模板、输出契约、normalizer、测试样例、版本和失效标记。
 
 ```text
 WebEnvoy App / Library
@@ -108,7 +108,7 @@ Lode 不是浏览器运行时，不管理 Profile、Cookie、Runtime Session、V
 
 Lode 不是 App Shell，也不承载人类用户界面。
 
-Lode 不保存账号凭据、会话状态、具体任务输入、用户业务客户数据、真实 raw payload 或未脱敏执行现场。
+Lode 不保存账号凭据、会话状态、具体任务输入、用户业务客户数据、真实生产 raw payload 或未脱敏执行现场。
 
 Lode 也不是业务策略系统。它不决定用户应该发布什么内容、联系谁、投放什么广告或如何运营账号。
 
@@ -117,7 +117,7 @@ Lode 也不是业务策略系统。它不决定用户应该发布什么内容、
 当 Lode 成功时，用户和系统应该可以自然地说：
 
 - 这个网站的入口、页面状态和操作路径已经沉淀为资产；
-- 这个能力有明确输入输出、资源需求、验证方式和测试样例；
+- 这个能力有明确输入输出、source schema、normalizer、资源需求、验证方式和测试样例；
 - 这个任务模板可以被多个 Agent、脚本或上游系统复用；
 - 平台资产可以按需安装、更新、锁定和回滚；
 - 我的个人修改不会直接污染平台资产；

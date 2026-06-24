@@ -2,7 +2,9 @@
 
 本文档描述 Lode 中站点能力输出契约的初步方向，不代表最终 Schema。
 
-Lode 不只保存站点入口、页面状态和操作步骤，也应保存站点能力的输出契约。能力包应声明结果如何被公共化表达，让 WebEnvoy Core 可以在运行时校验、投影和封装结果。
+Lode 不只保存站点入口、页面状态和操作步骤，也应保存站点能力的输出契约。能力包应声明结果如何被公共化表达，并提供从不同站点 source shape 到公共结果的归一化规则，让 WebEnvoy Core 可以在运行时校验、投影和封装结果。
+
+更完整的站点级归一化模型见 [站点级清洗与归一化](site-normalization.md)。
 
 ## 定位
 
@@ -10,16 +12,16 @@ Lode 不只保存站点入口、页面状态和操作步骤，也应保存站点
 
 ```text
 Lode
-  定义 output schema / normalized schema / fixture
+  定义并版本化 output schema、normalized schema、source schema、normalizer、fixture 和 tests
 
 WebEnvoy Core
-  消费 Lode schema，校验并封装 public result envelope
+  调用 Lode 能力和 normalizer，校验并封装 public result envelope
 
 Harbor
   提供 raw_payload_ref、evidence_ref、source_trace 和运行现场
 ```
 
-这意味着 Lode 定义“结果应该长什么样”，但不执行归一化，也不保存真实 raw payload。
+这意味着 Lode 定义“结果应该长什么样”，也保存“某站点 raw source 如何变成该结果”的规则和代码。Lode 不保存真实生产 raw 数据，也不作为运行时数据平台。
 
 ## 能力输出契约
 
@@ -27,14 +29,45 @@ Harbor
 
 - 输出类型，例如 detail、collection、comment_collection、profile、media_asset、write_result、dataset_record；
 - normalized result schema；
+- source shape schema；
+- extractor / parser / mapper / normalizer 引用；
 - raw payload 引用策略；
 - evidence 引用策略；
 - source trace 要求；
 - failure classification 词表；
 - cursor / continuation 契约；
-- 脱敏 fixture 和示例结果。
+- 脱敏 raw fixture、normalized fixture 和 normalizer test。
 
-能力输出契约应服务于 Core 的运行时校验，而不是作为说明性 Markdown 停留在文档中。
+能力输出契约应服务于 Core 的运行时校验和 Lode normalizer 回归测试，而不是作为说明性 Markdown 停留在文档中。
+
+## Source-specific Normalization
+
+同一个站点能力可以有多个来源：
+
+- API payload；
+- 页面 DOM；
+- network response；
+- 浏览器 Snapshot；
+- 移动端接口；
+- 人工接管或诊断生成的脱敏证据。
+
+这些来源的 raw shape 可以不同，但应被站点包内的 normalizer 归一到同一个 output schema。
+
+```text
+web_api raw shape
+  → web-api normalizer
+  → ContentDetail
+
+dom raw shape
+  → dom normalizer
+  → ContentDetail
+
+network raw shape
+  → network normalizer
+  → ContentDetail
+```
+
+Core 不应理解小红书、抖音等站点的 raw 字段。站点字段解析、字段映射和 source-specific fallback 属于 Lode 站点包。
 
 ## Normalized Result
 
@@ -133,13 +166,17 @@ origin_kind
 
 ## 边界
 
-Lode 应定义：
+Lode 应定义并维护：
 
 - output schema；
 - normalized schema；
+- source schema；
+- extractor / parser / mapper / normalizer；
 - collection / comment / dataset schema；
 - cursor / continuation schema；
-- 脱敏 fixture；
+- 脱敏 raw fixture；
+- normalized fixture；
+- normalizer tests；
 - 版本和失效标记。
 
 Lode 不应保存：
@@ -147,10 +184,12 @@ Lode 不应保存：
 - 真实账号；
 - Cookie；
 - Token；
-- 完整 raw payload；
-- 完整 DOM；
-- 完整请求 / 响应；
+- 完整生产 raw payload；
+- 未脱敏 DOM；
+- 未脱敏完整请求 / 响应；
 - 用户业务客户数据；
-- 未脱敏执行现场。
+- 未脱敏执行现场；
+- 长期采集数据；
+- 通用 ETL 调度任务。
 
-归一化契约的目标，是让不同网站能力返回稳定、可校验、可记录、可复用的公共结果，而不是把 Lode 扩张成通用 ETL、爬虫数据清洗平台或业务数据仓库。
+归一化契约的目标，是让不同网站能力、不同 source shape 返回稳定、可校验、可记录、可复用的公共结果，而不是把 Lode 扩张成通用 ETL、爬虫数据存储平台或业务数据仓库。

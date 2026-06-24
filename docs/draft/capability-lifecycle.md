@@ -25,13 +25,17 @@
 - capability family；
 - target type；
 - input schema；
+- source schema；
+- extraction / parsing / mapping / normalization 规则；
 - output schema / normalized schema；
 - resource requirement profiles；
 - pre-check；
 - post-check / verification；
 - failure classification；
 - evidence policy；
-- fixture；
+- redacted raw fixtures；
+- normalized fixtures；
+- normalizer tests；
 - version；
 - invalidation marker；
 - known limitations。
@@ -57,8 +61,10 @@ site capability
 
 ## 生命周期与输出契约
 
-稳定能力必须有输出契约。输出契约包括：
+稳定能力必须有输出契约和 source-specific normalizer。输出契约包括：
 
+- source schema；
+- extractor / parser / mapper / normalizer；
 - normalized result schema；
 - collection item schema；
 - comment item schema；
@@ -67,9 +73,11 @@ site capability
 - raw_payload_ref policy；
 - evidence_ref policy；
 - source_trace policy；
-- fixture。
+- redacted raw fixture；
+- normalized fixture；
+- normalizer tests。
 
-没有输出契约的能力可以作为探索草稿或 experimental 能力，但不应进入稳定任务路径。
+没有输出契约和 normalizer 测试的能力可以作为探索草稿或 experimental 能力，但不应进入稳定任务路径。
 
 ## 生命周期与资源需求
 
@@ -91,6 +99,10 @@ Core 执行时根据 Lode 声明和 Harbor 能力事实做 one-of matching。
 - output_contract_broken；
 - input_contract_broken；
 - selector_or_flow_changed；
+- source_shape_changed；
+- source_schema_changed；
+- normalizer_failed；
+- mapping_incomplete；
 - resource_requirement_changed；
 - verification_failed；
 - deprecated。

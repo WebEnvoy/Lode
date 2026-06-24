@@ -68,11 +68,11 @@ manual_takeover
 snapshot
 network_summary
 write_verification
-raw_payload_ref
-evidence_ref
+evidence_capture
+raw_payload_reference
 ```
 
-这些是公共能力词汇，不是 Harbor 内部字段，也不是 provider 私有参数。
+这些是公共运行资源能力词汇，不是 Harbor 内部字段，也不是 provider 私有参数。`raw_payload_ref` 与 `evidence_ref` 是结果 / 证据引用字段，不应作为资源需求 capability id。
 
 ## 与 Harbor 的关系
 

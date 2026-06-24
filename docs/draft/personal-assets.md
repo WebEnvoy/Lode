@@ -12,8 +12,12 @@
 - 私有任务模板；
 - 用户 overlay；
 - fork；
+- 私有 normalizer patch；
+- 私有 source schema patch；
+- 私有 mapping patch；
 - 探索草稿；
 - 修复草稿；
+- 私有 redacted regression fixture；
 - 私有测试样例。
 
 ## 状态
@@ -52,4 +56,6 @@ WebEnvoy App 的 Library / My Assets 应支持：
 - 导出；
 - 可选提交为平台贡献。
 
-Lode 负责保存个人资产的格式、版本、依赖和测试样例；App 只提供操作入口。
+Lode 负责保存个人资产的格式、版本、依赖、脱敏 fixture 和测试样例；App 只提供操作入口。
+
+个人资产可以包含对平台 normalizer 的私有修复，但不应保存真实生产 raw payload、账号凭据、Cookie、Token 或用户业务数据。

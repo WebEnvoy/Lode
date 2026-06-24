@@ -10,6 +10,7 @@
 - [能力生命周期](capability-lifecycle.md)
 - [资源需求声明](resource-requirements.md)
 - [结果 Schema 与归一化契约](result-schema.md)
+- [站点级清洗与归一化](site-normalization.md)
 - [站点包格式](site-package-format.md)
 - [任务包格式](task-package-format.md)
 - [贡献模型](contribution-model.md)

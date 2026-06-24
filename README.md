@@ -2,7 +2,7 @@
 
 Lode 是 WebEnvoy 的能力资产仓库。
 
-它把网站经验、站点能力、任务模板和测试样例沉淀为可安装、可版本管理、可测试、可修复、可复用的能力资产。
+它把网站经验、站点能力、站点级清洗与归一化规则、任务模板和测试样例沉淀为可安装、可版本管理、可测试、可修复、可复用的能力资产。
 
 WebEnvoy Core 解释并执行 Lode 资产；WebEnvoy App 在 Library 区域提供浏览、安装、配置、调试、探索、维护和上报入口；Harbor 提供执行身份、浏览器 Runtime 和运行现场。
 
@@ -18,7 +18,7 @@ Lode 负责沉淀和维护：
 - 站点能力；
 - 原子动作；
 - 任务封装；
-- 能力输出契约和 normalized result schema；
+- 能力输出契约、source schema、字段映射、normalizer 和 normalized result schema；
 - 官方模板；
 - 能力测试样例；
 - 能力版本与失效标记。
@@ -45,9 +45,9 @@ Lode 需要同时支持平台资产和用户个人资产。
 - WebEnvoy App 负责 Library 工作台，提供资产浏览、安装、配置、探索、修复和上报入口；
 - WebEnvoy Core 负责解释和执行 Lode 资产，并记录任务运行事实；
 - Harbor 负责浏览器身份、Runtime Session、Viewer、人工接管和运行证据；
-- Lode 负责站点知识、能力包、任务模板、输出契约、测试样例、版本和失效标记。
+- Lode 负责站点知识、能力包、任务模板、输出契约、normalizer、测试样例、版本和失效标记。
 
-Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具体任务输入、真实 raw payload、用户业务客户数据或未脱敏执行现场。它定义能力结果的公共形态，WebEnvoy Core 负责运行时校验、投影和封装，Harbor 负责提供 evidence_ref、raw_payload_ref 和 source_trace。
+Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具体任务输入、真实生产 raw payload、用户业务客户数据或未脱敏执行现场。它定义并版本化能力结果的公共形态，以及从站点 raw source 到公共结果的 extraction、parsing、mapping 和 normalization 规则；WebEnvoy Core 负责运行时调用、校验、投影和封装，Harbor 负责提供 evidence_ref、raw_payload_ref 和 source_trace。
 
 ## 文档
 

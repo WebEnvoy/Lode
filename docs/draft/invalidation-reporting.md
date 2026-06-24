@@ -9,6 +9,13 @@
 - 页面结构变化；
 - 入口路径变化；
 - 字段或按钮变化；
+- API / DOM / network source shape 变化；
+- source schema 变化；
+- normalizer 失败；
+- 字段映射不完整；
+- 必填字段缺失；
+- cursor / continuation shape 变化；
+- partial parse 失败；
 - 登录状态异常；
 - 访问受限；
 - 写入后验证失败；
@@ -39,9 +46,31 @@
 - 元素变化摘要；
 - 错误码；
 - 验证阶段；
+- source shape 类型；
+- source schema 版本；
+- normalizer 版本；
+- 脱敏 raw fixture 引用；
+- normalized fixture 引用；
 - 证据引用。
 
-平台上报不应包含用户业务内容、账号凭据、完整执行现场或未脱敏页面内容。
+平台上报不应包含用户业务内容、账号凭据、完整执行现场、真实生产 raw payload 或未脱敏页面内容。
+
+## 归一化失效类型
+
+站点级归一化可以使用更细的失效类型：
+
+| 失效类型 | 含义 |
+|---|---|
+| `source_shape_changed` | API、DOM、network 或 Snapshot 的 raw shape 变化 |
+| `source_schema_changed` | 已记录 source schema 与实际来源不一致 |
+| `normalizer_failed` | normalizer 无法生成合法 normalized output |
+| `mapping_incomplete` | 站点字段到公共字段的映射缺失 |
+| `required_field_missing` | source 中缺少 output schema 必填字段 |
+| `cursor_shape_changed` | continuation / reply cursor 形态变化 |
+| `partial_parse_failed` | 部分 item 可解析，部分 item 解析失败 |
+| `output_contract_broken` | normalizer 输出不满足 output schema |
+
+这些类型应尽量定位到 source shape 或 normalizer，而不是笼统标记整个站点能力失效。
 
 ## 修复流程
 
