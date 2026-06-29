@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Draft
 
 ## Context
 
@@ -78,9 +78,11 @@ version。
 
 ## Open Questions
 
-- 第一版 repo-level registry file 应立即强制存在，还是从 package manifest 生成。
-- `domain-skill` 后续是否需要拆成 notes、selectors、examples 和 authoring
-  guidance。
-- overlay / fork 在 update 和 rollback 时如何处理冲突。
-- benchmark harness 存在后，benchmark task 应留在本仓库还是拆到独立 eval
-  package。
+- [PD-0010](pending-decisions.md#pd-0010)：第一版 repo-level registry file 应立即
+  强制存在，还是从 package manifest 生成。
+- [PD-0011](pending-decisions.md#pd-0011)：`domain-skill` 后续是否需要拆成 notes、
+  selectors、examples 和 authoring guidance。
+- [PD-0012](pending-decisions.md#pd-0012)：overlay / fork 在 update 和 rollback
+  时如何处理冲突。
+- [PD-0013](pending-decisions.md#pd-0013)：benchmark harness 存在后，benchmark
+  task 应留在本仓库还是拆到独立 eval package。

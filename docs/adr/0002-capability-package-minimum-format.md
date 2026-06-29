@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Draft
 
 ## Context
 
@@ -80,8 +80,10 @@ Snapshot raw shape。
 
 ## Open Questions
 
-- 第一版稳定 action risk enum 尚未冻结；`read`、`write`、`submit`、
+- [PD-0003](pending-decisions.md#pd-0003)：第一版稳定 action risk enum 尚未冻结；
+  `read`、`write`、`submit`、
   `destructive` 是当前最小候选集合。
-- search-to-detail flow 的 follow-up references 需要稳定字段形态。
-- `source_trace`、`raw_payload_ref`、`evidence_ref` 需要 Core/Harbor 先拥有
-  schema，Lode 才能做更深层引用校验。
+- [PD-0004](pending-decisions.md#pd-0004)：search-to-detail flow 的 follow-up
+  references 需要稳定字段形态。
+- [PD-0005](pending-decisions.md#pd-0005)：`source_trace`、`raw_payload_ref`、
+  `evidence_ref` 需要 Core/Harbor 先拥有 schema，Lode 才能做更深层引用校验。

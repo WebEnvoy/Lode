@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Draft
 
 ## Context
 
@@ -74,9 +74,11 @@ payload reference 和其他 runtime evidence。
 
 ## Open Questions
 
-- 是否每个 read capability 都需要 post-check，还是部分 read-only capability 可先用
-  schema validation 加 fixture test。
-- 第一版 failure classification 词表尚未冻结。
-- Lode failure class 到 Core `unknown_outcome` / `requires_user_action` 的映射
-  仍是 Core 决策。
-- evidence type enum 应先由 Core/Harbor 拥有，Lode 再做超出引用存在性的校验。
+- [PD-0006](pending-decisions.md#pd-0006)：是否每个 read capability 都需要
+  post-check，还是部分 read-only capability 可先用 schema validation 加 fixture
+  test。
+- [PD-0007](pending-decisions.md#pd-0007)：第一版 failure classification 词表尚未冻结。
+- [PD-0008](pending-decisions.md#pd-0008)：Lode failure class 到 Core
+  `unknown_outcome` / `requires_user_action` 的映射仍是 Core 决策。
+- [PD-0009](pending-decisions.md#pd-0009)：evidence type enum 应先由 Core/Harbor
+  拥有，Lode 再做超出引用存在性的校验。
