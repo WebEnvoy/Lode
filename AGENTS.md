@@ -24,6 +24,19 @@
 
 Lode 只维护资产定义、测试样例、版本和失效标记，不负责运行时执行。WebEnvoy Core 解释并执行 Lode 资产；Harbor 提供 Profile、Execution Identity、Runtime Session、CDP / VNC 和 Evidence。任务封装不应依赖某个具体 Runtime 实现，也不应硬编码 Harbor 内部细节。
 
+## 路线图 / 里程碑 / 功能需求 / 工作项
+
+- 跨仓长期方向以 `WebEnvoy/.github/ROADMAP.md` 为准。
+- 当前执行状态以 GitHub Milestones、Project、issues 和 PR 为准，不在仓库文档中复制维护。
+- GitHub Milestone 只承载当前 1-3 个可交付阶段，不承载全部远期设想。
+- 功能需求（FR）issue 表达用户可见或系统可验证的能力增量。
+- 工作项（Work Item）issue 是可由一个 PR 完成的最小执行单元。
+- 新建功能需求或工作项前，先确认它属于当前活跃 Milestone；不属于则回到总 ROADMAP 或 backlog。
+- 单仓 planning 文档只能解释本仓如何服务当前活跃 Milestone，不能新增跨仓 Milestone。
+- 不允许在单仓创建与总 ROADMAP 冲突的平行路线图；不要新建单仓 `ROADMAP.md`。
+- 规格文档只服务当前或下一个活跃 Milestone，不提前铺满远期设计。
+- 涉及跨仓方向、阶段阶梯或边界调整时，先更新或评审总 ROADMAP / 跨仓架构，再拆单仓事项。
+
 ## 安全与数据处理
 
 不要提交真实凭据、会话状态、未脱敏执行现场、用户私有任务参数或真实业务客户数据。站点能力不应包含账号投放、内容排期、客户运营或广告决策等业务策略；这些属于上游系统。
