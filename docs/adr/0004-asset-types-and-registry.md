@@ -66,14 +66,14 @@ version。
   并避免直接改写官方资产。
 - `docs/draft/asset-versioning.md` 要求 capability、source schema、normalizer、
   output schema、fixture、task、overlay、fork 和 draft 具备版本引用。
-- `/Volumes/2T/dev/WebEnvoy/research/synthesis.md` 说明 site capability、
+- `https://github.com/WebEnvoy/research/blob/main/synthesis.md` 说明 site capability、
   workflow、benchmark task、crawler job 和 agent plugin 不应混成一种 asset。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/site-knowledge-and-capability-assets.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/site-knowledge-and-capability-assets.md`
   区分 domain skill、adapter、package metadata、private override 和 capability
   taxonomy。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/workflow-and-task-package.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/workflow-and-task-package.md`
   说明 workflow package 是不同于 atomic site capability 的问题域。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/task-execution-and-admission.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/task-execution-and-admission.md`
   否定把 benchmark loop 和 crawler runtime 当成产品 admission contract。
 
 ## Open Questions

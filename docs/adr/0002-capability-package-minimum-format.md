@@ -69,13 +69,13 @@ Snapshot raw shape。
   不应解析 raw site source。
 - `docs/draft/result-schema.md` 说明 Lode 拥有 result shape 和 normalizer，
   Core 封装 public result，Harbor 提供 evidence reference。
-- `/Volumes/2T/dev/WebEnvoy/research/synthesis.md` 收敛出 capability /
+- `https://github.com/WebEnvoy/research/blob/main/synthesis.md` 收敛出 capability /
   workflow asset 需要 schema、fixture 和 post-check，runtime facts 必须和
   task policy 拆开。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/site-knowledge-and-capability-assets.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/site-knowledge-and-capability-assets.md`
   支持 adapter/package metadata，但否定把 read-only flag 或 raw adapter 当成
   完整 WebEnvoy 合同。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/task-execution-and-admission.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/task-execution-and-admission.md`
   区分 Harbor runtime facts 和 Core admission rules。
 
 ## Open Questions

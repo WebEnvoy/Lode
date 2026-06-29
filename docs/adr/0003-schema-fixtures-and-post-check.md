@@ -65,11 +65,11 @@ payload reference 和其他 runtime evidence。
   Core 基于 Harbor facts 做 one-of matching。
 - `docs/draft/result-schema.md` 把 output schema、source schema、normalizer、
   fixture 和 test 归属给 Lode，把 public result wrapping 留给 Core。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/result-normalization-and-reconciliation.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/result-normalization-and-reconciliation.md`
   否定把 adapter-specific JSON、display columns 和文件格式当稳定 result schema。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/workflow-and-task-package.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/workflow-and-task-package.md`
   支持 workflow input schema、verification checks 和 expected outcome。
-- `/Volumes/2T/dev/WebEnvoy/research/absorability/themes/task-execution-and-admission.md`
+- `https://github.com/WebEnvoy/research/blob/main/absorability/themes/task-execution-and-admission.md`
   说明 deterministic step completion 需要 post-check 和 unknown-outcome handling。
 
 ## Open Questions
