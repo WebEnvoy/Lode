@@ -51,8 +51,9 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 
 ## 文档
 
-- [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
 - [愿景](VISION.md)
+- [路线图](ROADMAP.md)
+- [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
 
 ## 许可证
 
