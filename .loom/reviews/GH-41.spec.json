@@ -3,13 +3,13 @@
   "item_id": "GH-41",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "GH-41 docs-only spec is bounded to Lode asset/workflow references and input/output/source schema semantics without implementation scope.",
+  "summary": "Post-merge spec closeout for GH-41 is approved; the docs-only contract is merged and no implementation completion is implied.",
   "reviewer": "codex-coordinator",
-  "reviewed_head": "f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f",
-  "reviewed_validation_summary": "2026-06-30 coordinator review approved PR #58 docs-only contract at product head f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f; prior branch validation covered `git diff --check`, JSON syntax, Loom doctor, verify, fact-chain, suite validate, and carrier validate; no executable code, real capability package, schema files, fixtures, validators, registry behavior, generated artifacts, runtime behavior, external-visible behavior, or issue closeout changed.",
+  "reviewed_head": "a5cd1930b9c2dba1a47f8ed816d8706e7ede0c4b",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #58, head 25ec1e48c9cb955fc00ad27efa803df35d57bd20, merge commit a5cd1930b9c2dba1a47f8ed816d8706e7ede0c4b, target branch main, and hosted run 28440644859 with all required checks passing.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
-    "Create separate Work Items for real package files, schemas, fixtures, validators, registry behavior, and workflow/runtime implementation."
+    "Do not treat this approval as completion of real capability package files, final JSON Schema, fixtures, validators, registry behavior, workflow runtime, or App Library UI."
   ]
 }

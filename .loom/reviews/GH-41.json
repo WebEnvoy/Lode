@@ -3,19 +3,20 @@
   "item_id": "GH-41",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "PR #58 is approved for the docs-only asset/workflow reference and input/output/source schema contract and remains within Lode #40/#41/#42/#43/#44/#45/#46 scope.",
+  "summary": "Post-merge closeout for PR #58 is approved; the docs-only asset/schema contracts and GH-41 carrier are merged to main and ready for issue closeout.",
   "reviewer": "codex-coordinator",
-  "reviewed_head": "f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f",
-  "reviewed_validation_summary": "2026-06-30 coordinator review approved PR #58 docs-only contract at product head f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f; prior branch validation covered `git diff --check`, JSON syntax, Loom doctor, verify, fact-chain, suite validate, and carrier validate; no executable code, real capability package, schema files, fixtures, validators, registry behavior, generated artifacts, runtime behavior, external-visible behavior, or issue closeout changed.",
+  "reviewed_head": "a5cd1930b9c2dba1a47f8ed816d8706e7ede0c4b",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #58, head 25ec1e48c9cb955fc00ad27efa803df35d57bd20, merge commit a5cd1930b9c2dba1a47f8ed816d8706e7ede0c4b, target branch main, and hosted run 28440644859 with all required checks passing.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
   "follow_ups": [
-    "Do not treat this approval as real capability package, schema file, fixture, validator, registry behavior, workflow runner, runtime behavior, hosted marketplace, live write behavior, merge, or issue closeout completion."
+    "Do not treat this approval as completion of real capability package files, final JSON Schema, fixtures, validators, registry behavior, workflow runtime, or App Library UI.",
+    "Close covered GitHub issues only after this closeout carrier PR is merged and issue comments reference PR #58, merge commit a5cd1930b9c2dba1a47f8ed816d8706e7ede0c4b, and hosted run 28440644859."
   ],
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "ADR 0004 separates site-capability, workflow-package, domain-skill, site-adapter, benchmark-task, crawler-job, and registry boundaries; ADR 0003 defines docs-level input/output/source shape and failure mapping while preserving Core/Harbor ownership."
+    "reason": "ADR 0004 and ADR 0003 define Stage 2 asset/workflow reference and input/output/source schema semantics without claiming package, schema-file, fixture, validator, registry, or runtime implementation."
   },
   "consumed_inputs": {
     "spec": ".loom/specs/GH-41/spec.md",
