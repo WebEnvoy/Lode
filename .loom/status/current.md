@@ -7,25 +7,25 @@
 - Scope: 更新 `docs/draft/resource-requirements.md`、`docs/adr/0003-schema-fixtures-and-post-check.md` 和本事项的 GH-52 Loom carrier。
 - Execution Path: docs-only/contract
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-52.md
-- Review Entry: .loom/reviews/GH-52.json
+- Recovery Entry: `.loom/progress/GH-52.md`
+- Review Entry: `.loom/reviews/GH-52.json`
 - Validation Entry: `git diff --check`; JSON validation; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-52 --json`; `loom suite carrier validate --target . --item GH-52 --json`; hosted checks after PR creation
 - Closing Condition: PR is ready for review with hosted basic checks reported; merge and issue closeout are explicitly out of scope for this thread.
-- Current Checkpoint: pr_ready
-- Current Stop: Docs-only contract drafted for resource requirements, fixtures, read-only post-check, validator v0, and write-like deferred conditions.
-- Next Step: Review PR and hosted checks; do not merge or close issues in this thread.
+- Current Checkpoint: closed_out
+- Current Stop: Post-merge carrier closeout recorded for WebEnvoy/Lode#60.
+- Next Step: No further action for GH-47/GH-48/GH-49/GH-50/GH-51/GH-52/GH-53/GH-54/GH-55 after coordinator issue closeout comments are posted and covered issues are closed.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for reviewed head d802bfb44eeae3996e8fea0d8ec6b508b9a027ad: git diff --check; JSON validation; loom fact-chain; loom suite validate; loom suite carrier validate.
-- Recovery Boundary: Docs-only contract and item-specific Loom carrier only. Real capability package files, JSON Schema files, fixtures, validator code, registry implementation, runtime, Core/Harbor/App changes, true write package behavior, merge, and issue closeout are out of scope.
-- Current Lane: docs-only/resource-validator-contract
+- Latest Validation Summary: Post-merge closeout consumed PR #60, head daecf65c5f48212e93d6c06c5111729aa737b4fd, merge commit 02b029935716a950684a88d4bd50f17d7156bcb9, target branch main, and hosted run 28442558377 with all required checks passing.
+- Recovery Boundary: Terminal carrier for docs-only Lode resource requirements, fixtures, post-check, validator, and write-like deferred contract; open later Work Items for real package files, JSON Schema files, fixtures, validator code, registry implementation, runtime, Core/Harbor/App changes, or true write behavior.
+- Current Lane: terminal closeout
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-52 --json`; `loom suite carrier validate --target . --item GH-52 --json`
-- Lane Entry: not_applicable
+- Verification Entry: .loom/progress/GH-52.md
+- Lane Entry: lode
 
 ## Sources
 

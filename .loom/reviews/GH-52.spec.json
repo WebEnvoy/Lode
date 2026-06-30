@@ -3,13 +3,13 @@
   "item_id": "GH-52",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "Minimal suite path is valid for this docs-only Stage 2 resource requirements and validator contract; full suite remains not applicable until executable package, schema, fixture, validator, registry, runtime, or write-side behavior is added.",
-  "reviewer": "codex-lode-execution-thread",
-  "reviewed_head": "b281d6698362cb24c74825f2c9f590645bdcca90",
-  "reviewed_validation_summary": "Local validation passed for head b281d6698362cb24c74825f2c9f590645bdcca90: git diff --check; JSON validation; loom fact-chain; loom suite validate; loom suite carrier validate.",
+  "summary": "Post-merge spec closeout for GH-52 is approved; the docs-only contract is merged and no implementation completion is implied.",
+  "reviewer": "codex-coordinator",
+  "reviewed_head": "02b029935716a950684a88d4bd50f17d7156bcb9",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #60, head daecf65c5f48212e93d6c06c5111729aa737b4fd, merge commit 02b029935716a950684a88d4bd50f17d7156bcb9, target branch main, and hosted run 28442558377 with all required checks passing.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
-    "Require full suite when later PRs add real capability package files, JSON Schema files, fixtures, validator code, registry behavior, runtime behavior, or write-like execution."
+    "Do not treat this approval as real capability package, JSON Schema, fixture, validator, registry, runtime, Core/Harbor/App integration, or true write behavior completion."
   ]
 }
