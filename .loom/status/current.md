@@ -11,13 +11,13 @@
 - Review Entry: `.loom/reviews/GH-64.json`
 - Validation Entry: `git diff --check`; JSON validation for `.loom/**/*.json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-64 --json`; `loom suite carrier validate --target . --item GH-64 --json`; hosted checks after PR creation
 - Closing Condition: PR is ready for review with hosted basic checks reported; merge and issue closeout are explicitly out of scope for this thread.
-- Current Checkpoint: implementation
-- Current Stop: PR created at https://github.com/WebEnvoy/Lode/pull/67 after draft docs were classified with concrete judgment reasons.
-- Next Step: Await review / hosted checks; merge and issue closeout remain out of scope.
+- Current Checkpoint: closed_out
+- Current Stop: Post-merge carrier closeout recorded for WebEnvoy/Lode#67.
+- Next Step: No further action for GH-62/GH-63/GH-64/GH-65/GH-66 after coordinator issue closeout comments are posted and covered issues are closed.
 - Blockers: None recorded.
-- Latest Validation Summary: 2026-06-30 local validation passed after adding the draft analysis absorption ledger: `git diff --check`; `.loom/**/*.json` parsed with `jq`; `loom fact-chain --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --json`; `loom suite validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`; `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`.
-- Recovery Boundary: Docs-only closeout for GH-62/GH-63/GH-64/GH-65/GH-66. Do not add product semantics, package/schema/validator/runtime code, fixtures, generated facts, guides, merge, or issue closeout.
-- Current Lane: lode-docs-closeout
+- Latest Validation Summary: Post-merge closeout consumed PR #67, head 5463d6cd7f6ace0756cdc17e20dfbe548c2d0bca, merge commit 39748cbe94f22111f772b53e07d8cc9ddec1136b, target branch main, and hosted run 28456467771 with all required checks passing.
+- Recovery Boundary: Terminal carrier for docs-only Lode draft lifecycle closeout; open later Work Items for package/schema/validator/registry/runtime implementation or any contract behavior change.
+- Current Lane: terminal closeout
 
 ## Runtime Evidence
 

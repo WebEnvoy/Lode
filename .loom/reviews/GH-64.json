@@ -3,28 +3,25 @@
   "item_id": "GH-64",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "Docs-only draft closeout for PR #67 is approved for review consumption: each draft has an explicit value judgment, accepted analysis is absorbed into ADR/contracts/index, deferred analysis remains owner-linked, and no product semantics or runtime artifacts were added.",
-  "reviewer": "codex",
-  "reviewed_head": "4a5c03d79ecc2386bc81edec8c0325c30b21ec56",
-  "reviewed_validation_summary": "2026-06-30 local validation passed after adding the draft analysis absorption ledger: `git diff --check`; `.loom/**/*.json` parsed with `jq`; `loom fact-chain --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --json`; `loom suite validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`; `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`.",
+  "summary": "Post-merge closeout for PR #67 is approved; the docs-only Lode docs draft closeout and GH-64 carrier are merged to main and ready for issue closeout.",
+  "reviewer": "codex-coordinator",
+  "reviewed_head": "39748cbe94f22111f772b53e07d8cc9ddec1136b",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #67, head 5463d6cd7f6ace0756cdc17e20dfbe548c2d0bca, merge commit 39748cbe94f22111f772b53e07d8cc9ddec1136b, target branch main, and hosted run 28456467771 with all required checks passing.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
-    "Do not treat this approval as merge, issue closeout, real package files, JSON Schema, fixture, validator, registry, runtime, App UX, Reports UX, hosted marketplace, runner, schedule, visual builder, or product behavior completion.",
-    "Future work that introduces code, schema, API, runtime behavior, generated facts, fixtures, package artifacts, validator behavior, external-visible behavior, merge, or issue closeout must enable stronger/full validation."
+    "Do not treat this approval as code, schema, API, runtime, storage, UI, fixture, generated fact, or product behavior implementation completion."
   ],
   "findings": [],
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "The PR now preserves reusable draft analysis through the contracts absorption ledger, keeps accepted Stage 2 facts in ADR/contract/index surfaces, and keeps unresolved contribution/personal asset work deferred with owner-linked exit conditions."
+    "reason": "Post-merge closeout consumes the merged docs-only Lode docs draft closeout and records terminal evidence without claiming implementation completion."
   },
   "consumed_inputs": {
     "pull_request": "https://github.com/WebEnvoy/Lode/pull/67",
-    "spec": ".loom/specs/GH-64/spec.md",
-    "plan": ".loom/specs/GH-64/plan.md",
-    "task_carrier": ".loom/specs/GH-64/task-carrier.md",
-    "draft_lifecycle": "docs/draft/README.md",
-    "absorption_ledger": "docs/contracts/README.md#draft-分析吸收账本",
-    "suite_path": "minimal"
+    "pr_head": "5463d6cd7f6ace0756cdc17e20dfbe548c2d0bca",
+    "merge_commit": "39748cbe94f22111f772b53e07d8cc9ddec1136b",
+    "target_branch": "main",
+    "evidence": "https://github.com/WebEnvoy/Lode/actions/runs/28456467771"
   }
 }
