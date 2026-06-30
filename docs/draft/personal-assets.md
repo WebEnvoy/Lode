@@ -1,61 +1,12 @@
-# 个人资产
+# Personal Assets Draft
 
-本文档定义 Lode 中用户个人资产的基本模型。
+- status: deferred
+- owner: Lode docs / future App Library owner
+- linked issue: [#66](https://github.com/WebEnvoy/Lode/issues/66)
+- exit condition: a future App Library / overlay Work Item defines private asset storage, update, rollback, and conflict behavior, then promotes it to ADR / contracts or removes it.
 
-## 定义
+Judgment: this draft still has independent future value, but not for Stage 2 implementation. ADR 0004 accepts the platform/personal boundary and overlay/fork/draft vocabulary; what remains open is private asset persistence, team sync, active/deprecated/archive behavior, App operations, and overlay conflict handling.
 
-用户个人资产是用户或团队在平台资产基础上形成的私有能力资产。
+Exit requires both a product owner and implementation owner for App Library / overlay behavior: resolve [PD-0012](../adr/pending-decisions.md#pd-0012), then either promote the remaining rules to ADR / contracts or remove the draft if private asset handling moves out of Lode.
 
-常见类型包括：
-
-- 私有能力；
-- 私有任务模板；
-- 用户 overlay；
-- fork；
-- 私有 normalizer patch；
-- 私有 source schema patch；
-- 私有 mapping patch；
-- 探索草稿；
-- 修复草稿；
-- 私有 redacted regression fixture；
-- 私有测试样例。
-
-## 状态
-
-个人资产可以使用以下状态：
-
-```text
-draft → tested → active → deprecated → archived
-```
-
-- draft：草稿，尚未验证；
-- tested：已通过本地或团队测试；
-- active：当前正在使用；
-- deprecated：不再推荐使用；
-- archived：归档保留。
-
-## 与平台资产的关系
-
-个人资产不应直接覆盖平台资产。
-
-推荐使用：
-
-- overlay：在平台资产上叠加用户自己的修改；
-- fork：从平台资产复制出独立的个人版本；
-- draft：从探索或修复流程产生的新草稿。
-
-## App 中的操作
-
-WebEnvoy App 的 Library / My Assets 应支持：
-
-- 创建；
-- 编辑；
-- 测试；
-- 查看 diff；
-- 回滚；
-- 导出；
-- 可选提交为平台贡献。
-
-Lode 负责保存个人资产的格式、版本、依赖、脱敏 fixture 和测试样例；App 只提供操作入口。
-
-个人资产可以包含对平台 normalizer 的私有修复，但不应保存真实生产 raw payload、账号凭据、Cookie、Token 或用户业务数据。
+Until promoted, this draft cannot be used as implementation truth.
