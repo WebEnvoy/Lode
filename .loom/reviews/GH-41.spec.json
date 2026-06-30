@@ -5,8 +5,8 @@
   "kind": "spec_review",
   "summary": "GH-41 docs-only spec is bounded to Lode asset/workflow references and input/output/source schema semantics without implementation scope.",
   "reviewer": "codex-coordinator",
-  "reviewed_head": "f2b329e0afc0e7b2d0ff992650866c3c1ff908e9",
-  "reviewed_validation_summary": "2026-06-30 coordinator review approved PR #58 docs-only contract at product head f2b329e0afc0e7b2d0ff992650866c3c1ff908e9; prior branch validation covered `git diff --check`, JSON syntax, Loom doctor, verify, fact-chain, suite validate, and carrier validate; no executable code, real capability package, schema files, fixtures, validators, registry behavior, generated artifacts, runtime behavior, external-visible behavior, or issue closeout changed.",
+  "reviewed_head": "f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f",
+  "reviewed_validation_summary": "2026-06-30 coordinator review approved PR #58 docs-only contract at product head f2b329e18e9c7a88ab4c03ac3762c5c5ff73d32f; prior branch validation covered `git diff --check`, JSON syntax, Loom doctor, verify, fact-chain, suite validate, and carrier validate; no executable code, real capability package, schema files, fixtures, validators, registry behavior, generated artifacts, runtime behavior, external-visible behavior, or issue closeout changed.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
