@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted for Stage 2 docs-only contract, 2026-06-30.
 
 ## Context
 
