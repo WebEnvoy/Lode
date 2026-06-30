@@ -14,7 +14,7 @@
 - Current Checkpoint: merge
 - Current Stop: Capability package minimum format v0 contract and current-head docs-only review are recorded for PR #56.
 - Next Step: Run PR merge gate, merge PR #56 if hosted checks pass, then perform post-merge closeout.
-- Blockers: None for merge-ready after hosted checks pass.
+- Blockers: None
 - Latest Validation Summary: `git diff --check`, `git diff --cached --check`, Markdown file existence check, `loom doctor --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom verify --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, and post-repair `loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json` pass.
 - Recovery Boundary: Keep this lane docs-only. Do not create real capability package, schema, fixture, validator, registry, merge, or issue closeout.
 - Current Lane: Stage 2 Lode package format docs-only
