@@ -5,7 +5,7 @@
   "kind": "general_review",
   "summary": "Workflow-only Loom PR gate repair is approved for this repair PR head.",
   "reviewer": "codex",
-  "reviewed_head": "0c492a6aa1e778a192c88b9994f698a2fb700710",
+  "reviewed_head": "6fc7fd143f9db3111515ea6826946c15d57e4ff2",
   "reviewed_validation_summary": "Bootstrap result JSON can be read mechanically; the first work item, status surface, and spec/plan artifacts exist.",
   "fallback_to": null,
   "findings": [],
