@@ -15,7 +15,7 @@
 - Current Stop: Docs-only contract drafted for resource requirements, fixtures, read-only post-check, validator v0, and write-like deferred conditions.
 - Next Step: Review PR and hosted checks; do not merge or close issues in this thread.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for reviewed head 1b385eb218ccf828beb17adbcf5e9dd3a253ae6a: `git diff --check`, JSON validation, `loom fact-chain`, `loom suite validate`, and `loom suite carrier validate`. Hosted run 28441991978 passed py-compile/demo-bootstrap/repo-local-cli/loom-check and exposed a fixable pr-gate carrier issue that this follow-up carrier update addresses.
+- Latest Validation Summary: Local validation passed for reviewed head d802bfb44eeae3996e8fea0d8ec6b508b9a027ad: git diff --check; JSON validation; loom fact-chain; loom suite validate; loom suite carrier validate.
 - Recovery Boundary: Docs-only contract and item-specific Loom carrier only. Real capability package files, JSON Schema files, fixtures, validator code, registry implementation, runtime, Core/Harbor/App changes, true write package behavior, merge, and issue closeout are out of scope.
 - Current Lane: docs-only/resource-validator-contract
 
