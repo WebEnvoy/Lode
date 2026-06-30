@@ -243,7 +243,7 @@
   ],
   "fact_chain": {
     "mode": "work-item + recovery-entry + derived status-surface",
-    "read_entry": "loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-resource-validator --json",
+    "read_entry": "loom fact-chain --target . --json",
     "entry_points": {
       "current_item_id": "GH-52",
       "work_item": ".loom/work-items/GH-52.md",

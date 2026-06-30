@@ -13,9 +13,9 @@
 
 - `git diff --check`
 - JSON validation for `.loom/**/*.json`
-- `loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-resource-validator --json`
-- `loom suite validate --target /Volumes/2T/.codex/worktrees/stage2/lode-resource-validator --item GH-52 --json`
-- `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/stage2/lode-resource-validator --item GH-52 --json`
+- `loom fact-chain --target . --json`
+- `loom suite validate --target . --item GH-52 --json`
+- `loom suite carrier validate --target . --item GH-52 --json`
 - Hosted basic checks after PR creation
 
 ## Minimal Path Applicability Records
