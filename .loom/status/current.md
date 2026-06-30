@@ -2,22 +2,22 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-31
-- Goal: 沉淀 Loom PR 与 closeout 执行约束，避免后续产品 PR 复用 `INIT-0001` 或产生 head/carrier 漂移。
-- Scope: 仅更新 `AGENTS.md` 和本事项的最小 Loom carrier。
-- Execution Path: docs-only/governance
+- Item ID: GH-19
+- Goal: 收敛首批低风险只读能力候选原则，并把 package 最小形状、fixture/post-check、研究吸收和写侧非目标边界写入仓内事实载体。
+- Scope: docs-only; update `docs/adr/pending-decisions.md` and item-specific Loom carrier files.
+- Execution Path: docs-only/boundary
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-31.md
-- Review Entry: .loom/reviews/GH-31.json
+- Recovery Entry: .loom/progress/GH-19.md
+- Review Entry: .loom/reviews/GH-19.json
 - Validation Entry: `git diff --check`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; hosted Loom checks
-- Closing Condition: AGENTS.md 约束合入 main，hosted checks 通过，并在 issue 中写入 post-merge closeout 证据。
-- Current Checkpoint: closed_out
-- Current Stop: Post-merge carrier closeout recorded for WebEnvoy/Lode#31 and PR #32.
-- Next Step: No further action for this Work Item.
-- Blockers: None recorded.
-- Latest Validation Summary: Post-merge closeout consumed PR #32, merge commit bc770b337cb6cd1e44310e1b4a746cb982242adf, and hosted run 28424976705 with all required checks passing.
-- Recovery Boundary: Terminal carrier; open a new Work Item for future Loom governance changes.
-- Current Lane: terminal closeout
+- Closing Condition: PR merged, hosted checks passed, and issue closeout records PR, merge commit, head, hosted run, repository carrier, and scope limits.
+- Current Checkpoint: build
+- Current Stop: Docs-only first-stage boundary convergence prepared for review.
+- Next Step: Open PR, wait for hosted checks and Loom review.
+- Blockers: Local `loom doctor` / `loom verify` report installed-state / legacy surface blockers; local `loom fact-chain` reports missing init-result through the wrapper/target path. Hosted workflow primes Loom host state and is the authoritative gate for this PR.
+- Latest Validation Summary: `git diff --check`, `loom doctor --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom verify --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom fact-chain --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json`, and `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json` passed locally on 2026-06-30T06:56Z; hosted checks pending PR creation.
+- Recovery Boundary: Continue from this branch and GH-19 carrier; do not reuse INIT-0001.
+- Current Lane: docs-only boundary convergence
 
 ## Runtime Evidence
 
@@ -29,7 +29,7 @@
 
 ## Sources
 
-- Static Truth: .loom/work-items/GH-31.md
-- Dynamic Truth: .loom/progress/GH-31.md
+- Static Truth: .loom/work-items/GH-19.md
+- Dynamic Truth: .loom/progress/GH-19.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
