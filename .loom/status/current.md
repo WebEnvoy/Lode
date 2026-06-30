@@ -2,22 +2,22 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-19
-- Goal: 收敛首批低风险只读能力候选原则，并把 package 最小形状、fixture/post-check、研究吸收和写侧非目标边界写入仓内事实载体。
-- Scope: docs-only; update `docs/adr/pending-decisions.md` and item-specific Loom carrier files.
-- Execution Path: docs-only/boundary
+- Item ID: GH-37
+- Goal: Docs-only 收敛 Capability package minimum format v0，覆盖 GH-37 manifest/目录结构、GH-38 identity/operation/family/tags、GH-39 lifecycle/version/deprecation/invalidation。
+- Scope: 更新 `docs/adr/0002-capability-package-minimum-format.md` 和本事项的最小 Loom carrier。
+- Execution Path: docs-only/contract
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-19.md
-- Review Entry: .loom/reviews/GH-19.json
-- Validation Entry: `git diff --check`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; hosted Loom checks
-- Closing Condition: PR merged, hosted checks passed, and issue closeout records PR, merge commit, head, hosted run, repository carrier, and scope limits.
-- Current Checkpoint: closed_out
-- Current Stop: Post-merge carrier closeout recorded for WebEnvoy/Lode#19 via PR #34.
-- Next Step: No further action for this Work Item after coordinator issue closeout comments are posted and covered issues are closed.
+- Recovery Entry: .loom/progress/GH-37.md
+- Review Entry: .loom/reviews/GH-37.json
+- Validation Entry: `git diff --check`; low-cost repo checks; Loom local checks if available; hosted checks after PR
+- Closing Condition: PR ready against `main`; do not merge and do not close GH-36/GH-37/GH-38/GH-39 in this lane.
+- Current Checkpoint: merge
+- Current Stop: Capability package minimum format v0 contract and current-head docs-only review are recorded for PR #56.
+- Next Step: Run PR merge gate, merge PR #56 if hosted checks pass, then perform post-merge closeout.
 - Blockers: None
-- Latest Validation Summary: Post-merge closeout consumed PR #34, head bfd5709b6fcf563b0c85c644777c884a57cfd5ab, merge commit bc29fb0fea56786d1ba83b11f2ab2014f87c4cb3, and hosted run 28426657824 with all required checks passing.
-- Recovery Boundary: Terminal carrier for this docs-only capability boundary item; open new Work Items for schemas, packages, fixtures, validators, or runtime implementation.
-- Current Lane: terminal closeout
+- Latest Validation Summary: `git diff --check`, `git diff --cached --check`, Markdown file existence check, `loom doctor --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom verify --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, and post-repair `loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json` pass.
+- Recovery Boundary: Keep this lane docs-only. Do not create real capability package, schema, fixture, validator, registry, merge, or issue closeout.
+- Current Lane: Stage 2 Lode package format docs-only
 
 ## Runtime Evidence
 
@@ -29,7 +29,7 @@
 
 ## Sources
 
-- Static Truth: .loom/work-items/GH-19.md
-- Dynamic Truth: .loom/progress/GH-19.md
+- Static Truth: .loom/work-items/GH-37.md
+- Dynamic Truth: .loom/progress/GH-37.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
