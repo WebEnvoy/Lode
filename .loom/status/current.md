@@ -11,10 +11,10 @@
 - Review Entry: .loom/reviews/GH-37.json
 - Validation Entry: `git diff --check`; low-cost repo checks; Loom local checks if available; hosted checks after PR
 - Closing Condition: PR ready against `main`; do not merge and do not close GH-36/GH-37/GH-38/GH-39 in this lane.
-- Current Checkpoint: build_ready_for_pr
-- Current Stop: Docs-only v0 contract recorded in ADR 0002; PR ready is the target, not merge-ready.
-- Next Step: Push the GH-37 carrier/status sync update to PR #56, then leave merge-ready review and merge to the coordinator batch.
-- Blockers: PR-ready none. Merge-ready still requires coordinator-owned current-head semantic review and merge checkpoint.
+- Current Checkpoint: merge
+- Current Stop: Capability package minimum format v0 contract and current-head docs-only review are recorded for PR #56.
+- Next Step: Run PR merge gate, merge PR #56 if hosted checks pass, then perform post-merge closeout.
+- Blockers: None for merge-ready after hosted checks pass.
 - Latest Validation Summary: `git diff --check`, `git diff --cached --check`, Markdown file existence check, `loom doctor --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom verify --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, and post-repair `loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json` pass.
 - Recovery Boundary: Keep this lane docs-only. Do not create real capability package, schema, fixture, validator, registry, merge, or issue closeout.
 - Current Lane: Stage 2 Lode package format docs-only

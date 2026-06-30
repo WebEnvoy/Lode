@@ -1,0 +1,27 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-37",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "The docs-only ADR and GH-37 carrier stay within the Lode Stage 2 package format lane and establish a usable package metadata contract without creating package/runtime implementation.",
+  "reviewer": "codex-coordinator",
+  "reviewed_head": "7f41c7ad75cccd17658ebf57c436314836f9ebf6",
+  "reviewed_validation_summary": "On PR #56 head 7f41c7ad75cccd17658ebf57c436314836f9ebf6, git diff --check, JSON validation, loom verify, loom fact-chain, loom suite validate, and loom suite carrier validate passed.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [
+    "Do not treat this approval as completion of real capability package files, final JSON Schema, fixtures, validator, registry, runtime execution, App Library UI, or true write behavior.",
+    "Close GH-36/GH-37/GH-38/GH-39 only after merge and post-merge closeout evidence are recorded."
+  ],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "ADR 0002 defines Stage 2 package root/manifest boundaries, forbidden contents, capability identity, operation/family/tags, lifecycle, version, deprecation, invalidation, consumer fields, research absorption decisions, and non-goals for GH-36/GH-37/GH-38/GH-39."
+  },
+  "consumed_inputs": {
+    "spec": ".loom/specs/GH-37/spec.md",
+    "plan": ".loom/specs/GH-37/plan.md",
+    "suite_path": "minimal",
+    "validation": "git diff --check; JSON validation; loom verify/fact-chain/suite validate/suite carrier validate"
+  }
+}
