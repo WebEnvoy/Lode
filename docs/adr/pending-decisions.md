@@ -26,6 +26,59 @@ issues #6/#7/#8/#9/#10/#11、`README.md`、`ROADMAP.md`、ADR 0002/0003/0004、
 | `crawler-job` | 暂不作为 Lode MVP 合同；长时间 crawl 未来可转成 workflow profile。 | queue、storage、proxy、scaling runtime、crawler scheduler 不归 Lode。 | 后续 crawler / workflow 规划。 | ADR 0004、`ROADMAP.md`、research workflow-and-task-package。 | deferred |
 | 首批只读能力与写侧 validate-only / draft / preview 内容 | 本轮只把它们作为后续 #18/#21 的输入边界：需要 Lode 提供 schema、fixtures、resource requirement 和 post-check。 | 本轮不创建具体能力包、不实现写侧资产、不运行真实提交。 | 后续 #18/#21、Core/App/Harbor 对齐。 | 当前委派边界、`ROADMAP.md` 阶段四/六。 | deferred |
 
+## 第一阶段剩余能力树收敛
+
+本节覆盖 #12 至 #23 的第一批低风险只读能力、package 最小形状、研究吸收和非目标边界。读取时间为
+2026-06-30，来源包括 GitHub issues #12/#13/#14/#15/#16/#17/#18/#19/#20/#21/#22/#23、
+`ROADMAP.md`、ADR 0002/0003/0004、`docs/draft/*`、`research/synthesis.md`、
+`research/absorability/themes/site-knowledge-and-capability-assets.md`、
+`research/absorability/themes/result-normalization-and-reconciliation.md`、
+`research/absorability/themes/evidence-and-observability.md`、
+`research/absorability/themes/workflow-and-task-package.md`、
+`research/absorability/themes/task-execution-and-admission.md`，以及只读 sources locator
+`/Volumes/2T/dev/WebEnvoy/sources/`。
+
+### 首批只读能力候选
+
+| 步骤/场景 | 本仓责任 | 输入 | 输出 | 失败/证据 | 状态 |
+|---|---|---|---|---|---|
+| 单页面结构化信息提取 | 提供可引用 `site-capability` package 的 metadata、input shape、normalized result shape、resource requirement、fixture、post-check、version 和 invalidation 边界。 | 公开 URL、目标页面类型、可选字段选择；不包含账号凭据、Cookie、真实业务客户数据或写入意图。 | 页面状态摘要和结构化字段，例如标题/正文摘要、作者或来源引用、时间、canonical ref、media refs、source trace、evidence refs。 | fixture 必须使用脱敏 raw/source 样例和 normalized fixture；post-check 至少证明目标页面可定位、字段来自声明 source shape、结果能引用证据。 | accepted |
+| 列表字段抽取 | 作为后续候选；只允许低权限、短列表、用户可理解结果，不默认长时间 crawl。 | URL 或站内查询条件；必须限制范围和页数。 | item envelope 列表，含 dedup key、canonical/source ref、normalized item、cursor/continuation 候选。 | 需要 fixture 覆盖空结果、分页/截断和字段缺失；长队列、代理池、调度和存储不进入本阶段。 | candidate |
+| 页面状态摘要 | 作为 capability authoring 和 evidence 辅助；不是业务 result schema 的替代物。 | Harbor/Core 提供的 Snapshot、DOM/network 摘要或等价 evidence ref。 | login wall、not found、risk page、content available、field missing 等声明式状态。 | Lode 只声明状态词汇和 fixture；runtime 采集、截图、Snapshot 保存属于 Harbor/Core。 | candidate |
+
+首批具体站点 deferred；优先选择公开或用户已打开页面上的读操作，不选择复杂写侧、crawler queue、marketplace、通用 browser agent loop 或需要真实账号默认写入的能力。
+
+### Package 最小形状边界
+
+| Package 部分 | Lode 最小责任 | 不在本轮做 | 状态 |
+|---|---|---|---|
+| capability metadata | `site`、supported origins、capability id、operation id、capability family、target type、lifecycle、version、known limitations、invalidation marker。 | 不创建正式 schema 文件或 validator。 | accepted |
+| input shape | 声明 URL / query / selector-like hint 等低风险只读输入，以及禁止凭据和真实业务数据的边界。 | 不定义完整 JSON Schema。 | accepted |
+| result shape | 声明 normalized result、source trace、raw payload ref policy、evidence ref policy、failure hint 的最小字段类别。 | 不把 display columns、CSV/table 输出或 adapter 私有 JSON 当稳定 result schema。 | accepted |
+| evidence requirements | 声明 evidence refs 必须可引用、可脱敏、可被 post-check 消费；真实截图、完整 DOM、完整请求/响应和账号态不 inline 存入 Lode。 | 不定义 Harbor evidence enum 或 Core result envelope。 | accepted |
+| fixture / post-check | 要求脱敏 raw/source fixture、normalized fixture、normalizer 或等价回归检查；read capability 至少要有能证明来源和字段映射的 post-check。 | 不搭测试框架，不创建真实 fixture 目录。 | accepted |
+| version / deprecation | capability、source schema、normalizer、output schema、fixture、post-check 均可被版本引用并可失效/废弃。 | 不实现 registry service、hosted marketplace、sync 或 rollback UI。 | accepted |
+
+### 研究吸收与非目标
+
+| 候选项 | 吸收方式 | 源码复用判断 | 依据 locator | Owner | 状态 |
+|---|---|---|---|---|---|
+| OpenCLI manifest / adapter metadata | 吸收 `site`、`domain`、`args`、`columns`、pipeline 和错误提示等字段种子，但重命名为 Lode capability metadata / input / result / failure hint。 | 只把 `manifest-types.ts` 等小型结构作为 schema seed 参考；不迁入站点命令实现。 | `research/absorability/themes/site-knowledge-and-capability-assets.md`; `/Volumes/2T/dev/WebEnvoy/sources/jackwener/OpenCLI` | Lode | candidate |
+| Syvert registry / taxonomy | 吸收 registry validation、capability taxonomy、lifecycle 和 resource requirement 思路。 | 自有代码可改造后复用小模块；不整体迁移 `runtime.py`。 | `research/synthesis.md`; `research/absorability/themes/task-execution-and-admission.md`; `/Volumes/2T/dev/WebEnvoy/sources/lodcel/Syvert` | Lode/Core boundary | accepted |
+| 旧 WebEnvoy XHS capability | 作为首批只读能力素材和写侧反例样本。 | 自有代码可拆出字段、gate、result、fixture 种子；不直接继承旧 FR/issue 字段或 runtime bridge。 | `research/absorability/themes/site-knowledge-and-capability-assets.md`; `/Volumes/2T/dev/WebEnvoy/sources/lodcel/WebEnvoy` | Lode/Harbor boundary | accepted |
+| MediaCrawler 字段模型 | 吸收多平台字段映射、processor/extractor 组织和 normalized fixture 种子。 | 可改造字段模型和 schema 样本；不迁入 crawler runtime、账号池、代理池、queue、存储和扩缩容。 | `research/absorability/themes/result-normalization-and-reconciliation.md`; `/Volumes/2T/dev/WebEnvoy/sources/MediaCrawlPro` | Lode/Core/Harbor boundary | candidate |
+| marketplace / solution catalog | 仅保留为后续 App/生态方向参考。 | 不复用 hosted marketplace 或 catalog 代码。 | `research/synthesis.md`; `research/absorability/themes/workflow-and-task-package.md` | App/Lode future | deferred |
+| crawler queue / benchmark task contract | 明确不作为 Lode MVP 合同；只保留机制参考。 | 不迁入 Crawlee/BrowserGym/WorkArena task runtime。 | `research/synthesis.md`; `research/absorability/themes/task-execution-and-admission.md` | future eval/crawler | deferred |
+| 通用 browser agent loop | 不作为正式 capability 执行路径；只能作为 fallback 或 authoring 参考。 | 不迁入 BrowserUse/Skyvern 等通用 loop。 | `research/synthesis.md`; `research/absorability/themes/task-execution-and-admission.md` | Core future | rejected |
+
+### 写侧早期边界
+
+| 写侧概念 | 早期允许范围 | 禁止范围 | 进入真实写入条件 | 依据 | 状态 |
+|---|---|---|---|---|---|
+| validate-only | 只声明待写内容、目标页面/对象、风险提示、所需资源和验证结果，不提交外部变更。 | 不点击 submit、publish、send、delete、follow、pay 等外部写入动作。 | Core action risk、App confirmation、Harbor target binding、write post-check 和 evidence contract 稳定后。 | #21/#22、ADR 0002/0003、research task-execution-and-admission | deferred |
+| draft / preview | 允许生成本地草稿、预览 payload 或外部页面前的检查清单；必须可被用户理解和放弃。 | 不默认保存到真实外部系统，不调度发布，不上传真实素材。 | 需要 idempotency、write operation ref、expected change schema、post-check 和 unknown outcome 处理。 | #21/#22/#23、`ROADMAP.md` 阶段六/七 | deferred |
+| true write capability | 本阶段仅记录进入条件。 | 不创建真实写 capability package，不运行 live write，不保存账号态或生产证据。 | action boundary、idempotency key、write operation ref、runtime target binding、completion evidence、rollback/repair hint、用户确认全部稳定。 | #23、research write-side fail-closed gate | deferred |
+
 ## 第一阶段排除的运行时事实
 
 | 非目标 | 排除原因 | 可重新评估条件 | 影响阶段 | 状态 |
