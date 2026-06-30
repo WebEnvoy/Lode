@@ -138,6 +138,88 @@ source_ref:
 | `evidence_unavailable` | Evidence ref required by policy/post-check is missing. | envelope `ok=false` or `unknown_outcome`, based on Core policy. | Show unverifiable result. | Core/Harbor own evidence store. |
 | `requires_user_action` | User must login, confirm, solve challenge, or provide missing safe input. | envelope outcome `requires_user_action`. | Prompt user at App boundary. | Lode only declares possible requirement. |
 
+### Stage 2 v0 Contract: Resource, Fixture, Post-Check, And Validator
+
+本节覆盖 GH-47/GH-48/GH-49/GH-50/GH-51/GH-52/GH-53/GH-54/GH-55。它是 docs-only 合同；不创建 package、schema、fixture、validator、registry 或 runtime 代码。
+
+#### Resource Requirement And Harbor Facts
+
+Lode declares public resource requirements. Harbor owns runtime facts. Core matches them and reports admission status.
+
+| 字段或状态 | Owner | Consumer | 有效性 / 过期规则 | 失败分类 | 非目标 |
+|---|---|---|---|---|---|
+| Harbor facts vocabulary | Harbor owns facts; Lode owns references to public vocabulary | Core admission; App setup guidance | Facts are fresh only for the bound runtime/profile/session evidence window. Recheck after profile switch, login state change, session restart, proxy change, or evidence policy change. | `resource_unavailable`; `requires_user_action` | Lode does not store profile ids, cookies, tokens, provider routes, local paths, proxy endpoints, or live tab state. |
+| `resource_requirement_profiles[]` | Lode | Core admission | One valid matching profile is enough. Profile order is not priority or fallback. | `resource_unavailable`; `invalid_contract` | No provider selection, fallback ranking, or runtime acquisition. |
+| `matched` | Core | Core/App | At least one valid profile matches current Harbor facts. | not_applicable | Does not prove capability success or post-check pass. |
+| `unmatched` | Core | App repair/setup | Declaration is valid but current Harbor facts are insufficient. | `resource_unavailable`; `requires_user_action` | Not a package-invalid signal. |
+| `invalid_contract` | Lode validator; Core admission | Package repair | Requirement shape, vocabulary, evidence ref, operation mode, or forbidden field is invalid. | `invalid_contract` | Do not continue by guessing resources. |
+
+#### Operation Resource Boundary
+
+| Boundary | Stage 2 allowed | Stage 2 deferred | Failure classes | Non-goals |
+|---|---|---|---|---|
+| `read` | Public or user-authorized read; may require page context, Snapshot, network summary, manual takeover, source refs, and evidence refs. | Long-running crawler queue, account/proxy pool orchestration, hidden storage, and production raw capture. | `resource_unavailable`; `source_unavailable`; `output_invalid`; `evidence_unavailable` | No external mutation. |
+| `validate-only` | Validate target, inputs, risk, resources, and expected change without submitting. | Saving, sending, publishing, deleting, paying, following, uploading to external systems. | `input_invalid`; `requires_user_action`; `verification_failed` | Validation success is not write success. |
+| `write-like` | Describe future write requirements: target binding, confirmation, completion evidence, idempotency, operation refs, repair hints. | Executable write package until Core/App/Harbor write contracts are accepted. | `invalid_contract` when claimed executable in Stage 2 | No true write side in Stage 2. |
+
+#### Fixture Format
+
+| 字段或状态 | Owner | Consumer | 有效性 / 过期规则 | 失败分类 | 非目标 |
+|---|---|---|---|---|---|
+| redacted raw fixture | Lode | Normalizer regression; package validator | Must name source kind, source shape version, redaction policy, captured/synthesized timestamp, schema hint, and integrity hint. Refresh when source shape or redaction policy changes. | `fixture_missing`; `fixture_invalid`; `source_schema_changed` | No production raw body, full DOM/HAR/screenshot, credentials, account state, or user business data. |
+| normalized fixture | Lode | Output schema validation; App/Core examples | Must pair with a redacted raw fixture or declared synthetic source and the output schema version. | `fixture_missing`; `fixture_invalid`; `output_invalid` | Not a Core result envelope and not runtime evidence. |
+| source/evidence refs in fixture | Lode declares placeholder shape; Core/Harbor own runtime refs | Post-check examples; package review | Use stable placeholder ids and declared ref kinds; live resolution is out of scope. | `fixture_invalid`; `evidence_unavailable` | No local path, storage URL, provider route, or live evidence body. |
+
+Document-level minimal example:
+
+```yaml
+raw_fixture:
+  fixture_id: content-detail-web-api-redacted
+  source_kind: network_response_summary
+  source_shape: content-detail-web-api-source@0.1.0
+  redaction: summary_only
+  captured_at: "2026-06-30T00:00:00Z"
+  integrity_hint: "sha256:<redacted-summary-hash>"
+normalized_fixture:
+  output_schema: content-detail-output@0.1.0
+  data:
+    source_type: content_detail
+    canonical_ref: "https://www.example.com/items/123"
+    title_or_text_hint: "redacted public title"
+  source_refs: ["fixture-source-1"]
+  evidence_refs: ["fixture-evidence-1"]
+```
+
+#### Read-Only Post-Check And Evidence Binding
+
+| 字段或状态 | Owner | Consumer | 有效性 / 过期规则 | 失败分类 | 非目标 |
+|---|---|---|---|---|---|
+| `post_check.requirements[]` | Lode | Core post-check runner; App result confidence | Must state what proves success: target located, required fields mapped, source refs present, evidence refs present when required. | `post_check_failed`; `evidence_unavailable`; `mapping_incomplete` | Does not prescribe browser automation steps. |
+| evidence binding | Core/Harbor own live refs; Lode declares required binding | Core/App audit | Each required public result field must be traceable to a declared source/evidence ref policy. Recheck if evidence retention or source shape changes. | `evidence_unavailable`; `source_unavailable`; `verification_failed` | No inline heavy evidence in Lode. |
+| post-check result | Core | Core result envelope; App display | A browser step finishing is insufficient; read success needs result/schema/source/evidence alignment. | `post_check_failed`; `unknown_outcome` via Core policy | Lode does not own runtime outcome. |
+
+#### Package Validator v0 Contract
+
+The Stage 2 validator is a contract, not implemented code.
+
+| Surface | Input | Output | Error reporting | Non-goals |
+|---|---|---|---|---|
+| package manifest validation | package root; manifest; referenced docs/schema/check/fixture paths | machine-readable report with `status`, `errors[]`, `warnings[]`, `checked_refs[]` | `missing_manifest`, `invalid_contract`, `unsupported_version`, `forbidden_field` | No registry service or generated package skeleton. |
+| resource requirement validation | manifest resource profiles; allowed vocabulary; evidence refs | `matched` is not produced by offline validator; validator only reports contract validity | `invalid_contract`, `validator_warning` | No Harbor runtime matching or provider selection. |
+| fixture/post-check validation | redacted raw fixture, normalized fixture, post-check requirements, ref placeholders | report field paths, fixture ids, source/evidence binding ids, severity | `fixture_missing`, `fixture_invalid`, `post_check_failed`, `validator_warning` | No live browser, no real account, no production evidence. |
+
+Validator severity v0: `error` blocks stable package admission; `warning` allows experimental/proposed but must be shown; `info` is advisory.
+
+#### Write-Like Validation Deferred Conditions
+
+Write-like validation stays deferred until all of these exist outside this PR:
+
+- Core action risk and confirmation contract is accepted.
+- Harbor target binding and completion evidence refs are accepted.
+- Lode write expected-change schema, idempotency key requirement, write operation ref, post-check, unknown-outcome mapping, and repair hint are accepted.
+- App user confirmation and cancellation boundary is accepted.
+- A later Work Item explicitly authorizes true write package scope.
+
 #### Research Absorption Record
 
 | locator | 判断 | 机制吸收 / 裁剪 / 拒绝理由 | 落点 |
@@ -146,8 +228,8 @@ source_ref:
 | `docs/adr/pending-decisions.md` | 吸收 | 吸收 Lode 拥有 input/output/source schema、fixture/post-check 和 failure class 声明；保留 PD-0005/PD-0007/PD-0008/PD-0009 为 Core/Harbor 外部合同或 validator 后续决策。 | Failure Mapping; Open Questions |
 | `research/synthesis.md` | 吸收 | 吸收 schema 化 capability/workflow、Run Record/evidence 统一归 Core/Harbor/App、runtime facts 与 task policy 拆分；拒绝把 raw payload storage 或 agent loop 写进 Lode schema。 | Source Payload / Source Ref Shape |
 | `research/absorability/README.md` | 只参考 | 只采用其吸收记录方法，不从该文提取字段。 | Research Absorption Record |
-| `research/absorability/themes/result-normalization-and-reconciliation.md` | 裁剪复用 | 吸收低噪音 result、typed error/hint、schema-first extraction、heavy evidence by reference、平台字段 mapping；裁剪为 Lode normalized data + Core envelope 分工；拒绝 adapter 自定义 JSON、OpenCLI columns、Stagehand 临时 schema、Automa table、EasySpider output file 作为稳定 schema。 | Normalized Output Schema; Failure Mapping |
-| `research/absorability/themes/task-execution-and-admission.md` | 裁剪复用 | 吸收 resource matching、post-check、unknown outcome、requires user action、write fail-closed 语义；裁剪为 Lode failure mapping；拒绝 BrowserUse agent loop、workflow-use/Skyvern 执行器、旧 XHS gate 全量字段进入本 ADR。 | Failure Mapping To Core / App |
+| `research/absorability/themes/result-normalization-and-reconciliation.md` | 裁剪复用 | 吸收低噪音 result、typed error/hint、schema-first extraction、heavy evidence by reference、平台字段 mapping；裁剪为 Lode normalized data + Core envelope 分工；拒绝 adapter 自定义 JSON、OpenCLI columns、Stagehand 临时 schema、Automa table、EasySpider output file 作为稳定 schema。 | Normalized Output Schema; Failure Mapping; Fixture Format |
+| `research/absorability/themes/task-execution-and-admission.md` | 裁剪复用 | 吸收 resource matching、post-check、unknown outcome、requires user action、write fail-closed 语义；裁剪为 Lode resource/post-check/validator 合同；拒绝 BrowserUse agent loop、workflow-use/Skyvern 执行器、crawler queue、旧 XHS gate 全量字段进入本 ADR。 | Resource Requirement And Harbor Facts; Package Validator v0 Contract |
 
 ## Consequences
 

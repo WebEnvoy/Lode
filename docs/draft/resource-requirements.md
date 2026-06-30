@@ -90,6 +90,37 @@ Harbor 返回 Runtime Capability Facts，例如：
 
 Core 使用这些事实与 Lode 的 resource requirement profiles 做匹配。
 
+## Stage 2 v0 合同
+
+本节把 `Resource Requirements v0` 收敛为可被 Core 准入消费的最小合同。Lode 只声明需求；Harbor 仍是 runtime facts 的 truth source；Core 做匹配、失败归因和 result envelope 映射。
+
+### Harbor facts vocabulary 消费
+
+| fact vocabulary | Owner | Lode consumer boundary | 有效性 / 过期规则 | 失败分类 | 非目标 |
+|---|---|---|---|---|---|
+| `profile_persistence` | Harbor | Lode 可声明需要 `persistent_profile` 或 `ephemeral_profile_allowed`。 | 事实随 Harbor profile/session 状态刷新；过期事实不能用于 admission。 | `resource_unavailable` | 不保存 profile id、路径、Cookie 或 storage。 |
+| `identity_binding` | Harbor | Lode 可声明需要 `account_bound`、`anonymous_allowed` 或 `user_login_required`。 | 登录墙、账号切换、登出或风险页会使事实过期。 | `resource_unavailable`; `requires_user_action` | 不保存账号名、手机号、cookie 或 token。 |
+| `browser_context` | Harbor | Lode 可声明需要 browser context、CDP、viewer 或 manual takeover。 | session close、provider restart 或 tab loss 会使事实过期。 | `resource_unavailable` | 不选择 provider、tab 或 driver 参数。 |
+| `network_context` | Harbor | Lode 可声明是否需要 proxy、稳定出口或允许无代理。 | proxy 轮换、健康检查失败或站点封禁会使事实过期。 | `resource_unavailable` | 不保存 proxy endpoint、供应商或路由。 |
+| `evidence_capability` | Harbor | Lode 可声明需要 Snapshot、network summary、screenshot summary、raw payload ref 或 evidence capture。 | evidence policy、retention 或 capture failure 变化会使匹配失效。 | `evidence_unavailable`; `resource_unavailable` | 不 inline screenshot、HAR、DOM 或完整响应。 |
+| `write_safety_capability` | Harbor/Core boundary | Stage 2 只允许声明 write-like validation 需要未来 write target binding、completion evidence 和 user confirmation。 | 真实写侧合同未稳定前只能 `deferred`。 | `invalid_contract` when used for real write in Stage 2 | 不执行 submit/publish/delete/pay/send/follow 等真实写入。 |
+
+### 匹配状态
+
+| 状态 | 含义 | Owner | Consumer | 失败分类 | 非目标 |
+|---|---|---|---|---|---|
+| `matched` | 声明合法，且至少一个 resource requirement profile 被当前 Harbor facts 满足。 | Core | Core admission; App explainability | not_applicable | 不表示业务结果成功。 |
+| `unmatched` | 声明合法，但当前 Harbor facts 不满足任一 profile。 | Core | App repair/login/runtime setup | `resource_unavailable`; `requires_user_action` | 不把资源不足误报为 package 无效。 |
+| `invalid_contract` | profile 字段、词汇、引用、证据或 operation/resource 边界非法。 | Lode validator / Core admission | Package repair | `invalid_contract` | 不尝试 fallback 或硬跑 runtime。 |
+
+### read / validate-only / write-like 边界
+
+| operation boundary | Stage 2 允许声明 | 必须 deferred | 失败分类 | 非目标 |
+|---|---|---|---|---|
+| `read` | 读取页面、列表、详情、评论或公开/用户已授权可见内容；可要求 Snapshot、network summary、manual takeover 或 raw payload ref。 | 长队列 crawler、账号池调度、后台采集和未脱敏存储。 | `resource_unavailable`; `source_unavailable`; `output_invalid` | 不做真实写入或 provider 选择。 |
+| `validate-only` | 在不提交外部变更的前提下校验目标页面、输入、资源、风险和预期变更可解释性。 | 保存到真实外部系统、点击提交、发送、发布、支付、删除。 | `input_invalid`; `requires_user_action`; `verification_failed` | 不把验证通过当写入成功。 |
+| `write-like` | 只记录未来真实写能力需要的资源和证据条件。 | action boundary、idempotency key、write operation ref、completion evidence、rollback/repair hint 未定稿前的真实写 package。 | `invalid_contract` when claimed as executable | 不把 Stage 2 提前扩成真实写闭环。 |
+
 ## 与能力生命周期的关系
 
 稳定能力必须声明资源需求。没有资源需求的能力可以处于 proposed 或 experimental，但不应进入 stable execution，除非它明确声明 `dependency_mode=none` 并有对应 evidence_refs。
