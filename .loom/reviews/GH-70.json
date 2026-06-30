@@ -3,25 +3,26 @@
   "item_id": "GH-70",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "Workflow-only Loom 0.22.1 maintenance PR #69 is approved.",
+  "summary": "Post-merge closeout for PR #69 is approved; Loom 0.22.1 workflow maintenance is merged to main and ready for issue closeout.",
   "reviewer": "codex-coordinator",
-  "reviewed_head": "73d25b7829eb18edaf0b12a68ec1d0a02cbe3346",
-  "reviewed_validation_summary": "PR head 73d25b7829eb18edaf0b12a68ec1d0a02cbe3346 contains the Loom workflow pin update to 0.22.1 plus the GH-70 item-specific maintenance carrier; no product docs, product contracts, code, roadmap, issue tree, plugin cache path, or historical INIT-0001 migration changed.",
+  "reviewed_head": "bb1ef62715132bb9272d52cb4d213c9921fa87cf",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #69, head 3ecf6b697edab6da0986ec31bb1b6e406929a1aa, merge commit bb1ef62715132bb9272d52cb4d213c9921fa87cf, target branch main, and hosted run 28461417688 with all required checks passing.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
   "follow_ups": [
-    "This review does not approve product, schema, API, runtime, fixture, roadmap, or issue-tree changes."
+    "This closeout review does not approve product, schema, API, runtime, fixture, roadmap, or issue-tree changes."
   ],
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Authored review covers only the workflow version-pin update for PR #69. Drift after reviewed_head must be limited to GH-70 Loom carrier metadata or require a fresh review."
+    "reason": "Post-merge closeout consumes the merged workflow-only maintenance PR and records terminal evidence without claiming product implementation."
   },
   "consumed_inputs": {
     "issue": "https://github.com/WebEnvoy/Lode/issues/70",
     "pull_request": "https://github.com/WebEnvoy/Lode/pull/69",
-    "reviewed_head": "73d25b7829eb18edaf0b12a68ec1d0a02cbe3346",
-    "changed_workflow": ".github/workflows/loom-check.yml",
-    "suite_path": "not_applicable"
+    "pr_head": "3ecf6b697edab6da0986ec31bb1b6e406929a1aa",
+    "merge_commit": "bb1ef62715132bb9272d52cb4d213c9921fa87cf",
+    "target_branch": "main",
+    "evidence": "https://github.com/WebEnvoy/Lode/actions/runs/28461417688"
   }
 }

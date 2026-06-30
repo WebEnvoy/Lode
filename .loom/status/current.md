@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-70.json
 - Validation Entry: `git diff --check`; hosted GitHub Actions checks for PR #69.
 - Closing Condition: PR #69 is merged and GH-70 contains post-merge closeout evidence.
-- Current Checkpoint: merge
-- Current Stop: PR #69 is ready for hosted merge gate on the GH-70 workflow-only maintenance carrier.
-- Next Step: Run hosted checks for PR #69, merge after required checks pass, then record closeout evidence for GH-70.
+- Current Checkpoint: closed_out
+- Current Stop: Post-merge closeout recorded for WebEnvoy/Lode#69.
+- Next Step: No further action for GH-70 after issue closeout comment is posted and the issue is closed.
 - Blockers: None recorded.
-- Latest Validation Summary: PR head 73d25b7829eb18edaf0b12a68ec1d0a02cbe3346 contains the Loom workflow pin update to 0.22.1 plus the GH-70 item-specific maintenance carrier; no product docs, product contracts, code, roadmap, issue tree, plugin cache path, or historical INIT-0001 migration changed.
+- Latest Validation Summary: Post-merge closeout consumed PR #69, head 3ecf6b697edab6da0986ec31bb1b6e406929a1aa, merge commit bb1ef62715132bb9272d52cb4d213c9921fa87cf, target branch main, and hosted run 28461417688 with all required checks passing.
 - Recovery Boundary: Workflow-only maintenance; re-review if the PR changes product code, product docs, roadmap, issue tree, workflow command structure, schema/API/runtime behavior, fixtures, or `.loom` carriers beyond GH-70 status/review/progress evidence.
-- Current Lane: ci-maintenance
+- Current Lane: terminal closeout
 
 ## Runtime Evidence
 
