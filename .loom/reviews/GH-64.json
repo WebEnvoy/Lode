@@ -5,7 +5,7 @@
   "kind": "general_review",
   "summary": "Docs-only draft closeout for PR #67 is approved for review consumption: each draft has an explicit value judgment, accepted analysis is absorbed into ADR/contracts/index, deferred analysis remains owner-linked, and no product semantics or runtime artifacts were added.",
   "reviewer": "codex",
-  "reviewed_head": "8fb47df99833b99558e7e2457f7afc142d1a4fcf",
+  "reviewed_head": "4a5c03d79ecc2386bc81edec8c0325c30b21ec56",
   "reviewed_validation_summary": "2026-06-30 local validation passed after adding the draft analysis absorption ledger: `git diff --check`; `.loom/**/*.json` parsed with `jq`; `loom fact-chain --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --json`; `loom suite validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`; `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode --item GH-64 --json`.",
   "fallback_to": null,
   "blocking_issues": [],
