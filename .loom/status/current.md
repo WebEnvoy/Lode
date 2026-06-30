@@ -6,7 +6,7 @@
 - Goal: Docs-only 收口 Lode `文档草稿收口` milestone：定义 `docs/` 最小目录语义，更新 `docs/draft/` 生命周期规则，盘点所有 draft 归宿，并把 Stage 2 已接受合同从 draft truth 收敛到 ADR / contracts 指针。
 - Scope: 更新 `docs/README.md`、`docs/contracts/README.md`、`docs/draft/*.md` 和本事项的 GH-64 Loom carrier。
 - Execution Path: docs-only/contract-closeout
-- Workspace Entry: `/Volumes/2T/.codex/worktrees/docs-draft-closeout/Lode`
+- Workspace Entry: .
 - Recovery Entry: `.loom/progress/GH-64.md`
 - Review Entry: `.loom/reviews/GH-64.json`
 - Validation Entry: `git diff --check`; JSON validation for `.loom/**/*.json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-64 --json`; `loom suite carrier validate --target . --item GH-64 --json`; hosted checks after PR creation
