@@ -43,3 +43,22 @@ Lode 只维护资产定义、测试样例、版本和失效标记，不负责运
 ## 安全与数据处理
 
 不要提交真实凭据、会话状态、未脱敏执行现场、用户私有任务参数或真实业务客户数据。站点能力不应包含账号投放、内容排期、客户运营或广告决策等业务策略；这些属于上游系统。
+
+<!-- LOOM_BOOTSTRAP_START -->
+## Loom Bootstrap
+
+本仓库采用 Loom 来管理 agent 执行流程、工作事实载体、review、merge-ready 和 closeout；开始实现、review、merge-ready 或 closeout 前，先完成以下 bootstrap 检查。
+
+1. 检查 `.loom/installed-state.json`。
+2. 若本机没有 `loom`，执行：
+   `npm install -g @mc-and-his-agents/loom`
+3. 运行：
+   `loom doctor --target . --json`
+4. 若 Codex Loom plugin 缺失，执行：
+   `loom host install --host codex --scope user --apply --json`
+   `loom host register --host codex --scope user --apply --json`
+5. 重新运行：
+   `loom doctor --target . --json`
+
+不要把 Loom runtime、plugin 或 skills payload 写入仓库；它们属于用户级全局安装。
+<!-- LOOM_BOOTSTRAP_END -->
