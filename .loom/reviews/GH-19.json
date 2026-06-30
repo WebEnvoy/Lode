@@ -3,24 +3,24 @@
   "item_id": "GH-19",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "Docs-only boundary convergence is scoped to pending decisions and GH-19 Loom carriers; no executable schema, fixture, runtime, or external write behavior is introduced.",
+  "summary": "Closeout-only carrier sync records merged PR #34 and terminal GH-19 state; no executable schema, fixture, runtime, or external write behavior is introduced.",
   "reviewer": "codex",
-  "reviewed_head": "73846ec995ac700ed102dcc24df68e9316b61bad",
-  "reviewed_validation_summary": "`git diff --check`, `loom doctor --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom verify --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom fact-chain --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json`, and `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json` passed locally on 2026-06-30T06:56Z; hosted checks pending PR creation.",
+  "reviewed_head": "9b5ba9a9dadbe1204a78d63a1d8d8c5ae6fb0a72",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR #34, head bfd5709b6fcf563b0c85c644777c884a57cfd5ab, merge commit bc29fb0fea56786d1ba83b11f2ab2014f87c4cb3, and hosted run 28426657824 with all required checks passing.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
   "follow_ups": [
-    "Do not close issues until post-merge closeout records PR, merge commit, hosted run, and carrier consumption."
+    "Coordinator must post issue closeout comments and close covered issues after this closeout carrier PR is merged."
   ],
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "The PR records first-stage Lode docs boundaries and item-specific carrier metadata only; it does not alter product behavior, schema, API, runtime, package assets, fixtures, or external write behavior."
+    "reason": "The closeout-only change records terminal carrier facts after the already-merged docs-only PR; it does not alter product behavior, schema, API, runtime, package assets, fixtures, or external write behavior."
   },
   "consumed_inputs": {
     "spec": ".loom/specs/GH-19/spec.md",
     "plan": ".loom/specs/GH-19/plan.md",
     "suite_path": "minimal",
-    "validation": "git diff --check; loom doctor/verify/fact-chain; loom suite validate; loom suite carrier validate"
+    "validation": "git diff --check; post-merge PR #34 readback; hosted run 28426657824"
   }
 }
