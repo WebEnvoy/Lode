@@ -1,0 +1,15 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-19",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Minimal suite path is valid for this docs-only decision carrier; full suite remains not applicable until executable schemas, validators, package assets, fixtures, runtime fields, or write behavior are added.",
+  "reviewer": "codex",
+  "reviewed_head": "73846ec995ac700ed102dcc24df68e9316b61bad",
+  "reviewed_validation_summary": "`git diff --check`, `loom doctor`, `loom verify`, `loom fact-chain`, `loom suite validate --item GH-19`, and `loom suite carrier validate --item GH-19` passed locally before review.",
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "Require full suite when later PRs add real package/schema/fixture/runtime behavior."
+  ]
+}

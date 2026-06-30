@@ -1,0 +1,26 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-19",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "Docs-only boundary convergence is scoped to pending decisions and GH-19 Loom carriers; no executable schema, fixture, runtime, or external write behavior is introduced.",
+  "reviewer": "codex",
+  "reviewed_head": "73846ec995ac700ed102dcc24df68e9316b61bad",
+  "reviewed_validation_summary": "`git diff --check`, `loom doctor`, `loom verify`, `loom fact-chain`, `loom suite validate --item GH-19`, and `loom suite carrier validate --item GH-19` passed locally before review.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [
+    "Do not close issues until post-merge closeout records PR, merge commit, hosted run, and carrier consumption."
+  ],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The PR records first-stage Lode docs boundaries and item-specific carrier metadata only; it does not alter product behavior, schema, API, runtime, package assets, fixtures, or external write behavior."
+  },
+  "consumed_inputs": {
+    "spec": ".loom/specs/GH-19/spec.md",
+    "plan": ".loom/specs/GH-19/plan.md",
+    "suite_path": "minimal",
+    "validation": "git diff --check; loom doctor/verify/fact-chain; loom suite validate; loom suite carrier validate"
+  }
+}
