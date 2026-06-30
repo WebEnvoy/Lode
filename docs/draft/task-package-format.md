@@ -1,35 +1,12 @@
-# 任务包格式
+# Task Package Format Draft
 
-任务包用于将多个站点能力组合成可复用流程。
+- status: pointer
+- owner: Lode docs / contracts
+- linked issue: [#65](https://github.com/WebEnvoy/Lode/issues/65)
+- exit condition: remove this pointer after downstream references use ADR / contracts only.
 
-## 建议目录
+Workflow package / task package asset type, site capability dependency, normalized output dependency, verification requirement, and non-runtime boundary are accepted in [ADR 0004](../adr/0004-asset-types-and-registry.md).
 
-```text
-tasks/
-  publish-content/
-    task.json
-    README.md
-    examples/
-    tests/
-```
+Judgment: this draft has no remaining independent implementation value. ADR 0004 accepts workflow-package as an asset boundary; runner, schedules, visual builder, and marketplace behavior remain outside Stage 2.
 
-## task.json 可能包含
-
-```json
-{
-  "task_id": "publish-content",
-  "name": "发布内容",
-  "inputs": [],
-  "steps": [],
-  "resource_requirements": [],
-  "verification": []
-}
-```
-
-## 设计要求
-
-- 任务封装应声明输入、步骤、资源需求和验证方式；
-- 写入类任务必须包含写入前检查和写入后验证；
-- 任务不应保存用户私有业务参数；
-- 任务可以引用站点能力，但不应依赖 Harbor 内部实现；
-- 任务包应依赖站点能力的 normalized output contract，不应直接解析 API、DOM、network 或 Snapshot 的 raw payload。
+Do not use this draft as implementation truth.
