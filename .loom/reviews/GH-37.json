@@ -6,7 +6,7 @@
   "summary": "The docs-only ADR and GH-37 carrier stay within the Lode Stage 2 package format lane and establish a usable package metadata contract without creating package/runtime implementation.",
   "reviewer": "codex-coordinator",
   "reviewed_head": "7f41c7ad75cccd17658ebf57c436314836f9ebf6",
-  "reviewed_validation_summary": "On PR #56 head 7f41c7ad75cccd17658ebf57c436314836f9ebf6, git diff --check, JSON validation, loom verify, loom fact-chain, loom suite validate, and loom suite carrier validate passed.",
+  "reviewed_validation_summary": "`git diff --check`, `git diff --cached --check`, Markdown file existence check, `loom doctor --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom verify --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --item GH-37 --json`, and post-repair `loom fact-chain --target /Volumes/2T/.codex/worktrees/stage2/lode-package-format --json` pass.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
