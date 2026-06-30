@@ -14,7 +14,7 @@
 - Current Checkpoint: merge
 - Current Stop: Docs-only first-stage boundary convergence is ready for hosted PR checks.
 - Next Step: Wait for hosted checks; do not merge or close issues in this thread.
-- Blockers: Local `loom doctor` / `loom verify` report installed-state / legacy surface blockers; local `loom fact-chain` reports missing init-result through the wrapper/target path. Hosted workflow primes Loom host state and is the authoritative gate for this PR.
+- Blockers: None
 - Latest Validation Summary: `git diff --check`, `loom doctor --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom verify --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom fact-chain --target /Volumes/2T/.codex/worktrees/e0c7/Lode --json`, `loom suite validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json`, and `loom suite carrier validate --target /Volumes/2T/.codex/worktrees/e0c7/Lode --item GH-19 --json` passed locally on 2026-06-30T06:56Z; hosted checks pending PR creation.
 - Recovery Boundary: Continue from this branch and GH-19 carrier; do not reuse INIT-0001.
 - Current Lane: docs-only boundary convergence
