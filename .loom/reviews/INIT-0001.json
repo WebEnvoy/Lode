@@ -1,17 +1,25 @@
 {
   "schema_version": "loom-review/v1",
   "item_id": "INIT-0001",
-  "decision": "fallback",
+  "decision": "allow",
   "kind": "general_review",
-  "summary": "Bootstrap has not entered formal review yet.",
-  "reviewer": "not yet assigned",
-  "reviewed_head": "bootstrap-placeholder",
-  "reviewed_validation_summary": "Bootstrap manifest exists; init-result JSON can be read mechanically; the first work item, status surface, and spec/plan artifacts exist.",
-  "fallback_to": "admission",
-  "blocking_issues": [
-    "Formal review starts only after downstream work replaces the bootstrap placeholder item."
-  ],
+  "summary": "Lode boundary documentation semantics are approved for docs-only PR #29.",
+  "reviewer": "codex",
+  "reviewed_head": "e9cf3ee5905af31aa452931789142368e304fdc0",
+  "reviewed_validation_summary": "Bootstrap result JSON can be read mechanically; the first work item, status surface, and spec/plan artifacts exist.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
   "follow_ups": [
-    "Record the first real semantic review before asking merge checkpoint to consume reviewer judgment."
-  ]
+    "This review does not approve Phase 2 capability/package/schema implementation."
+  ],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored review covers only Lode boundary documentation semantics for the current PR."
+  },
+  "consumed_inputs": {
+    "scope": "temporary bootstrap-bound docs-only gate",
+    "docs": "docs/adr/pending-decisions.md",
+    "suite_path": "not_applicable"
+  }
 }
