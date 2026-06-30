@@ -15,7 +15,7 @@
 - Current Stop: PR #69 is ready for hosted merge gate on the GH-70 workflow-only maintenance carrier.
 - Next Step: Run hosted checks for PR #69, merge after required checks pass, then record closeout evidence for GH-70.
 - Blockers: None recorded.
-- Latest Validation Summary: Workflow head ef97e3fcb63ac85e9306583682c86043a443f911 changed only `LOOM_VERSION: 0.21.1` to `LOOM_VERSION: 0.22.1`; earlier hosted basic checks passed and the carrier now binds this maintenance PR to GH-70 instead of INIT-0001.
+- Latest Validation Summary: PR head 73d25b7829eb18edaf0b12a68ec1d0a02cbe3346 contains the Loom workflow pin update to 0.22.1 plus the GH-70 item-specific maintenance carrier; no product docs, product contracts, code, roadmap, issue tree, plugin cache path, or historical INIT-0001 migration changed.
 - Recovery Boundary: This carrier approves only Loom workflow version-pin maintenance; it does not approve product, schema, API, runtime, fixture, roadmap, issue-tree, or governance process changes.
 - Current Lane: ci-maintenance
 
