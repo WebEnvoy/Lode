@@ -1,0 +1,15 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-52",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Minimal suite path is valid for this docs-only Stage 2 resource requirements and validator contract; full suite remains not applicable until executable package, schema, fixture, validator, registry, runtime, or write-side behavior is added.",
+  "reviewer": "codex-lode-execution-thread",
+  "reviewed_head": "b281d6698362cb24c74825f2c9f590645bdcca90",
+  "reviewed_validation_summary": "Local validation passed for head b281d6698362cb24c74825f2c9f590645bdcca90: git diff --check; JSON validation; loom fact-chain; loom suite validate; loom suite carrier validate.",
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "Require full suite when later PRs add real capability package files, JSON Schema files, fixtures, validator code, registry behavior, runtime behavior, or write-like execution."
+  ]
+}
