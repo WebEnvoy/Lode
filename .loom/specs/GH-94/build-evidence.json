@@ -1,0 +1,83 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "delegations": [],
+  "ownership_constraints": {
+    "write_scope": [
+      "sites/example/read-public-page/manifest.json",
+      "sites/example/read-public-page/lifecycle-metadata.json",
+      ".loom/work-items/GH-94.md",
+      ".loom/progress/GH-94.md",
+      ".loom/specs/GH-94/*",
+      ".loom/status/current.md",
+      ".loom/bootstrap/init-result.json"
+    ],
+    "forbidden_scope": [
+      "fixture payloads",
+      "post-check logic",
+      "validator/packer/tester/registry code",
+      "package manager initialization or dependencies",
+      "lockfile implementation",
+      "App install, pin, update, or rollback UI",
+      "runtime behavior or live Harbor fact matching",
+      "provider/profile/session/cookie/token/raw evidence fields",
+      "hosted registry, marketplace, sync, crawler queue, benchmark contract, or true write execution",
+      "Core, Harbor, App, or other repositories",
+      "merge or issue closeout"
+    ],
+    "owner": "repo-controller"
+  },
+  "integration_evidence": [
+    {
+      "carrier": "lifecycle_metadata",
+      "locator": "sites/example/read-public-page/lifecycle-metadata.json",
+      "summary": "Package-local lifecycle metadata declares version identity, proposed lifecycle state, deprecation status, invalidation status, lock input fields, failure mapping, and forbidden runtime identity fields."
+    },
+    {
+      "carrier": "manifest",
+      "locator": "sites/example/read-public-page/manifest.json",
+      "summary": "Manifest marks the GH-94 version/lifecycle metadata asset ref as present and records asset id/version plus quick lifecycle/deprecation/invalidation/lock summary."
+    },
+    {
+      "carrier": "task_carrier",
+      "locator": ".loom/specs/GH-94/task-carrier.md",
+      "summary": "GH-94 is the primary Loom item; GH-87 is mirrored as the parent FR and is not closed by this PR."
+    }
+  ],
+  "validation": {
+    "status": "passed_with_build_adapter_gap",
+    "commands": [
+      {
+        "command": "jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json .loom/bootstrap/init-result.json .loom/specs/GH-94/build-evidence.json",
+        "result": "passed",
+        "generated_at": "2026-07-01T17:51:37Z"
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed",
+        "generated_at": "2026-07-01T17:51:37Z"
+      },
+      {
+        "command": "loom fact-chain --target . --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T17:51:37Z"
+      },
+      {
+        "command": "loom suite validate --target . --item GH-94 --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T17:51:37Z"
+      },
+      {
+        "command": "loom suite carrier validate --target . --item GH-94 --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T17:51:37Z"
+      },
+      {
+        "command": "loom build --target . --item GH-94 --build-evidence .loom/specs/GH-94/build-evidence.json --json",
+        "result": "block",
+        "generated_at": "2026-07-01T17:54:20Z",
+        "classification": "loom_build_adapter_gap",
+        "summary": "Blocked on embedded suite CLI JSON consumption after direct suite and carrier validations passed."
+      }
+    ]
+  }
+}
