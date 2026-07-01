@@ -3,19 +3,19 @@
   "item_id": "GH-103",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-103 implementation is approved. The package now has a static write-deferred guardrail asset, consistent manifest/lock/registry/lifecycle/README discoverability, and validator checks that fail closed if deferred write-side modes drift into executable claims. The change remains scoped to Lode and does not add runtime or write execution.",
+  "summary": "GH-103 implementation review remains approved for the write-deferred guardrail PR. This post-merge closeout carrier repins the previously consumed approval to merge commit d7a2b96c38badf8d5259d946c2ca521400d67e65 because PR #132 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T20:55:06Z",
-  "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
-  "reviewed_validation_summary": "Review rebinding refresh on 2026-07-01T20:55:06Z: PR #132 head `b569668d9bcd1795fe0440e094fcfa09c8e06444` contains only GH-103 carrier checkpoint and build-evidence refresh over previously reviewed head `f38eadf8f3255f24b83f51e6400fde2ebb59e0c0`; local `git diff --check origin/main...HEAD`, fact-chain, suite validate, suite carrier validate, review read, and PR metadata preflight passed. Hosted run `28547106872` passed `demo-bootstrap`, `loom-check`, `py-compile`, and `repo-local-cli`; `loom-pr-merge-gate` failed because the review artifact was stale for `b569668d9bcd1795fe0440e094fcfa09c8e06444`. This review-only refresh binds semantic review to `b569668d9bcd1795fe0440e094fcfa09c8e06444`.",
+  "authored_at": "2026-07-01T21:02:22Z",
+  "reviewed_head": "d7a2b96c38badf8d5259d946c2ca521400d67e65",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #132 merged to `main` at `d7a2b96c38badf8d5259d946c2ca521400d67e65`; current-head hosted run `28547406559` passed required checks including `repo-local-cli`, `loom-check`, and `loom-pr-merge-gate`; issue #103 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/103#issuecomment-4860003988 and issue #103 closed at 2026-07-01T21:01:29Z. This closeout branch records carrier-only terminal state.",
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Implementation changes are limited to the static GH-103 guardrail, validator guardrail checks, sample package metadata, and item-specific Loom carriers. No true write execution, runtime behavior, or cross-repo code was introduced."
+    "reason": "Authored implementation review was consumed before PR #132 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   },
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
-    "Post-merge closeout must record PR, merge commit, hosted checks, validation commands, and remaining risk before closing issue #103."
+    "Parent FR #89 can be evaluated for closeout after GH-103 carrier sync merges."
   ],
   "consumed_inputs": {
     "work_item": ".loom/work-items/GH-103.md",
@@ -41,8 +41,12 @@
     "loom_build_result": "blocked_known_tool_gap",
     "loom_build_classification": "loom_build_adapter_gap",
     "branch": "work/GH-103-write-guardrail",
-    "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
+    "reviewed_head": "d7a2b96c38badf8d5259d946c2ca521400d67e65",
     "pr": "https://github.com/WebEnvoy/Lode/pull/132",
-    "hosted_run_classified": "https://github.com/WebEnvoy/Lode/actions/runs/28547106872"
+    "hosted_run_classified": "https://github.com/WebEnvoy/Lode/actions/runs/28547106872",
+    "hosted_runs": [
+      "https://github.com/WebEnvoy/Lode/actions/runs/28547406559"
+    ],
+    "issue_closeout": "https://github.com/WebEnvoy/Lode/issues/103#issuecomment-4860003988"
   }
 }
