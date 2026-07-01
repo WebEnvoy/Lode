@@ -2,21 +2,21 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-73
-- Goal: Docs-only 收口 milestone #8「Lode 资产与校验架构基线」的技术架构基线，覆盖 GH-72 至 GH-81。
-- Scope: 新增 Lode 技术架构基线 ADR，更新 contracts 索引和 AGENTS 技术/依赖/测试/安全禁线，并记录本事项的 GH-73 Loom carrier 与 ownership constraints。
-- Execution Path: docs-only/tech-baseline-lode
+- Item ID: GH-84
+- Goal: Upgrade the repository Loom runtime workflow pin to 0.25.0.
+- Scope: Runtime-upgrade-only maintenance PR that updates `.github/workflows/loom-check.yml`, declares the v0.25 PR metadata carrier in `.loom/companion/repo-interface.json`, and records item-specific Loom carrier evidence.
+- Execution Path: ci-maintenance/loom-runtime-upgrade
 - Workspace Entry: .
-- Recovery Entry: `.loom/progress/GH-73.md`
-- Review Entry: `.loom/reviews/GH-73.json`
-- Validation Entry: `git diff --check`; Markdown/JSON readability checks; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-73 --json`; `loom suite carrier validate --target . --item GH-73 --json`; PR body/head readback.
-- Closing Condition: PR is ready for review with hosted checks classified; merge and issue closeout are explicitly out of scope for this thread.
+- Recovery Entry: .loom/progress/GH-84.md
+- Review Entry: .loom/reviews/GH-84.json
+- Validation Entry: `git diff --check`; `jq empty .loom/companion/repo-interface.json`; `loom suite validate --item GH-84`; `loom runtime-upgrade check --item GH-84`; hosted GitHub checks for PR #85.
+- Closing Condition: PR #85 is merged, runtime-upgrade closeout evidence is recorded, issue #84 is closed, and main reads back Loom workflow pin 0.25.0.
 - Current Checkpoint: merge
-- Current Stop: Closeout carrier sync is ready for hosted gate and merge.
-- Next Step: Merge this closeout-only carrier PR; no product work remains in this batch.
+- Current Stop: Merge-ready carrier refresh for the Loom 0.25.0 runtime-upgrade maintenance PR.
+- Next Step: Run PR gate and hosted checks for PR #85 at the current head, then merge only if they pass.
 - Blockers: None recorded.
-- Latest Validation Summary: Post-merge closeout consumed PR https://github.com/WebEnvoy/Lode/pull/82, PR head 073e5dd5881a3df27ca6438fcdb45336c3c826b2, merge commit b2de5d87041b6333b3da29f87c33f8e97a3fc4a3, target branch main, hosted run https://github.com/WebEnvoy/Lode/actions/runs/28493861404, closed issues #72-#81, and closed milestone Lode 资产与校验架构基线 (#8). Scope remains docs-only technical architecture baseline; capability package/schema/fixture/validator/packer/tester/registry/runtime implementation were not completed.
-- Recovery Boundary: Closed docs-only planning batch. Reopen or create a new Work Item if future work changes capability package/schema/fixture/validator/packer/tester/registry/runtime implementation.
+- Latest Validation Summary: The initial PR updated the workflow pin to 0.25.0 and added the v0.25 repo metadata declaration/spec. Hosted checks consumed v0.25.0 and exposed that fact-chain and semantic review must be item-specific for GH-84; this refresh aligns the current fact-chain and records workflow-only review evidence. Product/runtime tests remain not applicable.
+- Recovery Boundary: Runtime-upgrade-only maintenance. Re-review if the diff touches product code, product docs semantics, schema/API/runtime behavior, fixtures, releases, workstation plugin/cache state, or dependencies unrelated to Loom.
 - Current Lane: merge-ready
 
 ## Runtime Evidence
@@ -24,16 +24,16 @@
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: `.loom/progress/GH-73.md`
-- Lane Entry: lode-tech-baseline
+- Verification Entry: .loom/progress/GH-84.md
+- Lane Entry: ci-maintenance
 
 ## Sources
 
-- Static Truth: `.loom/work-items/GH-73.md`
-- Dynamic Truth: `.loom/progress/GH-73.md`
-- Locator Truth: `.loom/bootstrap/init-result.json`
-- Fact Chain CLI: `loom fact-chain --target . --json`
+- Static Truth: .loom/work-items/GH-84.md
+- Dynamic Truth: .loom/progress/GH-84.md
+- Locator Truth: .loom/bootstrap/init-result.json
+- Fact Chain CLI: loom fact-chain --target . --json
 
 ## Notes
 
-- 2026-07-01: Post-merge closeout recorded PR https://github.com/WebEnvoy/Lode/pull/82, merge commit `b2de5d87041b6333b3da29f87c33f8e97a3fc4a3`, hosted run https://github.com/WebEnvoy/Lode/actions/runs/28493861404, closed issues #72-#81, and closed milestone Lode 资产与校验架构基线 (#8).
+- 2026-07-01: Runtime-upgrade carrier refreshed for Loom 0.25.0 maintenance PR #85; this does not claim product or runtime implementation.
