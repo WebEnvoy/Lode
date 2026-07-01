@@ -1,0 +1,41 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-100",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-100 implementation is approved for static package ref / lock semantics. The sample package now has `package-lock.json`, manifest/local registry/lifecycle metadata expose package lock identity, the stdlib validator checks package lock resolution, locked asset refs, and invalidation behavior, and the change introduces no dependencies, generated outputs, App install/update behavior, hosted registry behavior, Core Run Record/result envelope behavior, runtime behavior, Core/Harbor/App code, or write capability.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T19:49:04Z",
+  "reviewed_head": "65956788ae24247467685f9387b0e5d3e49b5096",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json`, `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-100 --json`, and `loom suite carrier validate --target . --item GH-100 --json`; both validator invocations returned status `passed` with no warnings and checked `package_lock`; `loom build --target . --item GH-100 --build-evidence .loom/specs/GH-100/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Review binds the implementation head `65956788ae24247467685f9387b0e5d3e49b5096`; subsequent changes are limited to review/progress/status carriers and PR metadata, with no package lock asset, validator, package metadata, runtime, dependency, Core, Harbor, App, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-101 through GH-103 must cover sample read package closeout, Core fixture consumption, and deferred write guardrail."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-100.md",
+    "recovery_entry": ".loom/progress/GH-100.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-100/spec.md",
+    "plan": ".loom/specs/GH-100/plan.md",
+    "implementation_contract": ".loom/specs/GH-100/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-100/build-evidence.json",
+    "package_lock": "sites/example/read-public-page/package-lock.json",
+    "local_registry_index": "registry/local-packages.json",
+    "validator_cli": "tools/lode_validate_package.py",
+    "sample_package": "sites/example/read-public-page",
+    "readme": "README.md",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-100 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-100 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-100-package-ref-lock",
+    "reviewed_head": "65956788ae24247467685f9387b0e5d3e49b5096"
+  }
+}
