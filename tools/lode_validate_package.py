@@ -14,12 +14,14 @@ SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
 POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
+REQUIRED_FAILURE_CLASSES = {"invalid_contract", "resource_unavailable", "site_changed", "empty_result"}
 REQUIRED_ASSET_ROLES = {
     "input_schema",
     "normalized_output_schema",
     "resource_requirements",
     "version_lifecycle_metadata",
     "fixture",
+    "failure_mapping",
 }
 FORBIDDEN_KEYS = {
     "cookie",
@@ -269,6 +271,56 @@ def validate_lifecycle(report: Report, lifecycle: dict[str, Any], asset: dict[st
     scan_forbidden_keys(report, lifecycle, path)
 
 
+def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        failure_mapping,
+        [
+            "schema_version",
+            "failure_mapping_id",
+            "failure_mapping_version",
+            "package_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "classes",
+        ],
+        path,
+    )
+    if failure_mapping.get("schema_version") != "lode.failure-mapping.v0":
+        add_error(report, "unsupported_version", path, "Unsupported failure mapping schema version.", "Use `lode.failure-mapping.v0`.")
+    if failure_mapping.get("failure_mapping_id") != asset.get("failure_mapping_id") or failure_mapping.get("failure_mapping_version") != asset.get("failure_mapping_version"):
+        add_error(report, "invalid_contract", path, "Failure mapping identity/version does not match manifest asset ref.", "Keep failure mapping metadata aligned.")
+    if failure_mapping.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Failure mapping package_ref does not match manifest.", "Bind failure mapping to the package ref.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if failure_mapping.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", path, f"Failure mapping `{key}` does not match manifest capability.", "Bind failure mapping to the package capability.")
+    classes = failure_mapping.get("classes")
+    if not isinstance(classes, list) or not classes:
+        add_error(report, "invalid_contract", path, "Failure mapping must declare classes.", "Add failure class mapping entries.")
+    else:
+        class_ids = {item.get("lode_failure_class") for item in classes if isinstance(item, dict)}
+        missing = sorted(REQUIRED_FAILURE_CLASSES - class_ids)
+        if missing:
+            add_error(report, "invalid_contract", path, f"Failure mapping missing required classes: {', '.join(missing)}.", "Declare the GH-98 required failure classes.")
+        for item in classes:
+            if isinstance(item, dict):
+                require_keys(report, item, ["lode_failure_class", "trigger", "owner", "core_mapping", "app_mapping"], f"{path}#classes")
+                validate_mapping_consumer(report, item.get("core_mapping"), path, "core_mapping")
+                validate_mapping_consumer(report, item.get("app_mapping"), path, "app_mapping")
+    scan_forbidden_keys(report, failure_mapping, path)
+
+
+def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: str) -> None:
+    if not isinstance(mapping, dict):
+        add_error(report, "invalid_contract", f"{path}#{field}", "Failure mapping consumer entry must be an object.", "Declare consumer mapping details.")
+        return
+    required = ["category"] if field == "core_mapping" else ["display"]
+    require_keys(report, mapping, required, f"{path}#{field}")
+
+
 def validate_fixture(
     report: Report,
     fixture: dict[str, Any],
@@ -477,6 +529,8 @@ def validate_package(root: Path) -> Report:
         validate_resource_requirements(report, assets["resource_requirements"], refs["resource_requirements"], manifest)
     if isinstance(assets.get("version_lifecycle_metadata"), dict):
         validate_lifecycle(report, assets["version_lifecycle_metadata"], refs["version_lifecycle_metadata"], manifest)
+    if isinstance(assets.get("failure_mapping"), dict):
+        validate_failure_mapping(report, assets["failure_mapping"], refs["failure_mapping"], manifest)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:
         validate_fixture(report, assets["fixture"], refs["fixture"], manifest, refs["normalized_output_schema"])
     if "post_check" in refs:

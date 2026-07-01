@@ -58,8 +58,8 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 ## 本地校验
 
 当前最小 validator CLI 使用 Python 标准库，离线校验单个 capability package 的
-manifest、schema、fixture 和 post-check 引用，不访问真实账号、浏览器 runtime、
-Core、Harbor 或 App：
+manifest、schema、fixture、post-check 和 failure mapping 引用，不访问真实账号、
+浏览器 runtime、Core、Harbor 或 App：
 
 ```bash
 python3 tools/lode_validate_package.py sites/example/read-public-page --json
