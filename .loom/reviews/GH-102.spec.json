@@ -5,9 +5,9 @@
   "kind": "spec_review",
   "summary": "GH-102 spec is approved for a minimal Core consumption fixture contract. The spec keeps scope limited to a Lode-side repo-local fixture and discoverability metadata for package admission and schema validation. It explicitly excludes Core/Harbor/App code, Core result envelope schema, runtime/live evidence, hosted registry, and write behavior.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T20:23:00Z",
-  "reviewed_head": "812fcae50345e7df730bd7bcd0a574aec7e4cf21",
-  "reviewed_validation_summary": "Spec review consumed `.loom/specs/GH-102/spec.md`, `.loom/specs/GH-102/plan.md`, `.loom/specs/GH-102/implementation-contract.md`, and `.loom/specs/GH-102/task-carrier.md`; `loom suite validate --target . --item GH-102 --json` and `loom suite carrier validate --target . --item GH-102 --json` passed at 2026-07-01T20:22:30Z.",
+  "authored_at": "2026-07-01T20:27:00Z",
+  "reviewed_head": "9cfa003ea3a10200936b5253a6b7f8001df32035",
+  "reviewed_validation_summary": "Review refresh after PR #130 gate classification: product implementation head `9cfa003ea3a10200936b5253a6b7f8001df32035` contains only GH-102 scoped changes; local validation passed (`python3 tools/lode_validate_package.py sites/example/read-public-page --json`, explicit registry-index validator, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, `jq empty`, GH-102 fixture `jq -e`, `git diff --check HEAD~2..HEAD`, `loom fact-chain`, `loom suite validate`, `loom suite carrier validate`, and `loom review read`). Hosted run `28545559519` had `py-compile`, `demo-bootstrap`, `repo-local-cli`, and `loom-check` pass; `loom-pr-merge-gate` failed as review/validation-summary drift, so this carrier refresh realigns review and latest validation summary without product changes.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
@@ -22,6 +22,6 @@
     "suite_validation_result": "pass",
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-102 --json",
     "suite_carrier_validation_result": "pass",
-    "reviewed_head": "812fcae50345e7df730bd7bcd0a574aec7e4cf21"
+    "reviewed_head": "9cfa003ea3a10200936b5253a6b7f8001df32035"
   }
 }
