@@ -8,13 +8,28 @@
 
 当前尚未初始化 `package.json`。新增工具后，优先统一为：`pnpm install` 安装依赖，`pnpm validate` 校验包和 Schema，`pnpm test` 运行测试，`pnpm lint` 检查格式，`pnpm build` 打包资产。新增命令必须写入 `package.json` 并同步 README 或 `docs/`。
 
+当前技术架构基线是 docs-only；不得为了文档基线 PR 初始化 `package.json`、安装依赖、创建 CLI、生成 schema、创建 fixture、写 validator/packer/tester/registry 代码或提交工具输出。
+
 ## 代码风格与命名规范
 
 本仓库以 JSON / YAML / Markdown 为主，TypeScript 只用于 validator、packer、tester 和 registry tooling。站点目录使用稳定 slug，例如 `sites/xiaohongshu/`；能力 ID 使用小写短横线，例如 `publish-note`、`read-comments`；任务封装使用业务中性命名，例如 `collect-details`。Markdown 用于说明，正式执行依赖应落到结构化 Schema。
 
+## 技术架构基线约束
+
+- [ADR 0005](docs/adr/0005-lode-technical-architecture-baseline.md) 是当前技术基线入口；后续 package/schema/tooling Work Item 先引用它，再细化真实文件和命令。
+- JSON / YAML / Markdown 是 Lode 资产主载体；JSON Schema 是正式结构化合同载体，Markdown 只能说明和索引。
+- TypeScript 只用于 offline validator、packer、tester 和 local registry tooling；不得把 Lode tooling 做成 runtime runner、browser automation runner、Core executor 或 App UI。
+- validator 只校验 manifest、JSON Schema、fixture、post-check、local registry 和引用完整性；不得连接生产 runtime、读取真实账号、匹配 live Harbor facts 或执行真实写入。
+- packer 只打包已通过本地校验的资产；local registry tooling 只做本地索引和引用验证。hosted registry、marketplace、team sync 和 public contribution review 不得提前塞进 v0 tooling。
+- manifest 描述身份、版本、生命周期、资源需求和引用；schema 描述 input/output/source/fixture/post-check shape；fixture/post-check 用于验证，不是 live evidence store。
+- 任何能力包、fixture、post-check、normalizer 或 registry 文件不得包含 Cookie、Token、profile state、runtime session、live tab、raw evidence body、完整 DOM/HAR/screenshot、生产 payload 或用户业务数据。
+- 修改技术基线时只改当前 Work Item 直接需要的 docs / contracts / AGENTS / item-specific Loom carrier；不要顺带重排路线图、创建代码骨架或扩大到其他仓。
+
 ## 测试指南
 
 测试应覆盖 schema validation、package validation、fixture validation、capability dry-run tests 和 Markdown link check。测试样例必须可脱敏复现，不依赖真实账号、真实会话或私有业务数据。新增站点能力至少提供最小 fixture、输入输出示例、前置检查和后置验证说明。
+
+docs-only 基线 PR 的最小验证是 `git diff --check`、Markdown/JSON 可读性检查、Loom fact-chain / suite carrier 检查以及 PR body/head readback；只有引入真实 code/schema/runtime/fixture/tooling 行为时才升级到对应测试命令。
 
 ## 提交与 Pull Request 规范
 
