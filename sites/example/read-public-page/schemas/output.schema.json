@@ -334,7 +334,11 @@
     "result_kind": "content_detail",
     "core_envelope_owner": "WebEnvoy Core",
     "failure_class_mapping": {
+      "invalid_contract": "invalid_contract",
+      "resource_unavailable": "resource_unavailable",
       "empty": "empty_result",
+      "empty_result": "empty_result",
+      "site_changed": "site_changed",
       "source_unavailable": "source_unavailable",
       "evidence_unavailable": "evidence_unavailable",
       "not_normalizable": "normalization_failed",

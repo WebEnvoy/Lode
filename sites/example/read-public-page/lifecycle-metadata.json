@@ -17,6 +17,7 @@
       "resource_requirements_present",
       "redacted_fixture_present",
       "post_check_present",
+      "failure_mapping_present",
       "validator_report_passed",
       "core_fixture_consumption_checked"
     ],
@@ -41,7 +42,8 @@
       "normalized output required fields or source/evidence ref policy changes",
       "resource requirement profile semantics change",
       "fixture source shape, redaction policy, normalized sample, or source/evidence placeholder binding changes",
-      "post-check result contract or success conditions change"
+      "post-check result contract or success conditions change",
+      "failure mapping category, outcome hint, or consumer boundary changes"
     ],
     "non_breaking_change_policy": [
       "documentation wording can change without a version bump",
@@ -93,6 +95,11 @@
         "version": "0.1.0"
       },
       {
+        "role": "failure_mapping",
+        "ref": "example.read-public-page.failure-mapping",
+        "version": "0.1.0"
+      },
+      {
         "role": "version_lifecycle_metadata",
         "ref": "example.read-public-page.lifecycle",
         "version": "0.1.0"
@@ -135,6 +142,9 @@
     "unsupported_version": "Consumer requested a package or asset version that this package does not declare.",
     "deprecated": "Consumer requested a package version whose lifecycle metadata marks it deprecated.",
     "invalid_contract": "Lifecycle, version, lock, deprecation, or invalidation metadata is malformed or contradicts the manifest.",
+    "resource_unavailable": "Current Harbor facts cannot satisfy the package resource requirements.",
+    "site_changed": "The public source shape or required field mapping no longer matches the package fixture and post-check expectations.",
+    "empty_result": "A valid read produced no public content and should be displayed as an empty state.",
     "temporarily_invalid": "Package is marked temporarily unavailable pending repair.",
     "verification_failed": "A declared fixture, post-check, validator, or Core fixture consumption check failed."
   },
