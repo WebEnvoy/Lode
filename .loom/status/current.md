@@ -41,3 +41,4 @@
 - 2026-07-01: CodeGraph was not initialized in this worktree, so structural lookup fell back to `rg --files` and direct reads without writing `.codegraph/`.
 - 2026-07-01: GH-96 keeps post-check output, failure mapping finalization, Core fixture consumption, and write guardrail behavior deferred to GH-97 through GH-103.
 - 2026-07-01: `loom build` was classified as a build adapter gap because the embedded flow did not consume direct suite JSON or the already-present `ownership_constraints`; direct suite and carrier validation passed.
+- 2026-07-01: Added GH-96 spec and semantic review records for implementation head `20b3c1c5cb98052c5035668de354f95cbb2344cd`.

@@ -1,0 +1,42 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-96",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-96 implementation is approved for PR creation. The validator is stdlib-only, offline, reads the sample package, emits the required report shape, checks manifest/schema/resource/lifecycle/fixture/post-check refs, treats the planned GH-97 post-check as a proposed-package warning, and does not introduce dependencies, runtime behavior, Core/Harbor/App changes, registry behavior, or write capability.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T18:44:30Z",
+  "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for validator report shape, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, workflow YAML parse, package/Loom JSON checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-96 --json`, and `loom suite carrier validate --target . --item GH-96 --json`; validator returned `passed_with_warnings` with only the expected GH-97 planned post-check warning; `loom build --target . --item GH-96 --build-evidence .loom/specs/GH-96/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review binds to GH-96 implementation head `20b3c1c5cb98052c5035668de354f95cbb2344cd`; subsequent PR setup changes are limited to review/progress/status carriers and PR metadata, with no validator CLI, sample package, workflow, runtime, dependency, Core/Harbor/App, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-97 must define post-check output before the planned post-check warning can become a clean pass.",
+    "GH-98 must define failure mapping before Core/App category consumption can be claimed.",
+    "GH-99 through GH-103 must cover local package resolution, package ref/lock, sample package closeout, Core fixture consumption, and deferred write guardrail."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-96.md",
+    "recovery_entry": ".loom/progress/GH-96.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-96/spec.md",
+    "plan": ".loom/specs/GH-96/plan.md",
+    "implementation_contract": ".loom/specs/GH-96/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-96/build-evidence.json",
+    "validator_cli": "tools/lode_validate_package.py",
+    "readme": "README.md",
+    "workflow": ".github/workflows/loom-check.yml",
+    "sample_package": "sites/example/read-public-page",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-96 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-96 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-96-validator-cli",
+    "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd"
+  }
+}
