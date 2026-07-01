@@ -42,7 +42,9 @@
     {
       "role": "normalized_output_schema",
       "path": "schemas/output.schema.json",
-      "status": "planned",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
+      "schema_version": "0.1.0",
       "work_item": "GH-92"
     },
     {
@@ -66,7 +68,7 @@
   ],
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Output schema, fixture, resource requirement, and post-check assets are planned in follow-up Work Items before stable admission."
+    "Fixture, resource requirement, and post-check assets are planned in follow-up Work Items before stable admission."
   ],
   "forbidden_contents": [
     "cookies",
