@@ -3,14 +3,14 @@
   "item_id": "GH-98",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-98 implementation is approved for defining a central sample failure mapping and validator consumption. The package now exposes the required classes `invalid_contract`, `resource_unavailable`, `site_changed`, and `empty_result`; the stdlib validator requires and checks the asset; no dependency, runtime, Core, Harbor, App, or write-capability behavior is introduced.",
+  "summary": "GH-98 implementation review remains approved for the failure mapping PR. This post-merge closeout carrier repins the previously consumed approval to merge commit f4e609d30fd42779b548b3e267aee38e1cf990fd because the implementation branch was deleted after PR #122 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T19:22:20Z",
-  "reviewed_head": "ae59a0d27c02571b439e6289df8cd993f5c6212b",
-  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json` with status `passed` and no warnings, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-98 --json`, and `loom suite carrier validate --target . --item GH-98 --json`; `loom build --target . --item GH-98 --build-evidence .loom/specs/GH-98/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "authored_at": "2026-07-01T19:26:26Z",
+  "reviewed_head": "f4e609d30fd42779b548b3e267aee38e1cf990fd",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #122 merged to `main` at `f4e609d30fd42779b548b3e267aee38e1cf990fd`; hosted run `28542214912` passed required checks including `repo-local-cli` validator execution and `loom-pr-merge-gate`; issue #98 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/98#issuecomment-4859339766 and issue #98 closed at 2026-07-01T19:25:37Z. This closeout branch records carrier-only terminal state.",
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Review binds the implementation head `ae59a0d27c02571b439e6289df8cd993f5c6212b`; subsequent changes are limited to review/progress/status carriers and PR metadata, with no failure mapping asset, validator, package metadata, runtime, dependency, Core, Harbor, App, or external behavior changes."
+    "reason": "Authored implementation review was consumed before PR #122 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   },
   "fallback_to": null,
   "blocking_issues": [],
@@ -35,6 +35,9 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-98 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-98-failure-mapping",
-    "reviewed_head": "ae59a0d27c02571b439e6289df8cd993f5c6212b"
+    "reviewed_head": "f4e609d30fd42779b548b3e267aee38e1cf990fd",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/122",
+    "hosted_run": "https://github.com/WebEnvoy/Lode/actions/runs/28542214912",
+    "issue_closeout": "https://github.com/WebEnvoy/Lode/issues/98#issuecomment-4859339766"
   }
 }
