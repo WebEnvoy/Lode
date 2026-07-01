@@ -11,13 +11,13 @@
 - Review Entry: `.loom/reviews/GH-73.json`
 - Validation Entry: `git diff --check`; Markdown/JSON readability checks; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-73 --json`; `loom suite carrier validate --target . --item GH-73 --json`; PR body/head readback.
 - Closing Condition: PR is ready for review with hosted checks classified; merge and issue closeout are explicitly out of scope for this thread.
-- Current Checkpoint: closed_out
-- Current Stop: Closed out by coordinator after merge, issue closure, and milestone closure.
-- Next Step: None for this batch. Start a new real Work Item for any code skeleton or implementation work.
+- Current Checkpoint: merge
+- Current Stop: Closeout carrier sync is ready for hosted gate and merge.
+- Next Step: Merge this closeout-only carrier PR; no product work remains in this batch.
 - Blockers: None recorded.
 - Latest Validation Summary: Post-merge closeout consumed PR https://github.com/WebEnvoy/Lode/pull/82, PR head 073e5dd5881a3df27ca6438fcdb45336c3c826b2, merge commit b2de5d87041b6333b3da29f87c33f8e97a3fc4a3, target branch main, hosted run https://github.com/WebEnvoy/Lode/actions/runs/28493861404, closed issues #72-#81, and closed milestone Lode 资产与校验架构基线 (#8). Scope remains docs-only technical architecture baseline; capability package/schema/fixture/validator/packer/tester/registry/runtime implementation were not completed.
 - Recovery Boundary: Closed docs-only planning batch. Reopen or create a new Work Item if future work changes capability package/schema/fixture/validator/packer/tester/registry/runtime implementation.
-- Current Lane: closed_out
+- Current Lane: merge-ready
 
 ## Runtime Evidence
 
