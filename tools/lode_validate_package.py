@@ -13,6 +13,7 @@ from typing import Any
 SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
+POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
 REQUIRED_ASSET_ROLES = {
     "input_schema",
     "normalized_output_schema",
@@ -196,6 +197,8 @@ def validate_asset_ref(report: Report, root: Path, role: str, asset: dict[str, A
 def load_present_assets(report: Report, root: Path, refs: dict[str, dict[str, Any]]) -> dict[str, Any]:
     assets: dict[str, Any] = {}
     for role, asset in refs.items():
+        if role == "post_check":
+            continue
         if asset.get("status") != "present":
             if role != "post_check":
                 report.ref(role, asset.get("path") or f"manifest.json#asset_refs.{role}", "planned")
@@ -345,7 +348,13 @@ def validate_bindings(report: Report, fixture: dict[str, Any], data: dict[str, A
             add_error(report, "fixture_invalid", path, f"Binding evidence_ref `{binding.get('evidence_ref')}` is not declared.", "Bind to declared evidence refs.")
 
 
-def validate_post_check(report: Report, root: Path, asset: dict[str, Any]) -> None:
+def validate_post_check(
+    report: Report,
+    root: Path,
+    asset: dict[str, Any],
+    manifest: dict[str, Any],
+    fixture: dict[str, Any] | None,
+) -> None:
     path = asset.get("path") or "manifest.json#asset_refs.post_check"
     if asset.get("status") == "planned":
         report.ref("post_check", str(path), "planned")
@@ -354,9 +363,78 @@ def validate_post_check(report: Report, root: Path, asset: dict[str, Any]) -> No
     loaded = load_json(report, root, root / str(path), "post_check")
     if not isinstance(loaded, dict):
         return
-    if not loaded.get("requirements"):
-        add_error(report, "post_check_failed", str(path), "Post-check must declare requirements.", "Add declarative post-check requirements.")
+    require_keys(
+        report,
+        loaded,
+        [
+            "schema_version",
+            "post_check_id",
+            "post_check_version",
+            "package_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "result_contract",
+            "requirements",
+            "fixture_post_check_output",
+        ],
+        str(path),
+    )
+    if loaded.get("schema_version") != "lode.post-check.v0":
+        add_error(report, "unsupported_version", str(path), "Unsupported post-check schema version.", "Use `lode.post-check.v0`.")
+    if loaded.get("post_check_id") != asset.get("post_check_id") or loaded.get("post_check_version") != asset.get("post_check_version"):
+        add_error(report, "invalid_contract", str(path), "Post-check identity/version does not match manifest asset ref.", "Keep post-check metadata aligned.")
+    if loaded.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", str(path), "Post-check package_ref does not match manifest.", "Bind post-check to the package ref.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if loaded.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", str(path), f"Post-check `{key}` does not match manifest capability.", "Bind post-check to the package capability.")
+    validate_post_check_payload(report, loaded, str(path), fixture)
     scan_forbidden_keys(report, loaded, str(path))
+
+
+def validate_post_check_payload(report: Report, post_check: dict[str, Any], path: str, fixture: dict[str, Any] | None) -> None:
+    contract = post_check.get("result_contract") if isinstance(post_check.get("result_contract"), dict) else {}
+    status_values = contract.get("status_values") if isinstance(contract.get("status_values"), list) else []
+    if set(status_values) != POST_CHECK_STATUSES:
+        add_error(report, "invalid_contract", path, "Post-check result_contract must declare passed/failed/skipped statuses.", "Declare the v0 post-check status vocabulary.")
+    required_fields = set(contract.get("required_fields") if isinstance(contract.get("required_fields"), list) else [])
+    missing_fields = sorted({"status", "reason", "source_refs", "evidence_refs"} - required_fields)
+    if missing_fields:
+        add_error(report, "invalid_contract", path, f"Post-check result_contract missing required fields: {', '.join(missing_fields)}.", "Require the v0 post-check output fields.")
+
+    source_ids = ref_ids(fixture.get("source_refs")) if isinstance(fixture, dict) else set()
+    evidence_ids = ref_ids(fixture.get("evidence_refs")) if isinstance(fixture, dict) else set()
+    requirements = post_check.get("requirements")
+    if not isinstance(requirements, list) or not requirements:
+        add_error(report, "post_check_failed", path, "Post-check must declare requirements.", "Add declarative post-check requirements.")
+    else:
+        for requirement in requirements:
+            if isinstance(requirement, dict):
+                require_keys(report, requirement, ["requirement_id", "description", "on_failure", "required_source_refs"], f"{path}#requirements")
+                validate_ref_list(report, requirement.get("required_source_refs"), source_ids, path, "required_source_refs")
+                validate_ref_list(report, requirement.get("required_evidence_refs", []), evidence_ids, path, "required_evidence_refs")
+
+    fixture_output = post_check.get("fixture_post_check_output") if isinstance(post_check.get("fixture_post_check_output"), dict) else {}
+    require_keys(report, fixture_output, ["status", "reason", "source_refs", "evidence_refs"], f"{path}#fixture_post_check_output")
+    if fixture_output.get("status") not in POST_CHECK_STATUSES:
+        add_error(report, "post_check_failed", path, "Fixture post-check output uses an unknown status.", "Use passed, failed, or skipped.")
+    if not isinstance(fixture_output.get("reason"), str) or not fixture_output.get("reason"):
+        add_error(report, "post_check_failed", path, "Fixture post-check output must include a reason.", "Add a human-readable reason.")
+    validate_ref_list(report, fixture_output.get("source_refs"), source_ids, path, "source_refs")
+    validate_ref_list(report, fixture_output.get("evidence_refs"), evidence_ids, path, "evidence_refs")
+
+
+def validate_ref_list(report: Report, refs: Any, declared_ids: set[str], path: str, field: str) -> None:
+    if not isinstance(refs, list):
+        add_error(report, "invalid_contract", f"{path}#{field}", "Reference list must be an array.", "Declare refs as an array of ids or objects with ref_id.")
+        return
+    for ref in refs:
+        ref_id = ref.get("ref_id") if isinstance(ref, dict) else ref
+        if not isinstance(ref_id, str):
+            add_error(report, "invalid_contract", f"{path}#{field}", "Reference entries must be ids or objects with ref_id.", "Use declared fixture source/evidence ref ids.")
+        elif declared_ids and ref_id not in declared_ids:
+            add_error(report, "post_check_failed", f"{path}#{field}", f"Post-check ref `{ref_id}` is not declared by the fixture.", "Bind post-check output to declared fixture refs.")
 
 
 def nested_get(value: Any, keys: list[str]) -> Any:
@@ -402,7 +480,8 @@ def validate_package(root: Path) -> Report:
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:
         validate_fixture(report, assets["fixture"], refs["fixture"], manifest, refs["normalized_output_schema"])
     if "post_check" in refs:
-        validate_post_check(report, root, refs["post_check"])
+        fixture = assets.get("fixture") if isinstance(assets.get("fixture"), dict) else None
+        validate_post_check(report, root, refs["post_check"], manifest, fixture)
     return report
 
 
