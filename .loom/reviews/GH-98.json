@@ -1,0 +1,40 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-98",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-98 implementation is approved for defining a central sample failure mapping and validator consumption. The package now exposes the required classes `invalid_contract`, `resource_unavailable`, `site_changed`, and `empty_result`; the stdlib validator requires and checks the asset; no dependency, runtime, Core, Harbor, App, or write-capability behavior is introduced.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T19:22:20Z",
+  "reviewed_head": "ae59a0d27c02571b439e6289df8cd993f5c6212b",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json` with status `passed` and no warnings, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-98 --json`, and `loom suite carrier validate --target . --item GH-98 --json`; `loom build --target . --item GH-98 --build-evidence .loom/specs/GH-98/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Review binds the implementation head `ae59a0d27c02571b439e6289df8cd993f5c6212b`; subsequent changes are limited to review/progress/status carriers and PR metadata, with no failure mapping asset, validator, package metadata, runtime, dependency, Core, Harbor, App, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-99 through GH-103 must cover local package resolution, package ref/lock, sample package closeout, Core fixture consumption, and deferred write guardrail."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-98.md",
+    "recovery_entry": ".loom/progress/GH-98.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-98/spec.md",
+    "plan": ".loom/specs/GH-98/plan.md",
+    "implementation_contract": ".loom/specs/GH-98/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-98/build-evidence.json",
+    "failure_mapping_asset": "sites/example/read-public-page/failure-mapping.json",
+    "validator_cli": "tools/lode_validate_package.py",
+    "sample_package": "sites/example/read-public-page",
+    "readme": "README.md",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-98 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-98 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-98-failure-mapping",
+    "reviewed_head": "ae59a0d27c02571b439e6289df8cd993f5c6212b"
+  }
+}
