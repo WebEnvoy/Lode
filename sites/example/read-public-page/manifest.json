@@ -112,7 +112,7 @@
   },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until Core fixture consumption, local package resolution, and write-deferred guardrail checks exist.",
+    "Package lifecycle remains proposed until package ref/lock semantics, Core fixture consumption, and write-deferred guardrail checks exist.",
     "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration."
   ],
   "forbidden_contents": [

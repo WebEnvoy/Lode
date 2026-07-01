@@ -11,7 +11,9 @@ from typing import Any
 
 
 SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
+SUPPORTED_LOCAL_REGISTRY_VERSION = "lode.local-package-index.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
+DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
 POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
 REQUIRED_FAILURE_CLASSES = {"invalid_contract", "resource_unavailable", "site_changed", "empty_result"}
@@ -103,8 +105,8 @@ def rel(root: Path, path: Path) -> str:
         return str(path)
 
 
-def load_json(report: Report, root: Path, path: Path, role: str) -> Any | None:
-    display_path = rel(root, path)
+def load_json(report: Report, root: Path, path: Path, role: str, display_path: str | None = None) -> Any | None:
+    display_path = display_path or rel(root, path)
     if not path.exists():
         report.ref(role, display_path, "missing")
         report.issue("error", "asset_missing", display_path, "Referenced file is missing.", "Create the referenced package asset or mark it planned.")
@@ -154,6 +156,21 @@ def asset_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
     if not isinstance(refs, list):
         return {}
     return {ref.get("role"): ref for ref in refs if isinstance(ref, dict) and ref.get("role")}
+
+
+def discover_repo_root(path: Path) -> Path | None:
+    for candidate in [path, *path.parents]:
+        if (candidate / ".git").exists() or (candidate / DEFAULT_LOCAL_REGISTRY).exists():
+            return candidate
+    return None
+
+
+def discover_local_registry(package_root: Path) -> Path | None:
+    repo_root = discover_repo_root(package_root)
+    if repo_root is None:
+        return None
+    candidate = repo_root / DEFAULT_LOCAL_REGISTRY
+    return candidate if candidate.exists() else None
 
 
 def validate_manifest(report: Report, root: Path, manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -319,6 +336,103 @@ def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: st
         return
     required = ["category"] if field == "core_mapping" else ["display"]
     require_keys(report, mapping, required, f"{path}#{field}")
+
+
+def validate_local_registry_index(report: Report, package_root: Path, registry_path: Path, manifest: dict[str, Any]) -> None:
+    registry_path = registry_path.resolve()
+    repo_root = discover_repo_root(registry_path.parent) or registry_path.parent
+    display_path = rel(repo_root, registry_path)
+    index = load_json(report, repo_root, registry_path, "local_registry_index", display_path)
+    if not isinstance(index, dict):
+        return
+
+    require_keys(report, index, ["schema_version", "index_scope", "entries"], display_path)
+    if index.get("schema_version") != SUPPORTED_LOCAL_REGISTRY_VERSION:
+        add_error(report, "unsupported_version", display_path, "Unsupported local registry index version.", f"Use `{SUPPORTED_LOCAL_REGISTRY_VERSION}`.")
+    if index.get("index_scope") != "repo-local":
+        add_error(report, "invalid_contract", display_path, "Local registry index must declare `repo-local` scope.", "Keep GH-99 resolution local to this repository.")
+
+    entries = index.get("entries")
+    if not isinstance(entries, list) or not entries:
+        add_error(report, "registry_unavailable", display_path, "Local registry index has no entries.", "Add the package entry to the repo-local index.")
+        scan_forbidden_keys(report, index, display_path)
+        return
+
+    matches = [(idx, entry) for idx, entry in enumerate(entries) if isinstance(entry, dict) and entry.get("package_ref") == manifest.get("package_ref")]
+    if len(matches) != 1:
+        add_error(report, "registry_unavailable", display_path, "Local registry index must contain exactly one entry for the package_ref.", "Add one repo-local package entry for this manifest.")
+    else:
+        idx, entry = matches[0]
+        validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest)
+    scan_forbidden_keys(report, index, display_path)
+
+
+def validate_registry_entry(
+    report: Report,
+    repo_root: Path,
+    package_root: Path,
+    index_path: str,
+    index: int,
+    entry: dict[str, Any],
+    manifest: dict[str, Any],
+) -> None:
+    entry_path = f"{index_path}#entries[{index}]"
+    require_keys(
+        report,
+        entry,
+        [
+            "package_ref",
+            "package_type",
+            "package_path",
+            "manifest_path",
+            "site_slug",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "version",
+            "lifecycle",
+            "asset_roles",
+            "resolution",
+        ],
+        entry_path,
+    )
+
+    expected = {
+        "package_type": manifest.get("package_type"),
+        "site_slug": nested_get(manifest, ["site", "slug"]),
+        "capability_id": nested_get(manifest, ["capability", "capability_id"]),
+        "operation_id": nested_get(manifest, ["capability", "operation_id"]),
+        "operation_mode": nested_get(manifest, ["capability", "operation_mode"]),
+        "version": nested_get(manifest, ["capability", "version"]),
+        "lifecycle": nested_get(manifest, ["capability", "lifecycle"]),
+    }
+    for key, value in expected.items():
+        if entry.get(key) != value:
+            add_error(report, "invalid_contract", f"{entry_path}.{key}", f"Registry `{key}` does not match manifest.", "Keep local registry identity aligned with the manifest.")
+
+    package_path = entry.get("package_path")
+    manifest_path = entry.get("manifest_path")
+    if not isinstance(package_path, str) or Path(package_path).is_absolute():
+        add_error(report, "invalid_contract", f"{entry_path}.package_path", "Registry package_path must be repo-relative.", "Use a repo-relative package path.")
+    else:
+        resolved_package = (repo_root / package_path).resolve()
+        if resolved_package != package_root.resolve():
+            add_error(report, "invalid_contract", f"{entry_path}.package_path", "Registry package_path does not resolve to the validated package root.", "Point the entry at this package root.")
+
+    if not isinstance(manifest_path, str) or Path(manifest_path).is_absolute():
+        add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must be repo-relative.", "Use a repo-relative manifest path.")
+    elif package_path and manifest_path != f"{package_path}/manifest.json":
+        add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point to the package manifest.", "Point manifest_path at the package manifest.")
+
+    roles = entry.get("asset_roles")
+    manifest_roles = set(asset_index(manifest))
+    if not isinstance(roles, list) or set(roles) != manifest_roles:
+        add_error(report, "invalid_contract", f"{entry_path}.asset_roles", "Registry asset_roles must match manifest asset_refs roles.", "Keep local index discoverability aligned with the manifest.")
+
+    resolution = entry.get("resolution") if isinstance(entry.get("resolution"), dict) else {}
+    require_keys(report, resolution, ["strategy", "freshness_rule", "failure_mapping"], f"{entry_path}.resolution")
+    if resolution.get("strategy") != "repo_relative_manifest":
+        add_error(report, "invalid_contract", f"{entry_path}.resolution.strategy", "Registry resolution strategy must be repo_relative_manifest.", "Use local manifest resolution for GH-99.")
 
 
 def validate_fixture(
@@ -513,7 +627,7 @@ def dotted_exists(value: Any, dotted: str) -> bool:
     return True
 
 
-def validate_package(root: Path) -> Report:
+def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     report = Report(root)
     manifest_path = root / "manifest.json"
     manifest = load_json(report, root, manifest_path, "manifest")
@@ -536,18 +650,23 @@ def validate_package(root: Path) -> Report:
     if "post_check" in refs:
         fixture = assets.get("fixture") if isinstance(assets.get("fixture"), dict) else None
         validate_post_check(report, root, refs["post_check"], manifest, fixture)
+    registry_path = registry_index or discover_local_registry(root)
+    if registry_path is not None:
+        validate_local_registry_index(report, root, registry_path, manifest)
     return report
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate one Lode site-capability package.")
     parser.add_argument("package_root", type=Path, help="Path to a package root containing manifest.json.")
+    parser.add_argument("--registry-index", type=Path, help="Optional repo-local package index to validate with the package.")
     parser.add_argument("--json", action="store_true", help="Emit JSON report. This is the default output format.")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print the JSON report.")
     args = parser.parse_args()
 
     root = args.package_root.resolve()
-    report = validate_package(root)
+    registry_index = args.registry_index.resolve() if args.registry_index else None
+    report = validate_package(root, registry_index)
     json.dump(report.to_dict(), sys.stdout, indent=2 if args.pretty else None)
     sys.stdout.write("\n")
     return 1 if report.errors else 0

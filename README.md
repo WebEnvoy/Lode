@@ -58,11 +58,19 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 ## 本地校验
 
 当前最小 validator CLI 使用 Python 标准库，离线校验单个 capability package 的
-manifest、schema、fixture、post-check 和 failure mapping 引用，不访问真实账号、
+manifest、schema、fixture、post-check、failure mapping 和 repo-local registry
+引用，不访问真实账号、
 浏览器 runtime、Core、Harbor 或 App：
 
 ```bash
 python3 tools/lode_validate_package.py sites/example/read-public-page --json
+```
+
+仓库内存在 `registry/local-packages.json` 时，validator 会自动检查该本地索引中的
+package ref、version、manifest path 和 asset role 解析。也可以显式传入索引：
+
+```bash
+python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json
 ```
 
 报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
