@@ -1,0 +1,41 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-95",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-95 implementation is approved for PR creation. The package fixture is redacted, keeps raw/runtime/evidence/user data out of Lode, binds normalized fields to placeholder source/evidence refs, and updates manifest/lifecycle refs without implementing validator, post-check, resolver, Core consumption, or write behavior.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T18:17:00Z",
+  "reviewed_head": "884811598862b395edae782c7530b9e51d188aa1",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `jq empty` over manifest/lifecycle/fixture/Loom JSON, targeted `jq -e` fixture reference checks, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-95 --json`, and `loom suite carrier validate --target . --item GH-95 --json`; `loom build --target . --item GH-95 --build-evidence .loom/specs/GH-95/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review binds to GH-95 implementation head `884811598862b395edae782c7530b9e51d188aa1`; subsequent PR setup changes are limited to review/progress/status carriers and PR metadata, with no package fixture, manifest, lifecycle, schema, validator, post-check, runtime, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-96 must implement the validator CLI before validator report pass can promote the package.",
+    "GH-97 must define post-check output before post-check-backed success can be claimed.",
+    "GH-98 must define failure mapping before Core/App category consumption can be claimed."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-95.md",
+    "recovery_entry": ".loom/progress/GH-95.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-95/spec.md",
+    "plan": ".loom/specs/GH-95/plan.md",
+    "implementation_contract": ".loom/specs/GH-95/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-95/build-evidence.json",
+    "fixture": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
+    "manifest": "sites/example/read-public-page/manifest.json",
+    "lifecycle_metadata": "sites/example/read-public-page/lifecycle-metadata.json",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-95 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-95 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-95-redacted-fixture",
+    "reviewed_head": "884811598862b395edae782c7530b9e51d188aa1"
+  }
+}
