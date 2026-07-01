@@ -64,6 +64,14 @@
       "work_item": "GH-94"
     },
     {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "guardrail_id": "example.read-public-page.write-deferred-guardrail",
+      "guardrail_version": "0.1.0",
+      "work_item": "GH-103"
+    },
+    {
       "role": "fixture",
       "path": "fixtures/read-public-page.fixture.json",
       "status": "present",
@@ -136,6 +144,23 @@
     "purpose": "repo-local package admission and schema validation fixture",
     "runtime_execution": "out_of_scope"
   },
+  "write_deferred_guardrail_metadata": {
+    "path": "write-deferred-guardrail.json",
+    "guardrail_id": "example.read-public-page.write-deferred-guardrail",
+    "guardrail_version": "0.1.0",
+    "status": "deferred",
+    "current_package_allowed_modes": [
+      "read"
+    ],
+    "deferred_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "runtime_execution": "out_of_scope",
+    "write_execution": "blocked"
+  },
   "sample_read_package": {
     "status": "selected",
     "work_item": "GH-101",
@@ -158,24 +183,26 @@
       "manifest_path": "sites/example/read-public-page/manifest.json",
       "package_lock": "sites/example/read-public-page/package-lock.json",
       "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
-      "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json"
+      "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
+      "write_deferred_guardrail_path": "sites/example/read-public-page/write-deferred-guardrail.json"
     },
     "admission_boundary": [
       "offline validator shape checks",
       "fixture and post-check contract checks",
       "repo-local package resolution checks",
       "static package lock checks",
-      "Core-readable static fixture for admission and schema validation"
+      "Core-readable static fixture for admission and schema validation",
+      "static write-deferred guardrail check"
     ],
     "not_yet_claimed": [
       "stable package admission",
       "runtime execution",
-      "write capability behavior"
+      "true write execution"
     ]
   },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until the write-deferred guardrail check exists and parent FR closeout consumes all Work Items.",
+    "Package lifecycle remains proposed until parent FR closeout consumes all Work Items.",
     "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration."
   ],
   "forbidden_contents": [

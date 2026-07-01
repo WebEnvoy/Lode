@@ -24,6 +24,7 @@ REQUIRED_ASSET_ROLES = {
     "resource_requirements",
     "version_lifecycle_metadata",
     "fixture",
+    "write_deferred_guardrail",
     "failure_mapping",
     "package_lock",
 }
@@ -332,6 +333,61 @@ def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], as
     scan_forbidden_keys(report, failure_mapping, path)
 
 
+def validate_write_deferred_guardrail(report: Report, guardrail_doc: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        guardrail_doc,
+        [
+            "schema_version",
+            "guardrail_id",
+            "guardrail_version",
+            "package_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "guardrail",
+            "validate_only_boundary",
+            "draft_preview_boundary",
+            "true_write_boundary",
+            "admission_guardrail",
+        ],
+        path,
+    )
+    if guardrail_doc.get("schema_version") != "lode.write-deferred-guardrail.v0":
+        add_error(report, "unsupported_version", path, "Unsupported write deferred guardrail schema version.", "Use `lode.write-deferred-guardrail.v0`.")
+    if guardrail_doc.get("guardrail_id") != asset.get("guardrail_id") or guardrail_doc.get("guardrail_version") != asset.get("guardrail_version"):
+        add_error(report, "invalid_contract", path, "Guardrail identity/version does not match manifest asset ref.", "Keep guardrail metadata aligned.")
+    if guardrail_doc.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Guardrail package_ref does not match manifest.", "Bind guardrail to the package ref.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if guardrail_doc.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", path, f"Guardrail `{key}` does not match manifest capability.", "Bind guardrail to the package capability.")
+
+    guardrail = guardrail_doc.get("guardrail") if isinstance(guardrail_doc.get("guardrail"), dict) else {}
+    require_keys(report, guardrail, ["status", "applies_to_operation_modes", "current_package_allowed_modes", "blocked_claims"], f"{path}#guardrail")
+    if guardrail.get("status") != "deferred":
+        add_error(report, "invalid_contract", f"{path}#guardrail.status", "Write-side guardrail must remain deferred.", "Keep write-side behavior deferred until future write contracts are accepted.")
+    modes = guardrail.get("applies_to_operation_modes")
+    required_modes = {"validate_only", "draft", "preview", "write"}
+    if not isinstance(modes, list) or not required_modes.issubset(set(modes)):
+        add_error(report, "invalid_contract", f"{path}#guardrail.applies_to_operation_modes", "Guardrail must cover validate_only, draft, preview, and write modes.", "Declare every deferred write-side mode.")
+    allowed_modes = guardrail.get("current_package_allowed_modes")
+    if not isinstance(allowed_modes, list) or set(allowed_modes) != {"read"}:
+        add_error(report, "invalid_contract", f"{path}#guardrail.current_package_allowed_modes", "Current sample package must allow only read mode.", "Keep the sample package read-only.")
+
+    true_write = guardrail_doc.get("true_write_boundary") if isinstance(guardrail_doc.get("true_write_boundary"), dict) else {}
+    require_keys(report, true_write, ["execution_status", "deferred_until"], f"{path}#true_write_boundary")
+    if true_write.get("execution_status") != "deferred":
+        add_error(report, "invalid_contract", f"{path}#true_write_boundary.execution_status", "True write execution must be deferred.", "Do not claim executable write capability in this package.")
+
+    admission = guardrail_doc.get("admission_guardrail") if isinstance(guardrail_doc.get("admission_guardrail"), dict) else {}
+    require_keys(report, admission, ["write_execution", "must_reject_if"], f"{path}#admission_guardrail")
+    if admission.get("write_execution") != "blocked":
+        add_error(report, "invalid_contract", f"{path}#admission_guardrail.write_execution", "Admission guardrail must block write execution.", "Keep write execution out of the package admission surface.")
+    scan_forbidden_keys(report, guardrail_doc, path)
+
+
 def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: str) -> None:
     if not isinstance(mapping, dict):
         add_error(report, "invalid_contract", f"{path}#{field}", "Failure mapping consumer entry must be an object.", "Declare consumer mapping details.")
@@ -533,6 +589,7 @@ def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
         ("resource_requirements_id", "resource_requirements_version"),
         ("lifecycle_metadata_id", "lifecycle_metadata_version"),
         ("fixture_id", "fixture_version"),
+        ("guardrail_id", "guardrail_version"),
         ("post_check_id", "post_check_version"),
         ("failure_mapping_id", "failure_mapping_version"),
         ("lock_ref", "lock_version"),
@@ -761,6 +818,8 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_resource_requirements(report, assets["resource_requirements"], refs["resource_requirements"], manifest)
     if isinstance(assets.get("version_lifecycle_metadata"), dict):
         validate_lifecycle(report, assets["version_lifecycle_metadata"], refs["version_lifecycle_metadata"], manifest)
+    if isinstance(assets.get("write_deferred_guardrail"), dict):
+        validate_write_deferred_guardrail(report, assets["write_deferred_guardrail"], refs["write_deferred_guardrail"], manifest)
     if isinstance(assets.get("failure_mapping"), dict):
         validate_failure_mapping(report, assets["failure_mapping"], refs["failure_mapping"], manifest)
     if isinstance(assets.get("package_lock"), dict):

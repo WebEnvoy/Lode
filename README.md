@@ -89,6 +89,9 @@ GH-102 补充了
 admission / schema validation 可直接读取的 repo-local fixture。它只绑定
 package ref、lock、schema、fixture、post-check 和 failure mapping 路径，不表示
 Core runtime execution、Core result envelope、stable admission 或任何写能力已经实现。
+GH-103 补充了 `sites/example/read-public-page/write-deferred-guardrail.json`，
+用于声明 validate-only、draft、preview 和 write 仍处于 deferred/blocked 边界；
+validator 只做离线 shape 与 fail-closed 检查，不执行或授权任何写侧动作。
 
 报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
 交付后，sample package 的 post-check asset 只声明输出格式、成功条件和
