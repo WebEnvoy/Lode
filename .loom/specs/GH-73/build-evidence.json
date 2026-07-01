@@ -52,5 +52,26 @@
       "locator": ".loom/bootstrap/init-result.json",
       "summary": "Current fact-chain locator is synchronized from GH-70 to GH-73 for this PR."
     }
-  ]
+  ],
+  "validation": {
+    "status": "passed_before_review_carrier",
+    "content_head": "624705add9206253c3c2fe149a526a02f538c63d",
+    "commands": [
+      {
+        "command": "git diff --check",
+        "result": "pass"
+      },
+      {
+        "command": "jq empty on changed GH carrier JSON and bootstrap JSON",
+        "result": "pass"
+      },
+      {
+        "command": "semantic/spec review artifact creation",
+        "result": "pass",
+        "reviewed_head": "624705add9206253c3c2fe149a526a02f538c63d"
+      }
+    ],
+    "hosted_gate": "pending_pr_creation_or_update",
+    "recheck_condition": "Run hosted gate again after PR creation or every push; require real suite if code, schema, fixture, generated type, runtime, storage, dependency, or behavior changes are added."
+  }
 }

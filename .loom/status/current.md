@@ -11,13 +11,13 @@
 - Review Entry: `.loom/reviews/GH-73.json`
 - Validation Entry: `git diff --check`; Markdown/JSON readability checks; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-73 --json`; `loom suite carrier validate --target . --item GH-73 --json`; PR body/head readback.
 - Closing Condition: PR is ready for review with hosted checks classified; merge and issue closeout are explicitly out of scope for this thread.
-- Current Checkpoint: build
-- Current Stop: Docs-only technical architecture baseline is being prepared in branch `work/tech-baseline-lode`.
-- Next Step: Validate docs/Loom carrier, push branch, create PR, and read back PR body/head.
+- Current Checkpoint: merge
+- Current Stop: Merge-ready carrier prepared for docs-only technical baseline; hosted PR gate, merge and post-merge closeout are coordinator-owned next steps.
+- Next Step: Create or update PR, read back PR body/head metadata, run hosted gate, merge, then write post-merge closeout evidence.
 - Blockers: None recorded.
-- Latest Validation Summary: `git diff --check`, `.loom/**/*.json` via `jq empty`, Markdown readability grep, `loom fact-chain`, `loom suite validate --item GH-73`, and `loom suite carrier validate --item GH-73` passed on 2026-07-01T04:20Z. `loom build --item GH-73` blocked only on suite CLI JSON consumption through repo-local `tools/loom.py`; the global suite commands it requested passed separately.
+- Latest Validation Summary: Static validation passed before review carrier; semantic/spec review artifacts approve docs-only content head `624705add9206253c3c2fe149a526a02f538c63d` and final PR head may differ only by carrier/status updates.
 - Recovery Boundary: Do not add package files, schema files, fixtures, validator/packer/tester/registry code, dependencies, hosted registry, marketplace, sync, merge, or issue closeout in this thread.
-- Current Lane: docs-only technical baseline
+- Current Lane: merge-ready
 
 ## Runtime Evidence
 
