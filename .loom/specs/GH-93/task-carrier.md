@@ -1,0 +1,6 @@
+# Task Carrier
+
+| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/93 | OPEN | in_progress | primary | .loom/work-items/GH-93.md | .loom/specs/GH-93/implementation-contract.md#implementation-contract | .loom/specs/GH-93/spec.md#required-behavior | .loom/specs/GH-93/plan.md#implementation | .loom/specs/GH-93/plan.md#validation | GH-93 is the current Work Item for defining the package-local resource requirements asset. | Recheck if issue #93 is closed, reopened, retitled, relabeled, or its scope changes. |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/87 | OPEN | in_progress | mirror | .loom/work-items/GH-93.md | .loom/specs/GH-93/implementation-contract.md#implementation-contract | .loom/specs/GH-93/spec.md#required-behavior | .loom/specs/GH-93/plan.md#implementation | .loom/specs/GH-93/plan.md#validation | Mirrored because GH-87 is the parent FR consumed but not closed by this PR. | Recheck if GH-87 body, dependencies, labels, or closeout state changes. |

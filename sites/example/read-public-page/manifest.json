@@ -50,7 +50,9 @@
     {
       "role": "resource_requirements",
       "path": "resource-requirements.json",
-      "status": "planned",
+      "status": "present",
+      "resource_requirements_id": "example.read-public-page.resources",
+      "resource_requirements_version": "0.1.0",
       "work_item": "GH-93"
     },
     {
@@ -68,7 +70,7 @@
   ],
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Fixture, resource requirement, and post-check assets are planned in follow-up Work Items before stable admission."
+    "Fixture and post-check assets are planned in follow-up Work Items before stable admission."
   ],
   "forbidden_contents": [
     "cookies",
