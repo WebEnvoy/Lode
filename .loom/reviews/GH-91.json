@@ -1,0 +1,35 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-91",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-91 implementation is approved for the input-schema-only PR. The schema constrains the sample read input to public Example Domain URLs, safe requested fields, and declared invalid input classes without adding runtime, fixture, validator, registry, or cross-repo behavior.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T17:06:45Z",
+  "reviewed_head": "cec6afeb4fe881892d8db3cef69457113eda0f0b",
+  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/input.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-91/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-91 --json`, and `loom suite carrier validate --target . --item GH-91 --json` at head `cec6afeb4fe881892d8db3cef69457113eda0f0b`.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-92 must add the normalized output schema before Core can validate returned data.",
+    "GH-93, GH-95, and GH-97 must add resource, fixture, and post-check assets before stable admission."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-91.md",
+    "recovery_entry": ".loom/progress/GH-91.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "suite_validation": "loom suite validate --target . --item GH-91 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-91 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-91-input-schema",
+    "reviewed_head": "cec6afeb4fe881892d8db3cef69457113eda0f0b",
+    "pr_metadata_preflight": "pending_pr"
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "No correctness, safety, or scope blockers found for the GH-91 input schema contract at reviewed head."
+  }
+}

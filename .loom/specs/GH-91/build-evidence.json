@@ -57,7 +57,7 @@
       {
         "command": "loom fact-chain --target . --json",
         "result": "pass",
-        "generated_at": "2026-07-01T17:05:57Z"
+        "generated_at": "2026-07-01T17:07:36Z"
       },
       {
         "command": "loom suite validate --target . --item GH-91 --json",
@@ -68,6 +68,11 @@
         "command": "loom suite carrier validate --target . --item GH-91 --json",
         "result": "pass",
         "generated_at": "2026-07-01T17:05:45Z"
+      },
+      {
+        "command": "loom review read --target . --item GH-91 --json",
+        "result": "pass",
+        "generated_at": "2026-07-01T17:07:36Z"
       }
     ]
   }
