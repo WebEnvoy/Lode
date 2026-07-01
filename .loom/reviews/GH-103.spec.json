@@ -5,9 +5,9 @@
   "kind": "spec_review",
   "summary": "GH-103 spec is approved for a minimal write-deferred guardrail. The spec keeps scope limited to a static Lode-side guardrail, package discoverability metadata, and validator fail-closed checks; it explicitly excludes executable validate-only, draft, preview, write behavior, runtime/live evidence, Core/Harbor/App code, hosted registry, marketplace, sync service, crawler queue, and benchmark contract.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T20:51:16Z",
-  "reviewed_head": "f38eadf8f3255f24b83f51e6400fde2ebb59e0c0",
-  "reviewed_validation_summary": "PR readiness refresh on 2026-07-01T20:51:16Z: local JSON/validator/py_compile/jq/git diff/fact-chain/suite/carrier/review-read checks passed for PR #132 at head `f38eadf8f3255f24b83f51e6400fde2ebb59e0c0`; PR metadata preflight passed with GitHub body readback. Hosted run `28546864402` passed `demo-bootstrap`, `loom-check`, `py-compile`, and `repo-local-cli`; `loom-pr-merge-gate` failed with merge checkpoint `fallback_to=build` and `missing_inputs=[]` because the carrier still declared `current_checkpoint=build`. This carrier-only refresh moves GH-103 to checkpoint `merge` for merge-gate consumption.",
+  "authored_at": "2026-07-01T20:55:06Z",
+  "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
+  "reviewed_validation_summary": "Review rebinding refresh on 2026-07-01T20:55:06Z: PR #132 head `b569668d9bcd1795fe0440e094fcfa09c8e06444` contains only GH-103 carrier checkpoint and build-evidence refresh over previously reviewed head `f38eadf8f3255f24b83f51e6400fde2ebb59e0c0`; local `git diff --check origin/main...HEAD`, fact-chain, suite validate, suite carrier validate, review read, and PR metadata preflight passed. Hosted run `28547106872` passed `demo-bootstrap`, `loom-check`, `py-compile`, and `repo-local-cli`; `loom-pr-merge-gate` failed because the review artifact was stale for `b569668d9bcd1795fe0440e094fcfa09c8e06444`. This review-only refresh binds semantic review to `b569668d9bcd1795fe0440e094fcfa09c8e06444`.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
@@ -22,7 +22,8 @@
     "suite_validation_result": "pass",
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-103 --json",
     "suite_carrier_validation_result": "pass",
-    "reviewed_head": "f38eadf8f3255f24b83f51e6400fde2ebb59e0c0",
-    "pr": "https://github.com/WebEnvoy/Lode/pull/132"
+    "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/132",
+    "hosted_run_classified": "https://github.com/WebEnvoy/Lode/actions/runs/28547106872"
   }
 }
