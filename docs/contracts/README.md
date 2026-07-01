@@ -7,11 +7,22 @@
 | 能力包最小格式、生命周期、资源需求边界 | [ADR 0002](../adr/0002-capability-package-minimum-format.md) |
 | input/output/source schema、fixture、post-check、validator 报告边界 | [ADR 0003](../adr/0003-schema-fixtures-and-post-check.md) |
 | asset taxonomy、workflow package、registry / version / invalidation 边界 | [ADR 0004](../adr/0004-asset-types-and-registry.md) |
+| Lode 技术栈、资产文件责任、JSON Schema 权威、tooling 最小边界、deferred / rejected 禁线 | [ADR 0005](../adr/0005-lode-technical-architecture-baseline.md) |
 | implementation-time / external-contract 未决项 | [pending decisions](../adr/pending-decisions.md) |
 
 实现、测试、schema、validator、runtime 或 generated facts 不应引用 `docs/draft/` 作为权威合同。
 
 未纳入 contracts：public contribution review / marketplace distribution、personal asset storage / sync / overlay conflict policy、App Library UX、Reports UX、真实 package 文件布局、runner、schedule、visual builder、hosted registry。这些内容尚未被 Stage 2 接受。
+
+## 后续 Tooling 骨架入口
+
+后续 package/schema/fixture/post-check/validator/packer/tester/local registry Work Item
+必须先引用 [ADR 0005](../adr/0005-lode-technical-architecture-baseline.md)。真实文件、
+命令和依赖尚未创建；实现前不得从 `docs/draft/` 或 research locator 直接派生第二套
+合同。
+
+Hosted registry、marketplace、team sync、public contribution review、crawler queue
+和 benchmark harness 仍是 deferred，不属于本地 validator / packer / registry v0。
 
 ## Draft 分析吸收账本
 
