@@ -3,11 +3,11 @@
   "item_id": "GH-94",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-94 implementation is approved for a version/lifecycle metadata-only PR. The package stays proposed, lock input remains declarative, and the PR does not add fixtures, post-check logic, validator behavior, registry behavior, lockfile behavior, App UI, runtime matching, or write capability.",
+  "summary": "GH-94 implementation review remains approved for the version/lifecycle metadata-only PR. This post-merge closeout carrier repins the previously consumed approval to merge commit c23dffda614563890de183e39ab11727cfde2ba2 because the implementation branch was deleted after PR #114 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T17:56:00Z",
-  "reviewed_head": "229d5f81aef041fdf8abf8b5abbc4ab9981281cf",
-  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json .loom/bootstrap/init-result.json .loom/specs/GH-94/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-94 --json`, and `loom suite carrier validate --target . --item GH-94 --json` at reviewed implementation head `229d5f81aef041fdf8abf8b5abbc4ab9981281cf`. `loom build --target . --item GH-94 --build-evidence .loom/specs/GH-94/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "authored_at": "2026-07-01T18:02:30Z",
+  "reviewed_head": "c23dffda614563890de183e39ab11727cfde2ba2",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #114 merged to `main` at `c23dffda614563890de183e39ab11727cfde2ba2`; hosted run `28537554784` passed required checks; issue #94 closeout evidence was posted and issue #94 closed at 2026-07-01T18:02:00Z. This closeout branch records carrier-only terminal state.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
@@ -20,18 +20,18 @@
     "work_item": ".loom/work-items/GH-94.md",
     "recovery_entry": ".loom/progress/GH-94.md",
     "status_surface": ".loom/status/current.md",
-    "build_checkpoint": "passed_with_build_adapter_gap",
+    "build_checkpoint": "pass",
     "suite_validation": "loom suite validate --target . --item GH-94 --json",
     "suite_validation_result": "pass",
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-94 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-94-version-lifecycle",
-    "reviewed_head": "229d5f81aef041fdf8abf8b5abbc4ab9981281cf",
-    "pr": "pending",
-    "pr_metadata_preflight": "pending"
+    "reviewed_head": "c23dffda614563890de183e39ab11727cfde2ba2",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/114",
+    "pr_metadata_preflight": "pass"
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "GH-94 adds only package-local lifecycle/version metadata and matching carrier evidence. It preserves the existing package identity, keeps lifecycle proposed, and excludes lockfile, registry, runtime, App UI, and write behavior."
+    "reason": "Authored implementation review was consumed before PR #114 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   }
 }
