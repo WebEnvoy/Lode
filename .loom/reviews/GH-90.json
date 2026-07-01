@@ -3,11 +3,11 @@
   "item_id": "GH-90",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-90 implementation review is approved for the manifest-only sample read package identity PR. The diff adds a proposed read-only manifest and GH-90 carrier only; it does not add schema files, fixtures, validator or registry code, runtime behavior, writes, or cross-repo changes.",
+  "summary": "GH-90 implementation review remains approved for the manifest-only sample read package identity PR. This post-merge closeout carrier repins the previously consumed approval to merge commit ec4ef6d2b664646958f677f47ee320f18af87cb3 because the implementation branch was deleted after PR #104 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T16:37:53Z",
-  "reviewed_head": "20e3b111922cb3054214970209aaafad82239443",
-  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json .loom/reviews/GH-90.json .loom/reviews/GH-90.spec.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, `loom suite carrier validate --target . --item GH-90 --json`, and `loom review read --target . --item GH-90 --json` at head `20e3b111922cb3054214970209aaafad82239443`. Hosted PR #104 run `28532869991` consumed the review approval and carrier-only head binding, then fell back because the recovery checkpoint still said `build`; this carrier-only update advances the checkpoint to `merge` without changing manifest scope.",
+  "authored_at": "2026-07-01T16:51:11Z",
+  "reviewed_head": "ec4ef6d2b664646958f677f47ee320f18af87cb3",
+  "reviewed_validation_summary": "Post-merge closeout validation on 2026-07-01: local `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json .loom/reviews/GH-90.json .loom/reviews/GH-90.spec.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, `loom suite carrier validate --target . --item GH-90 --json`, and `loom review read --target . --item GH-90 --json` passed at closeout head `11768e9546435f80378e785d58f2deb822332ca7`; PR #106 metadata readback passed for branch `work/GH-90-closeout`; hosted run `28533610439` passed `py-compile`, `demo-bootstrap`, `repo-local-cli`, and `loom-check`, and failed `loom-pr-merge-gate` only because retained review pointed to deleted branch head `20e3b111922cb3054214970209aaafad82239443`; this update repins retained review to merge commit `ec4ef6d2b664646958f677f47ee320f18af87cb3` for terminal closeout comparison.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
@@ -26,11 +26,11 @@
     "suite_carrier_validation_result": "pass",
     "pr": "https://github.com/WebEnvoy/Lode/pull/104",
     "branch": "work/GH-90-package-manifest",
-    "reviewed_head": "20e3b111922cb3054214970209aaafad82239443",
+    "reviewed_head": "ec4ef6d2b664646958f677f47ee320f18af87cb3",
     "pr_metadata_preflight": "pass"
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Authored implementation review approved the manifest-only GH-90 content head; any later carrier-only commit must not change package semantics."
+    "reason": "Authored implementation review was consumed before PR #104 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   }
 }
