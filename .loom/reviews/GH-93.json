@@ -3,11 +3,11 @@
   "item_id": "GH-93",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-93 implementation review approves the resource-requirements-only PR. It adds a package-local resource requirements asset that declares Harbor runtime, public navigation, snapshot summary, refmap/source ref, and evidence ref needs while keeping Core as matcher and Harbor as live fact/evidence owner. It does not add fixtures, post-check logic, validator code, runtime matching, provider/profile/session selection, or cross-repo changes.",
+  "summary": "GH-93 implementation review remains approved for the resource-requirements-only PR. This post-merge closeout carrier repins the previously consumed approval to merge commit 7a0df19ecf0b508b2935addba7f72cc2e8479f6e because the implementation branch was deleted after PR #112 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T17:39:00Z",
-  "reviewed_head": "3d829223e88958767ddfda65d30dc2cc74c43e48",
-  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/resource-requirements.json .loom/bootstrap/init-result.json .loom/specs/GH-93/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-93 --json`, and `loom suite carrier validate --target . --item GH-93 --json` at head `3d829223e88958767ddfda65d30dc2cc74c43e48`.",
+  "authored_at": "2026-07-01T17:42:30Z",
+  "reviewed_head": "7a0df19ecf0b508b2935addba7f72cc2e8479f6e",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #112 merged to `main` at `7a0df19ecf0b508b2935addba7f72cc2e8479f6e`; hosted run `28536461846` passed required checks; issue #93 closeout evidence was posted and issue #93 closed at 2026-07-01T17:42:04Z. This closeout branch records carrier-only terminal state.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
@@ -25,12 +25,12 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-93 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-93-resource-requirements",
-    "reviewed_head": "3d829223e88958767ddfda65d30dc2cc74c43e48",
-    "pr": "pending",
-    "pr_metadata_preflight": "pending"
+    "reviewed_head": "7a0df19ecf0b508b2935addba7f72cc2e8479f6e",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/112",
+    "pr_metadata_preflight": "pass"
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "The reviewed implementation stays within GH-93 resource requirements and item-specific carrier scope, preserves the Lode/Core/Harbor ownership boundary, and leaves fixture, post-check, validator, registry, and Core-consuming behavior to their own Work Items."
+    "reason": "Authored implementation review was consumed before PR #112 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   }
 }
