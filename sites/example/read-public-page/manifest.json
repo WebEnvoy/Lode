@@ -102,7 +102,7 @@
   },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until post-check, validator, and Core fixture consumption checks exist.",
+    "Package lifecycle remains proposed until post-check and Core fixture consumption checks exist and validator report is clean.",
     "Post-check assets are planned in follow-up Work Items before stable admission."
   ],
   "forbidden_contents": [

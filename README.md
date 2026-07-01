@@ -55,6 +55,20 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [路线图](ROADMAP.md)
 - [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
 
+## 本地校验
+
+当前最小 validator CLI 使用 Python 标准库，离线校验单个 capability package 的
+manifest、schema、fixture 和 post-check 引用，不访问真实账号、浏览器 runtime、
+Core、Harbor 或 App：
+
+```bash
+python3 tools/lode_validate_package.py sites/example/read-public-page --json
+```
+
+报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
+交付 post-check asset 前，sample package 会以 warning 记录 planned post-check，
+但不会因 proposed 生命周期而阻塞校验命令退出。
+
 ## 许可证
 
 本仓库采用 [MIT License](LICENSE)。

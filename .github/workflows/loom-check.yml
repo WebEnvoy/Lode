@@ -85,6 +85,7 @@ jobs:
       - run: test ! -d "$GITHUB_WORKSPACE/.loom/bin"
       - run: loom version --json
       - run: loom installed-state validate --target "$GITHUB_WORKSPACE" --json
+      - run: python3 tools/lode_validate_package.py sites/example/read-public-page --json
 
   loom-check:
     name: loom-check
