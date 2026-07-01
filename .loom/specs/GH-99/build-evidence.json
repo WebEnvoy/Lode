@@ -1,0 +1,113 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "delegations": [],
+  "ownership_constraints": {
+    "write_scope": [
+      "registry/local-packages.json",
+      "tools/lode_validate_package.py",
+      "README.md",
+      "sites/example/read-public-page/manifest.json",
+      "sites/example/read-public-page/lifecycle-metadata.json",
+      ".loom/work-items/GH-99.md",
+      ".loom/progress/GH-99.md",
+      ".loom/specs/GH-99/*",
+      ".loom/reviews/GH-99*.json",
+      ".loom/bootstrap/init-result.json",
+      ".loom/status/current.md"
+    ],
+    "forbidden_scope": [
+      "package manager initialization or dependencies",
+      "generated schema, generated types, generated registry artifacts, or committed validator reports",
+      "package ref/lock semantics beyond local package resolution",
+      "lockfile implementation, package publishing, install/update/pin/rollback behavior",
+      "hosted registry, marketplace, sync service, crawler queue, benchmark contract, or true write execution",
+      "runtime, browser, Core, Harbor, App, provider/profile/session/cookie/token/raw evidence fields",
+      "Core fixture consumption behavior",
+      "write guardrail behavior",
+      "merge or issue closeout"
+    ],
+    "owner": "repo-controller"
+  },
+  "integration_evidence": [
+    {
+      "carrier": "local_registry_index",
+      "locator": "registry/local-packages.json",
+      "summary": "Repo-local index resolves the sample package_ref to a repo-relative package root and manifest path."
+    },
+    {
+      "carrier": "validator_cli",
+      "locator": "tools/lode_validate_package.py",
+      "summary": "The existing stdlib validator discovers the repo-local index when present and also accepts an explicit --registry-index argument."
+    },
+    {
+      "carrier": "sample_package",
+      "locator": "sites/example/read-public-page",
+      "summary": "Manifest and lifecycle wording now treat local package resolution as covered while keeping lock semantics, Core fixture consumption, and write guardrail follow-ups out of scope."
+    }
+  ],
+  "validation": {
+    "status": "passed_local_static",
+    "commands": [
+      {
+        "command": "python3 tools/lode_validate_package.py sites/example/read-public-page --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:33:00Z",
+        "summary": "Validator returned status `passed` with no errors or warnings; checked_refs included `local_registry_index`."
+      },
+      {
+        "command": "python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:33:00Z",
+        "summary": "Explicit registry-index validation returned status `passed` with no errors or warnings."
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:33:00Z",
+        "cleanup": "Removed tools/__pycache__ after py_compile."
+      },
+      {
+        "command": "jq empty registry/local-packages.json sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:33:00Z"
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:00Z"
+      },
+      {
+        "command": "loom doctor --target . --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:14Z"
+      },
+      {
+        "command": "loom verify --target . --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:14Z"
+      },
+      {
+        "command": "loom fact-chain --target . --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:15Z"
+      },
+      {
+        "command": "loom suite validate --target . --item GH-99 --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:13Z"
+      },
+      {
+        "command": "loom suite carrier validate --target . --item GH-99 --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T19:35:13Z"
+      },
+      {
+        "command": "loom build --target . --item GH-99 --build-evidence .loom/specs/GH-99/build-evidence.json --json",
+        "result": "block",
+        "generated_at": "2026-07-01T19:35:40Z",
+        "classification": "loom_build_adapter_gap",
+        "summary": "Blocked on embedded suite CLI JSON and build-evidence ownership constraint consumption after direct suite and carrier validations passed."
+      }
+    ]
+  }
+}

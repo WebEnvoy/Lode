@@ -1,0 +1,51 @@
+{
+  "schema_version": "lode.local-package-index.v0",
+  "index_id": "lode.local-package-index.repo",
+  "index_scope": "repo-local",
+  "registry_boundary": {
+    "resolution_mode": "local-directory",
+    "hosted_registry": "deferred",
+    "runtime_execution": "out_of_scope",
+    "consumer_boundary": "Core may resolve package identity and local manifest paths from this index. The index does not publish, install, execute, sync, or choose runtime/profile/provider state."
+  },
+  "entries": [
+    {
+      "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/example/read-public-page",
+      "manifest_path": "sites/example/read-public-page/manifest.json",
+      "site_slug": "example",
+      "capability_id": "read-public-page",
+      "operation_id": "content_detail_by_url",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "fixture",
+        "post_check",
+        "failure_mapping"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "GH-99"
+    }
+  ],
+  "non_goals": [
+    "No hosted registry.",
+    "No marketplace or sync service.",
+    "No package installation, publishing, or update flow.",
+    "No runtime execution, provider/profile selection, live tab binding, or write capability."
+  ]
+}
