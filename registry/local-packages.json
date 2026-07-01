@@ -14,6 +14,8 @@
       "package_type": "site-capability",
       "package_path": "sites/example/read-public-page",
       "manifest_path": "sites/example/read-public-page/manifest.json",
+      "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+      "lock_path": "sites/example/read-public-page/package-lock.json",
       "site_slug": "example",
       "capability_id": "read-public-page",
       "operation_id": "content_detail_by_url",
@@ -27,11 +29,12 @@
         "version_lifecycle_metadata",
         "fixture",
         "post_check",
-        "failure_mapping"
+        "failure_mapping",
+        "package_lock"
       ],
       "resolution": {
         "strategy": "repo_relative_manifest",
-        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
         "failure_mapping": [
           "registry_unavailable",
           "asset_missing",
@@ -39,7 +42,8 @@
           "unsupported_version"
         ]
       },
-      "work_item": "GH-99"
+      "work_item": "GH-99",
+      "lock_work_item": "GH-100"
     }
   ],
   "non_goals": [

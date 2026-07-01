@@ -20,6 +20,7 @@
       "failure_mapping_present",
       "validator_report_passed",
       "local_package_resolution_checked",
+      "package_lock_present",
       "core_fixture_consumption_checked"
     ],
     "demotion_triggers": [
@@ -45,7 +46,8 @@
       "fixture source shape, redaction policy, normalized sample, or source/evidence placeholder binding changes",
       "post-check result contract or success conditions change",
       "failure mapping category, outcome hint, or consumer boundary changes",
-      "local registry package path or manifest path changes"
+      "local registry package path or manifest path changes",
+      "package lock ref, locked asset version, or invalidation behavior changes"
     ],
     "non_breaking_change_policy": [
       "documentation wording can change without a version bump",
@@ -68,7 +70,15 @@
       "output_schema_ref",
       "output_schema_version",
       "resource_requirements_id",
-      "resource_requirements_version"
+      "resource_requirements_version",
+      "fixture_id",
+      "fixture_version",
+      "post_check_id",
+      "post_check_version",
+      "failure_mapping_id",
+      "failure_mapping_version",
+      "package_lock_ref",
+      "package_lock_version"
     ],
     "asset_versions": [
       {
@@ -102,13 +112,18 @@
         "version": "0.1.0"
       },
       {
+        "role": "package_lock",
+        "ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+        "version": "0.1.0"
+      },
+      {
         "role": "version_lifecycle_metadata",
         "ref": "example.read-public-page.lifecycle",
         "version": "0.1.0"
       }
     ],
     "planned_asset_placeholders": [],
-    "consumer_boundary": "Lode supplies stable package and asset version identity. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry or marketplace state from this file."
+    "consumer_boundary": "Lode supplies stable package, lock, and asset version identity. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry, marketplace, runtime, or write state from this file."
   },
   "deprecation": {
     "status": "not_deprecated",
@@ -136,7 +151,8 @@
       "resource requirement profile changes",
       "validator report fails after GH-96 validator coverage exists",
       "post-check validation fails",
-      "Core fixture consumption fails after GH-102"
+    "Core fixture consumption fails after GH-102",
+    "package lock validation fails"
     ],
     "evidence_boundary": "Invalidation notes may point to redacted fixtures, review notes, or external Core/Harbor evidence refs. They must not inline live evidence, raw payloads, runtime session state, credentials, or user business data."
   },
@@ -172,8 +188,7 @@
     "user_business_data"
   ],
   "non_goals": [
-    "No lockfile implementation.",
-    "No App install, pin, update, or rollback UI.",
+    "No App install, pin, update, rollback, or sync UI.",
     "No hosted registry, marketplace, sync service, crawler queue, benchmark contract, or true write capability.",
     "No live Core, Harbor, App, profile, provider, session, or evidence storage behavior."
   ]

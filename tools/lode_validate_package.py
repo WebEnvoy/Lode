@@ -12,6 +12,7 @@ from typing import Any
 
 SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
 SUPPORTED_LOCAL_REGISTRY_VERSION = "lode.local-package-index.v0"
+SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
@@ -24,6 +25,7 @@ REQUIRED_ASSET_ROLES = {
     "version_lifecycle_metadata",
     "fixture",
     "failure_mapping",
+    "package_lock",
 }
 FORBIDDEN_KEYS = {
     "cookie",
@@ -385,6 +387,8 @@ def validate_registry_entry(
             "package_type",
             "package_path",
             "manifest_path",
+            "lock_ref",
+            "lock_path",
             "site_slug",
             "capability_id",
             "operation_id",
@@ -412,6 +416,7 @@ def validate_registry_entry(
 
     package_path = entry.get("package_path")
     manifest_path = entry.get("manifest_path")
+    lock_path = entry.get("lock_path")
     if not isinstance(package_path, str) or Path(package_path).is_absolute():
         add_error(report, "invalid_contract", f"{entry_path}.package_path", "Registry package_path must be repo-relative.", "Use a repo-relative package path.")
     else:
@@ -424,6 +429,15 @@ def validate_registry_entry(
     elif package_path and manifest_path != f"{package_path}/manifest.json":
         add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point to the package manifest.", "Point manifest_path at the package manifest.")
 
+    package_lock = asset_index(manifest).get("package_lock")
+    if isinstance(package_lock, dict):
+        expected_lock_ref = package_lock.get("lock_ref")
+        expected_lock_path = f"{package_path}/{package_lock.get('path')}" if isinstance(package_path, str) and isinstance(package_lock.get("path"), str) else None
+        if entry.get("lock_ref") != expected_lock_ref:
+            add_error(report, "invalid_contract", f"{entry_path}.lock_ref", "Registry lock_ref does not match manifest package_lock asset ref.", "Keep local registry lock identity aligned with the manifest.")
+        if lock_path != expected_lock_path:
+            add_error(report, "invalid_contract", f"{entry_path}.lock_path", "Registry lock_path must point to the package lock file.", "Point lock_path at the package lock file.")
+
     roles = entry.get("asset_roles")
     manifest_roles = set(asset_index(manifest))
     if not isinstance(roles, list) or set(roles) != manifest_roles:
@@ -433,6 +447,110 @@ def validate_registry_entry(
     require_keys(report, resolution, ["strategy", "freshness_rule", "failure_mapping"], f"{entry_path}.resolution")
     if resolution.get("strategy") != "repo_relative_manifest":
         add_error(report, "invalid_contract", f"{entry_path}.resolution.strategy", "Registry resolution strategy must be repo_relative_manifest.", "Use local manifest resolution for GH-99.")
+
+
+def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        lock,
+        [
+            "schema_version",
+            "lock_id",
+            "lock_version",
+            "lock_ref",
+            "package_ref",
+            "package_version",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "lifecycle",
+            "resolution",
+            "locked_assets",
+            "invalidation_behavior",
+        ],
+        path,
+    )
+    if lock.get("schema_version") != SUPPORTED_PACKAGE_LOCK_VERSION:
+        add_error(report, "unsupported_version", path, "Unsupported package lock schema version.", f"Use `{SUPPORTED_PACKAGE_LOCK_VERSION}`.")
+    for key in ["lock_id", "lock_version", "lock_ref"]:
+        if lock.get(key) != asset.get(key):
+            add_error(report, "invalid_contract", path, f"Package lock `{key}` does not match manifest asset ref.", "Keep package lock identity aligned with the manifest.")
+    if lock.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Package lock package_ref does not match manifest.", "Bind package lock to the package ref.")
+    expected = {
+        "package_version": nested_get(manifest, ["capability", "version"]),
+        "capability_id": nested_get(manifest, ["capability", "capability_id"]),
+        "operation_id": nested_get(manifest, ["capability", "operation_id"]),
+        "operation_mode": nested_get(manifest, ["capability", "operation_mode"]),
+        "lifecycle": nested_get(manifest, ["capability", "lifecycle"]),
+    }
+    for key, value in expected.items():
+        if lock.get(key) != value:
+            add_error(report, "invalid_contract", f"{path}#{key}", f"Package lock `{key}` does not match manifest.", "Keep lock identity aligned with the manifest capability.")
+    validate_lock_resolution(report, lock.get("resolution"), path)
+    validate_locked_assets(report, lock.get("locked_assets"), refs, path)
+    validate_lock_invalidation(report, lock.get("invalidation_behavior"), path)
+    scan_forbidden_keys(report, lock, path)
+
+
+def validate_lock_resolution(report: Report, resolution: Any, path: str) -> None:
+    if not isinstance(resolution, dict):
+        add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution must be an object.", "Declare repo-local lock resolution.")
+        return
+    require_keys(report, resolution, ["resolution_mode", "registry_index", "package_path", "manifest_path"], f"{path}#resolution")
+    if resolution.get("resolution_mode") != "repo-local":
+        add_error(report, "invalid_contract", f"{path}#resolution.resolution_mode", "Package lock resolution_mode must be repo-local.", "Keep GH-100 lock resolution local.")
+    if resolution.get("registry_index") != str(DEFAULT_LOCAL_REGISTRY):
+        add_error(report, "invalid_contract", f"{path}#resolution.registry_index", "Package lock registry_index must point at the repo-local index.", "Use the repo-local registry index.")
+    if resolution.get("package_path") != "sites/example/read-public-page" or resolution.get("manifest_path") != "sites/example/read-public-page/manifest.json":
+        add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution paths do not point at the sample package.", "Keep lock resolution aligned with the package root and manifest.")
+
+
+def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, dict[str, Any]], path: str) -> None:
+    if not isinstance(locked_assets, list) or not locked_assets:
+        add_error(report, "invalid_contract", f"{path}#locked_assets", "Package lock must declare locked assets.", "Lock the package asset refs consumed by Core admission.")
+        return
+    locked_by_role = {item.get("role"): item for item in locked_assets if isinstance(item, dict) and item.get("role")}
+    expected_roles = set(refs) - {"package_lock"}
+    missing = sorted(expected_roles - set(locked_by_role))
+    extra = sorted(set(locked_by_role) - expected_roles)
+    if missing or extra:
+        add_error(report, "invalid_contract", f"{path}#locked_assets", f"Locked asset roles do not match manifest asset refs: missing={missing}, extra={extra}.", "Keep package lock asset roles aligned with the manifest.")
+    for role in sorted(expected_roles & set(locked_by_role)):
+        locked = locked_by_role[role]
+        asset = refs[role]
+        expected_ref, expected_version = asset_ref_identity(asset)
+        if locked.get("path") != asset.get("path"):
+            add_error(report, "invalid_contract", f"{path}#locked_assets.{role}.path", "Locked asset path does not match manifest asset ref.", "Keep locked paths aligned with manifest asset refs.")
+        if locked.get("ref") != expected_ref or locked.get("version") != expected_version:
+            add_error(report, "invalid_contract", f"{path}#locked_assets.{role}", "Locked asset ref/version does not match manifest asset ref.", "Keep locked asset identity aligned with manifest asset refs.")
+
+
+def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
+    for ref_key, version_key in [
+        ("schema_id", "schema_version"),
+        ("resource_requirements_id", "resource_requirements_version"),
+        ("lifecycle_metadata_id", "lifecycle_metadata_version"),
+        ("fixture_id", "fixture_version"),
+        ("post_check_id", "post_check_version"),
+        ("failure_mapping_id", "failure_mapping_version"),
+        ("lock_ref", "lock_version"),
+    ]:
+        if ref_key in asset or version_key in asset:
+            return asset.get(ref_key), asset.get(version_key)
+    return None, None
+
+
+def validate_lock_invalidation(report: Report, invalidation: Any, path: str) -> None:
+    if not isinstance(invalidation, dict):
+        add_error(report, "invalid_contract", f"{path}#invalidation_behavior", "Package lock invalidation_behavior must be an object.", "Declare lock invalidation behavior.")
+        return
+    require_keys(report, invalidation, ["invalidates_lock_on", "requires_relock_on", "failure_mapping"], f"{path}#invalidation_behavior")
+    for key in ["invalidates_lock_on", "requires_relock_on", "failure_mapping"]:
+        value = invalidation.get(key)
+        if not isinstance(value, list) or not value:
+            add_error(report, "invalid_contract", f"{path}#invalidation_behavior.{key}", f"Package lock `{key}` must be a non-empty list.", "Declare concrete lock invalidation semantics.")
 
 
 def validate_fixture(
@@ -645,6 +763,8 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_lifecycle(report, assets["version_lifecycle_metadata"], refs["version_lifecycle_metadata"], manifest)
     if isinstance(assets.get("failure_mapping"), dict):
         validate_failure_mapping(report, assets["failure_mapping"], refs["failure_mapping"], manifest)
+    if isinstance(assets.get("package_lock"), dict):
+        validate_package_lock(report, assets["package_lock"], refs["package_lock"], manifest, refs)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:
         validate_fixture(report, assets["fixture"], refs["fixture"], manifest, refs["normalized_output_schema"])
     if "post_check" in refs:

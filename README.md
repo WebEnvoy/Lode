@@ -73,6 +73,10 @@ package ref、version、manifest path 和 asset role 解析。也可以显式传
 python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json
 ```
 
+sample package 还包含 `package-lock.json`，用于固定 package ref、capability id、
+version、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
+安装/更新、hosted registry、Core Run Record 或 runtime 执行已经实现。
+
 报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
 交付后，sample package 的 post-check asset 只声明输出格式、成功条件和
 source/evidence ref 绑定；validator 不执行浏览器 runtime，也不生成 Core 运行结果。

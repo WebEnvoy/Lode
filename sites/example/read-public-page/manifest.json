@@ -88,6 +88,15 @@
       "failure_mapping_id": "example.read-public-page.failure-mapping",
       "failure_mapping_version": "0.1.0",
       "work_item": "GH-98"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "lock_id": "example.read-public-page.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+      "work_item": "GH-100"
     }
   ],
   "lifecycle_metadata": {
@@ -112,7 +121,7 @@
   },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until package ref/lock semantics, Core fixture consumption, and write-deferred guardrail checks exist.",
+    "Package lifecycle remains proposed until Core fixture consumption and write-deferred guardrail checks exist.",
     "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration."
   ],
   "forbidden_contents": [
