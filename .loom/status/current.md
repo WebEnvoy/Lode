@@ -12,8 +12,8 @@
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json sites/example/read-public-page/fixtures/read-public-page.fixture.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-95 --json`; `loom suite carrier validate --target . --item GH-95 --json`; PR body/head readback.
 - Closing Condition: PR for GH-95 is merged, hosted checks are recorded, issue #95 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
 - Current Checkpoint: merge
-- Current Stop: GH-95 implementation head `884811598862b395edae782c7530b9e51d188aa1` is locally validated and has current-head review records prepared for PR creation.
-- Next Step: Create the PR, verify PR body/head readback, run hosted checks, and merge after gate pass.
+- Current Stop: PR #116 is open for GH-95; carrier-only PR URL binding is being synced on `work/GH-95-redacted-fixture`.
+- Next Step: Push carrier-only PR binding, refresh PR body/head metadata, run hosted checks, and merge after gate pass.
 - Blockers: None recorded.
 - Latest Validation Summary: Local validation passed on 2026-07-01 for `jq empty` over manifest/lifecycle/fixture/Loom JSON, targeted `jq -e` fixture reference checks, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-95 --json`, and `loom suite carrier validate --target . --item GH-95 --json`; `loom build --target . --item GH-95 --build-evidence .loom/specs/GH-95/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.
 - Recovery Boundary: Re-check if this PR adds validator CLI, post-check output, failure mapping finalization, local resolver/lock behavior, Core fixture consumption behavior, write guardrail behavior, runtime behavior, external writes, provider/profile/session fields, or changes outside GH-95 fixture format and carrier scope.
@@ -42,3 +42,4 @@
 - 2026-07-01: First GH-95 fact-chain attempt failed because `Evidence Freshness` used the invalid value `pending_validation`; carrier was corrected to `current` and fact-chain passed.
 - 2026-07-01: GH-95 local JSON/diff/fact-chain/suite/carrier validation passed before current-head review.
 - 2026-07-01: Added GH-95 spec and semantic review records for implementation head `884811598862b395edae782c7530b9e51d188aa1`.
+- 2026-07-01: PR #116 was created for `work/GH-95-redacted-fixture`; carrier PR URL binding is being synced before hosted checks are consumed.
