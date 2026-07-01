@@ -3,14 +3,14 @@
   "item_id": "GH-99",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-99 implementation is approved for repo-local package resolution. The sample package now has `registry/local-packages.json`, the stdlib validator checks automatic and explicit local index resolution, validator checked refs include `local_registry_index`, and the change introduces no dependencies, generated outputs, lockfile semantics, hosted registry behavior, runtime behavior, Core/Harbor/App behavior, or write capability.",
+  "summary": "GH-99 implementation review remains approved for the local package resolution PR. This post-merge closeout carrier repins the previously consumed approval to merge commit a470f14081b33d98fc3db41100a20d7142f360d3 because the implementation branch was deleted after PR #124 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T19:36:36Z",
-  "reviewed_head": "b3743deaed1badca48adb3d7fa881ca55b0d77ed",
-  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json`, `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-99 --json`, and `loom suite carrier validate --target . --item GH-99 --json`; both validator invocations returned status `passed` with no warnings; `loom build --target . --item GH-99 --build-evidence .loom/specs/GH-99/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "authored_at": "2026-07-01T19:40:14Z",
+  "reviewed_head": "a470f14081b33d98fc3db41100a20d7142f360d3",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #124 merged to `main` at `a470f14081b33d98fc3db41100a20d7142f360d3`; hosted run `28543017851` passed required checks including `repo-local-cli` validator execution and `loom-pr-merge-gate`; issue #99 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/99#issuecomment-4859440015 and issue #99 closed at 2026-07-01T19:40:02Z. This closeout branch records carrier-only terminal state.",
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Review binds the implementation head `b3743deaed1badca48adb3d7fa881ca55b0d77ed`; subsequent changes are limited to review/progress/status carriers and PR metadata, with no local registry asset, validator, package metadata, runtime, dependency, lockfile, Core, Harbor, App, or external behavior changes."
+    "reason": "Authored implementation review was consumed before PR #124 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   },
   "fallback_to": null,
   "blocking_issues": [],
@@ -36,6 +36,9 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-99 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-99-local-package-resolution",
-    "reviewed_head": "b3743deaed1badca48adb3d7fa881ca55b0d77ed"
+    "reviewed_head": "a470f14081b33d98fc3db41100a20d7142f360d3",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/124",
+    "hosted_run": "https://github.com/WebEnvoy/Lode/actions/runs/28543017851",
+    "issue_closeout": "https://github.com/WebEnvoy/Lode/issues/99#issuecomment-4859440015"
   }
 }
