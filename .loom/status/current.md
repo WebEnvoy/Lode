@@ -12,10 +12,10 @@
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/output.schema.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-92 --json`; `loom suite carrier validate --target . --item GH-92 --json`; PR body/head readback.
 - Closing Condition: PR for GH-92 is merged, hosted checks are recorded, issue #92 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
 - Current Checkpoint: merge
-- Current Stop: GH-92 normalized output schema implementation is locally validated on branch `work/GH-92-output-schema`; review carrier is pending.
-- Next Step: Record review evidence, open PR, and run hosted gates.
+- Current Stop: GH-92 normalized output schema implementation is reviewed at head `8708acf26151c6ec60d2dca94698b04daa8501e4`; only PR metadata and carrier-only updates are pending before hosted gates.
+- Next Step: Open PR, run metadata readback, and run hosted gates.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/output.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-92/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-92 --json`, and `loom suite carrier validate --target . --item GH-92 --json`.
+- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/output.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-92/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-92 --json`, and `loom suite carrier validate --target . --item GH-92 --json` at head `8708acf26151c6ec60d2dca94698b04daa8501e4`.
 - Recovery Boundary: Re-check if this PR adds resource requirements, fixtures, post-check logic, validator/registry behavior, runtime behavior, external writes, or changes outside GH-92 output schema/carrier scope.
 - Current Lane: implementation
 
@@ -37,3 +37,4 @@
 ## Notes
 
 - 2026-07-01: GH-92 became the active item for the milestone #9 output schema PR.
+- 2026-07-01: GH-92 output schema implementation was reviewed at head `8708acf26151c6ec60d2dca94698b04daa8501e4`; follow-up commits are limited to review/carrier/PR metadata unless code changes force re-review.

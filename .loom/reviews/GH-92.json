@@ -1,0 +1,36 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-92",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-92 implementation review approves the output-schema-only PR. It adds a package-local draft 2020-12 normalized output schema for structured content detail data, source/evidence refs, available/empty/unavailable states, and failure/result mapping metadata without adding fixtures, resource requirements, post-check logic, validator code, runtime behavior, or cross-repo changes.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T17:26:00Z",
+  "reviewed_head": "8708acf26151c6ec60d2dca94698b04daa8501e4",
+  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/output.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-92/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-92 --json`, and `loom suite carrier validate --target . --item GH-92 --json` at head `8708acf26151c6ec60d2dca94698b04daa8501e4`.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-93 must add package resource requirements before stable admission.",
+    "GH-95 and GH-97 must add fixture and post-check assets before validator/Core fixture consumption can close later FRs."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-92.md",
+    "recovery_entry": ".loom/progress/GH-92.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "suite_validation": "loom suite validate --target . --item GH-92 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-92 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-92-output-schema",
+    "reviewed_head": "8708acf26151c6ec60d2dca94698b04daa8501e4",
+    "pr": "pending",
+    "pr_metadata_preflight": "pending"
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The reviewed implementation stays within GH-92 output schema and item-specific carrier scope, preserves read-only and no-secret boundaries, and leaves later resource, fixture, post-check, validator, registry, and Core-consuming work to their own Work Items."
+  }
+}
