@@ -125,6 +125,20 @@
         "generated_at": "2026-07-01T20:44:40Z",
         "classification": "loom_build_adapter_gap",
         "summary": "Build flow reported suite CLI JSON unavailable and ownership_constraints missing despite direct suite/carrier pass and readable build evidence. No code or carrier gap remained after checkpoint correction."
+      },
+      {
+        "command": "loom pr metadata-preflight --body-file .loom/tmp/GH-103-pr-body.md --compare-body-file .loom/tmp/GH-103-pr-readback.md --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T20:49:00Z",
+        "summary": "PR #132 metadata machine block parsed successfully and matched GitHub body readback for head f38eadf8f3255f24b83f51e6400fde2ebb59e0c0."
+      },
+      {
+        "command": "gh pr checks 132 --watch --interval 10",
+        "result": "hosted_gate_blocked_classified",
+        "generated_at": "2026-07-01T20:49:52Z",
+        "hosted_run": "https://github.com/WebEnvoy/Lode/actions/runs/28546864402",
+        "classification": "carrier_checkpoint_drift",
+        "summary": "demo-bootstrap, loom-check, py-compile, and repo-local-cli passed. loom-pr-merge-gate failed because merge checkpoint fell back to build with missing_inputs=[], while metadata, fact-chain, semantic review, and carrier-only head binding were accepted."
       }
     ]
   }
