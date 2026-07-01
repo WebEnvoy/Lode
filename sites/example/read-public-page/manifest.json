@@ -56,6 +56,14 @@
       "work_item": "GH-93"
     },
     {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "lifecycle_metadata_id": "example.read-public-page.lifecycle",
+      "lifecycle_metadata_version": "0.1.0",
+      "work_item": "GH-94"
+    },
+    {
       "role": "fixture",
       "path": "fixtures/read-public-page.fixture.json",
       "status": "planned",
@@ -68,8 +76,19 @@
       "work_item": "GH-97"
     }
   ],
+  "lifecycle_metadata": {
+    "path": "lifecycle-metadata.json",
+    "lifecycle_metadata_id": "example.read-public-page.lifecycle",
+    "lifecycle_metadata_version": "0.1.0",
+    "package_version": "0.1.0",
+    "lifecycle": "proposed",
+    "deprecation_status": "not_deprecated",
+    "invalidation_status": "not_invalidated",
+    "lock_input_ref": "lode://site-capability/example/read-public-page/lifecycle@0.1.0#lock-input"
+  },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
+    "Package lifecycle remains proposed until fixture, post-check, validator, and Core fixture consumption checks exist.",
     "Fixture and post-check assets are planned in follow-up Work Items before stable admission."
   ],
   "forbidden_contents": [

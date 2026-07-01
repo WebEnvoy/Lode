@@ -2,40 +2,41 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-93
-- Goal: Define resource requirements for the first low-risk read capability package, including Harbor runtime, snapshot, refmap, and evidence needs.
-- Scope: Add a package-local resource requirements JSON asset for `sites/example/read-public-page` and mark the manifest resource requirements ref as present.
-- Execution Path: milestone-9/read-package-resource-requirements
+- Item ID: GH-94
+- Goal: Define version and lifecycle metadata for the first low-risk read capability package, including deprecation, invalidation, and lock input.
+- Scope: Add package-local lifecycle metadata for `sites/example/read-public-page`, mark the manifest version/lifecycle asset ref as present, and keep ownership constraints limited to GH-94 metadata plus item-specific carrier files.
+- Execution Path: milestone-9/read-package-version-lifecycle
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-93.md
-- Review Entry: .loom/reviews/GH-93.json
-- Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/resource-requirements.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-93 --json`; `loom suite carrier validate --target . --item GH-93 --json`; PR body/head readback.
-- Closing Condition: PR for GH-93 is merged, hosted checks are recorded, issue #93 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: closed_out
-- Current Stop: PR #112 merged into `main` at merge commit `7a0df19ecf0b508b2935addba7f72cc2e8479f6e`; closeout evidence was posted to issue #93 and the issue was closed at 2026-07-01T17:42:04Z.
-- Next Step: None for GH-93; continue milestone #9 with GH-94 through GH-103.
+- Recovery Entry: .loom/progress/GH-94.md
+- Review Entry: .loom/reviews/GH-94.json
+- Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-94 --json`; `loom suite carrier validate --target . --item GH-94 --json`; PR body/head readback.
+- Closing Condition: PR for GH-94 is merged, hosted checks are recorded, issue #94 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
+- Current Checkpoint: build
+- Current Stop: GH-94 package lifecycle metadata, manifest asset ref, and item-specific Loom carrier passed local validation and are ready for current-head review.
+- Next Step: Create current-head review artifacts, open PR, read back PR body/head, and wait for hosted checks.
 - Blockers: None recorded.
-- Latest Validation Summary: Post-merge closeout sync on 2026-07-01: PR #112 merged to `main` at `7a0df19ecf0b508b2935addba7f72cc2e8479f6e`; hosted run `28536461846` passed required checks; issue #93 closeout evidence was posted and issue #93 closed at 2026-07-01T17:42:04Z. This closeout branch records carrier-only terminal state.
-- Recovery Boundary: Re-check if this PR adds fixtures, post-check logic, validator/registry behavior, runtime behavior, external writes, provider/profile/session fields, or changes outside GH-93 resource requirements/carrier scope.
-- Current Lane: closeout
+- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json .loom/bootstrap/init-result.json .loom/specs/GH-94/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-94 --json`, and `loom suite carrier validate --target . --item GH-94 --json` at the current implementation head. `loom build --target . --item GH-94 --build-evidence .loom/specs/GH-94/build-evidence.json --json` is classified as a Loom build adapter gap because direct suite and carrier validation pass but the embedded build flow cannot consume repo-local `tools/loom.py` suite JSON in this repository.
+- Recovery Boundary: Re-check if this PR adds fixture payloads, post-check logic, validator/registry behavior, runtime behavior, external writes, provider/profile/session fields, lockfile implementation, App install/update/rollback behavior, or changes outside GH-94 version/lifecycle metadata and carrier scope.
+- Current Lane: implementation
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: .loom/progress/GH-93.md
-- Lane Entry: milestone-9/read-package-resource-requirements
+- Verification Entry: .loom/progress/GH-94.md
+- Lane Entry: milestone-9/read-package-version-lifecycle
 
 ## Sources
 
-- Static Truth: .loom/work-items/GH-93.md
-- Dynamic Truth: .loom/progress/GH-93.md
+- Static Truth: .loom/work-items/GH-94.md
+- Dynamic Truth: .loom/progress/GH-94.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
 
 ## Notes
 
-- 2026-07-01: GH-93 became the active item for the milestone #9 resource requirements PR.
-- 2026-07-01: GH-93 resource requirements implementation was reviewed at head `3d829223e88958767ddfda65d30dc2cc74c43e48`; follow-up commits are limited to review/carrier/PR metadata unless code changes force re-review.
-- 2026-07-01: PR #112 merged to `main` at `7a0df19ecf0b508b2935addba7f72cc2e8479f6e`; issue #93 closeout evidence was posted and issue #93 closed before this carrier sync.
+- 2026-07-01: GH-94 became the active item for the milestone #9 version/lifecycle metadata PR.
+- 2026-07-01: Started from `origin/main` after GH-93 closeout carrier sync merged at `e1ead302ff423cbfbc19e0cf67f7633241fea05f`.
+- 2026-07-01: GH-94 local JSON/diff/fact-chain/suite/carrier validation passed before current-head review.
+- 2026-07-01: `loom build` was classified as a build adapter gap after direct suite and carrier validation passed.

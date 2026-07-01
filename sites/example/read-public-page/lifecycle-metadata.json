@@ -1,0 +1,166 @@
+{
+  "schema_version": "lode.lifecycle-metadata.v0",
+  "lifecycle_metadata_id": "example.read-public-page.lifecycle",
+  "lifecycle_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+  "package_version": "0.1.0",
+  "capability_id": "read-public-page",
+  "operation_id": "content_detail_by_url",
+  "operation_mode": "read",
+  "lifecycle": {
+    "state": "proposed",
+    "stable_admission_allowed": false,
+    "consumer_meaning": "Package identity and contracts are available for review, fixture work, validator work, and Core fixture consumption planning. It is not a stable default execution package.",
+    "promotion_requirements": [
+      "input_schema_present",
+      "normalized_output_schema_present",
+      "resource_requirements_present",
+      "redacted_fixture_present",
+      "post_check_present",
+      "validator_report_passed",
+      "core_fixture_consumption_checked"
+    ],
+    "demotion_triggers": [
+      "input_contract_broken",
+      "output_contract_broken",
+      "source_shape_changed",
+      "resource_requirement_changed",
+      "fixture_invalid",
+      "post_check_failed",
+      "validator_report_failed"
+    ]
+  },
+  "version_identity": {
+    "version_scheme": "semver",
+    "current_version": "0.1.0",
+    "version_owner": "Lode",
+    "breaking_change_requires_new_version": [
+      "package_ref changes",
+      "capability_id or operation_id changes",
+      "input schema required fields or allowed origin constraints change",
+      "normalized output required fields or source/evidence ref policy changes",
+      "resource requirement profile semantics change",
+      "post-check success conditions change after GH-97"
+    ],
+    "non_breaking_change_policy": [
+      "documentation wording can change without a version bump",
+      "planned asset refs can become present within the same proposed version when they preserve existing contracts",
+      "known limitations can become more precise without a version bump"
+    ]
+  },
+  "lock_input": {
+    "lock_ref": "lode://site-capability/example/read-public-page@0.1.0",
+    "required_fields": [
+      "package_ref",
+      "package_version",
+      "capability_id",
+      "operation_id",
+      "operation_mode",
+      "lifecycle_metadata_id",
+      "lifecycle_metadata_version",
+      "input_schema_ref",
+      "input_schema_version",
+      "output_schema_ref",
+      "output_schema_version",
+      "resource_requirements_id",
+      "resource_requirements_version"
+    ],
+    "asset_versions": [
+      {
+        "role": "input_schema",
+        "ref": "lode://schema/site-capability/example/read-public-page/input@0.1.0",
+        "version": "0.1.0"
+      },
+      {
+        "role": "normalized_output_schema",
+        "ref": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
+        "version": "0.1.0"
+      },
+      {
+        "role": "resource_requirements",
+        "ref": "example.read-public-page.resources",
+        "version": "0.1.0"
+      },
+      {
+        "role": "version_lifecycle_metadata",
+        "ref": "example.read-public-page.lifecycle",
+        "version": "0.1.0"
+      }
+    ],
+    "planned_asset_placeholders": [
+      {
+        "role": "fixture",
+        "work_item": "GH-95"
+      },
+      {
+        "role": "post_check",
+        "work_item": "GH-97"
+      }
+    ],
+    "consumer_boundary": "Lode supplies stable package and asset version identity. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry or marketplace state from this file."
+  },
+  "deprecation": {
+    "status": "not_deprecated",
+    "deprecated_at": null,
+    "replacement_package_ref": null,
+    "recovery_hint": "No replacement is declared for this proposed sample package."
+  },
+  "invalidation": {
+    "status": "not_invalidated",
+    "marker": null,
+    "allowed_markers": [
+      "temporarily_invalid",
+      "input_contract_broken",
+      "output_contract_broken",
+      "source_shape_changed",
+      "source_schema_changed",
+      "normalizer_failed",
+      "mapping_incomplete",
+      "resource_requirement_changed",
+      "verification_failed"
+    ],
+    "revalidation_triggers": [
+      "source shape or redaction policy changes",
+      "schema version changes",
+      "resource requirement profile changes",
+      "fixture validation fails after GH-95",
+      "post-check validation fails after GH-97",
+      "Core fixture consumption fails after GH-102"
+    ],
+    "evidence_boundary": "Invalidation notes may point to redacted fixtures, review notes, or external Core/Harbor evidence refs. They must not inline live evidence, raw payloads, runtime session state, credentials, or user business data."
+  },
+  "failure_class_mapping": {
+    "unsupported_version": "Consumer requested a package or asset version that this package does not declare.",
+    "deprecated": "Consumer requested a package version whose lifecycle metadata marks it deprecated.",
+    "invalid_contract": "Lifecycle, version, lock, deprecation, or invalidation metadata is malformed or contradicts the manifest.",
+    "temporarily_invalid": "Package is marked temporarily unavailable pending repair.",
+    "verification_failed": "A declared fixture, post-check, validator, or Core fixture consumption check failed."
+  },
+  "forbidden_fields": [
+    "provider_key",
+    "harbor_profile_id",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "cookie",
+    "cookies",
+    "token",
+    "tokens",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "non_goals": [
+    "No lockfile implementation.",
+    "No App install, pin, update, or rollback UI.",
+    "No hosted registry, marketplace, sync service, crawler queue, benchmark contract, or true write capability.",
+    "No live Core, Harbor, App, profile, provider, session, or evidence storage behavior."
+  ]
+}
