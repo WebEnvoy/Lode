@@ -74,6 +74,15 @@
       "work_item": "GH-95"
     },
     {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "fixture_id": "example.read-public-page.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation",
+      "work_item": "GH-102"
+    },
+    {
       "role": "post_check",
       "path": "checks/post-check.json",
       "status": "present",
@@ -119,6 +128,14 @@
     "source_ref_policy": "placeholder_refs_only",
     "evidence_ref_policy": "placeholder_refs_only"
   },
+  "core_consumption_fixture_metadata": {
+    "path": "fixtures/core-consumption.fixture.json",
+    "fixture_id": "example.read-public-page.core-consumption-fixture",
+    "fixture_version": "0.1.0",
+    "consumer": "WebEnvoy Core",
+    "purpose": "repo-local package admission and schema validation fixture",
+    "runtime_execution": "out_of_scope"
+  },
   "sample_read_package": {
     "status": "selected",
     "work_item": "GH-101",
@@ -140,16 +157,17 @@
       "local_registry_index": "registry/local-packages.json",
       "manifest_path": "sites/example/read-public-page/manifest.json",
       "package_lock": "sites/example/read-public-page/package-lock.json",
-      "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json"
+      "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
+      "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json"
     },
     "admission_boundary": [
       "offline validator shape checks",
       "fixture and post-check contract checks",
       "repo-local package resolution checks",
-      "static package lock checks"
+      "static package lock checks",
+      "Core-readable static fixture for admission and schema validation"
     ],
     "not_yet_claimed": [
-      "Core fixture consumption",
       "stable package admission",
       "runtime execution",
       "write capability behavior"
@@ -157,7 +175,7 @@
   },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until Core fixture consumption and write-deferred guardrail checks exist.",
+    "Package lifecycle remains proposed until the write-deferred guardrail check exists and parent FR closeout consumes all Work Items.",
     "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration."
   ],
   "forbidden_contents": [

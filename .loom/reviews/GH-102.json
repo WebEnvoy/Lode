@@ -1,0 +1,48 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-102",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-102 implementation is approved. The change adds a Core-readable static consumption fixture, exposes it through manifest/package-lock/registry/lifecycle/README, keeps the package lifecycle proposed, and preserves the no-runtime/no-write boundary.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T20:27:00Z",
+  "reviewed_head": "9cfa003ea3a10200936b5253a6b7f8001df32035",
+  "reviewed_validation_summary": "Review refresh after PR #130 gate classification: product implementation head `9cfa003ea3a10200936b5253a6b7f8001df32035` contains only GH-102 scoped changes; local validation passed (`python3 tools/lode_validate_package.py sites/example/read-public-page --json`, explicit registry-index validator, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, `jq empty`, GH-102 fixture `jq -e`, `git diff --check HEAD~2..HEAD`, `loom fact-chain`, `loom suite validate`, `loom suite carrier validate`, and `loom review read`). Hosted run `28545559519` had `py-compile`, `demo-bootstrap`, `repo-local-cli`, and `loom-check` pass; `loom-pr-merge-gate` failed as review/validation-summary drift, so this carrier refresh realigns review and latest validation summary without product changes.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The implementation is limited to the Lode-owned fixture/discoverability surface, provides a direct Core-readable repo-local fixture, and does not introduce runtime, hosted registry, Core result envelope, or write behavior."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-103 remains required for write capability deferred guardrail before parent FR #89 closeout."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-102.md",
+    "recovery_entry": ".loom/progress/GH-102.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-102/spec.md",
+    "plan": ".loom/specs/GH-102/plan.md",
+    "implementation_contract": ".loom/specs/GH-102/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-102/build-evidence.json",
+    "core_consumption_fixture": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
+    "manifest": "sites/example/read-public-page/manifest.json",
+    "package_lock": "sites/example/read-public-page/package-lock.json",
+    "local_registry_index": "registry/local-packages.json",
+    "lifecycle_metadata": "sites/example/read-public-page/lifecycle-metadata.json",
+    "readme": "README.md",
+    "validator": "python3 tools/lode_validate_package.py sites/example/read-public-page --json",
+    "validator_result": "pass",
+    "registry_validator": "python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json",
+    "registry_validator_result": "pass",
+    "core_fixture_structure_check": "jq -e '<GH-102 core fixture structure check>' sites/example/read-public-page/fixtures/core-consumption.fixture.json",
+    "core_fixture_structure_check_result": "pass",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-102 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-102 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-102-core-fixture",
+    "reviewed_head": "9cfa003ea3a10200936b5253a6b7f8001df32035"
+  }
+}

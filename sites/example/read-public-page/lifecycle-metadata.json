@@ -10,7 +10,7 @@
   "lifecycle": {
     "state": "proposed",
     "stable_admission_allowed": false,
-    "consumer_meaning": "Package identity and contracts are available for review, fixture work, validator work, and Core fixture consumption planning. It is not a stable default execution package.",
+    "consumer_meaning": "Package identity and contracts are available for review, fixture work, validator work, and repo-local Core fixture consumption checks. It is not a stable default execution package.",
     "promotion_requirements": [
       "input_schema_present",
       "normalized_output_schema_present",
@@ -46,6 +46,7 @@
       "resource requirement profile semantics change",
       "fixture source shape, redaction policy, normalized sample, or source/evidence placeholder binding changes",
       "sample read package selection, fixture binding, or consumer entrypoint semantics change",
+      "Core consumption fixture resolution, schema validation case, or expected result changes",
       "post-check result contract or success conditions change",
       "failure mapping category, outcome hint, or consumer boundary changes",
       "local registry package path or manifest path changes",
@@ -75,6 +76,8 @@
       "resource_requirements_version",
       "fixture_id",
       "fixture_version",
+      "core_consumption_fixture_id",
+      "core_consumption_fixture_version",
       "post_check_id",
       "post_check_version",
       "failure_mapping_id",
@@ -104,6 +107,11 @@
         "version": "0.1.0"
       },
       {
+        "role": "core_consumption_fixture",
+        "ref": "example.read-public-page.core-consumption-fixture",
+        "version": "0.1.0"
+      },
+      {
         "role": "post_check",
         "ref": "example.read-public-page.post-check",
         "version": "0.1.0"
@@ -125,7 +133,7 @@
       }
     ],
     "planned_asset_placeholders": [],
-    "consumer_boundary": "Lode supplies stable package, lock, and asset version identity. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry, marketplace, runtime, or write state from this file."
+    "consumer_boundary": "Lode supplies stable package, lock, asset version identity, and a Core-readable fixture pointer. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry, marketplace, runtime, or write state from this file."
   },
   "deprecation": {
     "status": "not_deprecated",
