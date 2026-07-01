@@ -22,7 +22,8 @@
       "local_package_resolution_checked",
       "package_lock_present",
       "sample_read_package_selected",
-      "core_fixture_consumption_checked"
+      "core_fixture_consumption_checked",
+      "write_deferred_guardrail_present"
     ],
     "demotion_triggers": [
       "input_contract_broken",
@@ -47,6 +48,7 @@
       "fixture source shape, redaction policy, normalized sample, or source/evidence placeholder binding changes",
       "sample read package selection, fixture binding, or consumer entrypoint semantics change",
       "Core consumption fixture resolution, schema validation case, or expected result changes",
+      "write deferred guardrail identity, deferred boundary, or admission blocking semantics change",
       "post-check result contract or success conditions change",
       "failure mapping category, outcome hint, or consumer boundary changes",
       "local registry package path or manifest path changes",
@@ -74,6 +76,8 @@
       "output_schema_version",
       "resource_requirements_id",
       "resource_requirements_version",
+      "write_deferred_guardrail_id",
+      "write_deferred_guardrail_version",
       "fixture_id",
       "fixture_version",
       "core_consumption_fixture_id",
@@ -99,6 +103,11 @@
       {
         "role": "resource_requirements",
         "ref": "example.read-public-page.resources",
+        "version": "0.1.0"
+      },
+      {
+        "role": "write_deferred_guardrail",
+        "ref": "example.read-public-page.write-deferred-guardrail",
         "version": "0.1.0"
       },
       {
@@ -133,7 +142,7 @@
       }
     ],
     "planned_asset_placeholders": [],
-    "consumer_boundary": "Lode supplies stable package, lock, asset version identity, and a Core-readable fixture pointer. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry, marketplace, runtime, or write state from this file."
+    "consumer_boundary": "Lode supplies stable package, lock, asset version identity, a Core-readable fixture pointer, and a static write-deferred guardrail. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry, marketplace, runtime, or write state from this file."
   },
   "deprecation": {
     "status": "not_deprecated",
@@ -161,8 +170,9 @@
       "resource requirement profile changes",
       "validator report fails after GH-96 validator coverage exists",
       "post-check validation fails",
-    "Core fixture consumption fails after GH-102",
-    "package lock validation fails"
+      "Core fixture consumption fails after GH-102",
+      "write deferred guardrail validation fails after GH-103",
+      "package lock validation fails"
     ],
     "evidence_boundary": "Invalidation notes may point to redacted fixtures, review notes, or external Core/Harbor evidence refs. They must not inline live evidence, raw payloads, runtime session state, credentials, or user business data."
   },

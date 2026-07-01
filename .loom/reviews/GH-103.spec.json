@@ -1,0 +1,29 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-103",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "GH-103 spec is approved for a minimal write-deferred guardrail. The spec keeps scope limited to a static Lode-side guardrail, package discoverability metadata, and validator fail-closed checks; it explicitly excludes executable validate-only, draft, preview, write behavior, runtime/live evidence, Core/Harbor/App code, hosted registry, marketplace, sync service, crawler queue, and benchmark contract.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T20:55:06Z",
+  "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
+  "reviewed_validation_summary": "Review rebinding refresh on 2026-07-01T20:55:06Z: PR #132 head `b569668d9bcd1795fe0440e094fcfa09c8e06444` contains only GH-103 carrier checkpoint and build-evidence refresh over previously reviewed head `f38eadf8f3255f24b83f51e6400fde2ebb59e0c0`; local `git diff --check origin/main...HEAD`, fact-chain, suite validate, suite carrier validate, review read, and PR metadata preflight passed. Hosted run `28547106872` passed `demo-bootstrap`, `loom-check`, `py-compile`, and `repo-local-cli`; `loom-pr-merge-gate` failed because the review artifact was stale for `b569668d9bcd1795fe0440e094fcfa09c8e06444`. This review-only refresh binds semantic review to `b569668d9bcd1795fe0440e094fcfa09c8e06444`.",
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "After GH-103 merges and closes, parent FR #89 can be evaluated for closeout together with already-completed GH-99 through GH-102."
+  ],
+  "consumed_inputs": {
+    "spec": ".loom/specs/GH-103/spec.md",
+    "plan": ".loom/specs/GH-103/plan.md",
+    "implementation_contract": ".loom/specs/GH-103/implementation-contract.md",
+    "task_carrier": ".loom/specs/GH-103/task-carrier.md",
+    "suite_validation": "loom suite validate --target . --item GH-103 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-103 --json",
+    "suite_carrier_validation_result": "pass",
+    "reviewed_head": "b569668d9bcd1795fe0440e094fcfa09c8e06444",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/132",
+    "hosted_run_classified": "https://github.com/WebEnvoy/Lode/actions/runs/28547106872"
+  }
+}

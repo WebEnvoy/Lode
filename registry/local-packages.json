@@ -28,6 +28,7 @@
         "sample_role": "first_low_risk_read_package",
         "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
         "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
+        "write_deferred_guardrail_path": "sites/example/read-public-page/write-deferred-guardrail.json",
         "consumer_boundary": "Core may consume this entry and the GH-102 fixture as the first sample read package reference for repo-local admission and schema validation. This selection does not imply hosted registry, runtime execution, stable admission, or write behavior."
       },
       "asset_roles": [
@@ -35,6 +36,7 @@
         "normalized_output_schema",
         "resource_requirements",
         "version_lifecycle_metadata",
+        "write_deferred_guardrail",
         "fixture",
         "core_consumption_fixture",
         "post_check",
