@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-97.json
 - Validation Entry: `python3 tools/lode_validate_package.py sites/example/read-public-page --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json sites/example/read-public-page/fixtures/read-public-page.fixture.json sites/example/read-public-page/checks/post-check.json .loom/specs/GH-97/build-evidence.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-97 --json`; `loom suite carrier validate --target . --item GH-97 --json`; PR body/head readback.
 - Closing Condition: PR for GH-97 is merged, hosted checks are recorded, issue #97 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: build
-- Current Stop: GH-97 branch `work/GH-97-post-check-output` is implementing the declarative post-check output asset and validator consumption.
-- Next Step: Run local validator, static checks, suite checks, review readback, then create PR when build evidence is current.
+- Current Checkpoint: merge
+- Current Stop: GH-97 implementation head `4110b17c1837c48b77ad1852601eccee47bc80c6` defines the declarative post-check output asset and validator consumption; local validation, fact-chain, suite, carrier, and authored review records are ready for PR creation.
+- Next Step: Push branch, render PR body, create PR, read back PR body/head metadata, run hosted checks, and merge after gate pass.
 - Blockers: None recorded.
 - Latest Validation Summary: Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json` with status `passed` and no warnings, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-97 --json`, and `loom suite carrier validate --target . --item GH-97 --json`; `loom build --target . --item GH-97 --build-evidence .loom/specs/GH-97/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.
 - Recovery Boundary: Re-check if this PR adds dependencies, package manager files, a post-check runner, browser/runtime behavior, Core/Harbor/App behavior, failure mapping finalization beyond existing class names, local resolver/lock behavior, write guardrail behavior, external writes, provider/profile/session fields, or changes outside GH-97 package/validator/carrier scope.
-- Current Lane: build
+- Current Lane: merge
 
 ## Runtime Evidence
 
@@ -41,3 +41,4 @@
 - 2026-07-01: CodeGraph was not initialized in this worktree, so structural lookup uses `rg` and direct reads without writing `.codegraph/`.
 - 2026-07-01: GH-97 keeps post-check execution, failure mapping finalization, Core fixture consumption, local resolver/lock, and write guardrail behavior deferred to GH-98 through GH-103.
 - 2026-07-01: `loom build` was classified as a build adapter gap because the embedded flow did not consume direct suite JSON or the already-present `ownership_constraints`; direct suite and carrier validation passed.
+- 2026-07-01: Added GH-97 spec and semantic review records for implementation head `4110b17c1837c48b77ad1852601eccee47bc80c6`.
