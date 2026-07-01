@@ -1,0 +1,6 @@
+# Task Carrier
+
+| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/90 | OPEN | in_progress | primary | .loom/work-items/GH-90.md | .loom/specs/GH-90/implementation-contract.md#implementation-contract | .loom/specs/GH-90/spec.md#required-behavior | .loom/specs/GH-90/plan.md#implementation | .loom/specs/GH-90/plan.md#validation | Created by Codex on 2026-07-01 from GH-90 issue body and milestone #9 scope. | Recheck after every push, PR metadata update, hosted Loom run, review finding, or issue/PR state change. |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/87 | OPEN | in_progress | mirror | .loom/work-items/GH-90.md | .loom/specs/GH-90/implementation-contract.md#implementation-contract | .loom/specs/GH-90/spec.md#required-behavior | .loom/specs/GH-90/plan.md#implementation | .loom/specs/GH-90/plan.md#validation | Mirrored because GH-87 is the parent FR consumed but not closed by this PR. | Recheck if GH-87 body, dependencies, labels, or closeout state changes. |
