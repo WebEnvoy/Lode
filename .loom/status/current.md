@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-90.json
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-90 --json`; `loom suite carrier validate --target . --item GH-90 --json`; PR body/head readback.
 - Closing Condition: PR for GH-90 is merged, hosted checks are recorded, issue #90 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: merge
-- Current Stop: PR #104 is open; hosted run `28532869991` consumed review approval and carrier-only head binding, then fell back because recovery still declared checkpoint `build`.
-- Next Step: Commit and push the checkpoint-to-merge carrier refresh, update PR metadata Head SHA, then rerun hosted checks.
+- Current Checkpoint: closed_out
+- Current Stop: PR #104 merged into `main` at merge commit `ec4ef6d2b664646958f677f47ee320f18af87cb3`; GH-90 closeout evidence is recorded for issue closure.
+- Next Step: Post closeout evidence to GitHub issue #90 and close it.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json .loom/reviews/GH-90.json .loom/reviews/GH-90.spec.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, `loom suite carrier validate --target . --item GH-90 --json`, and `loom review read --target . --item GH-90 --json` at head `20e3b111922cb3054214970209aaafad82239443`. Hosted PR #104 run `28532869991` consumed the review approval and carrier-only head binding, then fell back because the recovery checkpoint still said `build`; this carrier-only update advances the checkpoint to `merge` without changing manifest scope.
+- Latest Validation Summary: Post-merge closeout readback on 2026-07-01: PR #104 merged at `2026-07-01T16:42:59Z`; merge commit `ec4ef6d2b664646958f677f47ee320f18af87cb3` is `origin/main`; implementation head `eb88773141a360a21e3946f569c28158f2806041`; hosted run `28533072007` passed `py-compile`, `demo-bootstrap`, `repo-local-cli`, `loom-check`, and `loom-pr-merge-gate`; local closeout carrier validation pending on this branch.
 - Recovery Boundary: Re-check if this PR adds schema files, fixtures, validator code, registry behavior, runtime behavior, external writes, or changes outside GH-90 manifest/carrier scope.
-- Current Lane: implementation
+- Current Lane: closeout
 
 ## Runtime Evidence
 
@@ -39,3 +39,4 @@
 - 2026-07-01: GH-90 became the active item for the first milestone #9 implementation PR.
 - 2026-07-01: Hosted run `28532434367` failed only `loom-pr-merge-gate`; failure was classified as review evidence stale because `.loom/work-items/GH-90.md` changed after reviewed head `8560e142aba8ca732ea3d8e38a5f55111ecd974f`.
 - 2026-07-01: Hosted run `28532869991` consumed GH-90 review approval and carrier-only head binding; remaining fallback was recovery checkpoint `build`, so checkpoint is advanced to `merge`.
+- 2026-07-01: PR #104 merged to `main` at `ec4ef6d2b664646958f677f47ee320f18af87cb3`; closeout branch records post-merge evidence before closing issue #90.
