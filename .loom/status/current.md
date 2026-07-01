@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-91.json
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/input.schema.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-91 --json`; `loom suite carrier validate --target . --item GH-91 --json`; PR body/head readback.
 - Closing Condition: PR for GH-91 is merged, hosted checks are recorded, issue #91 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: merge
-- Current Stop: GH-91 input schema implementation and local review evidence are ready for PR on branch `work/GH-91-input-schema`.
-- Next Step: Open PR, run PR metadata readback, and wait for hosted gates.
+- Current Checkpoint: closed_out
+- Current Stop: PR #108 merged into `main` at merge commit `f8388291b21621a94f0d8be52bb18e3ee81d3b97`; closeout evidence was posted to issue #91 and the issue was closed at 2026-07-01T17:14:02Z.
+- Next Step: None for GH-91; continue milestone #9 with GH-92 through GH-103.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/input.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-91/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-91 --json`, and `loom suite carrier validate --target . --item GH-91 --json` at head `cec6afeb4fe881892d8db3cef69457113eda0f0b`.
+- Latest Validation Summary: Post-merge closeout validation on 2026-07-01 passed: `jq empty` for bootstrap/review/build/schema assets, `git diff --check`, `loom fact-chain --target . --json`, `loom suite carrier validate --target . --item GH-91 --json`, and `loom review read --target . --item GH-91 --json`. PR #108 hosted run `28534875266` passed required checks; issue #91 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/91#issuecomment-4858186585 and issue #91 closed at 2026-07-01T17:14:02Z.
 - Recovery Boundary: Re-check if this PR adds output schema, fixtures, resource requirements, post-check logic, validator/registry behavior, runtime behavior, external writes, or changes outside GH-91 input schema/carrier scope.
-- Current Lane: implementation
+- Current Lane: closeout
 
 ## Runtime Evidence
 
@@ -38,3 +38,4 @@
 
 - 2026-07-01: GH-91 became the active item for the milestone #9 input schema PR.
 - 2026-07-01: GH-91 input schema implementation was reviewed at head `cec6afeb4fe881892d8db3cef69457113eda0f0b`; follow-up commits are limited to review/carrier metadata unless code changes force re-review.
+- 2026-07-01: PR #108 merged to `main` at `f8388291b21621a94f0d8be52bb18e3ee81d3b97`; issue #91 closeout evidence was posted and issue #91 closed before this carrier sync.

@@ -3,11 +3,11 @@
   "item_id": "GH-91",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-91 implementation is approved for the input-schema-only PR. The schema constrains the sample read input to public Example Domain URLs, safe requested fields, and declared invalid input classes without adding runtime, fixture, validator, registry, or cross-repo behavior.",
+  "summary": "GH-91 implementation review remains approved for the input-schema-only PR. This post-merge closeout carrier repins the previously consumed approval to merge commit f8388291b21621a94f0d8be52bb18e3ee81d3b97 because the implementation branch was deleted after PR #108 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T17:06:45Z",
-  "reviewed_head": "cec6afeb4fe881892d8db3cef69457113eda0f0b",
-  "reviewed_validation_summary": "Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/input.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-91/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-91 --json`, and `loom suite carrier validate --target . --item GH-91 --json` at head `cec6afeb4fe881892d8db3cef69457113eda0f0b`.",
+  "authored_at": "2026-07-01T17:15:02Z",
+  "reviewed_head": "f8388291b21621a94f0d8be52bb18e3ee81d3b97",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #108 merged to `main` at `f8388291b21621a94f0d8be52bb18e3ee81d3b97`; hosted run `28534875266` passed required checks; issue #91 closeout evidence was posted and issue #91 closed at 2026-07-01T17:14:02Z. This closeout branch records carrier-only terminal state.",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
@@ -25,11 +25,13 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-91 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-91-input-schema",
-    "reviewed_head": "cec6afeb4fe881892d8db3cef69457113eda0f0b",
-    "pr_metadata_preflight": "pending_pr"
+    "reviewed_head": "f8388291b21621a94f0d8be52bb18e3ee81d3b97",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/108",
+    "branch": "work/GH-91-input-schema",
+    "pr_metadata_preflight": "pass"
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "No correctness, safety, or scope blockers found for the GH-91 input schema contract at reviewed head."
+    "reason": "Authored implementation review was consumed before PR #108 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   }
 }
