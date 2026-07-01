@@ -1,0 +1,74 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "delegations": [],
+  "ownership_constraints": {
+    "write_scope": [
+      "sites/example/read-public-page/manifest.json",
+      "sites/example/read-public-page/schemas/input.schema.json",
+      ".loom/work-items/GH-91.md",
+      ".loom/progress/GH-91.md",
+      ".loom/specs/GH-91/*",
+      ".loom/status/current.md",
+      ".loom/bootstrap/init-result.json"
+    ],
+    "forbidden_scope": [
+      "normalized output schema",
+      "source schema",
+      "resource requirements",
+      "fixture payloads",
+      "post-check logic",
+      "validator/packer/tester/registry code",
+      "package manager initialization or dependencies",
+      "runtime behavior",
+      "hosted registry, marketplace, sync, crawler queue, benchmark contract, or true write execution",
+      "Core, Harbor, App, or other repositories",
+      "merge or issue closeout"
+    ],
+    "owner": "repo-controller"
+  },
+  "integration_evidence": [
+    {
+      "carrier": "input_schema",
+      "locator": "sites/example/read-public-page/schemas/input.schema.json",
+      "summary": "Package-local input schema constrains public Example Domain URL input, optional requested fields, source ref preference, sensitivity metadata, and invalid input classes."
+    },
+    {
+      "carrier": "manifest",
+      "locator": "sites/example/read-public-page/manifest.json",
+      "summary": "Manifest marks the GH-91 input schema asset ref as present and records schema id/version."
+    },
+    {
+      "carrier": "task_carrier",
+      "locator": ".loom/specs/GH-91/task-carrier.md",
+      "summary": "GH-91 is the primary Loom item; GH-87 is mirrored as the parent FR and is not closed by this PR."
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "commands": [
+      {
+        "command": "jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/schemas/input.schema.json .loom/bootstrap/init-result.json .loom/specs/GH-91/build-evidence.json",
+        "result": "pass"
+      },
+      {
+        "command": "git diff --check",
+        "result": "pass"
+      },
+      {
+        "command": "loom fact-chain --target . --json",
+        "result": "pass",
+        "generated_at": "2026-07-01T17:05:57Z"
+      },
+      {
+        "command": "loom suite validate --target . --item GH-91 --json",
+        "result": "pass",
+        "generated_at": "2026-07-01T17:05:45Z"
+      },
+      {
+        "command": "loom suite carrier validate --target . --item GH-91 --json",
+        "result": "pass",
+        "generated_at": "2026-07-01T17:05:45Z"
+      }
+    ]
+  }
+}
