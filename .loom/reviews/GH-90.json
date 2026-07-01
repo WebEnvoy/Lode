@@ -1,0 +1,36 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-90",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-90 implementation review is approved for the manifest-only sample read package identity PR. The diff adds a proposed read-only manifest and GH-90 carrier only; it does not add schema files, fixtures, validator or registry code, runtime behavior, writes, or cross-repo changes.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T16:30:00Z",
+  "reviewed_head": "8560e142aba8ca732ea3d8e38a5f55111ecd974f",
+  "reviewed_validation_summary": "Local validation passed for jq JSON readability, git diff whitespace checks, loom fact-chain, loom suite validate, and loom suite carrier validate. Hosted PR #104 checks passed except loom-pr-merge-gate, which blocked on missing current-head review before this artifact was added.",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-91, GH-92, GH-93, GH-95, and GH-97 must replace planned asset refs before stable admission.",
+    "Re-review if this PR adds schema, fixture, validator, registry, runtime, write, or cross-repo scope."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-90.md",
+    "recovery_entry": ".loom/progress/GH-90.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "suite_validation": "loom suite validate --target . --item GH-90 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-90 --json",
+    "suite_carrier_validation_result": "pass",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/104",
+    "branch": "work/GH-90-package-manifest",
+    "reviewed_head": "8560e142aba8ca732ea3d8e38a5f55111ecd974f",
+    "pr_metadata_preflight": "pass"
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review approved the manifest-only GH-90 content head; any later carrier-only commit must not change package semantics."
+  }
+}

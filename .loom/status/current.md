@@ -12,10 +12,10 @@
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-90 --json`; `loom suite carrier validate --target . --item GH-90 --json`; PR body/head readback.
 - Closing Condition: PR for GH-90 is merged, hosted checks are recorded, issue #90 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
 - Current Checkpoint: build
-- Current Stop: Local validation passed; GH-90 PR body and commit are being prepared.
-- Next Step: Commit, push, create the GH-90 PR, read back metadata/head, then run hosted checks.
+- Current Stop: PR #104 is open and semantic review artifacts are being recorded after hosted merge gate requested current-head review.
+- Next Step: Commit and push GH-90 review artifacts, update PR metadata head SHA, then rerun hosted checks.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, and `loom suite carrier validate --target . --item GH-90 --json`. `loom build --target . --item GH-90 --issue 90 --branch work/GH-90-package-manifest --owner repo-controller --build-evidence .loom/specs/GH-90/build-evidence.json --json` blocked on suite CLI JSON / ownership_constraints adapter consumption after direct suite commands passed; classified as Loom build adapter gap, not manifest semantic failure.
+- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, and `loom suite carrier validate --target . --item GH-90 --json`. PR #104 metadata preflight/readback passed for head `8560e142aba8ca732ea3d8e38a5f55111ecd974f`; hosted checks passed except `loom-pr-merge-gate`, which blocked on missing current-head review before GH-90 review artifacts were recorded.
 - Recovery Boundary: Re-check if this PR adds schema files, fixtures, validator code, registry behavior, runtime behavior, external writes, or changes outside GH-90 manifest/carrier scope.
 - Current Lane: implementation
 
