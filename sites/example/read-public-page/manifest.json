@@ -1,0 +1,79 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "example",
+    "display_name": "Example Domain",
+    "supported_origins": [
+      "https://example.org",
+      "https://www.example.org"
+    ]
+  },
+  "capability": {
+    "capability_id": "read-public-page",
+    "operation_id": "content_detail_by_url",
+    "operation_ref": "lode://operation/content_detail_by_url",
+    "capability_family": "content_detail",
+    "operation_mode": "read",
+    "target_type": "web_page",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": [
+      "site:example",
+      "sample",
+      "content-detail",
+      "risk:read"
+    ]
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/example/read-public-page/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "planned",
+      "work_item": "GH-91"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "planned",
+      "work_item": "GH-92"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "planned",
+      "work_item": "GH-93"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/read-public-page.fixture.json",
+      "status": "planned",
+      "work_item": "GH-95"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "planned",
+      "work_item": "GH-97"
+    }
+  ],
+  "known_limitations": [
+    "Sample package is a read-only reserved-domain fixture target.",
+    "Schema, fixture, resource requirement, and post-check assets are planned in follow-up Work Items before stable admission."
+  ],
+  "forbidden_contents": [
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "live_tab_state",
+    "production_payload",
+    "raw_evidence_body",
+    "user_business_data"
+  ]
+}

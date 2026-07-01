@@ -2,38 +2,38 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-84
-- Goal: Upgrade the repository Loom runtime workflow pin to 0.25.0.
-- Scope: Runtime-upgrade-only maintenance PR that updates `.github/workflows/loom-check.yml`, declares the v0.25 PR metadata carrier in `.loom/companion/repo-interface.json`, and records item-specific Loom carrier evidence.
-- Execution Path: ci-maintenance/loom-runtime-upgrade
+- Item ID: GH-90
+- Goal: Define the first sample read package manifest instance with package identity, operation, family, tags, and entrypoint/ref.
+- Scope: Add the minimum proposed `site-capability` manifest for the reserved-domain sample read package and record item-specific GH-90 Loom carrier evidence.
+- Execution Path: milestone-9/read-package-manifest
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-84.md
-- Review Entry: .loom/reviews/GH-84.json
-- Validation Entry: `git diff --check`; `jq empty .loom/companion/repo-interface.json`; `loom suite validate --item GH-84`; `loom runtime-upgrade check --item GH-84`; hosted GitHub checks for PR #85.
-- Closing Condition: PR #85 is merged, runtime-upgrade closeout evidence is recorded, issue #84 is closed, and main reads back Loom workflow pin 0.25.0.
-- Current Checkpoint: merge
-- Current Stop: Merge-ready carrier refresh for the Loom 0.25.0 runtime-upgrade maintenance PR.
-- Next Step: Run PR gate and hosted checks for PR #85 at the current head, then merge only if they pass.
+- Recovery Entry: .loom/progress/GH-90.md
+- Review Entry: .loom/reviews/GH-90.json
+- Validation Entry: `jq empty sites/example/read-public-page/manifest.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-90 --json`; `loom suite carrier validate --target . --item GH-90 --json`; PR body/head readback.
+- Closing Condition: PR for GH-90 is merged, hosted checks are recorded, issue #90 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
+- Current Checkpoint: build
+- Current Stop: Local validation passed; GH-90 PR body and commit are being prepared.
+- Next Step: Commit, push, create the GH-90 PR, read back metadata/head, then run hosted checks.
 - Blockers: None recorded.
-- Latest Validation Summary: The initial PR updated the workflow pin to 0.25.0 and added the v0.25 repo metadata declaration/spec. Hosted checks consumed v0.25.0 and exposed that fact-chain and semantic review must be item-specific for GH-84; this refresh aligns the current fact-chain and records workflow-only review evidence. Product/runtime tests remain not applicable.
-- Recovery Boundary: Runtime-upgrade-only maintenance. Re-review if the diff touches product code, product docs semantics, schema/API/runtime behavior, fixtures, releases, workstation plugin/cache state, or dependencies unrelated to Loom.
-- Current Lane: merge-ready
+- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json .loom/bootstrap/init-result.json .loom/specs/GH-90/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-90 --json`, and `loom suite carrier validate --target . --item GH-90 --json`. `loom build --target . --item GH-90 --issue 90 --branch work/GH-90-package-manifest --owner repo-controller --build-evidence .loom/specs/GH-90/build-evidence.json --json` blocked on suite CLI JSON / ownership_constraints adapter consumption after direct suite commands passed; classified as Loom build adapter gap, not manifest semantic failure.
+- Recovery Boundary: Re-check if this PR adds schema files, fixtures, validator code, registry behavior, runtime behavior, external writes, or changes outside GH-90 manifest/carrier scope.
+- Current Lane: implementation
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: .loom/progress/GH-84.md
-- Lane Entry: ci-maintenance
+- Verification Entry: .loom/progress/GH-90.md
+- Lane Entry: milestone-9/read-package-manifest
 
 ## Sources
 
-- Static Truth: .loom/work-items/GH-84.md
-- Dynamic Truth: .loom/progress/GH-84.md
+- Static Truth: .loom/work-items/GH-90.md
+- Dynamic Truth: .loom/progress/GH-90.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
 
 ## Notes
 
-- 2026-07-01: Runtime-upgrade carrier refreshed for Loom 0.25.0 maintenance PR #85; this does not claim product or runtime implementation.
+- 2026-07-01: GH-90 became the active item for the first milestone #9 implementation PR.
