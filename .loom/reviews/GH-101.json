@@ -3,14 +3,14 @@
   "item_id": "GH-101",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-101 implementation is approved for selecting the existing `example/read-public-page` package as the first low-risk sample read package. The PR adds manifest, registry, lifecycle, README, and Loom carrier metadata that bind the sample to the existing redacted fixture and keep schema, fixture payload, validator, package lock, Core/Harbor/App, runtime, and write behavior unchanged.",
+  "summary": "GH-101 implementation review remains approved for the sample read package selection PR. This post-merge closeout carrier repins the previously consumed approval to merge commit 41846e047a39d4103466612d2848638e474f31ed because PR #128 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T20:05:10Z",
-  "reviewed_head": "5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9",
-  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json`, `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`, package/Loom JSON syntax checks, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-101 --json`, and `loom suite carrier validate --target . --item GH-101 --json`; both validator invocations returned status `passed` with no errors or warnings.",
+  "authored_at": "2026-07-01T20:11:45Z",
+  "reviewed_head": "41846e047a39d4103466612d2848638e474f31ed",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #128 merged to `main` at `41846e047a39d4103466612d2848638e474f31ed`; hosted run `28544730136` passed required checks including `repo-local-cli`, `loom-check`, and `loom-pr-merge-gate`; issue #101 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/101#issuecomment-4859669428 and issue #101 closed at 2026-07-01T20:11:33Z. This closeout branch records carrier-only terminal state.",
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Review binds implementation head `5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9`; subsequent changes before PR creation are limited to review/progress/status carriers and PR metadata, with no sample metadata, package asset, schema, fixture payload, validator, package lock, runtime, dependency, Core, Harbor, App, or external behavior changes."
+    "reason": "Authored implementation review was consumed before PR #128 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   },
   "fallback_to": null,
   "blocking_issues": [],
@@ -36,6 +36,9 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-101 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-101-sample-read-package",
-    "reviewed_head": "5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9"
+    "reviewed_head": "41846e047a39d4103466612d2848638e474f31ed",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/128",
+    "hosted_run": "https://github.com/WebEnvoy/Lode/actions/runs/28544730136",
+    "issue_closeout": "https://github.com/WebEnvoy/Lode/issues/101#issuecomment-4859669428"
   }
 }
