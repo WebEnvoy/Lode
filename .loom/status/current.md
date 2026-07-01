@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-94.json
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-94 --json`; `loom suite carrier validate --target . --item GH-94 --json`; PR body/head readback.
 - Closing Condition: PR for GH-94 is merged, hosted checks are recorded, issue #94 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: build
-- Current Stop: GH-94 package lifecycle metadata, manifest asset ref, and item-specific Loom carrier have current-head review approval at `229d5f81aef041fdf8abf8b5abbc4ab9981281cf`.
-- Next Step: Open PR, read back PR body/head, and wait for hosted checks.
+- Current Checkpoint: merge
+- Current Stop: PR #114 is open for GH-94; PR body/head readback passed at head `03642468e810bc78aa4cb8fb9d96b7c9c9b35b1b`. A carrier-only merge checkpoint refresh is needed after hosted gate classified the previous status as still in build checkpoint.
+- Next Step: Push the merge checkpoint carrier refresh, update PR body head metadata, read back PR body/head, and wait for hosted checks.
 - Blockers: None recorded.
 - Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json .loom/bootstrap/init-result.json .loom/specs/GH-94/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-94 --json`, and `loom suite carrier validate --target . --item GH-94 --json` at reviewed implementation head `229d5f81aef041fdf8abf8b5abbc4ab9981281cf`. `loom build --target . --item GH-94 --build-evidence .loom/specs/GH-94/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.
 - Recovery Boundary: Re-check if this PR adds fixture payloads, post-check logic, validator/registry behavior, runtime behavior, external writes, provider/profile/session fields, lockfile implementation, App install/update/rollback behavior, or changes outside GH-94 version/lifecycle metadata and carrier scope.
-- Current Lane: implementation
+- Current Lane: merge-ready
 
 ## Runtime Evidence
 
@@ -41,3 +41,4 @@
 - 2026-07-01: GH-94 local JSON/diff/fact-chain/suite/carrier validation passed before current-head review.
 - 2026-07-01: `loom build` was classified as a build adapter gap after direct suite and carrier validation passed.
 - 2026-07-01: Added GH-94 spec and semantic review records for implementation head `229d5f81aef041fdf8abf8b5abbc4ab9981281cf`.
+- 2026-07-01: PR #114 body/head readback passed at `03642468e810bc78aa4cb8fb9d96b7c9c9b35b1b`; hosted `loom-pr-merge-gate` then failed because the carrier still declared the build checkpoint, so this refresh moves the carrier to merge-ready without changing implementation files.
