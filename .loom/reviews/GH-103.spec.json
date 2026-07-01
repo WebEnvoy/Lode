@@ -1,0 +1,27 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-103",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "GH-103 spec is approved for a minimal write-deferred guardrail. The spec keeps scope limited to a static Lode-side guardrail, package discoverability metadata, and validator fail-closed checks; it explicitly excludes executable validate-only, draft, preview, write behavior, runtime/live evidence, Core/Harbor/App code, hosted registry, marketplace, sync service, crawler queue, and benchmark contract.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T20:46:30Z",
+  "reviewed_head": "cdbd68e1c0010ecd27cd2eacc9d4d71ce008917c",
+  "reviewed_validation_summary": "Local GH-103 validation on 2026-07-01T20:44:48Z passed: JSON parsing for manifest, package lock, lifecycle metadata, local registry, write guardrail, build evidence, and bootstrap carrier; automatic and explicit registry-index validator runs both returned `passed` with no warnings; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, `jq -e '<GH-103 write guardrail structure check>' sites/example/read-public-page/write-deferred-guardrail.json`, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-103 --json`, and `loom suite carrier validate --target . --item GH-103 --json` passed. `loom build --target . --item GH-103 --build-evidence .loom/specs/GH-103/build-evidence.json --json` blocked on known `loom_build_adapter_gap` only: suite CLI JSON unavailable and `ownership_constraints` missing despite direct suite/carrier pass and readable build evidence.",
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "After GH-103 merges and closes, parent FR #89 can be evaluated for closeout together with already-completed GH-99 through GH-102."
+  ],
+  "consumed_inputs": {
+    "spec": ".loom/specs/GH-103/spec.md",
+    "plan": ".loom/specs/GH-103/plan.md",
+    "implementation_contract": ".loom/specs/GH-103/implementation-contract.md",
+    "task_carrier": ".loom/specs/GH-103/task-carrier.md",
+    "suite_validation": "loom suite validate --target . --item GH-103 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-103 --json",
+    "suite_carrier_validation_result": "pass",
+    "reviewed_head": "cdbd68e1c0010ecd27cd2eacc9d4d71ce008917c"
+  }
+}
