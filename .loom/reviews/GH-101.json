@@ -1,0 +1,41 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-101",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-101 implementation is approved for selecting the existing `example/read-public-page` package as the first low-risk sample read package. The PR adds manifest, registry, lifecycle, README, and Loom carrier metadata that bind the sample to the existing redacted fixture and keep schema, fixture payload, validator, package lock, Core/Harbor/App, runtime, and write behavior unchanged.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T20:05:10Z",
+  "reviewed_head": "5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json`, `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`, package/Loom JSON syntax checks, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-101 --json`, and `loom suite carrier validate --target . --item GH-101 --json`; both validator invocations returned status `passed` with no errors or warnings.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Review binds implementation head `5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9`; subsequent changes before PR creation are limited to review/progress/status carriers and PR metadata, with no sample metadata, package asset, schema, fixture payload, validator, package lock, runtime, dependency, Core, Harbor, App, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-102 must provide the Core consumption fixture boundary before Core fixture consumption can be claimed.",
+    "GH-103 must document deferred write guardrail behavior before parent FR #89 can close."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-101.md",
+    "recovery_entry": ".loom/progress/GH-101.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-101/spec.md",
+    "plan": ".loom/specs/GH-101/plan.md",
+    "implementation_contract": ".loom/specs/GH-101/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-101/build-evidence.json",
+    "sample_manifest": "sites/example/read-public-page/manifest.json",
+    "local_registry_index": "registry/local-packages.json",
+    "lifecycle_metadata": "sites/example/read-public-page/lifecycle-metadata.json",
+    "readme": "README.md",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-101 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-101 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-101-sample-read-package",
+    "reviewed_head": "5cd2ffd81f1c42e175e67217ab18a49e72bb1ad9"
+  }
+}
