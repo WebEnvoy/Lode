@@ -77,6 +77,16 @@ sample package 还包含 `package-lock.json`，用于固定 package ref、capabi
 version、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
 安装/更新、hosted registry、Core Run Record 或 runtime 执行已经实现。
 
+## 首个 sample read package
+
+当前首个低风险只读样例是
+`sites/example/read-public-page`，对应 package ref
+`lode://site-capability/example/read-public-page@0.1.0`。它使用 reserved
+public Example Domain 内容和 summary-only 脱敏 fixture，manifest 中的
+`sample_read_package` 记录选择理由、fixture 绑定和 Core 后续可消费入口。
+该选择只表示 Lode 中已有离线可校验样例，不表示 Core fixture consumption、
+runtime execution、stable admission 或任何写能力已经实现。
+
 报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
 交付后，sample package 的 post-check asset 只声明输出格式、成功条件和
 source/evidence ref 绑定；validator 不执行浏览器 runtime，也不生成 Core 运行结果。

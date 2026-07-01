@@ -1,0 +1,6 @@
+# Task Carrier
+
+| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/101 | OPEN | in_progress | primary | .loom/work-items/GH-101.md | .loom/specs/GH-101/implementation-contract.md#implementation-contract | .loom/specs/GH-101/spec.md#required-behavior | .loom/specs/GH-101/plan.md#implementation | .loom/specs/GH-101/plan.md#validation | GH-101 is the active Work Item for `work/GH-101-sample-read-package`. | Recheck if issue #101 state, PR binding, branch head, sample metadata, fixture binding, or local registry sample marker changes. |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/89 | OPEN | in_progress | mirror | .loom/work-items/GH-101.md | .loom/specs/GH-101/implementation-contract.md#implementation-contract | .loom/specs/GH-101/spec.md#required-behavior | .loom/specs/GH-101/plan.md#implementation | .loom/specs/GH-101/plan.md#validation | Mirrored because GH-89 is the parent FR consumed but not closed by this PR. | Recheck if GH-89 body, dependencies, labels, or closeout state changes. |

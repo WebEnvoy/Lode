@@ -22,6 +22,13 @@
       "operation_mode": "read",
       "version": "0.1.0",
       "lifecycle": "proposed",
+      "sample_read_package": {
+        "status": "selected",
+        "work_item": "GH-101",
+        "sample_role": "first_low_risk_read_package",
+        "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
+        "consumer_boundary": "Core may consume this entry as the first sample read package reference after GH-102 fixture consumption checks. This selection does not imply hosted registry, runtime execution, stable admission, or write behavior."
+      },
       "asset_roles": [
         "input_schema",
         "normalized_output_schema",
