@@ -3,14 +3,14 @@
   "item_id": "GH-73",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "Lode 资产与校验架构基线 docs-only spec is scoped to the current milestone and covers #72-#81 without implementation completion.",
+  "summary": "Lode 技术基线 closeout-only carrier is approved for merge as post-merge carrier closeout evidence.",
   "reviewer": "codex-coordinator",
-  "authored_at": "2026-07-01T04:34:08Z",
-  "reviewed_head": "a9f7f65b52854b268ccecd860113bdc0af027842",
-  "reviewed_validation_summary": "Review artifact approves the docs-only Lode 资产与校验架构基线 at head a9f7f65b52854b268ccecd860113bdc0af027842. The final PR head may differ only by Loom review/progress/status carrier refresh and PR metadata updates; no code, dependency, schema, runtime, generated artifact, UI behavior, or product semantics changed after the reviewed head.",
+  "authored_at": "2026-07-01T04:47:55Z",
+  "reviewed_head": "00644dc35ac841ade3e44e6f07ed7ae6208d5f74",
+  "reviewed_validation_summary": "Post-merge closeout consumed PR https://github.com/WebEnvoy/Lode/pull/82, PR head 073e5dd5881a3df27ca6438fcdb45336c3c826b2, merge commit b2de5d87041b6333b3da29f87c33f8e97a3fc4a3, target branch main, hosted run https://github.com/WebEnvoy/Lode/actions/runs/28493861404, closed issues #72-#81, and closed milestone Lode 资产与校验架构基线 (#8). Scope remains docs-only technical architecture baseline; capability package/schema/fixture/validator/packer/tester/registry/runtime implementation were not completed.",
   "fallback_to": null,
   "blocking_issues": [],
   "follow_ups": [
-    "Do not treat this approval as package/schema/fixture/validator/packer/registry/runtime 实现."
+    "This approval only covers closeout carrier synchronization after the content PR was merged, issues were closed, and the milestone was closed. It does not approve new product semantics or implementation work."
   ]
 }
