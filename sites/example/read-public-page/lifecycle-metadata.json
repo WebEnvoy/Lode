@@ -41,7 +41,7 @@
       "normalized output required fields or source/evidence ref policy changes",
       "resource requirement profile semantics change",
       "fixture source shape, redaction policy, normalized sample, or source/evidence placeholder binding changes",
-      "post-check success conditions change after GH-97"
+      "post-check result contract or success conditions change"
     ],
     "non_breaking_change_policy": [
       "documentation wording can change without a version bump",
@@ -88,17 +88,17 @@
         "version": "0.1.0"
       },
       {
+        "role": "post_check",
+        "ref": "example.read-public-page.post-check",
+        "version": "0.1.0"
+      },
+      {
         "role": "version_lifecycle_metadata",
         "ref": "example.read-public-page.lifecycle",
         "version": "0.1.0"
       }
     ],
-    "planned_asset_placeholders": [
-      {
-        "role": "post_check",
-        "work_item": "GH-97"
-      }
-    ],
+    "planned_asset_placeholders": [],
     "consumer_boundary": "Lode supplies stable package and asset version identity. App may choose an installed or pinned version later; Core records the referenced versions but does not infer hosted registry or marketplace state from this file."
   },
   "deprecation": {
@@ -126,7 +126,7 @@
       "schema version changes",
       "resource requirement profile changes",
       "validator report fails after GH-96 validator coverage exists",
-      "post-check validation fails after GH-97",
+      "post-check validation fails",
       "Core fixture consumption fails after GH-102"
     ],
     "evidence_boundary": "Invalidation notes may point to redacted fixtures, review notes, or external Core/Harbor evidence refs. They must not inline live evidence, raw payloads, runtime session state, credentials, or user business data."

@@ -1,0 +1,41 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-97",
+  "decision": "allow",
+  "kind": "general_review",
+  "summary": "GH-97 implementation is approved for PR creation. The package now has a declarative post-check asset with passed/failed/skipped output, reason, source refs, evidence refs, requirements, and a passing fixture output; the stdlib validator consumes it without adding dependencies, runtime behavior, Core/Harbor/App changes, or write capability.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T19:08:00Z",
+  "reviewed_head": "4110b17c1837c48b77ad1852601eccee47bc80c6",
+  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for `python3 tools/lode_validate_package.py sites/example/read-public-page --json` with status `passed` and no warnings, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, package/Loom JSON syntax checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-97 --json`, and `loom suite carrier validate --target . --item GH-97 --json`; `loom build --target . --item GH-97 --build-evidence .loom/specs/GH-97/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review binds to GH-97 implementation head `4110b17c1837c48b77ad1852601eccee47bc80c6`; subsequent PR setup changes are limited to review/progress/status carriers and PR metadata, with no post-check asset, validator, package metadata, runtime, dependency, Core/Harbor/App, or external behavior changes."
+  },
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-98 must finalize failure mapping before Core/App category consumption can be claimed.",
+    "GH-99 through GH-103 must cover local package resolution, package ref/lock, sample package closeout, Core fixture consumption, and deferred write guardrail."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/GH-97.md",
+    "recovery_entry": ".loom/progress/GH-97.md",
+    "status_surface": ".loom/status/current.md",
+    "spec": ".loom/specs/GH-97/spec.md",
+    "plan": ".loom/specs/GH-97/plan.md",
+    "implementation_contract": ".loom/specs/GH-97/implementation-contract.md",
+    "build_evidence": ".loom/specs/GH-97/build-evidence.json",
+    "post_check_asset": "sites/example/read-public-page/checks/post-check.json",
+    "validator_cli": "tools/lode_validate_package.py",
+    "sample_package": "sites/example/read-public-page",
+    "readme": "README.md",
+    "suite_path": "minimal",
+    "suite_validation": "loom suite validate --target . --item GH-97 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-97 --json",
+    "suite_carrier_validation_result": "pass",
+    "branch": "work/GH-97-post-check-output",
+    "reviewed_head": "4110b17c1837c48b77ad1852601eccee47bc80c6"
+  }
+}

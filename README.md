@@ -66,8 +66,8 @@ python3 tools/lode_validate_package.py sites/example/read-public-page --json
 ```
 
 报告输出 `status`、`errors[]`、`warnings[]` 和 `checked_refs[]`。在 GH-97
-交付 post-check asset 前，sample package 会以 warning 记录 planned post-check，
-但不会因 proposed 生命周期而阻塞校验命令退出。
+交付后，sample package 的 post-check asset 只声明输出格式、成功条件和
+source/evidence ref 绑定；validator 不执行浏览器 runtime，也不生成 Core 运行结果。
 
 ## 许可证
 

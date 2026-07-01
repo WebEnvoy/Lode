@@ -170,17 +170,17 @@
       }
     ],
     "source_refs_required": true,
-    "evidence_refs_required_for_post_check": "placeholder_declared_until_GH-97"
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_GH-97_post_check_output"
   },
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_by_GH-96_validator",
-    "post_check_scope": "requirements_defined_in_GH-97",
+    "post_check_scope": "result_contract_and_fixture_output_defined_in_GH-97",
     "failure_mapping_scope": "classification_defined_in_GH-98",
     "stable_gate_note": "This fixture alone does not make the package stable."
   },
   "non_goals": [
     "No live runtime session, profile, provider, cookie, token, DOM, HAR, screenshot body, network body, production payload, or user business data.",
-    "No post-check output contract or runner.",
+    "No post-check runner, Core result envelope, or live runtime post-check execution.",
     "No registry, marketplace, crawler queue, benchmark contract, Core, Harbor, App, or true write behavior."
   ]
 }
