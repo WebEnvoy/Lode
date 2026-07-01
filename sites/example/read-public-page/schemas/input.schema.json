@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/example/read-public-page/input@0.1.0",
+  "title": "Example Read Public Page Input",
+  "description": "Input contract for the reserved-domain, read-only sample capability package.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://(www\\.)?example\\.org(?:/.*)?$",
+      "description": "Public Example Domain URL to read. The sample package accepts only example.org origins.",
+      "examples": [
+        "https://example.org/"
+      ]
+    },
+    "requested_fields": {
+      "type": "array",
+      "description": "Optional public fields requested from the normalized output.",
+      "default": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status"
+      ],
+      "minItems": 1,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "title",
+          "summary",
+          "canonical_url",
+          "source_status"
+        ]
+      },
+      "examples": [
+        [
+          "title",
+          "summary"
+        ]
+      ]
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "description": "Whether Core should preserve source reference placeholders in the read result when available.",
+      "default": true,
+      "examples": [
+        true
+      ]
+    }
+  },
+  "examples": [
+    {
+      "url": "https://example.org/",
+      "requested_fields": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status"
+      ],
+      "include_source_refs": true
+    }
+  ],
+  "x-lode": {
+    "schema_id": "example.read-public-page.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+    "operation_ref": "lode://operation/content_detail_by_url",
+    "operation_mode": "read",
+    "sensitivity": {
+      "url": "public",
+      "requested_fields": "user_provided",
+      "include_source_refs": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "Provide a public https://example.org/ URL."
+      },
+      {
+        "code": "input_url_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on https://example.org or https://www.example.org",
+        "recovery_hint": "Use the reserved sample origin declared by the package manifest."
+      },
+      {
+        "code": "input_requested_field_unknown",
+        "field": "requested_fields",
+        "lode_failure_class": "input_invalid",
+        "trigger": "requested_fields contains a field outside the schema enum",
+        "recovery_hint": "Request only fields declared by this input schema."
+      },
+      {
+        "code": "input_forbidden_secret_or_runtime_state",
+        "field": "*",
+        "lode_failure_class": "invalid_contract",
+        "trigger": "input contains cookies, tokens, profile state, runtime session, raw evidence body, or user business data",
+        "recovery_hint": "Keep runtime identity and evidence in Core/Harbor references, not Lode package input."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}
