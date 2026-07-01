@@ -119,6 +119,42 @@
     "source_ref_policy": "placeholder_refs_only",
     "evidence_ref_policy": "placeholder_refs_only"
   },
+  "sample_read_package": {
+    "status": "selected",
+    "work_item": "GH-101",
+    "sample_role": "first_low_risk_read_package",
+    "selection_rationale": [
+      "Uses reserved public Example Domain content.",
+      "Operation mode is read-only.",
+      "Fixture is summary-only and uses placeholder source/evidence refs.",
+      "No account, session, credential, runtime, production payload, or user business data is represented."
+    ],
+    "fixture_binding": {
+      "fixture_id": "example.read-public-page.fixture",
+      "fixture_version": "0.1.0",
+      "path": "fixtures/read-public-page.fixture.json",
+      "normalized_output_schema": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
+      "redaction": "summary_only"
+    },
+    "consumer_entrypoints": {
+      "local_registry_index": "registry/local-packages.json",
+      "manifest_path": "sites/example/read-public-page/manifest.json",
+      "package_lock": "sites/example/read-public-page/package-lock.json",
+      "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json"
+    },
+    "admission_boundary": [
+      "offline validator shape checks",
+      "fixture and post-check contract checks",
+      "repo-local package resolution checks",
+      "static package lock checks"
+    ],
+    "not_yet_claimed": [
+      "Core fixture consumption",
+      "stable package admission",
+      "runtime execution",
+      "write capability behavior"
+    ]
+  },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
     "Package lifecycle remains proposed until Core fixture consumption and write-deferred guardrail checks exist.",

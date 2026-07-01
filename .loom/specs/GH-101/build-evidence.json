@@ -1,0 +1,73 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "delegations": [],
+  "ownership_constraints": {
+    "write_scope": [
+      "sites/example/read-public-page/manifest.json",
+      "sites/example/read-public-page/lifecycle-metadata.json",
+      "registry/local-packages.json",
+      "README.md",
+      ".loom/work-items/GH-101.md",
+      ".loom/progress/GH-101.md",
+      ".loom/specs/GH-101/*",
+      ".loom/reviews/GH-101*.json",
+      ".loom/bootstrap/init-result.json",
+      ".loom/status/current.md"
+    ],
+    "forbidden_scope": [
+      "new sample packages, schema changes, fixture payload changes, validator expansion, or package lock behavior changes",
+      "package manager initialization, dependencies, generated outputs, generated reports, package publishing, or installer behavior",
+      "App install/update/pin/rollback/sync behavior, hosted registry, marketplace, crawler queue, benchmark contract, or true write execution",
+      "Core Run Record/result envelope behavior",
+      "runtime, browser, Core, Harbor, App, provider/profile/session/cookie/token/raw evidence fields",
+      "Core fixture consumption behavior",
+      "write guardrail behavior",
+      "merge or issue closeout"
+    ],
+    "owner": "repo-controller"
+  },
+  "integration_evidence": [
+    {
+      "carrier": "sample_read_package_manifest",
+      "locator": "sites/example/read-public-page/manifest.json#sample_read_package",
+      "summary": "Manifest marks the existing reserved-domain read package as the first low-risk sample read package and binds it to the redacted fixture."
+    },
+    {
+      "carrier": "local_registry_sample_marker",
+      "locator": "registry/local-packages.json#entries[0].sample_read_package",
+      "summary": "Repo-local package index exposes the selected sample marker and fixture path without adding hosted registry or runtime behavior."
+    },
+    {
+      "carrier": "lifecycle_metadata",
+      "locator": "sites/example/read-public-page/lifecycle-metadata.json",
+      "summary": "Lifecycle metadata treats sample package selection as an explicit promotion prerequisite and version-relevant binding."
+    }
+  ],
+  "validation": {
+    "status": "passed_local_static",
+    "commands": [
+      {
+        "command": "python3 tools/lode_validate_package.py sites/example/read-public-page --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T20:03:00Z",
+        "summary": "Validator returned status `passed` with no errors or warnings."
+      },
+      {
+        "command": "python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json",
+        "result": "passed",
+        "generated_at": "2026-07-01T20:03:00Z",
+        "summary": "Explicit registry-index validation returned status `passed` with no errors or warnings."
+      },
+      {
+        "command": "jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json registry/local-packages.json",
+        "result": "passed",
+        "generated_at": "2026-07-01T20:03:00Z"
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed",
+        "generated_at": "2026-07-01T20:03:00Z"
+      }
+    ]
+  }
+}

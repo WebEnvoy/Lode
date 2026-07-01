@@ -2,44 +2,41 @@
 
 ## Derived Fact Chain View
 
-- Item ID: GH-100
-- Goal: Define package ref and lock semantics for the sample read package, including capability identity, version, lock ref, locked assets, and invalidation behavior, without implementing App install/update, hosted registry, Core Run Record, runtime, or write behavior.
-- Scope: Add `sites/example/read-public-page/package-lock.json`, mark the package lock present in the manifest/local registry/lifecycle metadata, extend the stdlib validator to validate lock identity and locked asset refs, update README wording, and maintain GH-100 item-specific Loom carriers.
-- Execution Path: milestone-9/package-ref-lock
+- Item ID: GH-101
+- Goal: Select the first low-risk sample read package and bind it to an existing redacted fixture so parent FR #89 has a repo-local sample package reference to consume.
+- Scope: Mark `sites/example/read-public-page` as the first sample read package in manifest, local registry, lifecycle metadata, and README while reusing the existing schemas, fixture, post-check, failure mapping, and package lock.
+- Execution Path: milestone-9/sample-read-package
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/GH-100.md
-- Review Entry: .loom/reviews/GH-100.json
-- Validation Entry: `python3 tools/lode_validate_package.py sites/example/read-public-page --json`; `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `jq empty sites/example/read-public-page/package-lock.json sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json registry/local-packages.json .loom/specs/GH-100/build-evidence.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-100 --json`; `loom suite carrier validate --target . --item GH-100 --json`; PR body/head readback.
-- Closing Condition: PR for GH-100 is merged, hosted checks are recorded, issue #100 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: closed_out
-- Current Stop: PR #126 merged into `main` at merge commit `d77bcc61a00e1a6ce9a71f97cef1219ef3c5b4b1`; closeout evidence was posted to issue #100 and the issue was closed at 2026-07-01T19:54:05Z.
-- Next Step: None for GH-100; continue milestone #9 with GH-101 through GH-103.
+- Recovery Entry: .loom/progress/GH-101.md
+- Review Entry: .loom/reviews/GH-101.json
+- Validation Entry: `python3 tools/lode_validate_package.py sites/example/read-public-page --json`; `python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json`; `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json registry/local-packages.json .loom/specs/GH-101/build-evidence.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-101 --json`; `loom suite carrier validate --target . --item GH-101 --json`; PR body/head readback.
+- Closing Condition: PR for GH-101 is merged, hosted checks are recorded, issue #101 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
+- Current Checkpoint: build
+- Current Stop: GH-101 selected `sites/example/read-public-page` as the first low-risk sample read package by adding sample selection and fixture binding metadata to the manifest, local registry, lifecycle metadata, and README.
+- Next Step: Add authored review records, validate Loom suite/carrier/readback, create PR, read back PR body/head metadata, run hosted checks, and merge after gate pass.
 - Blockers: None recorded.
-- Latest Validation Summary: Post-merge closeout sync on 2026-07-01: PR #126 merged to `main` at `d77bcc61a00e1a6ce9a71f97cef1219ef3c5b4b1`; hosted run `28543755904` passed required checks including `repo-local-cli`, `loom-check`, and `loom-pr-merge-gate`; issue #100 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/100#issuecomment-4859541796 and issue #100 closed at 2026-07-01T19:54:05Z. This closeout branch records carrier-only terminal state.
-- Recovery Boundary: Re-check if this PR adds package manager files, dependencies, generated outputs, App install/update/pin/rollback/sync behavior, hosted registry, marketplace, runtime behavior, Core/Harbor/App behavior, Core Run Record/result envelope behavior, Core fixture consumption behavior, write guardrail behavior, external writes, provider/profile/session fields, or changes outside GH-100 package lock/validator/package metadata/carrier scope.
-- Current Lane: closeout
+- Latest Validation Summary: Local package validation passed on 2026-07-01 for automatic local registry discovery and explicit `--registry-index registry/local-packages.json`; both reports returned status `passed` with no errors or warnings. JSON readability and `git diff --check` also passed.
+- Recovery Boundary: Re-check if this PR adds new packages, schema changes, fixture content changes, validator expansion, package lock behavior changes, App install/update, hosted registry, marketplace, runtime behavior, Core/Harbor/App behavior, Core fixture consumption behavior, write guardrail behavior, external writes, provider/profile/session fields, or changes outside GH-101 sample-selection metadata/carrier scope.
+- Current Lane: build
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: .loom/progress/GH-100.md
-- Lane Entry: milestone-9/package-ref-lock
+- Verification Entry: .loom/progress/GH-101.md
+- Lane Entry: milestone-9/sample-read-package
 
 ## Sources
 
-- Static Truth: .loom/work-items/GH-100.md
-- Dynamic Truth: .loom/progress/GH-100.md
+- Static Truth: .loom/work-items/GH-101.md
+- Dynamic Truth: .loom/progress/GH-101.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
 
 ## Notes
 
-- 2026-07-01: GH-100 became the active item for the milestone #9 package ref / lock semantics PR.
-- 2026-07-01: Started from `origin/main` after GH-99 closeout carrier sync merged at `22132bdec95096a0793674a9e0c6ba14ffb8ee52`.
+- 2026-07-01: GH-101 became the active item for milestone #9 sample read package selection.
+- 2026-07-01: Started from `origin/main` after GH-100 closeout carrier sync merged at `084f169fa9660d658e51f190f4c29dd44caf6b4e`.
 - 2026-07-01: CodeGraph was not initialized in this worktree, so structural lookup uses `rg` and direct reads without writing `.codegraph/`.
-- 2026-07-01: GH-100 keeps Core fixture consumption and write guardrail behavior deferred to later Work Items.
-- 2026-07-01: `loom build` was classified as a build adapter gap because the embedded flow did not consume direct suite JSON or the already-present `ownership_constraints`; direct suite and carrier validation passed.
-- 2026-07-01: Authored spec and general review records bind to implementation head `65956788ae24247467685f9387b0e5d3e49b5096`; later changes before PR creation are limited to review/progress/status carriers and PR metadata.
-- 2026-07-01: PR #126 merged to `main` at `d77bcc61a00e1a6ce9a71f97cef1219ef3c5b4b1`; issue #100 closeout evidence was posted and issue #100 closed before this carrier sync.
+- 2026-07-01: GH-101 reuses the existing package and redacted fixture; Core fixture consumption and write-deferred guardrail behavior remain follow-ups.
