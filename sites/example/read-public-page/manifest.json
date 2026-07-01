@@ -66,7 +66,11 @@
     {
       "role": "fixture",
       "path": "fixtures/read-public-page.fixture.json",
-      "status": "planned",
+      "status": "present",
+      "fixture_id": "example.read-public-page.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "example.read-public-page.source.document-summary@0.1.0",
+      "redaction": "summary_only",
       "work_item": "GH-95"
     },
     {
@@ -86,10 +90,20 @@
     "invalidation_status": "not_invalidated",
     "lock_input_ref": "lode://site-capability/example/read-public-page/lifecycle@0.1.0#lock-input"
   },
+  "fixture_metadata": {
+    "path": "fixtures/read-public-page.fixture.json",
+    "fixture_id": "example.read-public-page.fixture",
+    "fixture_version": "0.1.0",
+    "source_shape": "example.read-public-page.source.document-summary@0.1.0",
+    "normalized_output_schema": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
+    "redaction": "summary_only",
+    "source_ref_policy": "placeholder_refs_only",
+    "evidence_ref_policy": "placeholder_refs_only"
+  },
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
-    "Package lifecycle remains proposed until fixture, post-check, validator, and Core fixture consumption checks exist.",
-    "Fixture and post-check assets are planned in follow-up Work Items before stable admission."
+    "Package lifecycle remains proposed until post-check, validator, and Core fixture consumption checks exist.",
+    "Post-check assets are planned in follow-up Work Items before stable admission."
   ],
   "forbidden_contents": [
     "cookies",

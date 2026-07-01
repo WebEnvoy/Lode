@@ -1,0 +1,6 @@
+# Task Carrier
+
+| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/95 | OPEN | in_progress | primary | .loom/work-items/GH-95.md | .loom/specs/GH-95/implementation-contract.md#implementation-contract | .loom/specs/GH-95/spec.md#required-behavior | .loom/specs/GH-95/plan.md#implementation | .loom/specs/GH-95/plan.md#validation | GH-95 is the active Work Item for `work/GH-95-redacted-fixture`. | Recheck if issue #95 state, PR binding, branch head, or fixture scope changes. |
+| github_issue | https://github.com/WebEnvoy/Lode/issues/88 | OPEN | in_progress | mirror | .loom/work-items/GH-95.md | .loom/specs/GH-95/implementation-contract.md#implementation-contract | .loom/specs/GH-95/spec.md#required-behavior | .loom/specs/GH-95/plan.md#implementation | .loom/specs/GH-95/plan.md#validation | Mirrored because GH-88 is the parent FR consumed but not closed by this PR. | Recheck if GH-88 body, dependencies, labels, or closeout state changes. |
