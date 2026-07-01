@@ -125,7 +125,7 @@
       "source shape or redaction policy changes",
       "schema version changes",
       "resource requirement profile changes",
-      "fixture validation fails after GH-96 validator coverage exists",
+      "validator report fails after GH-96 validator coverage exists",
       "post-check validation fails after GH-97",
       "Core fixture consumption fails after GH-102"
     ],

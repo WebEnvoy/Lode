@@ -1,0 +1,28 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "GH-96",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "GH-96 spec is approved for a minimal offline validator CLI. The spec keeps validator scope limited to local package contract checks and explicitly defers post-check output, failure mapping finalization, Core fixture consumption, runtime behavior, dependencies, and write capability.",
+  "reviewer": "codex-repo-controller",
+  "authored_at": "2026-07-01T18:44:30Z",
+  "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd",
+  "reviewed_validation_summary": "Spec review consumed `.loom/specs/GH-96/spec.md`, `.loom/specs/GH-96/plan.md`, `.loom/specs/GH-96/implementation-contract.md`, and `.loom/specs/GH-96/task-carrier.md`; `loom suite validate --target . --item GH-96 --json` and `loom suite carrier validate --target . --item GH-96 --json` passed.",
+  "fallback_to": null,
+  "blocking_issues": [],
+  "follow_ups": [
+    "GH-97 must define post-check output before the validator warning can be removed.",
+    "GH-98 must define failure mapping before Core/App category consumption can be claimed."
+  ],
+  "consumed_inputs": {
+    "spec": ".loom/specs/GH-96/spec.md",
+    "plan": ".loom/specs/GH-96/plan.md",
+    "implementation_contract": ".loom/specs/GH-96/implementation-contract.md",
+    "task_carrier": ".loom/specs/GH-96/task-carrier.md",
+    "suite_validation": "loom suite validate --target . --item GH-96 --json",
+    "suite_validation_result": "pass",
+    "suite_carrier_validation": "loom suite carrier validate --target . --item GH-96 --json",
+    "suite_carrier_validation_result": "pass",
+    "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd"
+  }
+}
