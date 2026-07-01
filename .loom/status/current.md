@@ -12,10 +12,10 @@
 - Validation Entry: `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/resource-requirements.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-93 --json`; `loom suite carrier validate --target . --item GH-93 --json`; PR body/head readback.
 - Closing Condition: PR for GH-93 is merged, hosted checks are recorded, issue #93 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
 - Current Checkpoint: merge
-- Current Stop: GH-93 resource requirements implementation is locally validated on branch `work/GH-93-resource-requirements`; review carrier is pending.
-- Next Step: Record review evidence, open PR, and run hosted gates.
+- Current Stop: GH-93 resource requirements implementation is reviewed at head `3d829223e88958767ddfda65d30dc2cc74c43e48`; only PR metadata and carrier-only updates are pending before hosted gates.
+- Next Step: Open PR, run metadata readback, and run hosted gates.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/resource-requirements.json .loom/bootstrap/init-result.json .loom/specs/GH-93/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-93 --json`, and `loom suite carrier validate --target . --item GH-93 --json`.
+- Latest Validation Summary: Local validation passed for `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/resource-requirements.json .loom/bootstrap/init-result.json .loom/specs/GH-93/build-evidence.json`, `git diff --check`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-93 --json`, and `loom suite carrier validate --target . --item GH-93 --json` at head `3d829223e88958767ddfda65d30dc2cc74c43e48`.
 - Recovery Boundary: Re-check if this PR adds fixtures, post-check logic, validator/registry behavior, runtime behavior, external writes, provider/profile/session fields, or changes outside GH-93 resource requirements/carrier scope.
 - Current Lane: implementation
 
@@ -37,3 +37,4 @@
 ## Notes
 
 - 2026-07-01: GH-93 became the active item for the milestone #9 resource requirements PR.
+- 2026-07-01: GH-93 resource requirements implementation was reviewed at head `3d829223e88958767ddfda65d30dc2cc74c43e48`; follow-up commits are limited to review/carrier/PR metadata unless code changes force re-review.
