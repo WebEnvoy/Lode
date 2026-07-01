@@ -3,14 +3,14 @@
   "item_id": "GH-96",
   "decision": "allow",
   "kind": "general_review",
-  "summary": "GH-96 implementation is approved for PR creation. The validator is stdlib-only, offline, reads the sample package, emits the required report shape, checks manifest/schema/resource/lifecycle/fixture/post-check refs, treats the planned GH-97 post-check as a proposed-package warning, and does not introduce dependencies, runtime behavior, Core/Harbor/App changes, registry behavior, or write capability.",
+  "summary": "GH-96 implementation review remains approved for the validator CLI PR. This post-merge closeout carrier repins the previously consumed approval to merge commit 14e36c7c5597683c6da47203181d5c0d2874b63f because the implementation branch was deleted after PR #118 merged; it is not new pre-merge review evidence.",
   "reviewer": "codex-repo-controller",
-  "authored_at": "2026-07-01T18:44:30Z",
-  "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd",
-  "reviewed_validation_summary": "Local validation passed on 2026-07-01 for validator report shape, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, workflow YAML parse, package/Loom JSON checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-96 --json`, and `loom suite carrier validate --target . --item GH-96 --json`; validator returned `passed_with_warnings` with only the expected GH-97 planned post-check warning; `loom build --target . --item GH-96 --build-evidence .loom/specs/GH-96/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.",
+  "authored_at": "2026-07-01T18:52:20Z",
+  "reviewed_head": "14e36c7c5597683c6da47203181d5c0d2874b63f",
+  "reviewed_validation_summary": "Post-merge closeout sync on 2026-07-01: PR #118 merged to `main` at `14e36c7c5597683c6da47203181d5c0d2874b63f`; hosted run `28540319449` passed required checks including `repo-local-cli` validator execution; issue #96 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/96#issuecomment-4859086640 and issue #96 closed at 2026-07-01T18:52:05Z. This closeout branch records carrier-only terminal state.",
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Authored implementation review binds to GH-96 implementation head `20b3c1c5cb98052c5035668de354f95cbb2344cd`; subsequent PR setup changes are limited to review/progress/status carriers and PR metadata, with no validator CLI, sample package, workflow, runtime, dependency, Core/Harbor/App, or external behavior changes."
+    "reason": "Authored implementation review was consumed before PR #118 merged; this post-merge closeout repin binds retained approval to the merge commit for terminal closeout carrier comparison only."
   },
   "fallback_to": null,
   "blocking_issues": [],
@@ -37,6 +37,9 @@
     "suite_carrier_validation": "loom suite carrier validate --target . --item GH-96 --json",
     "suite_carrier_validation_result": "pass",
     "branch": "work/GH-96-validator-cli",
-    "reviewed_head": "20b3c1c5cb98052c5035668de354f95cbb2344cd"
+    "reviewed_head": "14e36c7c5597683c6da47203181d5c0d2874b63f",
+    "pr": "https://github.com/WebEnvoy/Lode/pull/118",
+    "hosted_run": "https://github.com/WebEnvoy/Lode/actions/runs/28540319449",
+    "issue_closeout": "https://github.com/WebEnvoy/Lode/issues/96#issuecomment-4859086640"
   }
 }

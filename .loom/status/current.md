@@ -11,13 +11,13 @@
 - Review Entry: .loom/reviews/GH-96.json
 - Validation Entry: `python3 tools/lode_validate_package.py sites/example/read-public-page --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `ruby -e 'require "yaml"; YAML.load_file(".github/workflows/loom-check.yml")'`; `jq empty sites/example/read-public-page/manifest.json sites/example/read-public-page/lifecycle-metadata.json sites/example/read-public-page/fixtures/read-public-page.fixture.json`; `git diff --check`; `loom fact-chain --target . --json`; `loom suite validate --target . --item GH-96 --json`; `loom suite carrier validate --target . --item GH-96 --json`; PR body/head readback.
 - Closing Condition: PR for GH-96 is merged, hosted checks are recorded, issue #96 closeout evidence is posted, and the branch/head/PR metadata agree with this carrier.
-- Current Checkpoint: merge
-- Current Stop: PR #118 is open for GH-96; PR body/head metadata is synced on `work/GH-96-validator-cli`, and hosted `repo-local-cli` has validated the new package validator command.
-- Next Step: Push merge-checkpoint carrier sync, refresh PR body/head metadata, rerun hosted checks, and merge after gate pass.
+- Current Checkpoint: closed_out
+- Current Stop: PR #118 merged into `main` at merge commit `14e36c7c5597683c6da47203181d5c0d2874b63f`; closeout evidence was posted to issue #96 and the issue was closed at 2026-07-01T18:52:05Z.
+- Next Step: None for GH-96; continue milestone #9 with GH-97 through GH-103.
 - Blockers: None recorded.
-- Latest Validation Summary: Local validation passed on 2026-07-01 for validator report shape, `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`, workflow YAML parse, package/Loom JSON checks, `git diff --check`, `loom doctor --target . --json`, `loom verify --target . --json`, `loom fact-chain --target . --json`, `loom suite validate --target . --item GH-96 --json`, and `loom suite carrier validate --target . --item GH-96 --json`; validator returned `passed_with_warnings` with only the expected GH-97 planned post-check warning; `loom build --target . --item GH-96 --build-evidence .loom/specs/GH-96/build-evidence.json --json` was classified as a Loom build adapter gap after direct suite and carrier validation passed.
+- Latest Validation Summary: Post-merge closeout sync on 2026-07-01: PR #118 merged to `main` at `14e36c7c5597683c6da47203181d5c0d2874b63f`; hosted run `28540319449` passed required checks including `repo-local-cli` validator execution; issue #96 closeout evidence was posted at https://github.com/WebEnvoy/Lode/issues/96#issuecomment-4859086640 and issue #96 closed at 2026-07-01T18:52:05Z. This closeout branch records carrier-only terminal state.
 - Recovery Boundary: Re-check if this PR adds dependencies, package manager files, a full JSON Schema engine, generated outputs, post-check runner/output, failure mapping finalization, local resolver/lock behavior, Core fixture consumption behavior, write guardrail behavior, runtime behavior, external writes, provider/profile/session fields, or changes outside GH-96 validator CLI and carrier scope.
-- Current Lane: merge
+- Current Lane: closeout
 
 ## Runtime Evidence
 
@@ -43,3 +43,4 @@
 - 2026-07-01: `loom build` was classified as a build adapter gap because the embedded flow did not consume direct suite JSON or the already-present `ownership_constraints`; direct suite and carrier validation passed.
 - 2026-07-01: Added GH-96 spec and semantic review records for implementation head `20b3c1c5cb98052c5035668de354f95cbb2344cd`.
 - 2026-07-01: PR #118 was created for `work/GH-96-validator-cli`; hosted run `28540145616` passed `repo-local-cli`, including the new validator command, but `loom-pr-merge-gate` blocked because the carrier still declared checkpoint `build`.
+- 2026-07-01: PR #118 merged to `main` at `14e36c7c5597683c6da47203181d5c0d2874b63f`; issue #96 closeout evidence was posted and issue #96 closed before this carrier sync.
