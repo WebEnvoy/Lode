@@ -1,0 +1,18 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-156",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Spec review accepts the bounded Stage 5 Lode repair draft and overlay/fork facts batch for issues #156 through #166.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T17:10:00Z",
+  "reviewed_head": "eabfd371c3bfc2e21a6c97e35710096a48d9d2a0",
+  "reviewed_validation_summary": "Spec review before final validation; implementation contract requires package validator, batch registry validation, git diff check, Loom suite/carrier/fact-chain/verify, hosted gate, and post-merge closeout.",
+  "reviewed_validation_summary_hash": "not_applicable_pre_validation",
+  "validation_summary_source": "implementation-contract",
+  "validation_summary_locator": ".loom/specs/LODE-156/implementation-contract.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": []
+}

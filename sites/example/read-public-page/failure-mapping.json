@@ -76,6 +76,38 @@
         "severity": "info"
       },
       "recovery_hint": "Surface an empty state; do not treat it as package or runtime failure."
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "A package run or fixture check fails the declared post-check expectations after schema admission.",
+      "owner": "Lode package maintainer after Core reports post-check failure facts",
+      "core_mapping": {
+        "category": "post_check_failed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "repair_draft_available",
+        "severity": "warning"
+      },
+      "recovery_hint": "Use the repair draft lifecycle to refresh fixtures, mappings, or post-check expectations."
+    },
+    {
+      "lode_failure_class": "evidence_expired",
+      "trigger": "The evidence refs needed to validate a package repair are stale, expired, or unavailable.",
+      "owner": "WebEnvoy Harbor and Core fact inputs before Lode repair promotion",
+      "core_mapping": {
+        "category": "evidence_expired",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "fresh_evidence_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Request fresh evidence refs; do not place private evidence material in Lode package assets."
     }
   ],
   "aliases": [
@@ -93,6 +125,16 @@
       "source": "mapping_incomplete",
       "maps_to": "site_changed",
       "source_owner": "Lode post-check or output validation"
+    },
+    {
+      "source": "post_check_mismatch",
+      "maps_to": "post_check_failed",
+      "source_owner": "Lode post-check validation"
+    },
+    {
+      "source": "stale_evidence_ref",
+      "maps_to": "evidence_expired",
+      "source_owner": "Harbor evidence lifecycle"
     },
     {
       "source": "empty",

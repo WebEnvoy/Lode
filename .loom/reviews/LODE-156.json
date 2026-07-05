@@ -1,0 +1,26 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-156",
+  "decision": "allow",
+  "kind": "code_review",
+  "summary": "Implementation review accepts repair draft, overlay/fork, package update acceptance, and sensitive material validator changes as bounded Stage 5 Lode facts.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T17:10:00Z",
+  "reviewed_head": "pending_pre_commit",
+  "reviewed_validation_summary": "Pending final validation; update after local validation before merge-ready.",
+  "reviewed_validation_summary_hash": "pending_pre_commit",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-156.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The change exposes refs-only repair and overlay/fork facts without claiming runtime execution, hosted registry, marketplace, App install truth, Core run truth, Harbor private evidence, or true write behavior."
+  },
+  "implementation_review_disposition": {
+    "status": "pending_final_validation",
+    "reason": "Final review head and validation summary must be refreshed after commit."
+  }
+}

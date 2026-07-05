@@ -116,6 +116,24 @@
       "work_item": "GH-153"
     },
     {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "repair_draft_id": "example.read-public-page.repair-draft",
+      "repair_draft_version": "0.1.0",
+      "consumer": "WebEnvoy App repair draft display and WebEnvoy Core failure attribution hints",
+      "work_item": "GH-159"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "overlay_metadata_id": "example.read-public-page.overlay-fork",
+      "overlay_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App invalidation, overlay, fork, and repair draft status display",
+      "work_item": "GH-163"
+    },
+    {
       "role": "package_lock",
       "path": "package-lock.json",
       "status": "present",
@@ -202,6 +220,8 @@
       "manifest_path": "sites/example/read-public-page/manifest.json",
       "package_lock": "sites/example/read-public-page/package-lock.json",
       "catalog_metadata_path": "sites/example/read-public-page/catalog-metadata.json",
+      "repair_draft_path": "sites/example/read-public-page/repair/repair-draft.fixture.json",
+      "overlay_fork_metadata_path": "sites/example/read-public-page/repair/overlay-fork-metadata.fixture.json",
       "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
       "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
       "write_deferred_guardrail_path": "sites/example/read-public-page/write-deferred-guardrail.json"
@@ -212,7 +232,9 @@
       "repo-local package resolution checks",
       "static package lock checks",
       "Core-readable static fixture for admission and schema validation",
-      "static write-deferred guardrail check"
+      "static write-deferred guardrail check",
+      "repair draft lifecycle and promotion boundary checks",
+      "overlay, fork, and private invalidation boundary checks"
     ],
     "not_yet_claimed": [
       "stable package admission",
@@ -223,7 +245,8 @@
   "known_limitations": [
     "Sample package is a read-only reserved-domain fixture target.",
     "Package lifecycle remains proposed until parent FR closeout consumes all Work Items.",
-    "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration."
+    "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration.",
+    "Repair draft and overlay/fork assets are refs-only fixtures; they do not contain private browser material or promote a package update."
   ],
   "forbidden_contents": [
     "cookies",
