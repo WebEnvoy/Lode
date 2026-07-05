@@ -19,6 +19,7 @@ SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write
 SUPPORTED_LIFECYCLE_STATES = {"proposed", "active", "suspected_broken", "broken", "deprecated"}
 POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
 REQUIRED_FAILURE_CLASSES = {"invalid_contract", "resource_unavailable", "site_changed", "empty_result"}
+REQUIRED_PREVIEW_FAILURE_CLASSES = {"preview_unavailable", "page_changed", "user_cancelled"}
 REQUIRED_ASSET_ROLES = {
     "input_schema",
     "normalized_output_schema",
@@ -269,6 +270,17 @@ def validate_output_schema(report: Report, schema: dict[str, Any], path: str) ->
     missing = sorted(expected - set(required))
     if missing:
         add_error(report, "invalid_contract", path, f"Output schema missing required fields: {', '.join(missing)}.", "Require the normalized result fields consumed by Core/App.")
+    x_lode = schema.get("x-lode") if isinstance(schema.get("x-lode"), dict) else {}
+    if x_lode.get("operation_ref") == "lode://operation/contact_form_preview":
+        preview_def = nested_get(schema, ["$defs", "contact_form_preview"]) or {}
+        preview_required = set(preview_def.get("required") if isinstance(preview_def.get("required"), list) else [])
+        missing_preview = sorted({"expected_change", "risk_hints", "no_submit_guard_status"} - preview_required)
+        if missing_preview:
+            add_error(report, "invalid_contract", path, f"Preview output schema missing fields: {', '.join(missing_preview)}.", "Declare structured expected change, risk hints, and no-submit guard status.")
+        taxonomy = x_lode.get("risk_hint_taxonomy")
+        required_hints = {"requires_user_review", "target_may_change", "evidence_may_stale", "no_submit_guard_required"}
+        if not isinstance(taxonomy, list) or not required_hints.issubset(set(taxonomy)):
+            add_error(report, "invalid_contract", f"{path}#x-lode.risk_hint_taxonomy", "Preview schema must declare risk hint taxonomy.", "Expose the Stage 6 risk hints consumed by Core/App.")
 
 
 def validate_resource_requirements(report: Report, resource: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
@@ -397,6 +409,10 @@ def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], as
         missing = sorted(REQUIRED_FAILURE_CLASSES - class_ids)
         if missing:
             add_error(report, "invalid_contract", path, f"Failure mapping missing required classes: {', '.join(missing)}.", "Declare the GH-98 required failure classes.")
+        if failure_mapping.get("operation_id") == "contact_form_preview":
+            missing_preview = sorted(REQUIRED_PREVIEW_FAILURE_CLASSES - class_ids)
+            if missing_preview:
+                add_error(report, "invalid_contract", path, f"Preview failure mapping missing classes: {', '.join(missing_preview)}.", "Declare preview unavailable, page changed, and user cancelled classes.")
         for item in classes:
             if isinstance(item, dict):
                 require_keys(report, item, ["lode_failure_class", "trigger", "owner", "core_mapping", "app_mapping"], f"{path}#classes")

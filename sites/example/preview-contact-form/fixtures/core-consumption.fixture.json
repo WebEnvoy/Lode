@@ -99,7 +99,10 @@
       "input_instance_matches_input_schema",
       "normalized_fixture_matches_output_schema",
       "post_check_fixture_output_is_passed",
-      "failure_mapping_declares_core_hints"
+      "failure_mapping_declares_core_hints",
+      "expected_change_schema_is_structured",
+      "risk_hint_taxonomy_is_declared",
+      "preview_failure_classes_are_declared"
     ]
   },
   "schema_validation_cases": [
@@ -148,7 +151,10 @@
       "invalid_contract",
       "resource_unavailable",
       "site_changed",
-      "empty_result"
+      "empty_result",
+      "preview_unavailable",
+      "page_changed",
+      "user_cancelled"
     ],
     "required_core_mapping_fields": [
       "category",
@@ -163,8 +169,10 @@
     "package_lock": "readable",
     "input_schema_validation": "valid",
     "normalized_output_schema_validation": "valid",
+    "expected_change_schema": "structured",
+    "risk_hint_taxonomy": "declared",
     "post_check_fixture_output": "passed",
-    "failure_mapping": "readable",
+    "failure_mapping": "preview_classes_readable",
     "stable_admission_claimed": false,
     "runtime_execution_claimed": false,
     "write_behavior_claimed": false

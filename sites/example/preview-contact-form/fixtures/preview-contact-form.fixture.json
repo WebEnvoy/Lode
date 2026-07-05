@@ -123,7 +123,34 @@
         "title": "Example Domain",
         "summary": "Reserved public example page for documentation and tests.",
         "source_status": "located",
+        "expected_change": {
+          "change_kind": "form_input_preview",
+          "target_ref": "writable-target:fixture/contact-form",
+          "summary": "Preview contact form input locally without submitting.",
+          "field_effects": [
+            {
+              "field_ref": "contact.message",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            }
+          ],
+          "external_submit": false
+        },
         "expected_change_summary": "Validate contact form target and prepare a local preview without submitting.",
+        "risk_hints": [
+          {
+            "risk_hint": "requires_user_review",
+            "severity": "warning",
+            "owner": "app",
+            "mitigation": "Show the preview before any later approval request."
+          },
+          {
+            "risk_hint": "no_submit_guard_required",
+            "severity": "blocked",
+            "owner": "core",
+            "mitigation": "Reject external submit attempts for this package."
+          }
+        ],
         "no_submit_guard_status": "active"
       },
       "source_refs": [
@@ -180,7 +207,17 @@
         "evidence_ref": "fixture-evidence-1"
       },
       {
+        "field": "normalized.expected_change",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
         "field": "normalized.expected_change_summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.risk_hints",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },
@@ -195,8 +232,8 @@
   },
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_by_GH-96_validator",
-    "post_check_scope": "result_contract_and_fixture_output_defined_in_GH-180",
-    "failure_mapping_scope": "required_classes_and_consumer_hints_defined_in_GH-180",
+    "post_check_scope": "preview post-check requirements include expected change and no-submit facts.",
+    "failure_mapping_scope": "preview failure classification includes unavailable, page changed, and user cancelled.",
     "stable_gate_note": "This fixture alone does not make the package stable."
   },
   "non_goals": [
