@@ -1,6 +1,0 @@
-# Task Carrier
-
-| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| github_issue | https://github.com/WebEnvoy/Lode/issues/19 | OPEN | in_progress | primary | .loom/work-items/GH-19.md | .loom/specs/GH-19/plan.md#implementation | .loom/specs/GH-19/spec.md#required-behavior | .loom/specs/GH-19/plan.md#implementation | .loom/specs/GH-19/plan.md#validation | Created by Codex on 2026-06-30 from GH-19 issue body and delegated scope. | Recheck after every push, PR metadata update, hosted Loom run, review finding, or issue/PR state change. |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/20 | OPEN | pending | mirror | .loom/work-items/GH-19.md | .loom/specs/GH-19/plan.md#implementation | .loom/specs/GH-19/spec.md#required-behavior | .loom/specs/GH-19/plan.md#implementation | .loom/specs/GH-19/plan.md#validation | Mirrored by Codex on 2026-06-30 because GH-20 fixture/post-check requirements are covered but not closed by this PR. | Recheck if GH-20 body, dependencies, labels, or closeout state changes. |
