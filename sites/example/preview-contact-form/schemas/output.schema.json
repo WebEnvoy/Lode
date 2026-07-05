@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/example/preview-contact-form/output@0.1.0",
+  "title": "Example Contact Form Preview Normalized Output",
+  "description": "Normalized output contract for a validate-only write-precheck package. Core owns the Result Envelope around this data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "contact_form_preview"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/contact_form_preview"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string",
+      "enum": [
+        "page_has_no_public_content",
+        "target_not_found"
+      ]
+    },
+    "unavailable_reason": {
+      "type": "string",
+      "enum": [
+        "source_unavailable",
+        "evidence_unavailable",
+        "not_normalizable"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mapping_incomplete",
+          "source_refs_partial",
+          "evidence_refs_partial"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "enum": [
+              "success_result",
+              "partial_result"
+            ]
+          },
+          "normalized": {
+            "$ref": "#/$defs/contact_form_preview"
+          }
+        },
+        "required": [
+          "source_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "empty_result"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "empty_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "not_normalizable"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "unavailable_reason"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "contact_form_preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_url",
+        "target_ref",
+        "title",
+        "summary",
+        "source_status",
+        "expected_change_summary",
+        "no_submit_guard_status"
+      ],
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(www\\.)?example\\.org(?:/.*)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located"
+          ]
+        },
+        "expected_change_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "no_submit_guard_status": {
+          "const": "active"
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "document_summary",
+            "http_metadata",
+            "dom_snapshot_summary"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        },
+        "schema_hint": {
+          "type": "string",
+          "examples": [
+            "example-preview-contact-form-source@0.1.0"
+          ]
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "evidence_kind": {
+          "type": "string",
+          "enum": [
+            "snapshot_ref",
+            "network_summary_ref",
+            "post_check_ref"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "result_kind": "contact_form_preview",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://example.org/",
+        "title": "Example Domain",
+        "summary": "Reserved public example page.",
+        "source_status": "located"
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "document_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "example-preview-contact-form-source@0.1.0"
+        }
+      ],
+      "evidence_refs": []
+    },
+    {
+      "result_kind": "contact_form_preview",
+      "status": "empty",
+      "classification": "empty_result",
+      "normalized": null,
+      "source_refs": [],
+      "evidence_refs": [],
+      "empty_reason": "page_has_no_public_content"
+    },
+    {
+      "result_kind": "contact_form_preview",
+      "status": "unavailable",
+      "classification": "not_normalizable",
+      "normalized": null,
+      "source_refs": [],
+      "evidence_refs": [],
+      "unavailable_reason": "source_unavailable"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "example.preview-contact-form.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+    "operation_ref": "lode://operation/contact_form_preview",
+    "result_kind": "contact_form_preview",
+    "core_envelope_owner": "WebEnvoy Core",
+    "failure_class_mapping": {
+      "invalid_contract": "invalid_contract",
+      "resource_unavailable": "resource_unavailable",
+      "empty": "empty_result",
+      "empty_result": "empty_result",
+      "site_changed": "site_changed",
+      "source_unavailable": "source_unavailable",
+      "evidence_unavailable": "evidence_unavailable",
+      "not_normalizable": "normalization_failed",
+      "mapping_incomplete": "mapping_incomplete"
+    },
+    "forbidden_inline_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data",
+      "full_dom",
+      "har",
+      "screenshot_body"
+    ]
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "example.preview-contact-form.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+  "capability_id": "preview-contact-form",
+  "operation_id": "contact_form_preview",
+  "operation_mode": "validate_only",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares stable failure class meaning and consumer hints. Core owns exact result envelope fields, and App owns final presentation."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Package manifest, schema, lifecycle, post-check, resource, fixture, or failure mapping contract is malformed or contradicts package identity.",
+      "owner": "Lode validator or Core admission",
+      "core_mapping": {
+        "category": "contract_violation",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_needs_repair",
+        "severity": "error"
+      },
+      "recovery_hint": "Repair the package asset contract before admission or execution."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Valid package resource requirements cannot be satisfied by current Harbor facts.",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "resource_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "setup_or_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the runtime owner for the missing profile, login, navigation, snapshot, source ref, or evidence capability."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "The reserved public page source shape, required public fields, or field mapping no longer matches the package fixture and post-check expectations.",
+      "owner": "Lode package maintainer after Core/Harbor detects source or mapping drift",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_update_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "Refresh source shape, fixture, normalizer, or post-check requirements without storing live raw evidence in Lode."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "A valid read produces no public content for the requested target.",
+      "owner": "WebEnvoy Core result projection from Lode output classification",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "empty_state",
+        "severity": "info"
+      },
+      "recovery_hint": "Surface an empty state; do not treat it as package or runtime failure."
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "A package run or fixture check fails the declared post-check expectations after schema admission.",
+      "owner": "Lode package maintainer after Core reports post-check failure facts",
+      "core_mapping": {
+        "category": "post_check_failed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "repair_draft_available",
+        "severity": "warning"
+      },
+      "recovery_hint": "Use the repair draft lifecycle to refresh fixtures, mappings, or post-check expectations."
+    },
+    {
+      "lode_failure_class": "evidence_expired",
+      "trigger": "The evidence refs needed to validate a package repair are stale, expired, or unavailable.",
+      "owner": "WebEnvoy Harbor and Core fact inputs before Lode repair promotion",
+      "core_mapping": {
+        "category": "evidence_expired",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "fresh_evidence_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Request fresh evidence refs; do not place private evidence material in Lode package assets."
+    }
+  ],
+  "aliases": [
+    {
+      "source": "source_shape_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "source_schema_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "mapping_incomplete",
+      "maps_to": "site_changed",
+      "source_owner": "Lode post-check or output validation"
+    },
+    {
+      "source": "post_check_mismatch",
+      "maps_to": "post_check_failed",
+      "source_owner": "Lode post-check validation"
+    },
+    {
+      "source": "stale_evidence_ref",
+      "maps_to": "evidence_expired",
+      "source_owner": "Harbor evidence lifecycle"
+    },
+    {
+      "source": "empty",
+      "maps_to": "empty_result",
+      "source_owner": "Lode normalized output schema"
+    }
+  ],
+  "consumer_boundary": {
+    "core": "Core may consume category, outcome_hint, retryable, and requires_user_action as compatibility hints, but Core owns the final envelope schema.",
+    "app": "App may consume display and severity as presentation hints, but App owns final UI copy.",
+    "lode": "Lode validator checks identity, required classes, and forbidden fields only; it does not execute runtime matching."
+  },
+  "non_goals": [
+    "No Core result envelope schema.",
+    "No App UI copy contract.",
+    "No hosted registry, marketplace, crawler queue, benchmark contract, live runtime matching, external writes, credentials, production payloads, or raw evidence bodies."
+  ]
+}

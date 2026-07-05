@@ -1,0 +1,108 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "example.preview-contact-form.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+  "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+  "capability_id": "preview-contact-form",
+  "operation_id": "contact_form_preview",
+  "operation_mode": "validate_only",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "Example Domain",
+    "manifest_path": "sites/example/preview-contact-form/manifest.json"
+  },
+  "display": {
+    "name": "Preview contact form summary",
+    "summary": "Read title, summary, canonical URL, and source status from a reserved public Example Domain page.",
+    "site_name": "Example Domain",
+    "category": "Content detail"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+      "status": "self_for_initial_version"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+        "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+        "candidate_kind": "previous_known_good"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "fixture_only",
+    "updated_at": "2026-07-05"
+  },
+  "risk": {
+    "level": "low",
+    "operation": "write-precheck",
+    "reason": "Reserved public sample page with summary-only fixture refs."
+  },
+  "facets": [
+    "site:example",
+    "sample",
+    "content-detail",
+    "risk:write-precheck"
+  ],
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present",
+    "post_check_fixture_status": "passed",
+    "runtime_execution": "out_of_scope"
+  },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "latest_repair_draft_ref": "lode://repair-draft/site-capability/example/preview-contact-form/site-change@0.1.1-draft",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "overlay_fork_metadata_path": "sites/example/preview-contact-form/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may render repair draft status, owner, and refs; it does not store repair, package, run, session, or private evidence truth."
+  },
+  "consumer_boundary": "App may render this catalog metadata and store local install/lock/update intent. Lode remains owner of package, catalog, version, lock, fixture, and test metadata truth.",
+  "forbidden_contents": [
+    "credentials",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_evidence_body",
+    "raw_dom",
+    "network_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+    "manifest_path": "sites/example/preview-contact-form/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/example/preview-contact-form/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/example/preview-contact-form/output@0.1.0",
+    "resource_requirements_id": "example.preview-contact-form.resources",
+    "post_check_id": "example.preview-contact-form.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "validate_only"
+  }
+}
