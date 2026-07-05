@@ -1,6 +1,0 @@
-# Task Carrier
-
-| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/96 | CLOSED | done | primary | .loom/work-items/GH-96.md | .loom/specs/GH-96/implementation-contract.md#implementation-contract | .loom/specs/GH-96/spec.md#required-behavior | .loom/specs/GH-96/plan.md#implementation | .loom/specs/GH-96/plan.md#validation | GH-96 closed after PR #118 merged and issue closeout evidence was posted. | Recheck if issue #96 state, PR binding, merge commit, validator report shape, or workflow hook changes. |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/88 | OPEN | in_progress | mirror | .loom/work-items/GH-96.md | .loom/specs/GH-96/implementation-contract.md#implementation-contract | .loom/specs/GH-96/spec.md#required-behavior | .loom/specs/GH-96/plan.md#implementation | .loom/specs/GH-96/plan.md#validation | Mirrored because GH-88 is the parent FR consumed but not closed by this PR. | Recheck if GH-88 body, dependencies, labels, or closeout state changes. |

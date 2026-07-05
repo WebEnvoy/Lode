@@ -1,6 +1,0 @@
-# Task Carrier
-
-| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/92 | CLOSED_AFTER_CLOSEOUT | done | primary | .loom/work-items/GH-92.md | .loom/specs/GH-92/implementation-contract.md#implementation-contract | .loom/specs/GH-92/spec.md#required-behavior | .loom/specs/GH-92/plan.md#implementation | .loom/specs/GH-92/plan.md#validation | PR #110 merged at `15c66a4c96cb57ed207763fcce76cb04d2c17bd7`; closeout evidence was posted; issue #92 closed at 2026-07-01T17:30:03Z. | Recheck if issue #92 is reopened, PR #110 merge is reverted, or closeout evidence changes. |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/87 | OPEN | in_progress | mirror | .loom/work-items/GH-92.md | .loom/specs/GH-92/implementation-contract.md#implementation-contract | .loom/specs/GH-92/spec.md#required-behavior | .loom/specs/GH-92/plan.md#implementation | .loom/specs/GH-92/plan.md#validation | Mirrored because GH-87 is the parent FR consumed but not closed by this PR. | Recheck if GH-87 body, dependencies, labels, or closeout state changes. |
