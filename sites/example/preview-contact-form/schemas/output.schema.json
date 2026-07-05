@@ -176,7 +176,9 @@
         "title",
         "summary",
         "source_status",
+        "expected_change",
         "expected_change_summary",
+        "risk_hints",
         "no_submit_guard_status"
       ],
       "properties": {
@@ -204,12 +206,120 @@
             "partially_located"
           ]
         },
+        "expected_change": {
+          "$ref": "#/$defs/expected_change"
+        },
         "expected_change_summary": {
           "type": "string",
           "minLength": 1
         },
+        "risk_hints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/risk_hint"
+          }
+        },
         "no_submit_guard_status": {
           "const": "active"
+        }
+      }
+    },
+    "expected_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_kind",
+        "target_ref",
+        "summary",
+        "field_effects",
+        "external_submit"
+      ],
+      "properties": {
+        "change_kind": {
+          "const": "form_input_preview"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_effects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field_ref",
+              "effect",
+              "redaction"
+            ],
+            "properties": {
+              "field_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "effect": {
+                "type": "string",
+                "enum": [
+                  "validate_presence",
+                  "preview_local_value"
+                ]
+              },
+              "redaction": {
+                "const": "summary_only"
+              }
+            }
+          }
+        },
+        "external_submit": {
+          "const": false
+        }
+      }
+    },
+    "risk_hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_hint",
+        "severity",
+        "owner",
+        "mitigation"
+      ],
+      "properties": {
+        "risk_hint": {
+          "type": "string",
+          "enum": [
+            "requires_user_review",
+            "target_may_change",
+            "evidence_may_stale",
+            "no_submit_guard_required"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "blocked"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "lode",
+            "core",
+            "harbor",
+            "app"
+          ]
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
@@ -306,9 +416,33 @@
       "classification": "success_result",
       "normalized": {
         "canonical_url": "https://example.org/",
+        "target_ref": "writable-target:fixture/contact-form",
         "title": "Example Domain",
         "summary": "Reserved public example page.",
-        "source_status": "located"
+        "source_status": "located",
+        "expected_change": {
+          "change_kind": "form_input_preview",
+          "target_ref": "writable-target:fixture/contact-form",
+          "summary": "Preview contact form input locally without submitting.",
+          "field_effects": [
+            {
+              "field_ref": "contact.message",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            }
+          ],
+          "external_submit": false
+        },
+        "expected_change_summary": "Validate contact form target and prepare a local preview without submitting.",
+        "risk_hints": [
+          {
+            "risk_hint": "no_submit_guard_required",
+            "severity": "blocked",
+            "owner": "core",
+            "mitigation": "Reject any request that tries to submit externally."
+          }
+        ],
+        "no_submit_guard_status": "active"
       },
       "source_refs": [
         {
@@ -355,9 +489,18 @@
       "site_changed": "site_changed",
       "source_unavailable": "source_unavailable",
       "evidence_unavailable": "evidence_unavailable",
+      "preview_unavailable": "preview_unavailable",
+      "page_changed": "site_changed",
+      "user_cancelled": "user_cancelled",
       "not_normalizable": "normalization_failed",
       "mapping_incomplete": "mapping_incomplete"
     },
+    "risk_hint_taxonomy": [
+      "requires_user_review",
+      "target_may_change",
+      "evidence_may_stale",
+      "no_submit_guard_required"
+    ],
     "forbidden_inline_fields": [
       "cookies",
       "tokens",

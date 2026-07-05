@@ -1,0 +1,26 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-182",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Spec review accepts the bounded Stage 6 Lode expected change, risk hint, preview post-check, and preview failure classification slice.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T20:00:00Z",
+  "reviewed_head": "pending",
+  "reviewed_validation_summary": "`python3 -m py_compile tools/lode_validate_package.py`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `git diff --check`; `loom verify --target . --json`; `loom fact-chain --target . --json` passed locally.",
+  "reviewed_validation_summary_hash": "pending",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-182.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The spec stays inside Lode package truth and excludes true writes, runtime execution, private material, Core envelopes, and App UI."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "Implementation is limited to package assets, validator checks, and item-specific carrier."
+  }
+}

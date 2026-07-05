@@ -78,6 +78,54 @@
       "recovery_hint": "Surface an empty state; do not treat it as package or runtime failure."
     },
     {
+      "lode_failure_class": "preview_unavailable",
+      "trigger": "Expected change, risk hint, post-check input, or preview evidence refs are absent before a validate-only preview can be projected.",
+      "owner": "Lode package contract consumed by WebEnvoy Core",
+      "core_mapping": {
+        "category": "preview_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "preview_unavailable",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Refresh package preview fields or request fresh Harbor evidence refs; do not treat this as submitted."
+    },
+    {
+      "lode_failure_class": "page_changed",
+      "trigger": "Harbor target provenance or RefMap freshness indicates the page changed after the preview source was captured.",
+      "owner": "Harbor freshness facts consumed by WebEnvoy Core",
+      "core_mapping": {
+        "category": "page_changed",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "page_changed_refresh_preview",
+        "severity": "warning"
+      },
+      "recovery_hint": "Request a fresh preview before asking for approval."
+    },
+    {
+      "lode_failure_class": "user_cancelled",
+      "trigger": "The user cancels preview or approval before any external submit.",
+      "owner": "WebEnvoy Core run lifecycle",
+      "core_mapping": {
+        "category": "user_cancelled",
+        "outcome_hint": "cancelled",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "cancelled",
+        "severity": "info"
+      },
+      "recovery_hint": "Record cancellation and keep true write execution unstarted."
+    },
+    {
       "lode_failure_class": "post_check_failed",
       "trigger": "A package run or fixture check fails the declared post-check expectations after schema admission.",
       "owner": "Lode package maintainer after Core reports post-check failure facts",
@@ -130,6 +178,21 @@
       "source": "post_check_mismatch",
       "maps_to": "post_check_failed",
       "source_owner": "Lode post-check validation"
+    },
+    {
+      "source": "preview_unavailable",
+      "maps_to": "preview_unavailable",
+      "source_owner": "Lode preview post-check"
+    },
+    {
+      "source": "page_changed",
+      "maps_to": "page_changed",
+      "source_owner": "Harbor target provenance"
+    },
+    {
+      "source": "user_cancelled",
+      "maps_to": "user_cancelled",
+      "source_owner": "Core cancellation run record"
     },
     {
       "source": "stale_evidence_ref",

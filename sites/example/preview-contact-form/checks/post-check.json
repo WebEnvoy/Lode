@@ -54,13 +54,34 @@
       "on_failure": "post_check_failed"
     },
     {
+      "requirement_id": "expected-change-declared",
+      "description": "The normalized result declares a structured expected change and confirms it does not externally submit.",
+      "required_status": "available",
+      "required_normalized_fields": [
+        "expected_change",
+        "expected_change_summary",
+        "risk_hints",
+        "no_submit_guard_status"
+      ],
+      "required_source_refs": [
+        "fixture-source-1"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-1"
+      ],
+      "on_failure": "preview_unavailable"
+    },
+    {
       "requirement_id": "field-source-binding",
       "description": "Each required normalized public field has a source ref and evidence ref binding.",
       "required_binding_fields": [
         "normalized.canonical_url",
         "normalized.title",
         "normalized.summary",
-        "normalized.source_status"
+        "normalized.source_status",
+        "normalized.expected_change",
+        "normalized.risk_hints",
+        "normalized.no_submit_guard_status"
       ],
       "required_source_refs": [
         "fixture-source-1",
@@ -93,6 +114,9 @@
     ]
   },
   "failure_boundary": {
+    "preview_unavailable": "Expected change, risk hint, or no-submit guard fields are absent or inconsistent.",
+    "page_changed": "Harbor/Core report that target refs no longer match the preview source.",
+    "user_cancelled": "The user cancels the preview or later approval before any external submit.",
     "post_check_failed": "Required public result fields or ref bindings are absent or inconsistent.",
     "mapping_incomplete": "A required normalized field is not traceable to declared source/evidence refs.",
     "evidence_unavailable": "Required evidence refs are absent, expired, or not retained by the runtime owner."
