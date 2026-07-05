@@ -22,6 +22,25 @@
       "operation_mode": "read",
       "version": "0.1.0",
       "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-05T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/example/read-public-page@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+        "status": "self_for_initial_version"
+      },
       "sample_read_package": {
         "status": "selected",
         "work_item": "GH-101",

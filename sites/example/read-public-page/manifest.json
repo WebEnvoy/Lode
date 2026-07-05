@@ -131,6 +131,16 @@
     "lifecycle_metadata_version": "0.1.0",
     "package_version": "0.1.0",
     "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good_ref": "lode://site-capability/example/read-public-page@0.1.0",
+    "rollback_lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
     "deprecation_status": "not_deprecated",
     "invalidation_status": "not_invalidated",
     "lock_input_ref": "lode://site-capability/example/read-public-page/lifecycle@0.1.0#lock-input"
