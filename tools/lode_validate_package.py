@@ -26,6 +26,7 @@ REQUIRED_ASSET_ROLES = {
     "fixture",
     "write_deferred_guardrail",
     "failure_mapping",
+    "catalog_metadata",
     "package_lock",
 }
 FORBIDDEN_KEYS = {
@@ -388,6 +389,60 @@ def validate_write_deferred_guardrail(report: Report, guardrail_doc: dict[str, A
     scan_forbidden_keys(report, guardrail_doc, path)
 
 
+def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        catalog,
+        [
+            "schema_version",
+            "catalog_metadata_id",
+            "catalog_metadata_version",
+            "package_ref",
+            "lock_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "source",
+            "display",
+            "version",
+            "status",
+            "risk",
+            "test_summary",
+            "consumer_boundary",
+        ],
+        path,
+    )
+    if catalog.get("schema_version") != "lode.catalog-metadata.v0":
+        add_error(report, "unsupported_version", path, "Unsupported catalog metadata schema version.", "Use `lode.catalog-metadata.v0`.")
+    if catalog.get("catalog_metadata_id") != asset.get("catalog_metadata_id") or catalog.get("catalog_metadata_version") != asset.get("catalog_metadata_version"):
+        add_error(report, "invalid_contract", path, "Catalog metadata identity/version does not match manifest asset ref.", "Keep catalog metadata aligned with the manifest.")
+    if catalog.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Catalog package_ref does not match manifest.", "Bind catalog metadata to the package ref.")
+    package_lock = refs.get("package_lock") if isinstance(refs.get("package_lock"), dict) else {}
+    if catalog.get("lock_ref") != package_lock.get("lock_ref"):
+        add_error(report, "invalid_contract", path, "Catalog lock_ref does not match package lock asset ref.", "Expose the package lock ref App/Core must pass around.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if catalog.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", path, f"Catalog `{key}` does not match manifest capability.", "Bind catalog metadata to the package capability.")
+
+    display = catalog.get("display") if isinstance(catalog.get("display"), dict) else {}
+    require_keys(report, display, ["name", "summary", "site_name", "category"], f"{path}#display")
+    version = catalog.get("version") if isinstance(catalog.get("version"), dict) else {}
+    require_keys(report, version, ["current", "latest", "default_locked", "lifecycle"], f"{path}#version")
+    if version.get("current") != nested_get(manifest, ["capability", "version"]) or version.get("lifecycle") != nested_get(manifest, ["capability", "lifecycle"]):
+        add_error(report, "invalid_contract", f"{path}#version", "Catalog version/lifecycle does not match manifest capability.", "Keep App-visible version facts owned by Lode.")
+    status = catalog.get("status") if isinstance(catalog.get("status"), dict) else {}
+    require_keys(report, status, ["catalog_state", "installability", "source_health", "updated_at"], f"{path}#status")
+    if status.get("installability") != "intent_only":
+        add_error(report, "invalid_contract", f"{path}#status.installability", "Catalog installability must stay intent_only.", "Do not put App install truth in Lode catalog metadata.")
+    risk = catalog.get("risk") if isinstance(catalog.get("risk"), dict) else {}
+    require_keys(report, risk, ["level", "operation", "reason"], f"{path}#risk")
+    if risk.get("operation") != "read":
+        add_error(report, "invalid_contract", f"{path}#risk.operation", "First-batch catalog metadata must remain read-only.", "Keep Stage 6/write-side risk out of this package.")
+    scan_forbidden_keys(report, catalog, path)
+
+
 def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: str) -> None:
     if not isinstance(mapping, dict):
         add_error(report, "invalid_contract", f"{path}#{field}", "Failure mapping consumer entry must be an object.", "Declare consumer mapping details.")
@@ -592,6 +647,7 @@ def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
         ("guardrail_id", "guardrail_version"),
         ("post_check_id", "post_check_version"),
         ("failure_mapping_id", "failure_mapping_version"),
+        ("catalog_metadata_id", "catalog_metadata_version"),
         ("lock_ref", "lock_version"),
     ]:
         if ref_key in asset or version_key in asset:
@@ -822,6 +878,8 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_write_deferred_guardrail(report, assets["write_deferred_guardrail"], refs["write_deferred_guardrail"], manifest)
     if isinstance(assets.get("failure_mapping"), dict):
         validate_failure_mapping(report, assets["failure_mapping"], refs["failure_mapping"], manifest)
+    if isinstance(assets.get("catalog_metadata"), dict):
+        validate_catalog_metadata(report, assets["catalog_metadata"], refs["catalog_metadata"], manifest, refs)
     if isinstance(assets.get("package_lock"), dict):
         validate_package_lock(report, assets["package_lock"], refs["package_lock"], manifest, refs)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:

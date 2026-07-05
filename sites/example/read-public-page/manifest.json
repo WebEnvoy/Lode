@@ -107,6 +107,15 @@
       "work_item": "GH-98"
     },
     {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "catalog_metadata_id": "example.read-public-page.catalog-metadata",
+      "catalog_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App Library",
+      "work_item": "GH-153"
+    },
+    {
       "role": "package_lock",
       "path": "package-lock.json",
       "status": "present",
@@ -182,6 +191,7 @@
       "local_registry_index": "registry/local-packages.json",
       "manifest_path": "sites/example/read-public-page/manifest.json",
       "package_lock": "sites/example/read-public-page/package-lock.json",
+      "catalog_metadata_path": "sites/example/read-public-page/catalog-metadata.json",
       "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
       "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
       "write_deferred_guardrail_path": "sites/example/read-public-page/write-deferred-guardrail.json"
