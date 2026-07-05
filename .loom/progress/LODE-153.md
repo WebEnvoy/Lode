@@ -1,0 +1,21 @@
+# LODE-153 Progress
+
+## Dynamic Facts
+
+- Item ID: LODE-153
+- Current Checkpoint: admission
+- Current Stop: Work item scaffolded and waiting for the first execution pass.
+- Next Step: Write the first recovery update for this work item.
+- Blockers: None recorded.
+- Latest Validation Summary: No validation recorded yet.
+- Recovery Boundary: Work item scaffolded at `.loom/work-items/LODE-153.md`.
+- Current Lane: not yet assigned
+
+## Execution Ledger
+
+- Ledger Binding: recovery_entry
+- Plan Locator: not_applicable (suite path: not_applicable)
+- Acceptance Locator: not_applicable
+- Validation Evidence Locator: not_applicable
+- Handoff Notes Locator: not_applicable
+- Evidence Freshness: not_applicable
