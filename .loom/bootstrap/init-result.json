@@ -10,7 +10,7 @@
   },
   "run": {
     "target": "${TARGET_ROOT}",
-    "scenario": "复杂既有仓库",
+    "scenario": "\u590d\u6742\u65e2\u6709\u4ed3\u5e93",
     "scenario_key": "complex-existing",
     "integration_mode": "companion",
     "recovery_mode": "standard"
@@ -36,8 +36,8 @@
     "adoption_intent_source": "cli"
   },
   "project_judgment": {
-    "scenario": "复杂既有仓库",
-    "intensity": "强化",
+    "scenario": "\u590d\u6742\u65e2\u6709\u4ed3\u5e93",
+    "intensity": "\u5f3a\u5316",
     "primary_structural_problem": "the repo needs execution support, recovery, and status carriers instead of more ad hoc guidance",
     "why_this_path": "the repo shows execution-support pressure, so the bootstrap must materialize recovery and status carriers immediately"
   },
@@ -244,12 +244,12 @@
     }
   ],
   "fact_chain": {
-    "mode": "idle",
+    "mode": "active",
     "read_entry": "loom fact-chain --target . --json",
     "entry_points": {
-      "current_item_id": "no_active_item",
-      "work_item": "not_applicable",
-      "recovery_entry": "not_applicable",
+      "current_item_id": "LODE-149",
+      "work_item": ".loom/work-items/LODE-149.md",
+      "recovery_entry": ".loom/progress/LODE-149.md",
       "status_surface": ".loom/status/current.md"
     }
   },

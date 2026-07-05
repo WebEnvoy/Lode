@@ -1,0 +1,58 @@
+{
+  "schema_version": "lode.read-capability-candidates.v0",
+  "selection_id": "stage5.first-read-capability-candidates",
+  "selected_at": "2026-07-06",
+  "selection_boundary": "Reserved public, read-only, summary-only fixtures. No account, runtime session, raw evidence, production payload, or write behavior.",
+  "candidates": [
+    {
+      "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+      "capability_id": "read-public-page",
+      "operation_id": "content_detail_by_url",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "risk": "low",
+      "why_selected": "Reserved public Example Domain read fixture with placeholder refs only.",
+      "manifest_path": "sites/example/read-public-page/manifest.json",
+      "catalog_metadata_path": "sites/example/read-public-page/catalog-metadata.json",
+      "core_admission_fields_source": "sites/example/read-public-page/catalog-metadata.json#core_admission_fields"
+    },
+    {
+      "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+      "capability_id": "read-page-links",
+      "operation_id": "public_links_by_url",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "risk": "low",
+      "why_selected": "Reserved public Example Domain read fixture with placeholder refs only.",
+      "manifest_path": "sites/example/read-page-links/manifest.json",
+      "catalog_metadata_path": "sites/example/read-page-links/catalog-metadata.json",
+      "core_admission_fields_source": "sites/example/read-page-links/catalog-metadata.json#core_admission_fields"
+    },
+    {
+      "package_ref": "lode://site-capability/example/read-page-metadata@0.1.0",
+      "capability_id": "read-page-metadata",
+      "operation_id": "public_metadata_by_url",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "risk": "low",
+      "why_selected": "Reserved public Example Domain read fixture with placeholder refs only.",
+      "manifest_path": "sites/example/read-page-metadata/manifest.json",
+      "catalog_metadata_path": "sites/example/read-page-metadata/catalog-metadata.json",
+      "core_admission_fields_source": "sites/example/read-page-metadata/catalog-metadata.json#core_admission_fields"
+    }
+  ],
+  "rejected_patterns": [
+    {
+      "pattern": "write or submit flows",
+      "reason": "Stage 6/write-side scope."
+    },
+    {
+      "pattern": "account-required pages",
+      "reason": "Would require real profile/session material."
+    },
+    {
+      "pattern": "production customer data reads",
+      "reason": "Cannot be safely represented as shared fixtures."
+    }
+  ]
+}

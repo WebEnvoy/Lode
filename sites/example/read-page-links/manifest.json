@@ -1,0 +1,261 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "example",
+    "display_name": "Example Domain",
+    "supported_origins": [
+      "https://example.org",
+      "https://www.example.org"
+    ]
+  },
+  "capability": {
+    "capability_id": "read-page-links",
+    "operation_id": "public_links_by_url",
+    "operation_ref": "lode://operation/public_links_by_url",
+    "capability_family": "content_links",
+    "operation_mode": "read",
+    "target_type": "web_link_list",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": [
+      "site:example",
+      "sample",
+      "content-links",
+      "risk:read"
+    ]
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/example/read-page-links/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/example/read-page-links/input@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "GH-150"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/example/read-page-links/output@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "GH-150"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "present",
+      "resource_requirements_id": "example.read-page-links.resources",
+      "resource_requirements_version": "0.1.0",
+      "work_item": "GH-150"
+    },
+    {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "lifecycle_metadata_id": "example.read-page-links.lifecycle",
+      "lifecycle_metadata_version": "0.1.0",
+      "work_item": "GH-150"
+    },
+    {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "guardrail_id": "example.read-page-links.write-deferred-guardrail",
+      "guardrail_version": "0.1.0",
+      "work_item": "GH-150"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/read-page-links.fixture.json",
+      "status": "present",
+      "fixture_id": "example.read-page-links.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "example.read-page-links.source.document-summary@0.1.0",
+      "redaction": "summary_only",
+      "work_item": "GH-151"
+    },
+    {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "fixture_id": "example.read-page-links.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation",
+      "work_item": "GH-151"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "present",
+      "post_check_id": "example.read-page-links.post-check",
+      "post_check_version": "0.1.0",
+      "work_item": "GH-151"
+    },
+    {
+      "role": "failure_mapping",
+      "path": "failure-mapping.json",
+      "status": "present",
+      "failure_mapping_id": "example.read-page-links.failure-mapping",
+      "failure_mapping_version": "0.1.0",
+      "work_item": "GH-151"
+    },
+    {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "catalog_metadata_id": "example.read-page-links.catalog-metadata",
+      "catalog_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App Library",
+      "work_item": "GH-154"
+    },
+    {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "repair_draft_id": "example.read-page-links.repair-draft",
+      "repair_draft_version": "0.1.0",
+      "consumer": "WebEnvoy App repair draft display and WebEnvoy Core failure attribution hints",
+      "work_item": "GH-154"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "overlay_metadata_id": "example.read-page-links.overlay-fork",
+      "overlay_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App invalidation, overlay, fork, and repair draft status display",
+      "work_item": "GH-154"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "lock_id": "example.read-page-links.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+      "work_item": "GH-154"
+    }
+  ],
+  "lifecycle_metadata": {
+    "path": "lifecycle-metadata.json",
+    "lifecycle_metadata_id": "example.read-page-links.lifecycle",
+    "lifecycle_metadata_version": "0.1.0",
+    "package_version": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good_ref": "lode://site-capability/example/read-page-links@0.1.0",
+    "rollback_lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+    "deprecation_status": "not_deprecated",
+    "invalidation_status": "not_invalidated",
+    "lock_input_ref": "lode://site-capability/example/read-page-links/lifecycle@0.1.0#lock-input"
+  },
+  "fixture_metadata": {
+    "path": "fixtures/read-page-links.fixture.json",
+    "fixture_id": "example.read-page-links.fixture",
+    "fixture_version": "0.1.0",
+    "source_shape": "example.read-page-links.source.document-summary@0.1.0",
+    "normalized_output_schema": "lode://schema/site-capability/example/read-page-links/output@0.1.0",
+    "redaction": "summary_only",
+    "source_ref_policy": "placeholder_refs_only",
+    "evidence_ref_policy": "placeholder_refs_only"
+  },
+  "core_consumption_fixture_metadata": {
+    "path": "fixtures/core-consumption.fixture.json",
+    "fixture_id": "example.read-page-links.core-consumption-fixture",
+    "fixture_version": "0.1.0",
+    "consumer": "WebEnvoy Core",
+    "purpose": "repo-local package admission and schema validation fixture",
+    "runtime_execution": "out_of_scope"
+  },
+  "write_deferred_guardrail_metadata": {
+    "path": "write-deferred-guardrail.json",
+    "guardrail_id": "example.read-page-links.write-deferred-guardrail",
+    "guardrail_version": "0.1.0",
+    "status": "deferred",
+    "current_package_allowed_modes": [
+      "read"
+    ],
+    "deferred_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "runtime_execution": "out_of_scope",
+    "write_execution": "blocked"
+  },
+  "sample_read_package": {
+    "status": "selected",
+    "work_item": "GH-149",
+    "sample_role": "first_low_risk_read_package",
+    "selection_rationale": [
+      "Uses reserved public Example Domain content.",
+      "Operation mode is read-only.",
+      "Fixture is summary-only and uses placeholder source/evidence refs.",
+      "No account, session, credential, runtime, production payload, or user business data is represented."
+    ],
+    "fixture_binding": {
+      "fixture_id": "example.read-page-links.fixture",
+      "fixture_version": "0.1.0",
+      "path": "fixtures/read-page-links.fixture.json",
+      "normalized_output_schema": "lode://schema/site-capability/example/read-page-links/output@0.1.0",
+      "redaction": "summary_only"
+    },
+    "consumer_entrypoints": {
+      "local_registry_index": "registry/local-packages.json",
+      "manifest_path": "sites/example/read-page-links/manifest.json",
+      "package_lock": "sites/example/read-page-links/package-lock.json",
+      "catalog_metadata_path": "sites/example/read-page-links/catalog-metadata.json",
+      "repair_draft_path": "sites/example/read-page-links/repair/repair-draft.fixture.json",
+      "overlay_fork_metadata_path": "sites/example/read-page-links/repair/overlay-fork-metadata.fixture.json",
+      "fixture_path": "sites/example/read-page-links/fixtures/read-page-links.fixture.json",
+      "core_consumption_fixture_path": "sites/example/read-page-links/fixtures/core-consumption.fixture.json",
+      "write_deferred_guardrail_path": "sites/example/read-page-links/write-deferred-guardrail.json"
+    },
+    "admission_boundary": [
+      "offline validator shape checks",
+      "fixture and post-check contract checks",
+      "repo-local package resolution checks",
+      "static package lock checks",
+      "Core-readable static fixture for admission and schema validation",
+      "static write-deferred guardrail check",
+      "repair draft lifecycle and promotion boundary checks",
+      "overlay, fork, and private invalidation boundary checks"
+    ],
+    "not_yet_claimed": [
+      "stable package admission",
+      "runtime execution",
+      "true write execution"
+    ]
+  },
+  "known_limitations": [
+    "Sample package is a read-only reserved-domain fixture target.",
+    "Package lifecycle remains proposed until parent FR closeout consumes all Work Items.",
+    "Post-check declares result shape and fixture bindings only; Core owns later runtime execution and result-envelope integration.",
+    "Repair draft and overlay/fork assets are refs-only fixtures; they do not contain private browser material or promote a package update."
+  ],
+  "forbidden_contents": [
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "live_tab_state",
+    "production_payload",
+    "raw_evidence_body",
+    "user_business_data"
+  ]
+}

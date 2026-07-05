@@ -1,23 +1,23 @@
 {
   "schema_version": "lode.catalog-metadata.v0",
-  "catalog_metadata_id": "example.read-public-page.catalog-metadata",
+  "catalog_metadata_id": "example.read-page-links.catalog-metadata",
   "catalog_metadata_version": "0.1.0",
-  "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
-  "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
-  "capability_id": "read-public-page",
-  "operation_id": "content_detail_by_url",
+  "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+  "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+  "capability_id": "read-page-links",
+  "operation_id": "public_links_by_url",
   "operation_mode": "read",
   "source": {
     "owner": "Lode",
     "kind": "repo-local-package",
     "label": "Example Domain",
-    "manifest_path": "sites/example/read-public-page/manifest.json"
+    "manifest_path": "sites/example/read-page-links/manifest.json"
   },
   "display": {
-    "name": "Read public page summary",
-    "summary": "Read title, summary, canonical URL, and source status from a reserved public Example Domain page.",
+    "name": "Read public page links",
+    "summary": "Read public link labels and public href refs from a reserved Example Domain page.",
     "site_name": "Example Domain",
-    "category": "Content detail"
+    "category": "Content links"
   },
   "version": {
     "current": "0.1.0",
@@ -33,14 +33,14 @@
     ],
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good": {
-      "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
-      "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+      "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
       "status": "self_for_initial_version"
     },
     "rollback_candidates": [
       {
-        "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
-        "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+        "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+        "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
         "candidate_kind": "previous_known_good"
       }
     ]
@@ -70,14 +70,14 @@
   },
   "repair_summary": {
     "status": "repair_draft_fixture_present",
-    "latest_repair_draft_ref": "lode://repair-draft/site-capability/example/read-public-page/site-change@0.1.1-draft",
+    "latest_repair_draft_ref": "lode://repair-draft/site-capability/example/read-page-links/site-change@0.1.1-draft",
     "failure_classes": [
       "invalid_contract",
       "site_changed",
       "post_check_failed",
       "evidence_expired"
     ],
-    "overlay_fork_metadata_path": "sites/example/read-public-page/repair/overlay-fork-metadata.fixture.json",
+    "overlay_fork_metadata_path": "sites/example/read-page-links/repair/overlay-fork-metadata.fixture.json",
     "app_display_boundary": "App may render repair draft status, owner, and refs; it does not store repair, package, run, session, or private evidence truth."
   },
   "consumer_boundary": "App may render this catalog metadata and store local install/lock/update intent. Lode remains owner of package, catalog, version, lock, fixture, and test metadata truth.",
@@ -94,14 +94,14 @@
     "user_business_data"
   ],
   "core_admission_fields": {
-    "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+    "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
     "version": "0.1.0",
-    "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
-    "manifest_path": "sites/example/read-public-page/manifest.json",
-    "input_schema_id": "lode://schema/site-capability/example/read-public-page/input@0.1.0",
-    "output_schema_id": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
-    "resource_requirements_id": "example.read-public-page.resources",
-    "post_check_id": "example.read-public-page.post-check",
+    "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+    "manifest_path": "sites/example/read-page-links/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/example/read-page-links/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/example/read-page-links/output@0.1.0",
+    "resource_requirements_id": "example.read-page-links.resources",
+    "post_check_id": "example.read-page-links.post-check",
     "lifecycle": "proposed",
     "operation_mode": "read"
   }

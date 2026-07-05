@@ -613,6 +613,7 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
             "status",
             "risk",
             "test_summary",
+            "core_admission_fields",
             "consumer_boundary",
         ],
         path,
@@ -649,6 +650,10 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
     require_keys(report, risk, ["level", "operation", "reason"], f"{path}#risk")
     if risk.get("operation") != "read":
         add_error(report, "invalid_contract", f"{path}#risk.operation", "First-batch catalog metadata must remain read-only.", "Keep Stage 6/write-side risk out of this package.")
+    admission = catalog.get("core_admission_fields") if isinstance(catalog.get("core_admission_fields"), dict) else {}
+    require_keys(report, admission, ["package_ref", "version", "lock_ref", "manifest_path", "input_schema_id", "output_schema_id", "resource_requirements_id", "post_check_id", "lifecycle", "operation_mode"], f"{path}#core_admission_fields")
+    if admission.get("package_ref") != manifest.get("package_ref") or admission.get("version") != nested_get(manifest, ["capability", "version"]):
+        add_error(report, "invalid_contract", f"{path}#core_admission_fields", "Core admission package/version fields do not match manifest.", "Keep Core admission facts aligned with Lode package truth.")
     scan_forbidden_keys(report, catalog, path)
 
 
@@ -687,6 +692,21 @@ def validate_local_registry_index(report: Report, package_root: Path, registry_p
         idx, entry = matches[0]
         validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest)
     scan_forbidden_keys(report, index, display_path)
+
+
+def validate_registry_query_fixture(report: Report, repo_root: Path, index: dict[str, Any], display_path: str) -> None:
+    query_path = index.get("query_fixture_path")
+    if not isinstance(query_path, str):
+        add_error(report, "asset_missing", f"{display_path}#query_fixture_path", "Local registry index must point at a query fixture.", "Add a repo-relative query fixture for App/Core consumers.")
+        return
+    fixture = load_json(report, repo_root, repo_root / query_path, "local_registry_query_fixture", query_path)
+    if not isinstance(fixture, dict):
+        return
+    require_keys(report, fixture, ["schema_version", "query_fixture_id", "queries"], query_path)
+    queries = fixture.get("queries")
+    if not isinstance(queries, list) or not queries:
+        add_error(report, "invalid_contract", f"{query_path}#queries", "Registry query fixture must include at least one query.", "Expose one App/Core-readable local query example.")
+    scan_forbidden_keys(report, fixture, query_path)
 
 
 def validate_registry_entry(
@@ -836,7 +856,7 @@ def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str,
     for key, value in expected.items():
         if lock.get(key) != value:
             add_error(report, "invalid_contract", f"{path}#{key}", f"Package lock `{key}` does not match manifest.", "Keep lock identity aligned with the manifest capability.")
-    validate_lock_resolution(report, lock.get("resolution"), path)
+    validate_lock_resolution(report, lock.get("resolution"), path, manifest)
     validate_lock_compatibility(report, lock.get("compatibility"), manifest, path)
     validate_lock_rollback(report, lock.get("rollback"), manifest, refs, path)
     validate_locked_assets(report, lock.get("locked_assets"), refs, path)
@@ -844,7 +864,7 @@ def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str,
     scan_forbidden_keys(report, lock, path)
 
 
-def validate_lock_resolution(report: Report, resolution: Any, path: str) -> None:
+def validate_lock_resolution(report: Report, resolution: Any, path: str, manifest: dict[str, Any]) -> None:
     if not isinstance(resolution, dict):
         add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution must be an object.", "Declare repo-local lock resolution.")
         return
@@ -853,8 +873,10 @@ def validate_lock_resolution(report: Report, resolution: Any, path: str) -> None
         add_error(report, "invalid_contract", f"{path}#resolution.resolution_mode", "Package lock resolution_mode must be repo-local.", "Keep GH-100 lock resolution local.")
     if resolution.get("registry_index") != str(DEFAULT_LOCAL_REGISTRY):
         add_error(report, "invalid_contract", f"{path}#resolution.registry_index", "Package lock registry_index must point at the repo-local index.", "Use the repo-local registry index.")
-    if resolution.get("package_path") != "sites/example/read-public-page" or resolution.get("manifest_path") != "sites/example/read-public-page/manifest.json":
-        add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution paths do not point at the sample package.", "Keep lock resolution aligned with the package root and manifest.")
+    expected_package_path = f"sites/{nested_get(manifest, ['site', 'slug'])}/{nested_get(manifest, ['capability', 'capability_id'])}"
+    expected_manifest_path = f"{expected_package_path}/manifest.json"
+    if resolution.get("package_path") != expected_package_path or resolution.get("manifest_path") != expected_manifest_path:
+        add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution paths do not point at the package manifest.", "Keep lock resolution aligned with the package root and manifest.")
 
 
 def validate_lock_compatibility(report: Report, compatibility: Any, manifest: dict[str, Any], path: str) -> None:
@@ -1166,6 +1188,7 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
     index = load_json(index_report, repo_root, registry_index, "local_registry_index", rel(repo_root, registry_index))
     package_reports: list[dict[str, Any]] = []
     if isinstance(index, dict):
+        validate_registry_query_fixture(index_report, repo_root, index, rel(repo_root, registry_index))
         entries = index.get("entries")
         if not isinstance(entries, list) or not entries:
             add_error(index_report, "registry_unavailable", rel(repo_root, registry_index), "Local registry index has no entries.", "Add repo-local package entries before batch validation.")

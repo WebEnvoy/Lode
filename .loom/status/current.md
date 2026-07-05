@@ -2,34 +2,34 @@
 
 ## Derived Fact Chain View
 
-- Item ID: no_active_item
-- Goal: not_applicable
-- Scope: not_applicable
-- Execution Path: not_applicable
-- Workspace Entry: not_applicable
-- Recovery Entry: not_applicable
-- Review Entry: not_applicable
-- Validation Entry: not_applicable
-- Closing Condition: not_applicable
-- Current Checkpoint: not_applicable
-- Current Stop: not_applicable
-- Next Step: not_applicable
-- Blockers: not_applicable
-- Latest Validation Summary: not_applicable
-- Recovery Boundary: not_applicable
-- Current Lane: not_applicable
+- Item ID: LODE-149
+- Goal: Complete Stage 5 read capability lifecycle/catalog foundation for first 2-3 low-risk read capability assets.
+- Scope: Batch covers Lode issues #149, #150, #151, #154, and #155. Parent FR readback/closeout covers #139, #140, and #141 after merge.
+- Execution Path: stage5/read-capability-assets
+- Workspace Entry: .
+- Recovery Entry: .loom/progress/LODE-149.md
+- Review Entry: .loom/reviews/LODE-149.json
+- Validation Entry: python3 -m py_compile tools/lode_validate_package.py; python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; jq local registry query/candidate checks; git diff --check
+- Closing Condition: Three repo-local read capability packages validate with schema, resource requirements, fixtures, post-checks, Core admission fields, and local registry query fixture; no runtime/private/write material enters Lode.
+- Current Checkpoint: implemented
+- Current Stop: Three read capability assets, registry query fixture, and validator checks are implemented locally.
+- Next Step: Run full local validation, review/gate, PR, merge, and post-merge closeout.
+- Blockers: Loom suite scaffold reports missing templates; existing Lode carrier shape is used without changing Loom CLI.
+- Latest Validation Summary: python3 -m py_compile; registry batch validator; jq registry query/candidate checks passed locally.
+- Recovery Boundary: Lode package/catalog/lifecycle/schema/fixture truth only; no hosted registry, marketplace, runtime execution, Core run truth, App UI changes, Harbor private material, raw evidence, or Stage 6 write behavior.
+- Current Lane: stage5 Lode read capability assets
 
 ## Runtime Evidence
 
-- Run Entry: not_applicable
-- Logs Entry: not_applicable
-- Diagnostics Entry: not_applicable
-- Verification Entry: not_applicable
+- Run Entry: .loom/progress/LODE-149.md
+- Logs Entry: local terminal validation
+- Diagnostics Entry: .loom/specs/LODE-149/evidence-map.md
+- Verification Entry: loom verify --target . --json
 - Lane Entry: not_applicable
 
 ## Sources
 
-- Static Truth: not_applicable
-- Dynamic Truth: not_applicable
+- Static Truth: .loom/work-items/LODE-149.md
+- Dynamic Truth: .loom/progress/LODE-149.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json

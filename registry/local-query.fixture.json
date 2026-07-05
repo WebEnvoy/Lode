@@ -1,0 +1,92 @@
+{
+  "schema_version": "lode.local-registry-query-fixture.v0",
+  "query_fixture_id": "stage5.local-registry.query.fixture",
+  "generated_from": "registry/local-packages.json",
+  "queries": [
+    {
+      "query_id": "list_read_capabilities_for_app_and_core",
+      "filters": {
+        "operation_mode": "read",
+        "site_slug": "example"
+      },
+      "results": [
+        {
+          "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+          "capability_id": "read-public-page",
+          "operation_id": "content_detail_by_url",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+          "manifest_path": "sites/example/read-public-page/manifest.json",
+          "catalog_metadata_path": "sites/example/read-public-page/catalog-metadata.json",
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+            "manifest_path": "sites/example/read-public-page/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/example/read-public-page/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/example/read-public-page/output@0.1.0",
+            "resource_requirements_id": "example.read-public-page.resources",
+            "post_check_id": "example.read-public-page.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "read"
+          }
+        },
+        {
+          "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+          "capability_id": "read-page-links",
+          "operation_id": "public_links_by_url",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+          "manifest_path": "sites/example/read-page-links/manifest.json",
+          "catalog_metadata_path": "sites/example/read-page-links/catalog-metadata.json",
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+            "manifest_path": "sites/example/read-page-links/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/example/read-page-links/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/example/read-page-links/output@0.1.0",
+            "resource_requirements_id": "example.read-page-links.resources",
+            "post_check_id": "example.read-page-links.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "read"
+          }
+        },
+        {
+          "package_ref": "lode://site-capability/example/read-page-metadata@0.1.0",
+          "capability_id": "read-page-metadata",
+          "operation_id": "public_metadata_by_url",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/example/read-page-metadata@0.1.0",
+          "manifest_path": "sites/example/read-page-metadata/manifest.json",
+          "catalog_metadata_path": "sites/example/read-page-metadata/catalog-metadata.json",
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/example/read-page-metadata@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/example/read-page-metadata@0.1.0",
+            "manifest_path": "sites/example/read-page-metadata/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/example/read-page-metadata/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/example/read-page-metadata/output@0.1.0",
+            "resource_requirements_id": "example.read-page-metadata.resources",
+            "post_check_id": "example.read-page-metadata.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "read"
+          }
+        }
+      ]
+    }
+  ],
+  "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",
+  "forbidden_contents": [
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_evidence_body",
+    "production_payload",
+    "user_business_data"
+  ]
+}
