@@ -6,9 +6,9 @@
   "summary": "Implementation review accepts repair draft, overlay/fork, package update acceptance, and sensitive material validator changes as bounded Stage 5 Lode facts.",
   "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
   "authored_at": "2026-07-05T17:10:00Z",
-  "reviewed_head": "pending_pre_commit",
-  "reviewed_validation_summary": "Pending final validation; update after local validation before merge-ready.",
-  "reviewed_validation_summary_hash": "pending_pre_commit",
+  "reviewed_head": "5fc5a09eff114124323e2071710cd0280f230357",
+  "reviewed_validation_summary": "python3 -m py_compile tools/lode_validate_package.py; python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json; python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; git diff --check; loom suite validate --target . --item LODE-156 --json; loom suite evidence validate --target . --item LODE-156 --json; loom suite carrier validate --target . --item LODE-156 --json; loom fact-chain --target . --json; loom verify --target . --json passed locally before PR. Loom verify reports Codex plugin runtime cache stale while CLI/source payload is 0.28.0; treated as host runtime cache surface, not repo code.",
+  "reviewed_validation_summary_hash": "76e12223f2165b8956b3a5344a2c92b899002231eca0e55de9e0dfa382c4b276",
   "validation_summary_source": "recovery.latest_validation_summary",
   "validation_summary_locator": ".loom/progress/LODE-156.md",
   "fallback_to": null,
@@ -20,7 +20,7 @@
     "reason": "The change exposes refs-only repair and overlay/fork facts without claiming runtime execution, hosted registry, marketplace, App install truth, Core run truth, Harbor private evidence, or true write behavior."
   },
   "implementation_review_disposition": {
-    "status": "pending_final_validation",
-    "reason": "Final review head and validation summary must be refreshed after commit."
+    "status": "passed",
+    "reason": "Validator checks cover repair draft lifecycle, failure mapping, overlay/fork metadata, package update acceptance, and sensitive material boundary facts; the data remains refs-only."
   }
 }
