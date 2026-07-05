@@ -73,6 +73,12 @@ package ref、version、manifest path 和 asset role 解析。也可以显式传
 python3 tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json
 ```
 
+也可以从 repo-local registry 批量校验所有 package entry：
+
+```bash
+python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
+```
+
 sample package 还包含 `package-lock.json`，用于固定 package ref、capability id、
 version、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
 安装/更新、hosted registry、Core Run Record 或 runtime 执行已经实现。

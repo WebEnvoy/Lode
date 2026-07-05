@@ -16,6 +16,7 @@ SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
+SUPPORTED_LIFECYCLE_STATES = {"proposed", "active", "suspected_broken", "broken", "deprecated"}
 POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
 REQUIRED_FAILURE_CLASSES = {"invalid_contract", "resource_unavailable", "site_changed", "empty_result"}
 REQUIRED_ASSET_ROLES = {
@@ -280,7 +281,22 @@ def validate_resource_requirements(report: Report, resource: dict[str, Any], ass
 
 def validate_lifecycle(report: Report, lifecycle: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
     path = str(asset.get("path"))
-    require_keys(report, lifecycle, ["schema_version", "lifecycle_metadata_id", "package_ref", "package_version", "lifecycle", "lock_input"], path)
+    require_keys(
+        report,
+        lifecycle,
+        [
+            "schema_version",
+            "lifecycle_metadata_id",
+            "package_ref",
+            "package_version",
+            "lifecycle_state_vocabulary",
+            "lifecycle",
+            "version_identity",
+            "rollback",
+            "lock_input",
+        ],
+        path,
+    )
     if lifecycle.get("lifecycle_metadata_id") != asset.get("lifecycle_metadata_id"):
         add_error(report, "invalid_contract", path, "Lifecycle metadata id does not match manifest asset ref.", "Keep lifecycle metadata identity aligned.")
     if lifecycle.get("package_ref") != manifest.get("package_ref"):
@@ -289,7 +305,57 @@ def validate_lifecycle(report: Report, lifecycle: dict[str, Any], asset: dict[st
     manifest_state = nested_get(manifest, ["capability", "lifecycle"])
     if state != manifest_state:
         add_error(report, "invalid_contract", path, "Lifecycle state does not match manifest capability lifecycle.", "Keep lifecycle state aligned.")
+    validate_lifecycle_vocabulary(report, lifecycle, path)
+    validate_version_identity(report, lifecycle.get("version_identity"), manifest, path)
+    validate_lifecycle_rollback(report, lifecycle.get("rollback"), manifest, path)
     scan_forbidden_keys(report, lifecycle, path)
+
+
+def validate_lifecycle_vocabulary(report: Report, lifecycle: dict[str, Any], path: str) -> None:
+    vocabulary = lifecycle.get("lifecycle_state_vocabulary") if isinstance(lifecycle.get("lifecycle_state_vocabulary"), dict) else {}
+    states = vocabulary.get("states")
+    if not isinstance(states, list) or set(states) != SUPPORTED_LIFECYCLE_STATES:
+        add_error(
+            report,
+            "invalid_contract",
+            f"{path}#lifecycle_state_vocabulary.states",
+            "Lifecycle vocabulary must declare proposed, active, suspected_broken, broken, and deprecated.",
+            "Expose the Stage 5 lifecycle states consumed by Core and App.",
+        )
+    transitions = vocabulary.get("allowed_transitions")
+    if not isinstance(transitions, list) or not transitions:
+        add_error(report, "invalid_contract", f"{path}#lifecycle_state_vocabulary.allowed_transitions", "Lifecycle vocabulary must declare state transitions.", "Declare promotion, suspected broken, broken, recovery, and deprecation transitions.")
+
+
+def validate_version_identity(report: Report, version_identity: Any, manifest: dict[str, Any], path: str) -> None:
+    if not isinstance(version_identity, dict):
+        add_error(report, "invalid_contract", f"{path}#version_identity", "Lifecycle version_identity must be an object.", "Declare current/latest/default versions and compatibility range.")
+        return
+    require_keys(
+        report,
+        version_identity,
+        ["version_scheme", "current_version", "latest_version", "default_locked_version", "compatibility_range", "breaking_change_requires_new_version"],
+        f"{path}#version_identity",
+    )
+    manifest_version = nested_get(manifest, ["capability", "version"])
+    if version_identity.get("current_version") != manifest_version:
+        add_error(report, "invalid_contract", f"{path}#version_identity.current_version", "Lifecycle current_version does not match manifest capability version.", "Keep lifecycle version facts aligned with manifest.")
+    if not isinstance(version_identity.get("compatibility_range"), str) or not version_identity.get("compatibility_range"):
+        add_error(report, "invalid_contract", f"{path}#version_identity.compatibility_range", "Lifecycle compatibility_range must be a non-empty string.", "Expose a consumer-readable compatibility range.")
+
+
+def validate_lifecycle_rollback(report: Report, rollback: Any, manifest: dict[str, Any], path: str) -> None:
+    if not isinstance(rollback, dict):
+        add_error(report, "invalid_contract", f"{path}#rollback", "Lifecycle rollback must be an object.", "Declare previous known good and rollback candidates.")
+        return
+    require_keys(report, rollback, ["previous_known_good", "rollback_candidates"], f"{path}#rollback")
+    known_good = rollback.get("previous_known_good") if isinstance(rollback.get("previous_known_good"), dict) else {}
+    require_keys(report, known_good, ["package_ref", "package_version", "lock_ref", "status"], f"{path}#rollback.previous_known_good")
+    if known_good.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good.package_ref", "Previous known good package_ref must match the initial package until another version exists.", "Use package/version refs only; do not inline package or evidence bodies.")
+    candidates = rollback.get("rollback_candidates")
+    if not isinstance(candidates, list) or not candidates:
+        add_error(report, "invalid_contract", f"{path}#rollback.rollback_candidates", "Rollback must declare at least one candidate.", "Expose rollback candidates as package/version/lock refs.")
 
 
 def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
@@ -432,6 +498,11 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
     require_keys(report, version, ["current", "latest", "default_locked", "lifecycle"], f"{path}#version")
     if version.get("current") != nested_get(manifest, ["capability", "version"]) or version.get("lifecycle") != nested_get(manifest, ["capability", "lifecycle"]):
         add_error(report, "invalid_contract", f"{path}#version", "Catalog version/lifecycle does not match manifest capability.", "Keep App-visible version facts owned by Lode.")
+    if "lifecycle_state_vocabulary" in version and set(version.get("lifecycle_state_vocabulary", [])) != SUPPORTED_LIFECYCLE_STATES:
+        add_error(report, "invalid_contract", f"{path}#version.lifecycle_state_vocabulary", "Catalog lifecycle_state_vocabulary must match Lode lifecycle vocabulary.", "Expose the same Stage 5 lifecycle states to App.")
+    for key in ["compatibility_range", "previous_known_good", "rollback_candidates"]:
+        if key not in version:
+            add_error(report, "invalid_contract", f"{path}#version.{key}", f"Catalog version missing `{key}`.", "Expose lifecycle facts needed by App without storing App UI truth.")
     status = catalog.get("status") if isinstance(catalog.get("status"), dict) else {}
     require_keys(report, status, ["catalog_state", "installability", "source_health", "updated_at"], f"{path}#status")
     if status.get("installability") != "intent_only":
@@ -506,6 +577,9 @@ def validate_registry_entry(
             "operation_mode",
             "version",
             "lifecycle",
+            "updated_at",
+            "version_status",
+            "rollback",
             "asset_roles",
             "resolution",
         ],
@@ -524,6 +598,10 @@ def validate_registry_entry(
     for key, value in expected.items():
         if entry.get(key) != value:
             add_error(report, "invalid_contract", f"{entry_path}.{key}", f"Registry `{key}` does not match manifest.", "Keep local registry identity aligned with the manifest.")
+    if "lifecycle_state_vocabulary" in entry and set(entry.get("lifecycle_state_vocabulary", [])) != SUPPORTED_LIFECYCLE_STATES:
+        add_error(report, "invalid_contract", f"{entry_path}.lifecycle_state_vocabulary", "Registry lifecycle_state_vocabulary must match Lode lifecycle vocabulary.", "Expose the same Stage 5 lifecycle states to consumers.")
+    validate_registry_version_status(report, entry.get("version_status"), entry_path, manifest)
+    validate_registry_rollback(report, entry.get("rollback"), entry_path, manifest, entry.get("lock_ref"))
 
     package_path = entry.get("package_path")
     manifest_path = entry.get("manifest_path")
@@ -558,6 +636,27 @@ def validate_registry_entry(
     require_keys(report, resolution, ["strategy", "freshness_rule", "failure_mapping"], f"{entry_path}.resolution")
     if resolution.get("strategy") != "repo_relative_manifest":
         add_error(report, "invalid_contract", f"{entry_path}.resolution.strategy", "Registry resolution strategy must be repo_relative_manifest.", "Use local manifest resolution for GH-99.")
+
+
+def validate_registry_version_status(report: Report, version_status: Any, entry_path: str, manifest: dict[str, Any]) -> None:
+    if not isinstance(version_status, dict):
+        add_error(report, "invalid_contract", f"{entry_path}.version_status", "Registry version_status must be an object.", "Expose current/latest/default/compatibility facts for consumers.")
+        return
+    require_keys(report, version_status, ["current", "latest", "default_locked", "compatibility_range"], f"{entry_path}.version_status")
+    manifest_version = nested_get(manifest, ["capability", "version"])
+    if version_status.get("current") != manifest_version:
+        add_error(report, "invalid_contract", f"{entry_path}.version_status.current", "Registry current version does not match manifest.", "Keep registry version facts aligned.")
+
+
+def validate_registry_rollback(report: Report, rollback: Any, entry_path: str, manifest: dict[str, Any], lock_ref: Any) -> None:
+    if not isinstance(rollback, dict):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback", "Registry rollback must be an object.", "Expose previous known good refs for App/Core.")
+        return
+    require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{entry_path}.rollback")
+    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_ref", "Registry previous known good package ref must match the initial package until another version exists.", "Expose package refs only.")
+    if rollback.get("previous_known_good_lock_ref") != lock_ref:
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_lock_ref", "Registry previous known good lock ref must match entry lock_ref.", "Keep rollback lock refs aligned.")
 
 
 def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
@@ -600,6 +699,8 @@ def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str,
         if lock.get(key) != value:
             add_error(report, "invalid_contract", f"{path}#{key}", f"Package lock `{key}` does not match manifest.", "Keep lock identity aligned with the manifest capability.")
     validate_lock_resolution(report, lock.get("resolution"), path)
+    validate_lock_compatibility(report, lock.get("compatibility"), manifest, path)
+    validate_lock_rollback(report, lock.get("rollback"), manifest, refs, path)
     validate_locked_assets(report, lock.get("locked_assets"), refs, path)
     validate_lock_invalidation(report, lock.get("invalidation_behavior"), path)
     scan_forbidden_keys(report, lock, path)
@@ -616,6 +717,27 @@ def validate_lock_resolution(report: Report, resolution: Any, path: str) -> None
         add_error(report, "invalid_contract", f"{path}#resolution.registry_index", "Package lock registry_index must point at the repo-local index.", "Use the repo-local registry index.")
     if resolution.get("package_path") != "sites/example/read-public-page" or resolution.get("manifest_path") != "sites/example/read-public-page/manifest.json":
         add_error(report, "invalid_contract", f"{path}#resolution", "Package lock resolution paths do not point at the sample package.", "Keep lock resolution aligned with the package root and manifest.")
+
+
+def validate_lock_compatibility(report: Report, compatibility: Any, manifest: dict[str, Any], path: str) -> None:
+    if not isinstance(compatibility, dict):
+        add_error(report, "invalid_contract", f"{path}#compatibility", "Package lock compatibility must be an object.", "Declare locked package version compatibility.")
+        return
+    require_keys(report, compatibility, ["package_version", "compatible_version_range", "breaking_change_policy_ref"], f"{path}#compatibility")
+    if compatibility.get("package_version") != nested_get(manifest, ["capability", "version"]):
+        add_error(report, "invalid_contract", f"{path}#compatibility.package_version", "Compatibility package_version does not match manifest.", "Keep lock compatibility aligned with manifest.")
+
+
+def validate_lock_rollback(report: Report, rollback: Any, manifest: dict[str, Any], refs: dict[str, dict[str, Any]], path: str) -> None:
+    if not isinstance(rollback, dict):
+        add_error(report, "invalid_contract", f"{path}#rollback", "Package lock rollback must be an object.", "Declare previous known good lock refs.")
+        return
+    require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{path}#rollback")
+    package_lock = refs.get("package_lock") if isinstance(refs.get("package_lock"), dict) else {}
+    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_ref", "Rollback package ref must match the initial package until another version exists.", "Expose refs only; do not inline package bodies.")
+    if rollback.get("previous_known_good_lock_ref") != package_lock.get("lock_ref"):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_lock_ref", "Rollback lock ref does not match package lock asset ref.", "Keep rollback lock refs aligned.")
 
 
 def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, dict[str, Any]], path: str) -> None:
@@ -893,13 +1015,56 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     return report
 
 
+def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
+    registry_index = registry_index.resolve()
+    repo_root = discover_repo_root(registry_index.parent) or registry_index.parent
+    index_report = Report(repo_root)
+    index = load_json(index_report, repo_root, registry_index, "local_registry_index", rel(repo_root, registry_index))
+    package_reports: list[dict[str, Any]] = []
+    if isinstance(index, dict):
+        entries = index.get("entries")
+        if not isinstance(entries, list) or not entries:
+            add_error(index_report, "registry_unavailable", rel(repo_root, registry_index), "Local registry index has no entries.", "Add repo-local package entries before batch validation.")
+        else:
+            for idx, entry in enumerate(entries):
+                if not isinstance(entry, dict):
+                    add_error(index_report, "invalid_contract", f"{rel(repo_root, registry_index)}#entries[{idx}]", "Registry entry must be an object.", "Use object entries with package_path.")
+                    continue
+                package_path = entry.get("package_path")
+                if not isinstance(package_path, str) or Path(package_path).is_absolute():
+                    add_error(index_report, "invalid_contract", f"{rel(repo_root, registry_index)}#entries[{idx}].package_path", "Registry package_path must be repo-relative.", "Use repo-relative package paths.")
+                    continue
+                package_root = repo_root / package_path
+                report = validate_package(package_root, registry_index)
+                package_reports.append(report.to_dict())
+    status = "failed" if index_report.errors or any(report.get("status") == "failed" for report in package_reports) else "passed"
+    return {
+        "schema_version": "lode-registry-validation-report.v0",
+        "status": status,
+        "registry_index": rel(repo_root, registry_index),
+        "index_report": index_report.to_dict(),
+        "package_reports": package_reports,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate one Lode site-capability package.")
-    parser.add_argument("package_root", type=Path, help="Path to a package root containing manifest.json.")
+    parser.add_argument("package_root", nargs="?", type=Path, help="Path to a package root containing manifest.json.")
     parser.add_argument("--registry-index", type=Path, help="Optional repo-local package index to validate with the package.")
+    parser.add_argument("--all", action="store_true", help="Validate every package listed by --registry-index.")
     parser.add_argument("--json", action="store_true", help="Emit JSON report. This is the default output format.")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print the JSON report.")
     args = parser.parse_args()
+
+    if args.all:
+        if args.registry_index is None:
+            parser.error("--all requires --registry-index")
+        batch_report = validate_registry_packages(args.registry_index)
+        json.dump(batch_report, sys.stdout, indent=2 if args.pretty else None)
+        sys.stdout.write("\n")
+        return 1 if batch_report["status"] == "failed" else 0
+    if args.package_root is None:
+        parser.error("package_root is required unless --all is used")
 
     root = args.package_root.resolve()
     registry_index = args.registry_index.resolve() if args.registry_index else None

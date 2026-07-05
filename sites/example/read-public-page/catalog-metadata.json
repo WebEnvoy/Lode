@@ -23,7 +23,27 @@
     "current": "0.1.0",
     "latest": "0.1.0",
     "default_locked": "0.1.0",
-    "lifecycle": "proposed"
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+      "status": "self_for_initial_version"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+        "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+        "candidate_kind": "previous_known_good"
+      }
+    ]
   },
   "status": {
     "catalog_state": "available",

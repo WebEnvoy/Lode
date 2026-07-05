@@ -7,6 +7,78 @@
   "capability_id": "read-public-page",
   "operation_id": "content_detail_by_url",
   "operation_mode": "read",
+  "lifecycle_state_vocabulary": {
+    "states": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "state_meaning": {
+      "proposed": "Package contracts and fixtures are available for review and local validation, but the package is not a stable default.",
+      "active": "Package version is the current supported read capability version for consumers that accept this source.",
+      "suspected_broken": "Recent test, post-check, site-shape, runtime evidence, or user report suggests the package may be invalid; consumers should show caution and prefer a known-good version when available.",
+      "broken": "The package version failed validation or maintainer review and should not be admitted for new read runs except explicit diagnostic checks.",
+      "deprecated": "The package version remains readable for historical run attribution or rollback display, but a newer replacement should be preferred."
+    },
+    "allowed_transitions": [
+      {
+        "from": "proposed",
+        "to": "active",
+        "requires": [
+          "validator_report_passed",
+          "post_check_fixture_output_passed",
+          "local_package_resolution_checked",
+          "package_lock_present"
+        ]
+      },
+      {
+        "from": "active",
+        "to": "suspected_broken",
+        "requires": [
+          "failed_recent_test",
+          "post_check_failed",
+          "site_change_signal",
+          "user_invalid_report",
+          "evidence_stale_or_expired"
+        ],
+        "requires_any": true
+      },
+      {
+        "from": "suspected_broken",
+        "to": "broken",
+        "requires": [
+          "maintainer_confirms_package_or_site_failure"
+        ]
+      },
+      {
+        "from": "suspected_broken",
+        "to": "active",
+        "requires": [
+          "repair_validated",
+          "post_check_fixture_output_passed",
+          "validator_report_passed"
+        ]
+      },
+      {
+        "from": "active",
+        "to": "deprecated",
+        "requires": [
+          "replacement_package_ref_declared",
+          "previous_known_good_preserved_for_history"
+        ]
+      },
+      {
+        "from": "broken",
+        "to": "deprecated",
+        "requires": [
+          "replacement_package_ref_declared"
+        ]
+      }
+    ],
+    "owner_boundary": "Lode owns lifecycle state and rollback facts. Core may use them for admission and run attribution. App may display them, but does not store package truth."
+  },
   "lifecycle": {
     "state": "proposed",
     "stable_admission_allowed": false,
@@ -38,6 +110,9 @@
   "version_identity": {
     "version_scheme": "semver",
     "current_version": "0.1.0",
+    "latest_version": "0.1.0",
+    "default_locked_version": "0.1.0",
+    "compatibility_range": ">=0.1.0 <0.2.0",
     "version_owner": "Lode",
     "breaking_change_requires_new_version": [
       "package_ref changes",
@@ -59,6 +134,26 @@
       "planned asset refs can become present within the same proposed version when they preserve existing contracts",
       "known limitations can become more precise without a version bump"
     ]
+  },
+  "rollback": {
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+      "package_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+      "status": "self_for_initial_version",
+      "validated_at": "2026-07-05T00:00:00Z",
+      "validation_source": "tools/lode_validate_package.py sites/example/read-public-page --registry-index registry/local-packages.json --json"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+        "package_version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+        "candidate_kind": "previous_known_good",
+        "reason": "Initial sample package version is the only declared known-good version."
+      }
+    ],
+    "consumer_boundary": "Rollback candidates are package/version/lock refs only. They do not contain App install state, Core run truth, Harbor runtime state, raw evidence, credentials, or private local browser material."
   },
   "lock_input": {
     "lock_ref": "lode://site-capability/example/read-public-page@0.1.0",
