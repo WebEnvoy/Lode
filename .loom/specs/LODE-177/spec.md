@@ -13,3 +13,8 @@
 - A validate-only package declares package metadata, input/output schemas, resource requirements, and no-submit guard facts.
 - The local registry can resolve the package for Core contract tests.
 - Validator rejects missing no-submit guard facts or private material.
+
+## Suite Path
+
+- Suite path: minimal
+- full-path-artifacts not_applicable rationale: bounded Stage 6 package metadata/schema/resource/guard slice; consumer boundary: Core consumes refs and static facts only; recheck condition: switch to full suite when adding expected-change schemas, repair promotion, true write execution, hosted registry, runtime execution, or private material handling.
