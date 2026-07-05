@@ -6,7 +6,7 @@
   "summary": "Spec review accepts the bounded Stage 6 Lode write-pre candidate fixture slice.",
   "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
   "authored_at": "2026-07-05T20:10:00Z",
-  "reviewed_head": "34e78b74ac26d1c42c8f887e2feb90eff7d0953f",
+  "reviewed_head": "50705e82e82006bb920b146b1e70894d8ba9f112",
   "reviewed_validation_summary": "`python3 -m py_compile tools/lode_validate_package.py`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `git diff --check`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-187 --json`; `loom suite evidence validate --target . --item LODE-187 --json`; `loom suite carrier validate --target . --item LODE-187 --json` passed locally.",
   "reviewed_validation_summary_hash": "c873e848dfdb20217c1d6c306e717eebbd4e9d86ab5edd65f9f7de2feb8040e7",
   "validation_summary_source": "recovery.latest_validation_summary",
