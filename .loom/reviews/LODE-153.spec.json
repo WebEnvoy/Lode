@@ -1,0 +1,54 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-153",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Spec review accepts the Lode catalog metadata fixture slice and minimal suite boundary for LODE-153.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T10:56:32Z",
+  "reviewed_head": "4ccf85163db465b40db49af68b48081cd8c9aa05",
+  "reviewed_validation_summary": "python3 tools/lode_validate_package.py sites/example/read-public-page, git diff --check, suite validate, suite evidence validate, suite carrier validate, fact-chain, and verify passed on LODE-153.",
+  "reviewed_validation_summary_hash": "60c23c6f3a15aa3cf2e1127f0ff909fefd0a2683c501276d04fee1532885a10c",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-153.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-153.md",
+    "recovery_entry": ".loom/progress/LODE-153.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "budget_risk": {
+      "schema_version": "loom-execution-budget-risk/v1",
+      "status": "not_applicable",
+      "enforcement": "advisory",
+      "highest_risk": "none",
+      "risk_dimensions": [],
+      "summary": "execution budget is not_applicable; budget risk remains advisory and non-blocking",
+      "budget_summary": "execution budget is not collected for this invocation.",
+      "adapter_evidence_locator": "",
+      "provenance": {
+        "source": "github_host"
+      }
+    },
+    "engine_adapter": null,
+    "engine_evidence": null,
+    "normalized_findings": null,
+    "suite_validation": "suite validate",
+    "suite_validator": "loom",
+    "suite_validator_mode": "global-cli",
+    "suite_spec": ".loom/specs/LODE-153/spec.md",
+    "suite_plan": ".loom/specs/LODE-153/plan.md",
+    "suite_evidence_map": ".loom/specs/LODE-153/evidence-map.md",
+    "suite_consistency_analysis": null,
+    "suite_task_carriers": [
+      ".loom/specs/LODE-153/task-carrier.md"
+    ],
+    "suite_consumed_contracts": [
+      "docs/methodology/harness/full-spec-suite-cli-surface.md",
+      "docs/methodology/templates/spec-suite.md"
+    ]
+  }
+}
