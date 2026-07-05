@@ -1,0 +1,34 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-187",
+  "decision": "allow",
+  "kind": "code_review",
+  "summary": "Implementation review accepts low-risk write-pre candidate selection, draft/preview fixture metadata, registry query output, and validator coverage for Lode #187/#188/#189/#190.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T20:10:00Z",
+  "reviewed_head": "34e78b74ac26d1c42c8f887e2feb90eff7d0953f",
+  "reviewed_validation_summary": "`python3 -m py_compile tools/lode_validate_package.py`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `git diff --check`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-187 --json`; `loom suite evidence validate --target . --item LODE-187 --json`; `loom suite carrier validate --target . --item LODE-187 --json` passed locally.",
+  "reviewed_validation_summary_hash": "c873e848dfdb20217c1d6c306e717eebbd4e9d86ab5edd65f9f7de2feb8040e7",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-187.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-187.md",
+    "recovery_entry": ".loom/progress/LODE-187.md",
+    "suite_evidence_map": ".loom/specs/LODE-187/evidence-map.md",
+    "suite_task_carriers": [
+      ".loom/specs/LODE-187/task-carrier.md"
+    ]
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The candidate fixture is refs-only, redacted, and keeps no-submit active with true-write blocked."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "Validator and package fixture checks pass locally; no raw Harbor material or true write behavior is introduced."
+  }
+}
