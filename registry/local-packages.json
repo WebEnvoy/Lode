@@ -48,8 +48,26 @@
         "fixture_path": "sites/example/read-public-page/fixtures/read-public-page.fixture.json",
         "core_consumption_fixture_path": "sites/example/read-public-page/fixtures/core-consumption.fixture.json",
         "catalog_metadata_path": "sites/example/read-public-page/catalog-metadata.json",
+        "repair_draft_path": "sites/example/read-public-page/repair/repair-draft.fixture.json",
+        "overlay_fork_metadata_path": "sites/example/read-public-page/repair/overlay-fork-metadata.fixture.json",
         "write_deferred_guardrail_path": "sites/example/read-public-page/write-deferred-guardrail.json",
-        "consumer_boundary": "Core may consume this entry and the GH-102 fixture as the first sample read package reference for repo-local admission and schema validation. This selection does not imply hosted registry, runtime execution, stable admission, or write behavior."
+        "repair_summary": {
+          "status": "fixture_present",
+          "covered_work_items": [
+            "GH-156",
+            "GH-157",
+            "GH-158",
+            "GH-159",
+            "GH-160",
+            "GH-161",
+            "GH-162",
+            "GH-163",
+            "GH-164",
+            "GH-165",
+            "GH-166"
+          ]
+        },
+        "consumer_boundary": "Core may consume this entry and the GH-102 fixture as the first sample read package reference for repo-local admission and schema validation. App/Core may consume repair and overlay/fork metadata as refs-only status facts. This selection does not imply hosted registry, runtime execution, stable admission, package promotion, or write behavior."
       },
       "asset_roles": [
         "input_schema",
@@ -62,6 +80,8 @@
         "post_check",
         "failure_mapping",
         "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
         "package_lock"
       ],
       "resolution": {

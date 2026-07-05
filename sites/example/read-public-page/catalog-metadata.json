@@ -68,6 +68,18 @@
     "post_check_fixture_status": "passed",
     "runtime_execution": "out_of_scope"
   },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "latest_repair_draft_ref": "lode://repair-draft/site-capability/example/read-public-page/site-change@0.1.1-draft",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "overlay_fork_metadata_path": "sites/example/read-public-page/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may render repair draft status, owner, and refs; it does not store repair, package, run, session, or private evidence truth."
+  },
   "consumer_boundary": "App may render this catalog metadata and store local install/lock/update intent. Lode remains owner of package, catalog, version, lock, fixture, and test metadata truth.",
   "forbidden_contents": [
     "credentials",

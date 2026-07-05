@@ -29,7 +29,12 @@ REQUIRED_ASSET_ROLES = {
     "failure_mapping",
     "catalog_metadata",
     "package_lock",
+    "repair_draft",
+    "overlay_fork_metadata",
 }
+REQUIRED_REPAIR_FAILURE_CLASSES = {"invalid_contract", "site_changed", "post_check_failed", "evidence_expired"}
+REPAIR_DRAFT_STATES = {"candidate", "validated", "promoted", "rejected"}
+OVERLAY_ASSET_KINDS = {"user_overlay", "fork", "repair_draft"}
 FORBIDDEN_KEYS = {
     "cookie",
     "cookies",
@@ -398,6 +403,139 @@ def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], as
                 validate_mapping_consumer(report, item.get("core_mapping"), path, "core_mapping")
                 validate_mapping_consumer(report, item.get("app_mapping"), path, "app_mapping")
     scan_forbidden_keys(report, failure_mapping, path)
+
+
+def validate_repair_draft(report: Report, repair: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        repair,
+        [
+            "schema_version",
+            "repair_draft_id",
+            "repair_draft_version",
+            "package_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "failure_to_repair",
+            "draft_lifecycle",
+            "validation_and_promotion",
+            "repair_drafts",
+            "forbidden_material_policy",
+        ],
+        path,
+    )
+    if repair.get("schema_version") != "lode.repair-draft.v0":
+        add_error(report, "unsupported_version", path, "Unsupported repair draft schema version.", "Use `lode.repair-draft.v0`.")
+    if repair.get("repair_draft_id") != asset.get("repair_draft_id") or repair.get("repair_draft_version") != asset.get("repair_draft_version"):
+        add_error(report, "invalid_contract", path, "Repair draft identity/version does not match manifest asset ref.", "Keep repair draft metadata aligned.")
+    if repair.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Repair draft package_ref does not match manifest.", "Bind repair draft facts to the package ref.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if repair.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", path, f"Repair draft `{key}` does not match manifest capability.", "Bind repair draft facts to the package capability.")
+
+    mapping = repair.get("failure_to_repair")
+    if not isinstance(mapping, list) or not mapping:
+        add_error(report, "invalid_contract", f"{path}#failure_to_repair", "Repair draft must map failures to repair actions.", "Declare failure-to-repair mapping for App/Core.")
+    else:
+        classes = {item.get("failure_class") for item in mapping if isinstance(item, dict)}
+        missing = sorted(REQUIRED_REPAIR_FAILURE_CLASSES - classes)
+        if missing:
+            add_error(report, "invalid_contract", f"{path}#failure_to_repair", f"Repair mapping missing classes: {', '.join(missing)}.", "Expose repair mappings for capability, site, post-check, and evidence failures.")
+        for item in mapping:
+            if isinstance(item, dict):
+                require_keys(report, item, ["failure_class", "repair_owner", "draft_action", "app_summary"], f"{path}#failure_to_repair")
+
+    lifecycle = repair.get("draft_lifecycle") if isinstance(repair.get("draft_lifecycle"), dict) else {}
+    states = lifecycle.get("states")
+    if not isinstance(states, list) or set(states) != REPAIR_DRAFT_STATES:
+        add_error(report, "invalid_contract", f"{path}#draft_lifecycle.states", "Repair draft lifecycle must declare candidate, validated, promoted, and rejected.", "Expose the Stage 5 repair draft lifecycle.")
+    transitions = lifecycle.get("allowed_transitions")
+    if not isinstance(transitions, list) or not transitions:
+        add_error(report, "invalid_contract", f"{path}#draft_lifecycle.allowed_transitions", "Repair draft lifecycle must declare transitions.", "Declare validation and promotion transitions.")
+
+    validation = repair.get("validation_and_promotion") if isinstance(repair.get("validation_and_promotion"), dict) else {}
+    require_keys(report, validation, ["draft_validation_checks", "promotion_checks", "promotion_target"], f"{path}#validation_and_promotion")
+    promotion_target = validation.get("promotion_target") if isinstance(validation.get("promotion_target"), dict) else {}
+    require_keys(report, promotion_target, ["target_kind", "package_ref", "requires_new_version"], f"{path}#validation_and_promotion.promotion_target")
+    if promotion_target.get("target_kind") != "package_update":
+        add_error(report, "invalid_contract", f"{path}#validation_and_promotion.promotion_target.target_kind", "Promotion target must be package_update.", "Keep repair promotion tied to Lode package update truth.")
+
+    drafts = repair.get("repair_drafts")
+    if not isinstance(drafts, list) or not drafts:
+        add_error(report, "invalid_contract", f"{path}#repair_drafts", "Repair draft fixture must declare at least one draft.", "Expose an App/Core-consumable repair draft fixture.")
+    else:
+        for draft in drafts:
+            if isinstance(draft, dict):
+                require_keys(report, draft, ["draft_ref", "source_failure_class", "status", "summary", "source_refs", "asset_boundary"], f"{path}#repair_drafts")
+                if draft.get("status") not in REPAIR_DRAFT_STATES:
+                    add_error(report, "invalid_contract", f"{path}#repair_drafts.status", "Repair draft status is outside the lifecycle vocabulary.", "Use candidate, validated, promoted, or rejected.")
+                boundary = draft.get("asset_boundary") if isinstance(draft.get("asset_boundary"), dict) else {}
+                require_keys(report, boundary, ["allowed_asset_kinds", "forbidden_material"], f"{path}#repair_drafts.asset_boundary")
+
+    policy = repair.get("forbidden_material_policy") if isinstance(repair.get("forbidden_material_policy"), dict) else {}
+    require_keys(report, policy, ["raw_runtime_material", "sensitive_user_material", "private_browser_material"], f"{path}#forbidden_material_policy")
+    scan_forbidden_keys(report, repair, path)
+
+
+def validate_overlay_fork_metadata(report: Report, overlay: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
+    path = str(asset.get("path"))
+    require_keys(
+        report,
+        overlay,
+        [
+            "schema_version",
+            "overlay_metadata_id",
+            "overlay_metadata_version",
+            "package_ref",
+            "capability_id",
+            "operation_id",
+            "operation_mode",
+            "asset_boundary",
+            "private_invalidation_boundary",
+            "overlay_fork_examples",
+            "update_acceptance",
+        ],
+        path,
+    )
+    if overlay.get("schema_version") != "lode.overlay-fork-metadata.v0":
+        add_error(report, "unsupported_version", path, "Unsupported overlay/fork metadata schema version.", "Use `lode.overlay-fork-metadata.v0`.")
+    if overlay.get("overlay_metadata_id") != asset.get("overlay_metadata_id") or overlay.get("overlay_metadata_version") != asset.get("overlay_metadata_version"):
+        add_error(report, "invalid_contract", path, "Overlay metadata identity/version does not match manifest asset ref.", "Keep overlay/fork metadata aligned.")
+    if overlay.get("package_ref") != manifest.get("package_ref"):
+        add_error(report, "invalid_contract", path, "Overlay metadata package_ref does not match manifest.", "Bind overlay facts to the package ref.")
+    for key in ["capability_id", "operation_id", "operation_mode"]:
+        if overlay.get(key) != nested_get(manifest, ["capability", key]):
+            add_error(report, "invalid_contract", path, f"Overlay metadata `{key}` does not match manifest capability.", "Bind overlay metadata to the package capability.")
+
+    boundary = overlay.get("asset_boundary") if isinstance(overlay.get("asset_boundary"), dict) else {}
+    require_keys(report, boundary, ["allowed_asset_kinds", "truth_owner", "forbidden_material"], f"{path}#asset_boundary")
+    kinds = boundary.get("allowed_asset_kinds")
+    if not isinstance(kinds, list) or not OVERLAY_ASSET_KINDS.issubset(set(kinds)):
+        add_error(report, "invalid_contract", f"{path}#asset_boundary.allowed_asset_kinds", "Overlay boundary must declare user_overlay, fork, and repair_draft.", "Expose Stage 5 overlay/fork/draft asset kinds.")
+    if boundary.get("truth_owner") != "Lode":
+        add_error(report, "invalid_contract", f"{path}#asset_boundary.truth_owner", "Overlay/fork asset truth owner must be Lode.", "Do not move package truth into App/Core/Harbor.")
+
+    invalidation = overlay.get("private_invalidation_boundary") if isinstance(overlay.get("private_invalidation_boundary"), dict) else {}
+    require_keys(report, invalidation, ["private_report_status", "platform_report_status", "forbidden_private_material"], f"{path}#private_invalidation_boundary")
+    if invalidation.get("private_report_status") != "local_signal_only":
+        add_error(report, "invalid_contract", f"{path}#private_invalidation_boundary.private_report_status", "Private invalidation must stay local_signal_only.", "Do not store private browser material in Lode assets.")
+
+    examples = overlay.get("overlay_fork_examples")
+    if not isinstance(examples, list) or not examples:
+        add_error(report, "invalid_contract", f"{path}#overlay_fork_examples", "Overlay/fork metadata must include at least one example.", "Expose a fixture App/Core can render.")
+    else:
+        for example in examples:
+            if isinstance(example, dict):
+                require_keys(report, example, ["asset_kind", "asset_ref", "source", "status", "boundary"], f"{path}#overlay_fork_examples")
+                if example.get("asset_kind") not in OVERLAY_ASSET_KINDS:
+                    add_error(report, "invalid_contract", f"{path}#overlay_fork_examples.asset_kind", "Overlay example asset_kind is outside the allowed vocabulary.", "Use user_overlay, fork, or repair_draft.")
+
+    acceptance = overlay.get("update_acceptance") if isinstance(overlay.get("update_acceptance"), dict) else {}
+    require_keys(report, acceptance, ["acceptance_checks", "promotion_requires", "reject_if"], f"{path}#update_acceptance")
+    scan_forbidden_keys(report, overlay, path)
 
 
 def validate_write_deferred_guardrail(report: Report, guardrail_doc: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
@@ -770,6 +908,8 @@ def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
         ("post_check_id", "post_check_version"),
         ("failure_mapping_id", "failure_mapping_version"),
         ("catalog_metadata_id", "catalog_metadata_version"),
+        ("repair_draft_id", "repair_draft_version"),
+        ("overlay_metadata_id", "overlay_metadata_version"),
         ("lock_ref", "lock_version"),
     ]:
         if ref_key in asset or version_key in asset:
@@ -1000,6 +1140,10 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_write_deferred_guardrail(report, assets["write_deferred_guardrail"], refs["write_deferred_guardrail"], manifest)
     if isinstance(assets.get("failure_mapping"), dict):
         validate_failure_mapping(report, assets["failure_mapping"], refs["failure_mapping"], manifest)
+    if isinstance(assets.get("repair_draft"), dict):
+        validate_repair_draft(report, assets["repair_draft"], refs["repair_draft"], manifest)
+    if isinstance(assets.get("overlay_fork_metadata"), dict):
+        validate_overlay_fork_metadata(report, assets["overlay_fork_metadata"], refs["overlay_fork_metadata"], manifest)
     if isinstance(assets.get("catalog_metadata"), dict):
         validate_catalog_metadata(report, assets["catalog_metadata"], refs["catalog_metadata"], manifest, refs)
     if isinstance(assets.get("package_lock"), dict):

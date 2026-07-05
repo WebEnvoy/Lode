@@ -1,0 +1,97 @@
+{
+  "schema_version": "lode.overlay-fork-metadata.v0",
+  "overlay_metadata_id": "example.read-public-page.overlay-fork",
+  "overlay_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+  "capability_id": "read-public-page",
+  "operation_id": "content_detail_by_url",
+  "operation_mode": "read",
+  "asset_boundary": {
+    "allowed_asset_kinds": [
+      "user_overlay",
+      "fork",
+      "repair_draft"
+    ],
+    "truth_owner": "Lode",
+    "allowed_storage": "repo-local refs and redacted metadata only",
+    "forbidden_material": [
+      "credentials",
+      "cookies",
+      "tokens",
+      "profile state",
+      "runtime session",
+      "live tab state",
+      "full document body",
+      "network archive",
+      "network response body",
+      "production payload",
+      "user business data"
+    ]
+  },
+  "private_invalidation_boundary": {
+    "private_report_status": "local_signal_only",
+    "platform_report_status": "lode_public_fix_candidate",
+    "forbidden_private_material": [
+      "account identity",
+      "credential material",
+      "browser storage",
+      "private page content",
+      "raw runtime capture"
+    ],
+    "app_may_store": "local UI intent and report preference only"
+  },
+  "overlay_fork_examples": [
+    {
+      "asset_kind": "repair_draft",
+      "asset_ref": "lode://repair-draft/site-capability/example/read-public-page/site-change@0.1.1-draft",
+      "source": "site_changed failure mapping",
+      "status": "candidate",
+      "boundary": "refs-only fixture with no private browser material"
+    },
+    {
+      "asset_kind": "user_overlay",
+      "asset_ref": "lode://overlay/site-capability/example/read-public-page/local-field-map@0.1.1-draft",
+      "source": "local user report signal",
+      "status": "local_only",
+      "boundary": "App may keep local intent; Lode package truth requires explicit promotion checks"
+    },
+    {
+      "asset_kind": "fork",
+      "asset_ref": "lode://fork/site-capability/example/read-public-page/public-sample@0.1.1-draft",
+      "source": "maintainer draft candidate",
+      "status": "candidate",
+      "boundary": "Fork metadata is package refs only and excludes raw evidence"
+    }
+  ],
+  "update_acceptance": {
+    "acceptance_checks": [
+      "validator_report_passed",
+      "repair_draft_validated",
+      "promotion_checks_passed",
+      "sensitive_material_scan_passed",
+      "previous_known_good_ref_retained"
+    ],
+    "promotion_requires": [
+      "new package version or explicit asset version bump",
+      "catalog metadata updated_at changes",
+      "package lock invalidation reviewed",
+      "Core/App consumer boundary remains refs-only"
+    ],
+    "reject_if": [
+      "contains credential material",
+      "contains private browser material",
+      "contains raw evidence body",
+      "claims hosted sync",
+      "claims runtime execution",
+      "claims true write behavior"
+    ]
+  },
+  "consumer_boundary": "App may render local report, overlay, fork, and repair draft status as owner-provided facts. Lode owns package/draft truth; Core owns run truth; Harbor owns evidence refs and freshness.",
+  "non_goals": [
+    "No marketplace.",
+    "No hosted sync.",
+    "No crawler queue.",
+    "No raw runtime material ingestion.",
+    "No true write-side execution."
+  ]
+}
