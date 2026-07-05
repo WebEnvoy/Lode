@@ -3,19 +3,19 @@
 ## Dynamic Facts
 
 - Item ID: LODE-153
-- Current Checkpoint: admission
-- Current Stop: Work item scaffolded and waiting for the first execution pass.
-- Next Step: Write the first recovery update for this work item.
+- Current Checkpoint: build
+- Current Stop: Lode catalog metadata fixture, package lock refs, registry index, and validator coverage are implemented on PR #169.
+- Next Step: Record current-head review, update PR metadata, and run hosted gate for Lode #169.
 - Blockers: None recorded.
-- Latest Validation Summary: No validation recorded yet.
-- Recovery Boundary: Work item scaffolded at `.loom/work-items/LODE-153.md`.
-- Current Lane: not yet assigned
+- Latest Validation Summary: python3 tools/lode_validate_package.py sites/example/read-public-page, git diff --check, suite validate, suite evidence validate, suite carrier validate, fact-chain, and verify passed on LODE-153.
+- Recovery Boundary: Lode package/catalog metadata fixture only; no hosted registry, App state, Core run truth, Harbor evidence payload, or Stage 6 behavior.
+- Current Lane: stage5 catalog metadata fixture
 
 ## Execution Ledger
 
 - Ledger Binding: recovery_entry
-- Plan Locator: not_applicable (suite path: not_applicable)
-- Acceptance Locator: not_applicable
-- Validation Evidence Locator: not_applicable
-- Handoff Notes Locator: not_applicable
-- Evidence Freshness: not_applicable
+- Plan Locator: .loom/specs/LODE-153/plan.md
+- Acceptance Locator: .loom/specs/LODE-153/spec.md
+- Validation Evidence Locator: .loom/specs/LODE-153/evidence-map.md
+- Handoff Notes Locator: .loom/specs/LODE-153/task-carrier.md
+- Evidence Freshness: current
