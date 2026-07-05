@@ -6,7 +6,7 @@
   "summary": "Implementation review accepts repair draft, overlay/fork, package update acceptance, and sensitive material validator changes as bounded Stage 5 Lode facts.",
   "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
   "authored_at": "2026-07-05T17:10:00Z",
-  "reviewed_head": "2516325644121acaf70c13288f9ae1ae17b1fd48",
+  "reviewed_head": "b6f1c1c7b3aa457426ec38868f3969894baf360e",
   "reviewed_validation_summary": "loom fact-chain --target . --json; loom verify --target . --json; git diff --check passed locally before retire PR. Loom verify reports Codex plugin runtime cache stale while CLI/source payload is 0.28.0; treated as host runtime cache surface, not repo code.",
   "reviewed_validation_summary_hash": "f1732abb5f17cbc34d56133da4a993c3087437a9100f1481254c1e1b62e27617",
   "validation_summary_source": "recovery.latest_validation_summary",

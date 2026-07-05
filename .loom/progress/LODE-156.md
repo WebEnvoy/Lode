@@ -3,7 +3,7 @@
 ## Dynamic Facts
 
 - Item ID: LODE-156
-- Current Checkpoint: closeout_retired
+- Current Checkpoint: closed_out
 - Current Stop: Repair draft facts batch is merged and the current pointer retire PR returns the repo to no_active_item.
 - Next Step: Merge retire PR after hosted gate.
 - Blockers: None recorded.
