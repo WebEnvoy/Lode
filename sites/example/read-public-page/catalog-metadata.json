@@ -1,0 +1,64 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "example.read-public-page.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-public-page@0.1.0",
+  "lock_ref": "lode://lock/site-capability/example/read-public-page@0.1.0",
+  "capability_id": "read-public-page",
+  "operation_id": "content_detail_by_url",
+  "operation_mode": "read",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "Example Domain",
+    "manifest_path": "sites/example/read-public-page/manifest.json"
+  },
+  "display": {
+    "name": "Read public page summary",
+    "summary": "Read title, summary, canonical URL, and source status from a reserved public Example Domain page.",
+    "site_name": "Example Domain",
+    "category": "Content detail"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed"
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "fixture_only",
+    "updated_at": "2026-07-05"
+  },
+  "risk": {
+    "level": "low",
+    "operation": "read",
+    "reason": "Reserved public sample page with summary-only fixture refs."
+  },
+  "facets": [
+    "site:example",
+    "sample",
+    "content-detail",
+    "risk:read"
+  ],
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present",
+    "post_check_fixture_status": "passed",
+    "runtime_execution": "out_of_scope"
+  },
+  "consumer_boundary": "App may render this catalog metadata and store local install/lock/update intent. Lode remains owner of package, catalog, version, lock, fixture, and test metadata truth.",
+  "forbidden_contents": [
+    "credentials",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_evidence_body",
+    "raw_dom",
+    "network_body",
+    "production_payload",
+    "user_business_data"
+  ]
+}
