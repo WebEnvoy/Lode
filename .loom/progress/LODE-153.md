@@ -3,13 +3,13 @@
 ## Dynamic Facts
 
 - Item ID: LODE-153
-- Current Checkpoint: merge
-- Current Stop: Lode #153 catalog metadata fixture has current-head review, suite validation, package validator evidence, and PR #169 metadata ready for hosted gate consumption.
-- Next Step: Run hosted loom-pr-merge-gate for PR #169, then controlled merge if it passes.
+- Current Checkpoint: implemented
+- Current Stop: LODE-153 PR #169 is merged and issue #153 is closed; this carrier-only PR is retiring the current pointer.
+- Next Step: Merge carrier-only closeout PR, then keep Stage 5 dependency evidence aligned.
 - Blockers: None recorded.
 - Latest Validation Summary: python3 tools/lode_validate_package.py sites/example/read-public-page, git diff --check, suite validate, suite evidence validate, suite carrier validate, fact-chain, and verify passed on LODE-153.
 - Recovery Boundary: Lode package/catalog metadata fixture only; no hosted registry, App state, Core run truth, Harbor evidence payload, or Stage 6 behavior.
-- Current Lane: stage5 catalog metadata merge-ready
+- Current Lane: stage5 Lode catalog closeout
 
 ## Execution Ledger
 
@@ -19,3 +19,13 @@
 - Validation Evidence Locator: .loom/specs/LODE-153/evidence-map.md
 - Handoff Notes Locator: .loom/specs/LODE-153/task-carrier.md
 - Evidence Freshness: current
+
+## Terminal Closeout Metadata
+
+- Terminal State: closed_out
+- Issue: 153
+- PR: 169
+- Merge Commit: f25871f16b2bcda62b741d9f1075a47f231df1a5
+- Target Branch: main
+- Closed At: 2026-07-05T11:30:40Z
+- Evidence Locator: https://github.com/WebEnvoy/Lode/issues/153;https://github.com/WebEnvoy/Lode/pull/169

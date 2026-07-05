@@ -2,11 +2,11 @@
   "schema_version": "loom-review/v1",
   "item_id": "LODE-153",
   "decision": "allow",
-  "kind": "general_review",
-  "summary": "Implementation review accepts the Lode read-only catalog metadata fixture and validator changes for PR #169.",
+  "kind": "code_review",
+  "summary": "Carrier-only closeout review accepts LODE-153 terminal metadata and idle pointer sync after PR #169 merged and issue #153 closed.",
   "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
-  "authored_at": "2026-07-05T10:56:53Z",
-  "reviewed_head": "03d44655d76500e0a7e35b90a94578da06ae741b",
+  "authored_at": "2026-07-05T11:31:00Z",
+  "reviewed_head": "f25871f16b2bcda62b741d9f1075a47f231df1a5",
   "reviewed_validation_summary": "python3 tools/lode_validate_package.py sites/example/read-public-page, git diff --check, suite validate, suite evidence validate, suite carrier validate, fact-chain, and verify passed on LODE-153.",
   "reviewed_validation_summary_hash": "60c23c6f3a15aa3cf2e1127f0ff909fefd0a2683c501276d04fee1532885a10c",
   "validation_summary_source": "recovery.latest_validation_summary",
@@ -55,6 +55,14 @@
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Authored implementation review approved the current head for merge checkpoint consumption."
+    "reason": "Authored closeout review approved only LODE-153 terminal carrier metadata and idle pointer restoration; implementation behavior was already reviewed and merged in PR #169."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "Implementation behavior was reviewed and merged in PR #169; this carrier-only review covers only post-merge closeout metadata."
+  },
+  "carrier_only_closeout_review": {
+    "status": "passed",
+    "reason": "Closeout changes are limited to LODE-153 terminal metadata, issue/PR/merge evidence, and no_active_item pointer restoration."
   }
 }
