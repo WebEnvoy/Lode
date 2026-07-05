@@ -1,0 +1,26 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-149",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "Spec review accepts the Stage 5 Lode read capability asset batch as bounded package/catalog/lifecycle truth for issues #149, #150, #151, #154, and #155.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T17:42:00Z",
+  "reviewed_head": "efef44e8a3da8af6b3ac8e87a6e69bdbbfd89aba",
+  "reviewed_validation_summary": "python3 -m py_compile tools/lode_validate_package.py; python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; jq registry query/candidate checks; git diff --check; loom suite validate/evidence/carrier; loom fact-chain; loom verify passed locally before PR. Loom verify reports Codex plugin runtime cache stale while CLI/source payload is 0.28.0; treated as host runtime cache surface, not repo code.",
+  "reviewed_validation_summary_hash": "ecdfdff17a193fc19830c6c069df9ef898763241041775b0a8da1bbce3820764",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-149.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The spec keeps Lode as package/catalog/lifecycle/schema/fixture truth owner and excludes marketplace, runtime execution, private browser material, Core run truth, App package truth, Harbor evidence truth, and Stage 6 writes."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "The planned implementation is limited to repo-local package metadata, registry fixtures, validator checks, and item-specific Loom carrier for LODE-149."
+  }
+}

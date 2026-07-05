@@ -1,0 +1,143 @@
+{
+  "schema_version": "lode.repair-draft.v0",
+  "repair_draft_id": "example.read-page-links.repair-draft",
+  "repair_draft_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+  "capability_id": "read-page-links",
+  "operation_id": "public_links_by_url",
+  "operation_mode": "read",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "run_result_owner": "WebEnvoy Core",
+    "runtime_evidence_ref_owner": "WebEnvoy Harbor",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares repair draft facts and package update eligibility. Core owns run failure truth, Harbor owns evidence refs and freshness, and App may render refs/status without storing package or run truth."
+  },
+  "failure_to_repair": [
+    {
+      "failure_class": "invalid_contract",
+      "repair_owner": "Lode",
+      "draft_action": "package_asset_contract_fix",
+      "app_summary": "The package contract needs maintainer repair before it can be used."
+    },
+    {
+      "failure_class": "site_changed",
+      "repair_owner": "Lode",
+      "draft_action": "refresh_source_shape_fixture_and_post_check",
+      "app_summary": "The site shape appears to have changed; a package update candidate is needed."
+    },
+    {
+      "failure_class": "post_check_failed",
+      "repair_owner": "Lode",
+      "draft_action": "refresh_post_check_expectations_or_mapping",
+      "app_summary": "The latest check did not match the package expectations."
+    },
+    {
+      "failure_class": "evidence_expired",
+      "repair_owner": "Harbor/Core/Lode coordination",
+      "draft_action": "request_fresh_evidence_refs_then_validate_package_update",
+      "app_summary": "The evidence refs are stale or expired; refresh evidence before accepting a repair."
+    }
+  ],
+  "draft_lifecycle": {
+    "states": [
+      "candidate",
+      "validated",
+      "promoted",
+      "rejected"
+    ],
+    "allowed_transitions": [
+      {
+        "from": "candidate",
+        "to": "validated",
+        "requires": "validator_report_passed"
+      },
+      {
+        "from": "validated",
+        "to": "promoted",
+        "requires": "package_update_acceptance_passed"
+      },
+      {
+        "from": "candidate",
+        "to": "rejected",
+        "requires": "invalid_or_out_of_scope"
+      }
+    ]
+  },
+  "validation_and_promotion": {
+    "draft_validation_checks": [
+      "validator_report_passed",
+      "post_check_fixture_output_passed",
+      "sensitive_material_scan_passed",
+      "refs_only_sources_present"
+    ],
+    "promotion_checks": [
+      "new_package_version_or_asset_version_bump",
+      "previous_known_good_ref_retained",
+      "consumer_boundary_unchanged",
+      "no_private_runtime_material"
+    ],
+    "promotion_target": {
+      "target_kind": "package_update",
+      "package_ref": "lode://site-capability/example/read-page-links@0.1.1-draft",
+      "requires_new_version": true,
+      "previous_known_good_ref": "lode://site-capability/example/read-page-links@0.1.0"
+    }
+  },
+  "repair_drafts": [
+    {
+      "draft_ref": "lode://repair-draft/site-capability/example/read-page-links/site-change@0.1.1-draft",
+      "source_failure_class": "site_changed",
+      "status": "candidate",
+      "summary": "Refresh the source shape fixture and post-check expectations for the reserved public page sample.",
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "document_summary",
+          "redaction": "summary_only"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "status": "fixture_only"
+        }
+      ],
+      "asset_boundary": {
+        "allowed_asset_kinds": [
+          "fixture",
+          "post_check",
+          "failure_mapping",
+          "catalog_metadata"
+        ],
+        "forbidden_material": [
+          "credentials",
+          "cookies",
+          "tokens",
+          "profile state",
+          "runtime session",
+          "live tab state",
+          "full document body",
+          "network archive",
+          "network response body",
+          "production payload",
+          "user business data"
+        ]
+      }
+    }
+  ],
+  "forbidden_material_policy": {
+    "raw_runtime_material": "forbidden",
+    "sensitive_user_material": "forbidden",
+    "private_browser_material": "forbidden"
+  },
+  "consumer_boundary": "App may display repair draft refs, status, source failure class, and owner provenance. App must not store repair/package truth. Core may map run failures to this package repair vocabulary but owns run records and result envelopes.",
+  "non_goals": [
+    "No marketplace publishing.",
+    "No hosted sync.",
+    "No crawler queue.",
+    "No true write execution.",
+    "No private browser capture or raw evidence material."
+  ]
+}

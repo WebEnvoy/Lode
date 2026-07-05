@@ -1,0 +1,26 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-149",
+  "decision": "allow",
+  "kind": "code_review",
+  "summary": "Implementation review accepts the read capability asset lifecycle batch as bounded Stage 5 Lode package/catalog truth.",
+  "reviewer": "Codex thread 019f31a5-212e-7952-a56a-bba7ffe9b1b9",
+  "authored_at": "2026-07-05T17:42:00Z",
+  "reviewed_head": "efef44e8a3da8af6b3ac8e87a6e69bdbbfd89aba",
+  "reviewed_validation_summary": "python3 -m py_compile tools/lode_validate_package.py; python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; jq registry query/candidate checks; git diff --check; loom suite validate/evidence/carrier; loom fact-chain; loom verify passed locally before PR. Loom verify reports Codex plugin runtime cache stale while CLI/source payload is 0.28.0; treated as host runtime cache surface, not repo code.",
+  "reviewed_validation_summary_hash": "ecdfdff17a193fc19830c6c069df9ef898763241041775b0a8da1bbce3820764",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-149.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The change exposes versioned read capability candidates, schemas, resource requirements, fixtures, post-check refs, Core admission fields, and local registry query facts without claiming runtime execution or downstream truth ownership."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "Validator coverage now checks package path lock resolution, registry query fixture shape, forbidden key material, and Core admission fields for all local registry entries."
+  }
+}

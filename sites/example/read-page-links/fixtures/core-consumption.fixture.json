@@ -1,0 +1,179 @@
+{
+  "schema_version": "lode.core-consumption-fixture.v0",
+  "fixture_id": "example.read-page-links.core-consumption-fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+  "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+  "capability_id": "read-page-links",
+  "operation_id": "public_links_by_url",
+  "operation_mode": "read",
+  "work_item": "GH-151",
+  "purpose": "Repo-local fixture that WebEnvoy Core can read for package admission and schema validation checks without executing runtime behavior.",
+  "owner_boundary": {
+    "fixture_owner": "Lode",
+    "consumer_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "summary": "Lode supplies package identity, repo-local paths, input and normalized output validation cases, and post-check fixture output pointers. Core owns the admission implementation and any result envelope. Harbor owns live source and evidence records."
+  },
+  "repo_local_resolution": {
+    "resolution_mode": "repo-local",
+    "registry_index": "registry/local-packages.json",
+    "package_path": "sites/example/read-page-links",
+    "manifest_path": "sites/example/read-page-links/manifest.json",
+    "lock_path": "sites/example/read-page-links/package-lock.json",
+    "expected_registry_entry": {
+      "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+      "package_type": "site-capability",
+      "site_slug": "example",
+      "capability_id": "read-page-links",
+      "operation_id": "public_links_by_url",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed"
+    }
+  },
+  "asset_inputs": {
+    "manifest": {
+      "path": "sites/example/read-page-links/manifest.json",
+      "required_fields": [
+        "manifest_version",
+        "package_ref",
+        "package_type",
+        "site",
+        "capability",
+        "asset_refs"
+      ]
+    },
+    "package_lock": {
+      "path": "sites/example/read-page-links/package-lock.json",
+      "lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0"
+    },
+    "input_schema": {
+      "path": "sites/example/read-page-links/schemas/input.schema.json",
+      "schema_id": "lode://schema/site-capability/example/read-page-links/input@0.1.0"
+    },
+    "normalized_output_schema": {
+      "path": "sites/example/read-page-links/schemas/output.schema.json",
+      "schema_id": "lode://schema/site-capability/example/read-page-links/output@0.1.0"
+    },
+    "source_fixture": {
+      "path": "sites/example/read-page-links/fixtures/read-page-links.fixture.json",
+      "fixture_id": "example.read-page-links.fixture",
+      "normalized_output_pointer": "/normalized_fixture/data"
+    },
+    "post_check": {
+      "path": "sites/example/read-page-links/checks/post-check.json",
+      "post_check_id": "example.read-page-links.post-check",
+      "fixture_output_pointer": "/fixture_post_check_output"
+    },
+    "failure_mapping": {
+      "path": "sites/example/read-page-links/failure-mapping.json",
+      "failure_mapping_id": "example.read-page-links.failure-mapping"
+    }
+  },
+  "admission_fixture": {
+    "requested_package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+    "requested_lock_ref": "lode://lock/site-capability/example/read-page-links@0.1.0",
+    "accepted_operation_modes": [
+      "read"
+    ],
+    "accepted_lifecycle_states_for_fixture": [
+      "proposed"
+    ],
+    "input_instance": {
+      "url": "https://example.org/",
+      "requested_fields": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status"
+      ],
+      "include_source_refs": true
+    },
+    "expected_admission_checks": [
+      "registry_entry_resolves",
+      "manifest_ref_matches_request",
+      "lock_ref_matches_request",
+      "operation_mode_is_read",
+      "required_assets_are_present",
+      "input_instance_matches_input_schema",
+      "normalized_fixture_matches_output_schema",
+      "post_check_fixture_output_is_passed",
+      "failure_mapping_declares_core_hints"
+    ]
+  },
+  "schema_validation_cases": [
+    {
+      "case_id": "valid-input-example-org",
+      "schema_path": "sites/example/read-page-links/schemas/input.schema.json",
+      "instance_kind": "inline",
+      "instance": {
+        "url": "https://example.org/",
+        "requested_fields": [
+          "title",
+          "summary",
+          "canonical_url",
+          "source_status"
+        ],
+        "include_source_refs": true
+      },
+      "expected_result": "valid"
+    },
+    {
+      "case_id": "valid-normalized-output-from-fixture",
+      "schema_path": "sites/example/read-page-links/schemas/output.schema.json",
+      "instance_kind": "json_pointer",
+      "instance_path": "sites/example/read-page-links/fixtures/read-page-links.fixture.json",
+      "json_pointer": "/normalized_fixture/data",
+      "expected_result": "valid"
+    }
+  ],
+  "post_check_fixture_case": {
+    "case_id": "post-check-output-passed",
+    "post_check_path": "sites/example/read-page-links/checks/post-check.json",
+    "json_pointer": "/fixture_post_check_output",
+    "expected_status": "passed",
+    "required_source_ref_ids": [
+      "fixture-source-1",
+      "fixture-source-2"
+    ],
+    "required_evidence_ref_ids": [
+      "fixture-evidence-1"
+    ]
+  },
+  "failure_mapping_case": {
+    "case_id": "core-consumer-hints-present",
+    "failure_mapping_path": "sites/example/read-page-links/failure-mapping.json",
+    "required_lode_failure_classes": [
+      "invalid_contract",
+      "resource_unavailable",
+      "site_changed",
+      "empty_result"
+    ],
+    "required_core_mapping_fields": [
+      "category",
+      "outcome_hint",
+      "retryable",
+      "requires_user_action"
+    ]
+  },
+  "expected_fixture_result": {
+    "package_resolution": "resolved",
+    "manifest_contract": "readable",
+    "package_lock": "readable",
+    "input_schema_validation": "valid",
+    "normalized_output_schema_validation": "valid",
+    "post_check_fixture_output": "passed",
+    "failure_mapping": "readable",
+    "stable_admission_claimed": false,
+    "runtime_execution_claimed": false,
+    "write_behavior_claimed": false
+  },
+  "non_goals": [
+    "No WebEnvoy Core code changes.",
+    "No Core result envelope schema.",
+    "No runtime execution, browser automation, live source lookup, live evidence lookup, profile selection, or provider routing.",
+    "No hosted registry, marketplace, sync service, crawler queue, benchmark contract, or write capability behavior.",
+    "No cookies, tokens, account state, raw evidence bodies, complete DOM, HAR, screenshots, production payloads, or user business data."
+  ]
+}

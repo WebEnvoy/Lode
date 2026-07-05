@@ -1,0 +1,106 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "post_check_id": "example.read-page-links.post-check",
+  "post_check_version": "0.1.0",
+  "package_ref": "lode://site-capability/example/read-page-links@0.1.0",
+  "capability_id": "read-page-links",
+  "operation_id": "public_links_by_url",
+  "operation_mode": "read",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "execution_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "summary": "Lode declares success conditions and output shape only. Core decides when to run the check and Harbor owns live source and evidence refs."
+  },
+  "result_contract": {
+    "schema_version": "lode.post-check-result.v0",
+    "status_values": [
+      "passed",
+      "failed",
+      "skipped"
+    ],
+    "required_fields": [
+      "status",
+      "reason",
+      "source_refs",
+      "evidence_refs"
+    ],
+    "status_meaning": {
+      "passed": "Required public fields are present and bound to declared source/evidence refs.",
+      "failed": "One or more required public fields or bindings are missing or inconsistent.",
+      "skipped": "The check did not run because an upstream admission or runtime condition was not met."
+    },
+    "reason_policy": "Always provide a short human-readable reason for the status.",
+    "source_ref_policy": "Use source ref ids declared by the fixture or Core result source refs.",
+    "evidence_ref_policy": "Use evidence ref ids declared by the fixture or Harbor/Core evidence refs; do not inline evidence bodies."
+  },
+  "requirements": [
+    {
+      "requirement_id": "target-located",
+      "description": "The normalized result identifies the reserved Example Domain page as located.",
+      "required_status": "available",
+      "required_normalized_fields": [
+        "canonical_url",
+        "title",
+        "summary",
+        "source_status"
+      ],
+      "required_source_refs": [
+        "fixture-source-1"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-1"
+      ],
+      "on_failure": "post_check_failed"
+    },
+    {
+      "requirement_id": "field-source-binding",
+      "description": "Each required normalized public field has a source ref and evidence ref binding.",
+      "required_binding_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status"
+      ],
+      "required_source_refs": [
+        "fixture-source-1",
+        "fixture-source-2"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-1"
+      ],
+      "on_failure": "mapping_incomplete"
+    }
+  ],
+  "fixture_post_check_output": {
+    "status": "passed",
+    "reason": "The redacted fixture contains the required public fields and binds them to declared source and evidence refs.",
+    "source_refs": [
+      {
+        "ref_id": "fixture-source-1",
+        "source_kind": "document_summary"
+      },
+      {
+        "ref_id": "fixture-source-2",
+        "source_kind": "http_metadata"
+      }
+    ],
+    "evidence_refs": [
+      {
+        "ref_id": "fixture-evidence-1",
+        "evidence_kind": "snapshot_ref"
+      }
+    ]
+  },
+  "failure_boundary": {
+    "post_check_failed": "Required public result fields or ref bindings are absent or inconsistent.",
+    "mapping_incomplete": "A required normalized field is not traceable to declared source/evidence refs.",
+    "evidence_unavailable": "Required evidence refs are absent, expired, or not retained by the runtime owner."
+  },
+  "non_goals": [
+    "No browser automation steps.",
+    "No Core result envelope.",
+    "No Harbor evidence schema or live evidence body.",
+    "No runtime session, profile, provider, cookie, token, DOM, HAR, screenshot body, production payload, or user business data."
+  ]
+}
