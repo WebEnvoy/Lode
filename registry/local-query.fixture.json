@@ -77,6 +77,39 @@
           }
         }
       ]
+    },
+    {
+      "query_id": "get_write_precheck_package_for_core",
+      "filters": {
+        "operation_mode": "validate_only",
+        "capability_id": "preview-contact-form",
+        "site_slug": "example"
+      },
+      "results": [
+        {
+          "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+          "capability_id": "preview-contact-form",
+          "operation_id": "contact_form_preview",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+          "manifest_path": "sites/example/preview-contact-form/manifest.json",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked",
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
+            "manifest_path": "sites/example/preview-contact-form/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/example/preview-contact-form/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/example/preview-contact-form/output@0.1.0",
+            "resource_requirements_id": "example.preview-contact-form.resources",
+            "post_check_id": "example.preview-contact-form.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "validate_only"
+          }
+        }
+      ]
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",

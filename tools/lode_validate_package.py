@@ -571,15 +571,18 @@ def validate_write_deferred_guardrail(report: Report, guardrail_doc: dict[str, A
 
     guardrail = guardrail_doc.get("guardrail") if isinstance(guardrail_doc.get("guardrail"), dict) else {}
     require_keys(report, guardrail, ["status", "applies_to_operation_modes", "current_package_allowed_modes", "blocked_claims"], f"{path}#guardrail")
-    if guardrail.get("status") != "deferred":
-        add_error(report, "invalid_contract", f"{path}#guardrail.status", "Write-side guardrail must remain deferred.", "Keep write-side behavior deferred until future write contracts are accepted.")
+    manifest_mode = nested_get(manifest, ["capability", "operation_mode"])
+    expected_status = "deferred" if manifest_mode == "read" else "active"
+    if guardrail.get("status") != expected_status:
+        add_error(report, "invalid_contract", f"{path}#guardrail.status", "Write-side guardrail status must match the package operation boundary.", "Use deferred for read packages and active no-submit guardrails for validate-only/draft/preview packages.")
     modes = guardrail.get("applies_to_operation_modes")
     required_modes = {"validate_only", "draft", "preview", "write"}
     if not isinstance(modes, list) or not required_modes.issubset(set(modes)):
         add_error(report, "invalid_contract", f"{path}#guardrail.applies_to_operation_modes", "Guardrail must cover validate_only, draft, preview, and write modes.", "Declare every deferred write-side mode.")
     allowed_modes = guardrail.get("current_package_allowed_modes")
-    if not isinstance(allowed_modes, list) or set(allowed_modes) != {"read"}:
-        add_error(report, "invalid_contract", f"{path}#guardrail.current_package_allowed_modes", "Current sample package must allow only read mode.", "Keep the sample package read-only.")
+    allowed_mode_set = {manifest_mode} if manifest_mode in {"read", "validate_only", "draft", "preview"} else set()
+    if not isinstance(allowed_modes, list) or set(allowed_modes) != allowed_mode_set:
+        add_error(report, "invalid_contract", f"{path}#guardrail.current_package_allowed_modes", "Current package allowed modes must match the manifest operation mode.", "Keep executable write out of package allowed modes.")
 
     true_write = guardrail_doc.get("true_write_boundary") if isinstance(guardrail_doc.get("true_write_boundary"), dict) else {}
     require_keys(report, true_write, ["execution_status", "deferred_until"], f"{path}#true_write_boundary")
@@ -590,6 +593,8 @@ def validate_write_deferred_guardrail(report: Report, guardrail_doc: dict[str, A
     require_keys(report, admission, ["write_execution", "must_reject_if"], f"{path}#admission_guardrail")
     if admission.get("write_execution") != "blocked":
         add_error(report, "invalid_contract", f"{path}#admission_guardrail.write_execution", "Admission guardrail must block write execution.", "Keep write execution out of the package admission surface.")
+    if manifest_mode in {"validate_only", "draft", "preview"} and admission.get("no_submit_guard") != "active":
+        add_error(report, "invalid_contract", f"{path}#admission_guardrail.no_submit_guard", "Write-precheck packages must declare an active no-submit guard.", "Declare no_submit_guard: active for validate-only/draft/preview packages.")
     scan_forbidden_keys(report, guardrail_doc, path)
 
 
@@ -648,8 +653,10 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
         add_error(report, "invalid_contract", f"{path}#status.installability", "Catalog installability must stay intent_only.", "Do not put App install truth in Lode catalog metadata.")
     risk = catalog.get("risk") if isinstance(catalog.get("risk"), dict) else {}
     require_keys(report, risk, ["level", "operation", "reason"], f"{path}#risk")
-    if risk.get("operation") != "read":
-        add_error(report, "invalid_contract", f"{path}#risk.operation", "First-batch catalog metadata must remain read-only.", "Keep Stage 6/write-side risk out of this package.")
+    manifest_mode = nested_get(manifest, ["capability", "operation_mode"])
+    expected_risk_operation = "read" if manifest_mode == "read" else "write-precheck"
+    if risk.get("operation") != expected_risk_operation:
+        add_error(report, "invalid_contract", f"{path}#risk.operation", "Catalog risk operation must match the package operation boundary.", "Use read for read packages and write-precheck for validate-only/draft/preview packages.")
     admission = catalog.get("core_admission_fields") if isinstance(catalog.get("core_admission_fields"), dict) else {}
     require_keys(report, admission, ["package_ref", "version", "lock_ref", "manifest_path", "input_schema_id", "output_schema_id", "resource_requirements_id", "post_check_id", "lifecycle", "operation_mode"], f"{path}#core_admission_fields")
     if admission.get("package_ref") != manifest.get("package_ref") or admission.get("version") != nested_get(manifest, ["capability", "version"]):
