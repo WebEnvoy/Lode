@@ -729,7 +729,44 @@ def validate_registry_query_fixture(report: Report, repo_root: Path, index: dict
     queries = fixture.get("queries")
     if not isinstance(queries, list) or not queries:
         add_error(report, "invalid_contract", f"{query_path}#queries", "Registry query fixture must include at least one query.", "Expose one App/Core-readable local query example.")
+    else:
+        validate_write_pre_registry_query(report, queries, query_path)
     scan_forbidden_keys(report, fixture, query_path)
+
+
+def validate_write_pre_registry_query(report: Report, queries: list[Any], path: str) -> None:
+    write_pre_results: list[dict[str, Any]] = []
+    for query in queries:
+        if not isinstance(query, dict):
+            continue
+        for result in query.get("results", []):
+            if isinstance(result, dict) and result.get("operation_mode") in {"validate_only", "draft", "preview"}:
+                write_pre_results.append(result)
+    if not write_pre_results:
+        add_error(report, "invalid_contract", f"{path}#queries", "Registry query fixture must expose at least one write-precheck package result.", "Add a validate_only/draft/preview query result for Stage 6 consumers.")
+        return
+    for result in write_pre_results:
+        result_path = f"{path}#queries.write_pre_result"
+        if result.get("no_submit_guard") != "active":
+            add_error(report, "invalid_contract", f"{result_path}.no_submit_guard", "Write-precheck registry result must declare an active no-submit guard.", "Expose no_submit_guard: active for Core admission.")
+        if result.get("true_write_execution") != "blocked":
+            add_error(report, "invalid_contract", f"{result_path}.true_write_execution", "Write-precheck registry result must block true write execution.", "Expose true_write_execution: blocked.")
+        candidate = result.get("write_pre_candidate") if isinstance(result.get("write_pre_candidate"), dict) else {}
+        require_keys(
+            report,
+            candidate,
+            ["candidate_id", "candidate_status", "selection_reason", "supported_stage6_modes", "draft_preview_fixture_path", "core_consumption_fixture_path"],
+            f"{result_path}.write_pre_candidate",
+        )
+        modes = candidate.get("supported_stage6_modes")
+        if not isinstance(modes, list) or not {"validate_only", "draft", "preview"}.issubset(set(modes)):
+            add_error(report, "invalid_contract", f"{result_path}.write_pre_candidate.supported_stage6_modes", "Write-pre candidate must declare validate_only, draft, and preview fixture coverage.", "Expose the Stage 6 fixture modes without claiming executable write.")
+        for key in ["draft_preview_fixture_path", "core_consumption_fixture_path"]:
+            candidate_path = candidate.get(key)
+            if not isinstance(candidate_path, str) or not candidate_path:
+                continue
+            if Path(candidate_path).is_absolute() or not candidate_path.endswith(".json"):
+                add_error(report, "invalid_contract", f"{result_path}.write_pre_candidate.{key}", "Candidate fixture path must be a repo-relative JSON path.", "Use a repo-relative fixture path.")
 
 
 def validate_registry_entry(

@@ -90,12 +90,25 @@
           "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
           "capability_id": "preview-contact-form",
           "operation_id": "contact_form_preview",
+          "operation_mode": "validate_only",
           "version": "0.1.0",
           "lifecycle": "proposed",
           "lock_ref": "lode://lock/site-capability/example/preview-contact-form@0.1.0",
           "manifest_path": "sites/example/preview-contact-form/manifest.json",
           "no_submit_guard": "active",
           "true_write_execution": "blocked",
+          "write_pre_candidate": {
+            "candidate_id": "example.preview-contact-form.write-pre-candidate",
+            "candidate_status": "selected_low_risk_fixture",
+            "selection_reason": "Reserved public Example Domain fixture with local preview semantics only.",
+            "supported_stage6_modes": [
+              "validate_only",
+              "draft",
+              "preview"
+            ],
+            "draft_preview_fixture_path": "sites/example/preview-contact-form/fixtures/preview-contact-form.fixture.json",
+            "core_consumption_fixture_path": "sites/example/preview-contact-form/fixtures/core-consumption.fixture.json"
+          },
           "core_admission_fields": {
             "package_ref": "lode://site-capability/example/preview-contact-form@0.1.0",
             "version": "0.1.0",
