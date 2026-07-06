@@ -3,11 +3,11 @@
 ## Dynamic Facts
 
 - Item ID: LODE-205
-- Current Checkpoint: merge
-- Current Stop: PR #221 has a controller-authored review carrier and refreshed PR metadata for the current branch head.
-- Next Step: Controlled merge by the main controller, then post-merge closeout evidence for #198/#205/#206/#207/#208.
+- Current Checkpoint: closed_out
+- Current Stop: PR #221 已合并，#198/#205/#206/#207/#208 已写入 post-merge closeout evidence 并关闭。
+- Next Step: no_active_item；后续由 Lode #199/#200 继续 BOSS 直聘能力包和跨站点归一化。
 - Blockers: None recorded.
-- Latest Validation Summary: `python3 tools/lode_validate_package.py sites/xiaohongshu/search-notes --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/xiaohongshu/read-note-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-205 --json`; `loom suite evidence validate --target . --item LODE-205 --json`; `loom suite carrier validate --target . --item LODE-205 --json` passed locally. Hosted py-compile, demo-bootstrap, repo-local-cli, and loom-check passed on PR #221 run 28771263137. Live Xiaohongshu page validation remains pending human-owned logged-in runtime and is not fabricated.
+- Latest Validation Summary: `git diff --check`; `jq empty .loom/bootstrap/init-result.json .loom/reviews/LODE-205.json .loom/reviews/LODE-205.spec.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; closeout evidence comments posted for #198/#205/#206/#207/#208 after PR #221 merged to main at c3ebbab102bcf7607c5f2a7004ac57a3ef8bf679. This is a closeout-carrier-only review; it does not change Lode package semantics or claim live Xiaohongshu validation.
 - Recovery Boundary: Lode package/catalog/fixture/contract truth only; no Stage 7, no Xiaohongshu write or engagement action, no login automation, no batch crawling, no captcha or safety-control bypass, no Harbor/Core/App changes, and no `sources/` or `research/` edits.
 - Current Lane: FR #198 Xiaohongshu real read-only capability conversion
 
@@ -28,3 +28,13 @@
 - Added repo-local registry entries and query fixture result.
 - Added failure classes for login, readiness, signed refs, safety challenge, missing fields, site drift, and runtime resources.
 - Added contract doc that records absorbed and rejected source material.
+
+## Terminal Closeout Metadata
+
+- Terminal State: closed_out
+- Issue: #198
+- PR: #221
+- Merge Commit: c3ebbab102bcf7607c5f2a7004ac57a3ef8bf679
+- Target Branch: main
+- Closed At: 2026-07-06T06:45:52Z
+- Evidence Locator: GitHub issue closeout comments on #198, #205, #206, #207, and #208
