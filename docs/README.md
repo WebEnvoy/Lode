@@ -9,3 +9,6 @@
 | `draft/` | 短期规划草稿和迁移指针。 | 必须有状态、owner、linked issue 和退出条件；不能作为实现依据。 |
 
 现在不创建 `guides/`。等仓库有真实可运行流程、命令或用户操作需要说明时再建。
+
+当前已接受的站点吸收基线包括
+[ADR 0006: 小红书与 BOSS 站点知识吸收边界](adr/0006-xhs-boss-site-knowledge-selection.md)。
