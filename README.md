@@ -57,6 +57,7 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [小红书与 BOSS 站点知识吸收边界](docs/adr/0006-xhs-boss-site-knowledge-selection.md)
 - [小红书只读能力包合同](docs/contracts/xiaohongshu-read-capabilities.md)
 - [BOSS 直聘只读能力包合同](docs/contracts/boss-read-capabilities.md)
+- [真实页面写前验证能力合同](docs/contracts/write-precheck-capabilities.md)
 
 ## 本地校验
 
@@ -113,6 +114,19 @@ python3 tools/lode_validate_package.py --registry-index registry/local-packages.
 页面验证需要人工拥有的已登录 BOSS 直聘浏览器现场，当前标记为
 `pending_human_runtime`；本仓不保存账号状态、运行会话、原始页面、网络载荷或
 生产证据。
+
+## 真实页面写前验证能力包
+
+当前真实页面写前验证包包括：
+
+- `sites/xiaohongshu/publish-note-precheck`：声明小红书创作中心发布页和内容编辑目标，
+  输出预期变更、风险提示、页面要求和不发布边界。
+- `sites/boss/greet-precheck`：声明 BOSS 职位或招聘者沟通目标，输出打招呼内容预览、
+  目标引用、风险提示和不发送边界。
+
+这两个包只做 `validate_only` 写前验证，支持 Core/App 消费静态结构定义、脱敏固定样本、
+post-check、失败分类和仓库本地登记表结果。它们不执行保存、上传、发布、投递、
+打招呼或发送消息；真实页面验证仍需要人工拥有的已登录浏览器现场。
 
 ## 首个样例只读能力包
 

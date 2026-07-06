@@ -191,6 +191,90 @@
           "live_validation": "pending_human_runtime"
         }
       ]
+    },
+    {
+      "query_id": "real-page-write-precheck-packages",
+      "purpose": "Expose Xiaohongshu and BOSS real-page write-precheck packages for Core/App local registry lookup.",
+      "filters": {
+        "operation_mode": "validate_only",
+        "stage": "write_precheck"
+      },
+      "results": [
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+          "site_slug": "xiaohongshu",
+          "capability_id": "publish-note-precheck",
+          "operation_id": "xhs_publish_note_precheck",
+          "operation_mode": "validate_only",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+          "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked",
+          "write_pre_candidate": {
+            "candidate_id": "xiaohongshu.publish-note-precheck.write-pre-candidate",
+            "candidate_status": "selected_real_site_write_precheck_fixture",
+            "selection_reason": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+            "supported_stage6_modes": [
+              "validate_only",
+              "draft",
+              "preview"
+            ],
+            "draft_preview_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/publish-note-precheck.fixture.json",
+            "core_consumption_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/core-consumption.fixture.json"
+          },
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+            "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
+            "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
+            "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "validate_only"
+          }
+        },
+        {
+          "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+          "site_slug": "boss",
+          "capability_id": "greet-precheck",
+          "operation_id": "boss_greet_precheck",
+          "operation_mode": "validate_only",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+          "manifest_path": "sites/boss/greet-precheck/manifest.json",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked",
+          "write_pre_candidate": {
+            "candidate_id": "boss.greet-precheck.write-pre-candidate",
+            "candidate_status": "selected_real_site_write_precheck_fixture",
+            "selection_reason": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+            "supported_stage6_modes": [
+              "validate_only",
+              "draft",
+              "preview"
+            ],
+            "draft_preview_fixture_path": "sites/boss/greet-precheck/fixtures/greet-precheck.fixture.json",
+            "core_consumption_fixture_path": "sites/boss/greet-precheck/fixtures/core-consumption.fixture.json"
+          },
+          "core_admission_fields": {
+            "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+            "version": "0.1.0",
+            "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+            "manifest_path": "sites/boss/greet-precheck/manifest.json",
+            "input_schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
+            "output_schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+            "resource_requirements_id": "boss.greet-precheck.resources",
+            "post_check_id": "boss.greet-precheck.post-check",
+            "lifecycle": "proposed",
+            "operation_mode": "validate_only"
+          }
+        }
+      ]
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",

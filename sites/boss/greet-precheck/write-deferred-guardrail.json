@@ -1,0 +1,109 @@
+{
+  "schema_version": "lode.write-deferred-guardrail.v0",
+  "guardrail_id": "boss.greet-precheck.write-deferred-guardrail",
+  "guardrail_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+  "capability_id": "greet-precheck",
+  "operation_id": "boss_greet_precheck",
+  "operation_mode": "validate_only",
+  "work_item": "LODE-213",
+  "guardrail": {
+    "status": "active",
+    "applies_to_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "current_package_allowed_modes": [
+      "validate_only"
+    ],
+    "blocked_claims": [
+      "validate-only external submission",
+      "draft or preview persistence in an external system",
+      "publish, save, upload, greet, apply, send, delete, follow, schedule, or submit actions",
+      "live write execution or write success evidence"
+    ]
+  },
+  "validate_only_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "target and input validation",
+      "risk and resource declaration",
+      "expected-change preview without external submission"
+    ],
+    "blocked_now": [
+      "submitting changes to an external site",
+      "claiming validation success as write success",
+      "storing live account or runtime state"
+    ],
+    "requires_before_admission": [
+      "Core action risk contract",
+      "App confirmation contract",
+      "Harbor target binding and evidence reference contract",
+      "write post-check and unknown-outcome mapping"
+    ]
+  },
+  "draft_preview_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "local draft payload",
+      "discardable preview payload",
+      "pre-external-page checklist"
+    ],
+    "blocked_now": [
+      "saving draft content to an external service",
+      "publishing, greeting, applying, or sending",
+      "uploading real materials"
+    ],
+    "requires_before_admission": [
+      "idempotency requirement",
+      "write operation reference",
+      "expected-change schema",
+      "post-check result contract",
+      "unknown-outcome handling"
+    ]
+  },
+  "true_write_boundary": {
+    "execution_status": "deferred",
+    "entry_condition_only": true,
+    "deferred_until": [
+      "action boundary is accepted",
+      "idempotency requirement is accepted",
+      "write operation reference is accepted",
+      "runtime target binding is accepted",
+      "completion evidence reference is accepted",
+      "repair hint and rollback policy are accepted",
+      "explicit user confirmation flow is accepted",
+      "a later Work Item authorizes true write package scope"
+    ]
+  },
+  "admission_guardrail": {
+    "write_execution": "blocked",
+    "no_submit_guard": "active",
+    "must_reject_if": [
+      "package operation_mode is validate_only, draft, preview, or write and claims executable write behavior",
+      "package declares external submit, publish, send, delete, follow, pay, schedule, upload, or save steps",
+      "package stores credential material, account state, live runtime state, raw evidence, production payload, or user business data",
+      "package omits future action risk, confirmation, target binding, idempotency, expected-change, post-check, unknown-outcome, or repair contracts while claiming write behavior"
+    ],
+    "allowed_now": [
+      "static write-precheck package",
+      "redacted fixture preview",
+      "offline validator guardrail shape check"
+    ]
+  },
+  "consumer_boundary": "Core may read this file to fail closed on non-target write-side claims. This file does not authorize Core, App, Harbor, or Lode to execute write behavior.",
+  "source_decisions": [
+    "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+    "ROADMAP.md#stage-6",
+    "docs/contracts/write-precheck-capabilities.md"
+  ],
+  "non_goals": [
+    "No true write capability package.",
+    "No live write execution.",
+    "No Core, Harbor, or App code change.",
+    "No hosted registry, marketplace, sync service, crawler queue, or benchmark contract.",
+    "No cookies, tokens, account state, runtime session state, raw evidence bodies, complete DOM, HAR, screenshots, production payloads, or user business data."
+  ]
+}

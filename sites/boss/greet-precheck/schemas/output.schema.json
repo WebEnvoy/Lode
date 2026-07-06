@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+  "title": "BOSS 打招呼写前验证归一化输出",
+  "description": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "boss_greet_precheck"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/boss_greet_precheck"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string",
+      "enum": [
+        "page_has_no_public_content",
+        "target_not_found"
+      ]
+    },
+    "unavailable_reason": {
+      "type": "string",
+      "enum": [
+        "source_unavailable",
+        "evidence_unavailable",
+        "not_normalizable"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mapping_incomplete",
+          "source_refs_partial",
+          "evidence_refs_partial"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "enum": [
+              "success_result",
+              "partial_result"
+            ]
+          },
+          "normalized": {
+            "$ref": "#/$defs/boss_greet_precheck"
+          }
+        },
+        "required": [
+          "source_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "empty_result"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "empty_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "not_normalizable"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "unavailable_reason"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "boss_greet_precheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_url",
+        "target_ref",
+        "title",
+        "summary",
+        "source_status",
+        "expected_change",
+        "expected_change_summary",
+        "risk_hints",
+        "no_submit_guard_status"
+      ],
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://www\\.zhipin\\.com(?:/.*)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Harbor/Core 提供的写前目标引用。"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located"
+          ]
+        },
+        "expected_change": {
+          "$ref": "#/$defs/expected_change"
+        },
+        "expected_change_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_hints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/risk_hint"
+          }
+        },
+        "no_submit_guard_status": {
+          "const": "active"
+        }
+      }
+    },
+    "expected_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_kind",
+        "target_ref",
+        "summary",
+        "field_effects",
+        "external_submit"
+      ],
+      "properties": {
+        "change_kind": {
+          "const": "greet_message_preview"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_effects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field_ref",
+              "effect",
+              "redaction"
+            ],
+            "properties": {
+              "field_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "effect": {
+                "type": "string",
+                "enum": [
+                  "validate_presence",
+                  "preview_local_value"
+                ]
+              },
+              "redaction": {
+                "const": "summary_only"
+              }
+            }
+          }
+        },
+        "external_submit": {
+          "const": false
+        }
+      }
+    },
+    "risk_hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_hint",
+        "severity",
+        "owner",
+        "mitigation"
+      ],
+      "properties": {
+        "risk_hint": {
+          "type": "string",
+          "enum": [
+            "requires_user_review",
+            "target_may_change",
+            "evidence_may_stale",
+            "no_submit_guard_required"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "blocked"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "lode",
+            "core",
+            "harbor",
+            "app"
+          ]
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "document_summary",
+            "http_metadata",
+            "dom_snapshot_summary"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        },
+        "schema_hint": {
+          "type": "string",
+          "examples": [
+            "boss-greet-precheck-source@0.1.0"
+          ]
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "evidence_kind": {
+          "type": "string",
+          "enum": [
+            "snapshot_ref",
+            "network_summary_ref",
+            "post_check_ref"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "result_kind": "boss_greet_precheck",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.zhipin.com/job_detail/fixture.html?securityId=fixture-security",
+        "target_ref": "writable-target:boss/job-recruiter-greet",
+        "title": "BOSS 打招呼写前验证",
+        "summary": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+        "source_status": "located",
+        "expected_change": {
+          "change_kind": "greet_message_preview",
+          "target_ref": "writable-target:boss/job-recruiter-greet",
+          "summary": "校验职位和招聘者目标引用，生成打招呼内容预览，不投递、不打招呼、不发送消息。",
+          "field_effects": [
+            {
+              "field_ref": "job.security_id_ref",
+              "effect": "bind_existing_read_ref",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "recruiter.summary",
+              "effect": "preview_target_reference",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "greet.message_summary",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            }
+          ],
+          "external_submit": false
+        },
+        "expected_change_summary": "校验职位和招聘者目标引用，生成打招呼内容预览，不投递、不打招呼、不发送消息。",
+        "risk_hints": [
+          {
+            "risk_hint": "requires_user_review",
+            "severity": "warning",
+            "owner": "app",
+            "mitigation": "展示职位、招聘者和招呼语摘要后再进入任何后续人工确认。"
+          },
+          {
+            "risk_hint": "target_may_change",
+            "severity": "warning",
+            "owner": "core",
+            "mitigation": "若职位下架、招聘者变化或沟通入口消失，要求刷新写前验证。"
+          },
+          {
+            "risk_hint": "no_submit_guard_required",
+            "severity": "blocked",
+            "owner": "core",
+            "mitigation": "拒绝打招呼、发送消息、投递简历或任何外部提交步骤。"
+          }
+        ],
+        "no_submit_guard_status": "active"
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "job_recruiter_target_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss-greet-precheck-source@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    },
+    {
+      "result_kind": "boss_greet_precheck",
+      "status": "empty",
+      "classification": "empty_result",
+      "empty_reason": "target_has_no_writable_surface"
+    },
+    {
+      "result_kind": "boss_greet_precheck",
+      "status": "unavailable",
+      "classification": "not_normalizable",
+      "unavailable_reason": "resource_unavailable"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "boss.greet-precheck.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+    "operation_ref": "lode://operation/boss_greet_precheck",
+    "result_kind": "boss_greet_precheck",
+    "core_envelope_owner": "WebEnvoy Core",
+    "failure_class_mapping": {
+      "invalid_contract": "invalid_contract",
+      "resource_unavailable": "resource_unavailable",
+      "empty": "empty_result",
+      "empty_result": "empty_result",
+      "site_changed": "site_changed",
+      "source_unavailable": "source_unavailable",
+      "evidence_unavailable": "evidence_unavailable",
+      "preview_unavailable": "preview_unavailable",
+      "page_changed": "site_changed",
+      "user_cancelled": "user_cancelled",
+      "not_normalizable": "normalization_failed",
+      "mapping_incomplete": "mapping_incomplete",
+      "login_required": "login_required",
+      "permission_insufficient": "permission_insufficient",
+      "target_not_writable": "target_not_writable",
+      "safety_challenge": "safety_challenge"
+    },
+    "risk_hint_taxonomy": [
+      "requires_user_review",
+      "target_may_change",
+      "evidence_may_stale",
+      "no_submit_guard_required"
+    ],
+    "forbidden_inline_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data",
+      "full_dom",
+      "har",
+      "screenshot_body"
+    ]
+  }
+}

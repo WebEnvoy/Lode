@@ -670,6 +670,191 @@
       },
       "work_item": "LODE-211",
       "lock_work_item": "LODE-211"
+    },
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/xiaohongshu/publish-note-precheck",
+      "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "lock_path": "sites/xiaohongshu/publish-note-precheck/package-lock.json",
+      "site_slug": "xiaohongshu",
+      "capability_id": "publish-note-precheck",
+      "operation_id": "xhs_publish_note_precheck",
+      "operation_mode": "validate_only",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-213",
+      "lock_work_item": "LODE-213",
+      "write_precheck_package": {
+        "status": "selected",
+        "work_item": "LODE-213",
+        "covered_work_items": [
+          "LODE-213",
+          "LODE-215",
+          "LODE-216"
+        ],
+        "semantic_stories": [
+          "#21"
+        ],
+        "operation_modes": [
+          "validate_only",
+          "draft",
+          "preview"
+        ],
+        "no_submit_guard": "active",
+        "true_write_execution": "blocked",
+        "input_schema_path": "sites/xiaohongshu/publish-note-precheck/schemas/input.schema.json",
+        "output_schema_path": "sites/xiaohongshu/publish-note-precheck/schemas/output.schema.json",
+        "resource_requirements_path": "sites/xiaohongshu/publish-note-precheck/resource-requirements.json",
+        "guardrail_path": "sites/xiaohongshu/publish-note-precheck/write-deferred-guardrail.json",
+        "source_knowledge_locators": [
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/5.6-site-sitemaps.md",
+          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/21-xiao-hong-shu-ming-ling-mian-sou-suo-xiang-qing-yong-hu-zhu-ye-yu-bian-ji-qi-shu-ru.md",
+          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/22-shou-kong-shi-shi-xie-ru-fa-bu-zhun-ru-yu-shang-chuan-zheng-ju-bu-huo.md",
+          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/23-feng-xian-men-jin-zhang-hao-an-quan-yu-xie-ru-mo-ren-suo.md",
+          "sources/epiral/bb-sites/xiaohongshu/search.js",
+          "sources/epiral/bb-sites/xiaohongshu/note.js",
+          "sources/epiral/bb-sites/xiaohongshu/me.js"
+        ],
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping for write-precheck preview only. This package does not save, publish, apply, greet, or send."
+      }
+    },
+    {
+      "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/boss/greet-precheck",
+      "manifest_path": "sites/boss/greet-precheck/manifest.json",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "lock_path": "sites/boss/greet-precheck/package-lock.json",
+      "site_slug": "boss",
+      "capability_id": "greet-precheck",
+      "operation_id": "boss_greet_precheck",
+      "operation_mode": "validate_only",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-213",
+      "lock_work_item": "LODE-213",
+      "write_precheck_package": {
+        "status": "selected",
+        "work_item": "LODE-213",
+        "covered_work_items": [
+          "LODE-214",
+          "LODE-215",
+          "LODE-216"
+        ],
+        "semantic_stories": [
+          "#22"
+        ],
+        "operation_modes": [
+          "validate_only",
+          "draft",
+          "preview"
+        ],
+        "no_submit_guard": "active",
+        "true_write_execution": "blocked",
+        "input_schema_path": "sites/boss/greet-precheck/schemas/input.schema.json",
+        "output_schema_path": "sites/boss/greet-precheck/schemas/output.schema.json",
+        "resource_requirements_path": "sites/boss/greet-precheck/resource-requirements.json",
+        "guardrail_path": "sites/boss/greet-precheck/write-deferred-guardrail.json",
+        "source_knowledge_locators": [
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "sources/epiral/bb-sites/boss/search.js",
+          "sources/epiral/bb-sites/boss/detail.js",
+          "research/subjects/jackwener/OpenCLI/wiki/versions/raw/pages/3.1-built-in-commands-reference.md",
+          "research/subjects/Panniantong/Agent-Reach/wiki/versions/raw/pages/3.9-instagram-linkedin-and-boss-channels.md"
+        ],
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping for write-precheck preview only. This package does not save, publish, apply, greet, or send."
+      }
     }
   ],
   "non_goals": [

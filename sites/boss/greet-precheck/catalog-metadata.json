@@ -1,0 +1,107 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "boss.greet-precheck.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+  "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+  "capability_id": "greet-precheck",
+  "operation_id": "boss_greet_precheck",
+  "operation_mode": "validate_only",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "BOSS 直聘",
+    "manifest_path": "sites/boss/greet-precheck/manifest.json"
+  },
+  "display": {
+    "name": "BOSS 打招呼写前验证",
+    "summary": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+    "site_name": "BOSS 直聘",
+    "category": "write-precheck"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "status": "self_for_initial_version"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "fixture_only",
+    "updated_at": "2026-07-06T00:00:00Z"
+  },
+  "risk": {
+    "level": "medium",
+    "operation": "write-precheck",
+    "reason": "Validates a real-site write-like target but blocks all external submission."
+  },
+  "facets": [
+    "site:boss",
+    "write-precheck",
+    "validate-only",
+    "no-submit"
+  ],
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present",
+    "post_check_fixture_status": "passed",
+    "runtime_execution": "out_of_scope"
+  },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "latest_repair_draft_ref": "lode://repair-draft/site-capability/boss/greet-precheck/site-change@0.1.1-draft",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "overlay_fork_metadata_path": "sites/boss/greet-precheck/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may render repair draft status, owner, and refs; it does not store repair, package, run, session, or private evidence truth."
+  },
+  "consumer_boundary": "App/Core may consume this catalog entry for write-precheck discovery and no-submit preview display. It does not authorize runtime writes.",
+  "forbidden_contents": [
+    "credentials",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_evidence_body",
+    "raw_dom",
+    "network_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+    "manifest_path": "sites/boss/greet-precheck/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+    "resource_requirements_id": "boss.greet-precheck.resources",
+    "post_check_id": "boss.greet-precheck.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "validate_only"
+  }
+}

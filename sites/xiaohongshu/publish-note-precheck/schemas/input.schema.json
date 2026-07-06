@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
+  "title": "小红书发布草稿写前验证输入",
+  "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "target_ref",
+    "no_submit_guard"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://(www\\.)?xiaohongshu\\.com(?:/.*)?$|^https://creator\\.xiaohongshu\\.com(?:/.*)?$",
+      "description": "小红书 写前验证目标页面 URL。",
+      "examples": [
+        "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image"
+      ]
+    },
+    "requested_fields": {
+      "type": "array",
+      "description": "Optional public fields requested from the normalized output.",
+      "default": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status"
+      ],
+      "minItems": 1,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "title",
+          "summary",
+          "canonical_url",
+          "source_status"
+        ]
+      },
+      "examples": [
+        [
+          "title",
+          "summary",
+          "source_status"
+        ]
+      ]
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "description": "Whether Core should preserve source reference placeholders in the read result when available.",
+      "default": true,
+      "examples": [
+        true
+      ]
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Harbor 拥有的写前目标引用；Lode 只保存引用形态，不保存页面状态。"
+    },
+    "proposed_input_summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "公共安全的拟输入摘要；真实字段内容留在 Core/Harbor/App 边界外。"
+    },
+    "no_submit_guard": {
+      "const": "active",
+      "description": "Declares that this package can validate or preview only and must not submit."
+    }
+  },
+  "examples": [
+    {
+      "url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+      "target_ref": "writable-target:xiaohongshu/creator-publish-note",
+      "no_submit_guard": "active",
+      "requested_fields": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status"
+      ],
+      "include_source_refs": true,
+      "proposed_input_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-precheck.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_precheck",
+    "operation_mode": "validate_only",
+    "sensitivity": {
+      "url": "public",
+      "requested_fields": "user_provided",
+      "include_source_refs": "public",
+      "target_ref": "harbor_ref",
+      "proposed_input_summary": "public_safe_summary",
+      "no_submit_guard": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "提供 小红书 声明来源内的 https URL。"
+      },
+      {
+        "code": "input_url_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on declared 小红书 origins",
+        "recovery_hint": "Use one of the supported origins declared by the package manifest."
+      },
+      {
+        "code": "input_requested_field_unknown",
+        "field": "requested_fields",
+        "lode_failure_class": "input_invalid",
+        "trigger": "requested_fields contains a field outside the schema enum",
+        "recovery_hint": "Request only fields declared by this input schema."
+      },
+      {
+        "code": "input_forbidden_secret_or_runtime_state",
+        "field": "*",
+        "lode_failure_class": "invalid_contract",
+        "trigger": "input contains cookies, tokens, profile state, runtime session, raw evidence body, or user business data",
+        "recovery_hint": "Keep runtime identity and evidence in Core/Harbor references, not Lode package input."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}
