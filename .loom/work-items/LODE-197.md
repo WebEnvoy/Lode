@@ -25,3 +25,5 @@
 
 - docs/adr/0006-xhs-boss-site-knowledge-selection.md
 - .loom/specs/LODE-197/**
+- .loom/reviews/LODE-197.json
+- .loom/reviews/LODE-197.spec.json

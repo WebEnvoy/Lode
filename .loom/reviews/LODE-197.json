@@ -1,0 +1,60 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-197",
+  "decision": "allow",
+  "kind": "code_review",
+  "summary": "通过：文档和载体变更在当前 head 上无阻断问题；站点知识吸收边界、敏感数据边界和后续实现边界清楚。",
+  "reviewer": "codex-main-controller",
+  "authored_at": "2026-07-06T05:01:54Z",
+  "reviewed_head": "9eb572e0d3f046301e05f1bfd89df3819b63cea7",
+  "reviewed_validation_summary": "`git diff --check`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-197 --json`; `loom suite evidence validate --target . --item LODE-197 --json`; `loom suite carrier validate --target . --item LODE-197 --json` 本地通过。初始 `loom suite validate` 和 `loom suite evidence validate` 暴露过载体形态缺口，已在最终重跑前修正。`loom verify` 报 Codex 插件运行环境缓存过期，但 CLI/source payload 是当前版本；归类为 host runtime cache surface，不是仓库代码阻断项。",
+  "reviewed_validation_summary_hash": "5a6948ab0b164d7ea70c7659eda77a32c2fecc83028f2edeebbd209423aaa40f",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-197.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-197.md",
+    "recovery_entry": ".loom/progress/LODE-197.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "budget_risk": {
+      "schema_version": "loom-execution-budget-risk/v1",
+      "status": "not_applicable",
+      "enforcement": "advisory",
+      "highest_risk": "none",
+      "risk_dimensions": [],
+      "summary": "execution budget is not_applicable; budget risk remains advisory and non-blocking",
+      "budget_summary": "execution budget is not collected for this invocation.",
+      "adapter_evidence_locator": "",
+      "provenance": {
+        "source": "github_host"
+      }
+    },
+    "engine_adapter": null,
+    "engine_evidence": null,
+    "normalized_findings": null,
+    "suite_evidence_validation": "loom suite evidence validate --target /Volumes/2T/dev/WebEnvoy/Lode --item LODE-197 --json",
+    "suite_carrier_validation": "loom suite carrier validate --target /Volumes/2T/dev/WebEnvoy/Lode --item LODE-197 --json",
+    "suite_evidence_map": ".loom/specs/LODE-197/evidence-map.md",
+    "suite_consistency_analysis": null,
+    "suite_task_carriers": [
+      ".loom/specs/LODE-197/task-carrier.md"
+    ],
+    "suite_evidence_consumed_contracts": [
+      "docs/methodology/harness/full-spec-suite-cli-surface.md",
+      "docs/methodology/templates/evidence-map.md"
+    ],
+    "suite_carrier_consumed_contracts": [
+      "docs/methodology/harness/task-carrier-contract.md",
+      "docs/methodology/templates/execution-breakdown.md",
+      "docs/methodology/harness/full-spec-suite-cli-surface.md"
+    ]
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review approved the current head for merge checkpoint consumption."
+  }
+}
