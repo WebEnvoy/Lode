@@ -48,8 +48,8 @@
   "status": {
     "catalog_state": "available",
     "installability": "intent_only",
-    "source_health": "fixture_only",
-    "updated_at": "2026-07-06"
+    "source_health": "real_site_contract_ready_live_validation_not_attempted",
+    "updated_at": "2026-07-06T16:20:00Z"
   },
   "risk": {
     "level": "medium",
@@ -66,7 +66,7 @@
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present",
     "post_check_fixture_status": "passed",
-    "runtime_execution": "pending_human_runtime"
+    "runtime_execution": "not_attempted_real_account_access_forbidden"
   },
   "core_admission_fields": {
     "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
@@ -91,5 +91,13 @@
     "network body",
     "production payload",
     "user business data"
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236"
 }

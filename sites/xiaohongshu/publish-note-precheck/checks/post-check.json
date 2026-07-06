@@ -130,5 +130,34 @@
     "No Core result envelope.",
     "No Harbor evidence schema or live evidence body.",
     "No runtime session, profile, provider, cookie, token, DOM, HAR, screenshot body, production payload, or user business data."
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236",
+  "real_page_validation": {
+    "status": "not_attempted_real_account_access_forbidden",
+    "reason": "LODE-236 implements consumable real-site package contracts and fixtures; this execution did not access a real Xiaohongshu account or live publish/read target.",
+    "required_later_runtime": "human-owned logged-in browser profile bound by Core/Harbor with refs-only evidence capture",
+    "forbidden_later_evidence": [
+      "cookie",
+      "token",
+      "raw DOM",
+      "HAR",
+      "network response body",
+      "screenshot body",
+      "production payload"
+    ]
+  },
+  "post_check_plan": [
+    "target_ref is still bound to the current creator publish page summary",
+    "expected_change.external_submit remains false",
+    "risk_hints include no_submit_guard_required",
+    "no_submit_guard_status is active",
+    "source_refs and evidence_refs are refs-only"
   ]
 }

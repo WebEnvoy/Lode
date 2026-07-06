@@ -7,7 +7,7 @@
   "capability_id": "search-notes",
   "operation_id": "xhs_search_notes",
   "operation_mode": "read",
-  "work_item": "LODE-206",
+  "work_item": "LODE-236",
   "purpose": "Repo-local fixture Core can read for package admission and schema validation without executing runtime behavior.",
   "owner_boundary": {
     "fixture_owner": "Lode",
@@ -165,11 +165,20 @@
     "failure_mapping": "readable",
     "stable_admission_claimed": false,
     "runtime_execution_claimed": false,
-    "write_behavior_claimed": false
+    "write_behavior_claimed": false,
+    "live_account_access_claimed": false
   },
   "non_goals": [
     "No WebEnvoy Core code changes.",
     "No runtime execution, browser automation, live source lookup, profile selection, or provider routing.",
     "No hosted registry, marketplace, crawler queue, benchmark contract, or write behavior."
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "real_site_contract_status": "read_contract_ready_for_core_admission"
 }

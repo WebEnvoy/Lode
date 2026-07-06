@@ -375,7 +375,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T16:20:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -388,13 +388,12 @@
         "status": "self_for_initial_version"
       },
       "real_site_read_package": {
-        "status": "fixture_present_live_pending",
-        "work_item": "LODE-206",
+        "status": "selected_real_site_read_capability_contract_ready",
+        "work_item": "LODE-236",
         "covered_work_items": [
-          "LODE-205",
-          "LODE-206",
-          "LODE-207",
-          "LODE-208"
+          "LODE-236",
+          "LODE-237",
+          "LODE-239"
         ],
         "semantic_stories": [
           "#15",
@@ -404,7 +403,31 @@
         "fixture_path": "sites/xiaohongshu/search-notes/fixtures/search-notes.fixture.json",
         "core_consumption_fixture_path": "sites/xiaohongshu/search-notes/fixtures/core-consumption.fixture.json",
         "catalog_metadata_path": "sites/xiaohongshu/search-notes/catalog-metadata.json",
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in Xiaohongshu browser session."
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, source/evidence requirements, and post-check plans. Live runtime validation still requires a user-authorized logged-in Xiaohongshu browser session and refs-only evidence capture.",
+        "covered_issues": [
+          "#235",
+          "#236",
+          "#239"
+        ],
+        "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "sites/xiaohongshu/search-notes/**",
+          "sites/xiaohongshu/read-note-detail/**",
+          "sites/xiaohongshu/publish-note-precheck/**",
+          "registry/local-packages.json",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+          "sources/epiral/bb-sites/xiaohongshu/search.js",
+          "sources/epiral/bb-sites/xiaohongshu/note.js",
+          "sources/epiral/bb-sites/xiaohongshu/comments.js",
+          "sources/epiral/bb-sites/xiaohongshu/user_posts.js",
+          "sources/epiral/bb-sites/xiaohongshu/feed.js",
+          "sources/epiral/bb-sites/xiaohongshu/me.js"
+        ],
+        "live_validation": "not_attempted_real_account_access_forbidden_by_LODE-236_execution"
       },
       "asset_roles": [
         "input_schema",
@@ -431,8 +454,17 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-206",
-      "lock_work_item": "LODE-206"
+      "work_item": "LODE-236",
+      "lock_work_item": "LODE-236",
+      "anchor_work_item": "LODE-236",
+      "covered_issues": [
+        "#235",
+        "#236",
+        "#237",
+        "#238",
+        "#239"
+      ],
+      "milestone": "#14"
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
@@ -454,7 +486,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T16:20:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -467,13 +499,12 @@
         "status": "self_for_initial_version"
       },
       "real_site_read_package": {
-        "status": "fixture_present_live_pending",
-        "work_item": "LODE-207",
+        "status": "selected_real_site_read_capability_contract_ready",
+        "work_item": "LODE-236",
         "covered_work_items": [
-          "LODE-205",
-          "LODE-206",
-          "LODE-207",
-          "LODE-208"
+          "LODE-236",
+          "LODE-237",
+          "LODE-239"
         ],
         "semantic_stories": [
           "#15",
@@ -483,7 +514,31 @@
         "fixture_path": "sites/xiaohongshu/read-note-detail/fixtures/read-note-detail.fixture.json",
         "core_consumption_fixture_path": "sites/xiaohongshu/read-note-detail/fixtures/core-consumption.fixture.json",
         "catalog_metadata_path": "sites/xiaohongshu/read-note-detail/catalog-metadata.json",
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in Xiaohongshu browser session."
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, source/evidence requirements, and post-check plans. Live runtime validation still requires a user-authorized logged-in Xiaohongshu browser session and refs-only evidence capture.",
+        "covered_issues": [
+          "#235",
+          "#237",
+          "#239"
+        ],
+        "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "sites/xiaohongshu/search-notes/**",
+          "sites/xiaohongshu/read-note-detail/**",
+          "sites/xiaohongshu/publish-note-precheck/**",
+          "registry/local-packages.json",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+          "sources/epiral/bb-sites/xiaohongshu/search.js",
+          "sources/epiral/bb-sites/xiaohongshu/note.js",
+          "sources/epiral/bb-sites/xiaohongshu/comments.js",
+          "sources/epiral/bb-sites/xiaohongshu/user_posts.js",
+          "sources/epiral/bb-sites/xiaohongshu/feed.js",
+          "sources/epiral/bb-sites/xiaohongshu/me.js"
+        ],
+        "live_validation": "not_attempted_real_account_access_forbidden_by_LODE-236_execution"
       },
       "asset_roles": [
         "input_schema",
@@ -510,8 +565,17 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-207",
-      "lock_work_item": "LODE-207"
+      "work_item": "LODE-236",
+      "lock_work_item": "LODE-236",
+      "anchor_work_item": "LODE-236",
+      "covered_issues": [
+        "#235",
+        "#236",
+        "#237",
+        "#238",
+        "#239"
+      ],
+      "milestone": "#14"
     },
     {
       "package_ref": "lode://site-capability/boss/job-search@0.1.0",
@@ -691,7 +755,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T16:20:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -728,15 +792,14 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-213",
-      "lock_work_item": "LODE-213",
+      "work_item": "LODE-236",
+      "lock_work_item": "LODE-236",
       "write_precheck_package": {
-        "status": "selected",
-        "work_item": "LODE-213",
+        "status": "selected_real_site_write_precheck_contract_ready",
+        "work_item": "LODE-236",
         "covered_work_items": [
-          "LODE-213",
-          "LODE-215",
-          "LODE-216"
+          "LODE-238",
+          "LODE-239"
         ],
         "semantic_stories": [
           "#21"
@@ -753,17 +816,39 @@
         "resource_requirements_path": "sites/xiaohongshu/publish-note-precheck/resource-requirements.json",
         "guardrail_path": "sites/xiaohongshu/publish-note-precheck/write-deferred-guardrail.json",
         "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
           "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
-          "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/5.6-site-sitemaps.md",
-          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/21-xiao-hong-shu-ming-ling-mian-sou-suo-xiang-qing-yong-hu-zhu-ye-yu-bian-ji-qi-shu-ru.md",
-          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/22-shou-kong-shi-shi-xie-ru-fa-bu-zhun-ru-yu-shang-chuan-zheng-ju-bu-huo.md",
-          "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/23-feng-xian-men-jin-zhang-hao-an-quan-yu-xie-ru-mo-ren-suo.md",
+          "sites/xiaohongshu/search-notes/**",
+          "sites/xiaohongshu/read-note-detail/**",
+          "sites/xiaohongshu/publish-note-precheck/**",
+          "registry/local-packages.json",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
           "sources/epiral/bb-sites/xiaohongshu/search.js",
           "sources/epiral/bb-sites/xiaohongshu/note.js",
+          "sources/epiral/bb-sites/xiaohongshu/comments.js",
+          "sources/epiral/bb-sites/xiaohongshu/user_posts.js",
+          "sources/epiral/bb-sites/xiaohongshu/feed.js",
           "sources/epiral/bb-sites/xiaohongshu/me.js"
         ],
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping for write-precheck preview only. This package does not save, publish, apply, greet, or send."
-      }
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, expected-change/risk/no-submit fields, and post-check plans for write-precheck preview only. This package does not save, upload, publish, schedule, submit, or execute writes.",
+        "covered_issues": [
+          "#235",
+          "#238",
+          "#239"
+        ]
+      },
+      "anchor_work_item": "LODE-236",
+      "covered_issues": [
+        "#235",
+        "#236",
+        "#237",
+        "#238",
+        "#239"
+      ],
+      "milestone": "#14"
     },
     {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",

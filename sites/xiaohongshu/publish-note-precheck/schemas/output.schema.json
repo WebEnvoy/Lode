@@ -62,7 +62,8 @@
       "type": "string",
       "enum": [
         "page_has_no_public_content",
-        "target_not_found"
+        "target_not_found",
+        "target_has_no_writable_surface"
       ]
     },
     "unavailable_reason": {
@@ -70,7 +71,8 @@
       "enum": [
         "source_unavailable",
         "evidence_unavailable",
-        "not_normalizable"
+        "not_normalizable",
+        "resource_unavailable"
       ]
     },
     "warnings": {
@@ -268,7 +270,8 @@
                 "type": "string",
                 "enum": [
                   "validate_presence",
-                  "preview_local_value"
+                  "preview_local_value",
+                  "check_publish_page_requirement"
                 ]
               },
               "redaction": {
@@ -344,7 +347,8 @@
           "enum": [
             "document_summary",
             "http_metadata",
-            "dom_snapshot_summary"
+            "dom_snapshot_summary",
+            "creator_publish_page_summary"
           ]
         },
         "producer": {
@@ -541,6 +545,15 @@
       "full_dom",
       "har",
       "screenshot_body"
-    ]
+    ],
+    "covered_issues": [
+      "#235",
+      "#236",
+      "#237",
+      "#238",
+      "#239"
+    ],
+    "no_submit_guard": "active",
+    "true_write_execution": "blocked"
   }
 }

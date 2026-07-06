@@ -1,10 +1,12 @@
 # Xiaohongshu Read Capability Packages
 
-Status: proposed, 2026-07-06.
+Status: proposed, refreshed for LODE-236 / milestone #14 on 2026-07-06 UTC.
 
 ## Scope
 
-This contract covers Lode #198 and Work Items #205, #206, #207, and #208.
+This contract originally covered Lode #198 and Work Items #205, #206, #207, and #208.
+LODE-236 refreshes the same package refs for FR #235 and Work Items #236, #237,
+and #239 without changing package identity or claiming live account execution.
 It implements two repo-local read packages:
 
 - `lode://site-capability/xiaohongshu/search-notes@0.1.0`
@@ -19,8 +21,11 @@ Lode declares package contracts, resource requirements, fixtures, post-checks,
 and failure classes. Core owns execution and result envelopes. Harbor owns the
 browser identity, runtime session, source refs, and evidence refs.
 
-Real Xiaohongshu validation is pending a human-owned logged-in browser session.
-This PR does not fabricate live evidence.
+LODE-236 declares the real site entrypoints, evidence requirements, and failure
+classification that Core/App/Harbor can consume. Live Xiaohongshu validation is
+not attempted here because this execution is forbidden from accessing a real
+account; later runtime evidence must use a user-authorized logged-in browser and
+refs-only evidence capture.
 
 ## Site Readiness
 
@@ -32,6 +37,8 @@ The packages require:
 - The target route is `/explore`, `/search_result`, or a signed `/explore/<note_id>` URL.
 - Source refs and evidence refs are available from Harbor/Core.
 - No visible verification, login wall, or safety challenge is blocking the page.
+- Evidence is refs-only: no cookie, token, raw DOM, HAR, network response body,
+  screenshot body, production payload, profile state, or runtime session state.
 
 ## Search Package
 
@@ -83,8 +90,14 @@ Referenced locators:
 
 - `sources/epiral/bb-sites/xiaohongshu/search.js`
 - `sources/epiral/bb-sites/xiaohongshu/note.js`
+- `sources/epiral/bb-sites/xiaohongshu/comments.js`
+- `sources/epiral/bb-sites/xiaohongshu/user_posts.js`
+- `sources/epiral/bb-sites/xiaohongshu/feed.js`
 - `sources/epiral/bb-sites/xiaohongshu/me.js`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md`
 - `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md`
 - `research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/5.6-site-sitemaps.md`
 - `research/subjects/MediaCrawlPro/MediaCrawlerPro-SignSrv/wiki/versions/2026-06-09-114042/18-xiao-hong-shu-qian-ming-shi-xian-chun-suan-fa-liu-lan-qi-mo-shi-yu-xhshow-xiu-fu.md`
 
@@ -104,3 +117,13 @@ Not absorbed:
 - Sign service implementation, browser automation runner, or request signing.
 - Comments, feed, user profile, creator center, write actions, batch crawling,
   or any safety-control bypass.
+
+## LODE-236 Package Readiness
+
+- `sites/xiaohongshu/search-notes/manifest.json` now binds FR #235/#236/#239,
+  real site entrypoints, absorbed source locators, and refs-only evidence policy.
+- `sites/xiaohongshu/read-note-detail/manifest.json` now binds FR #235/#237/#239,
+  signed detail ref requirements, absorbed source locators, and refs-only
+  evidence policy.
+- `registry/local-query.fixture.json` exposes the LODE-236 Xiaohongshu batch for
+  Core/App discovery while marking live account validation as not attempted.

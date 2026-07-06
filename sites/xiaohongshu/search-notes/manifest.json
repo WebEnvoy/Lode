@@ -34,7 +34,7 @@
       "role": "input_schema",
       "path": "schemas/input.schema.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/input@0.1.0",
       "schema_version": "0.1.0"
     },
@@ -42,7 +42,7 @@
       "role": "normalized_output_schema",
       "path": "schemas/output.schema.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/output@0.1.0",
       "schema_version": "0.1.0"
     },
@@ -50,7 +50,7 @@
       "role": "resource_requirements",
       "path": "resource-requirements.json",
       "status": "present",
-      "work_item": "LODE-205",
+      "work_item": "LODE-236",
       "resource_requirements_id": "xiaohongshu.search-notes.resources",
       "resource_requirements_version": "0.1.0"
     },
@@ -58,7 +58,7 @@
       "role": "version_lifecycle_metadata",
       "path": "lifecycle-metadata.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "lifecycle_metadata_id": "xiaohongshu.search-notes.lifecycle",
       "lifecycle_metadata_version": "0.1.0"
     },
@@ -66,7 +66,7 @@
       "role": "write_deferred_guardrail",
       "path": "write-deferred-guardrail.json",
       "status": "present",
-      "work_item": "LODE-208",
+      "work_item": "LODE-236",
       "guardrail_id": "xiaohongshu.search-notes.write-deferred-guardrail",
       "guardrail_version": "0.1.0"
     },
@@ -74,7 +74,7 @@
       "role": "fixture",
       "path": "fixtures/search-notes.fixture.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "fixture_id": "xiaohongshu.search-notes.fixture",
       "fixture_version": "0.1.0",
       "source_shape": "xhs.search-notes.source.pinia-search-store",
@@ -84,7 +84,7 @@
       "role": "core_consumption_fixture",
       "path": "fixtures/core-consumption.fixture.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "fixture_id": "xiaohongshu.search-notes.core-consumption-fixture",
       "fixture_version": "0.1.0",
       "consumer": "WebEnvoy Core admission and schema validation"
@@ -93,7 +93,7 @@
       "role": "post_check",
       "path": "checks/post-check.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "post_check_id": "xiaohongshu.search-notes.post-check",
       "post_check_version": "0.1.0"
     },
@@ -101,7 +101,7 @@
       "role": "failure_mapping",
       "path": "failure-mapping.json",
       "status": "present",
-      "work_item": "LODE-208",
+      "work_item": "LODE-236",
       "failure_mapping_id": "xiaohongshu.search-notes.failure-mapping",
       "failure_mapping_version": "0.1.0"
     },
@@ -109,7 +109,7 @@
       "role": "catalog_metadata",
       "path": "catalog-metadata.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "catalog_metadata_id": "xiaohongshu.search-notes.catalog-metadata",
       "catalog_metadata_version": "0.1.0"
     },
@@ -117,7 +117,7 @@
       "role": "repair_draft",
       "path": "repair/repair-draft.fixture.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "repair_draft_id": "xiaohongshu.search-notes.repair-draft",
       "repair_draft_version": "0.1.0"
     },
@@ -125,7 +125,7 @@
       "role": "overlay_fork_metadata",
       "path": "repair/overlay-fork-metadata.fixture.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "overlay_metadata_id": "xiaohongshu.search-notes.overlay-fork",
       "overlay_metadata_version": "0.1.0"
     },
@@ -133,30 +133,74 @@
       "role": "package_lock",
       "path": "package-lock.json",
       "status": "present",
-      "work_item": "LODE-206",
+      "work_item": "LODE-236",
       "lock_id": "xiaohongshu.search-notes.lock",
       "lock_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0"
     }
   ],
   "source_knowledge": {
-    "reference_boundary": "Mechanisms and field ideas only; no bb-sites or research source code is copied.",
+    "status": "absorbed_without_source_copy",
+    "reference_boundary": "Mechanisms, route shapes, field names, failure classes, and evidence requirements only; no bb-sites source code, cookies, account state, raw DOM, HAR, network bodies, screenshots, or production payloads are copied into Lode.",
+    "absorbed_locators": [
+      "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
+      "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+      "sites/xiaohongshu/search-notes/**",
+      "sites/xiaohongshu/read-note-detail/**",
+      "sites/xiaohongshu/publish-note-precheck/**",
+      "registry/local-packages.json",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+      "sources/epiral/bb-sites/xiaohongshu/search.js",
+      "sources/epiral/bb-sites/xiaohongshu/note.js",
+      "sources/epiral/bb-sites/xiaohongshu/comments.js",
+      "sources/epiral/bb-sites/xiaohongshu/user_posts.js",
+      "sources/epiral/bb-sites/xiaohongshu/feed.js",
+      "sources/epiral/bb-sites/xiaohongshu/me.js"
+    ],
+    "forbidden_runtime_material": [
+      "cookie or token material",
+      "profile or runtime session state",
+      "raw DOM, HAR, network response body, or screenshot body",
+      "real publish/upload/save/comment/like/follow actions",
+      "safety-control or captcha bypass"
+    ],
+    "covered_issues": [
+      "#235",
+      "#236",
+      "#237",
+      "#238",
+      "#239"
+    ],
     "absorbed": [
-      "same-origin browser identity requirement",
-      "Vue/Pinia readiness probes",
-      "search to detail signed follow-up ref",
-      "structured failure hints"
+      "www.xiaohongshu.com same-origin logged-in browser boundary.",
+      "Vue app and Pinia search store readiness as Harbor/Core facts.",
+      "Search route and /search/notes source shape as a result-card source summary.",
+      "Sort aliases for general/latest/likes/comments/collects as stable input vocabulary.",
+      "Search result note_id, author, interaction metrics, signed URL, and xsec_token as follow-up detail refs.",
+      "Structured error categories for login, page readiness, safety challenge, field drift, empty result, and resource/evidence absence."
     ],
     "not_absorbed": [
-      "runtime adapter code",
-      "browser prototype interception code",
-      "write actions",
-      "raw page or network payloads"
+      "bb-sites helper, store invocation, XHR interception, token cache, or adapter implementation code.",
+      "comments, feed, me, and user_posts as first-batch capabilities.",
+      "raw search response, full page snapshot, account state, or batch crawling behavior."
     ]
   },
   "non_goals": [
-    "No login automation.",
-    "No comments, feed, profile, creator center, publish, like, follow, message, or batch crawling.",
+    "No login automation or real account access in Lode.",
+    "No bb-sites source copy or runtime adapter migration.",
+    "No cookies, tokens, profile state, runtime session, raw DOM, HAR, screenshot body, network body, production payload, or user business data.",
+    "No publish, upload, save, comment, like, collect, follow, delete, message, or safety-control bypass.",
     "No Harbor/Core/App code change."
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236"
 }

@@ -99,11 +99,38 @@
     "field_missing": "A required normalized field is not traceable to declared source/evidence refs.",
     "network_resource_unavailable": "Required evidence refs are absent, expired, or unavailable."
   },
-  "real_page_validation": "pending_human_runtime_with_logged_in_xiaohongshu_page",
+  "real_page_validation": {
+    "status": "not_attempted_real_account_access_forbidden",
+    "reason": "LODE-236 implements consumable real-site package contracts and fixtures; this execution did not access a real Xiaohongshu account or live publish/read target.",
+    "required_later_runtime": "human-owned logged-in browser profile bound by Core/Harbor with refs-only evidence capture",
+    "forbidden_later_evidence": [
+      "cookie",
+      "token",
+      "raw DOM",
+      "HAR",
+      "network response body",
+      "screenshot body",
+      "production payload"
+    ]
+  },
   "non_goals": [
     "No browser automation steps in Lode.",
     "No Core result envelope.",
     "No Harbor evidence schema or live evidence body.",
     "No write action."
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236",
+  "post_check_plan": [
+    "target route and normalized public fields are present",
+    "source_refs bind normalized fields to summary refs",
+    "evidence_refs are refs-only",
+    "signed detail follow-up refs are preserved when required"
   ]
 }

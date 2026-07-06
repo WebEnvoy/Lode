@@ -47,8 +47,8 @@
   "status": {
     "catalog_state": "available",
     "installability": "intent_only",
-    "source_health": "fixture_only",
-    "updated_at": "2026-07-06T00:00:00Z"
+    "source_health": "real_site_contract_ready_live_validation_not_attempted",
+    "updated_at": "2026-07-06T16:20:00Z"
   },
   "risk": {
     "level": "medium",
@@ -65,7 +65,7 @@
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present",
     "post_check_fixture_status": "passed",
-    "runtime_execution": "out_of_scope"
+    "runtime_execution": "not_attempted_real_account_access_forbidden"
   },
   "repair_summary": {
     "status": "repair_draft_fixture_present",
@@ -103,5 +103,13 @@
     "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
     "lifecycle": "proposed",
     "operation_mode": "validate_only"
-  }
+  },
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236"
 }

@@ -176,5 +176,54 @@
     "No Harbor live fact matching in Lode.",
     "No runtime acquisition or fallback ordering.",
     "No external visible action."
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236",
+  "real_site_entrypoints": [
+    {
+      "entrypoint_id": "xhs-note-detail",
+      "origin": "https://www.xiaohongshu.com",
+      "route_patterns": [
+        "/explore/{note_id}*",
+        "/search_result/{note_id}*"
+      ],
+      "source_mechanisms": [
+        "signed_note_url",
+        "pinia_note_store_ready",
+        "note_detail_summary",
+        "network_summary_ref"
+      ],
+      "mode": "read"
+    }
+  ],
+  "evidence_requirements": {
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "required_ref_kinds": [
+      "pinia_store_summary",
+      "network_summary",
+      "dom_snapshot_summary",
+      "snapshot_ref",
+      "post_check_ref"
+    ],
+    "forbidden_evidence_material": [
+      "raw DOM",
+      "HAR",
+      "network response body",
+      "screenshot body",
+      "cookie",
+      "token",
+      "profile state",
+      "runtime session",
+      "production payload",
+      "user business data"
+    ],
+    "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution"
+  }
 }

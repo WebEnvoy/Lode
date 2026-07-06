@@ -142,7 +142,10 @@
           "lifecycle": "proposed",
           "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
           "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
-          "live_validation": "pending_human_runtime"
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "status": "real_site_contract_ready",
+          "required_runtime_owner": "Core/Harbor",
+          "evidence_policy": "refs_only_no_raw_bodies"
         },
         {
           "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
@@ -154,8 +157,17 @@
           "lifecycle": "proposed",
           "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json",
           "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
-          "live_validation": "pending_human_runtime"
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "status": "real_site_contract_ready",
+          "required_runtime_owner": "Core/Harbor",
+          "evidence_policy": "refs_only_no_raw_bodies"
         }
+      ],
+      "covered_issues": [
+        "#235",
+        "#236",
+        "#237",
+        "#239"
       ]
     },
     {
@@ -235,7 +247,15 @@
             "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
             "lifecycle": "proposed",
             "operation_mode": "validate_only"
-          }
+          },
+          "status": "real_site_write_precheck_contract_ready",
+          "covered_issues": [
+            "#235",
+            "#238",
+            "#239"
+          ],
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "evidence_policy": "refs_only_no_raw_bodies"
         },
         {
           "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
@@ -275,6 +295,78 @@
           }
         }
       ]
+    },
+    {
+      "query_id": "xiaohongshu-fr-235-real-site-capabilities",
+      "purpose": "Expose the LODE-236 anchored Xiaohongshu FR #235 package batch for Core/App discovery.",
+      "filters": {
+        "site_slug": "xiaohongshu",
+        "covered_issue": "#235"
+      },
+      "covered_issues": [
+        "#235",
+        "#236",
+        "#237",
+        "#238",
+        "#239"
+      ],
+      "results": [
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+          "capability_id": "search-notes",
+          "operation_id": "xhs_search_notes",
+          "operation_mode": "read",
+          "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+          "status": "real_site_contract_ready",
+          "covers": [
+            "#236",
+            "#239"
+          ]
+        },
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+          "capability_id": "read-note-detail",
+          "operation_id": "xhs_read_note_detail",
+          "operation_mode": "read",
+          "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+          "status": "real_site_contract_ready",
+          "covers": [
+            "#237",
+            "#239"
+          ]
+        },
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+          "capability_id": "publish-note-precheck",
+          "operation_id": "xhs_publish_note_precheck",
+          "operation_mode": "validate_only",
+          "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+          "status": "real_site_write_precheck_contract_ready",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked",
+          "covers": [
+            "#238",
+            "#239"
+          ],
+          "write_pre_candidate": {
+            "candidate_id": "xiaohongshu.publish-note-precheck.write-pre-candidate",
+            "candidate_status": "selected_real_site_write_precheck_contract_ready",
+            "selection_reason": "Xiaohongshu creator publish page precheck with expected change, risk hints, and no-submit guard.",
+            "supported_stage6_modes": [
+              "validate_only",
+              "draft",
+              "preview"
+            ],
+            "draft_preview_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/publish-note-precheck.fixture.json",
+            "core_consumption_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/core-consumption.fixture.json"
+          }
+        }
+      ],
+      "live_validation": "not_attempted_real_account_access_forbidden",
+      "evidence_policy": "refs_only_no_raw_bodies"
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",
