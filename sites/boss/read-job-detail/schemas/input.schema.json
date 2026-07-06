@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/boss/read-job-detail/input@0.1.0",
+  "title": "Read BOSS Zhipin job detail Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "securityId"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://www\\.zhipin\\.com/job_detail/[A-Za-z0-9-]+\\.html(?:\\?.*)?$",
+      "description": "BOSS Zhipin job detail URL, preferably emitted by job-search."
+    },
+    "securityId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "BOSS securityId emitted by the job-search package."
+    },
+    "encryptJobId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9-]+$",
+      "description": "Optional encrypted job id used in the detail URL."
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "examples": [
+    {
+      "url": "https://www.zhipin.com/job_detail/fixture-job-1.html",
+      "securityId": "fixture-security-1",
+      "encryptJobId": "fixture-job-1"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "boss.read-job-detail.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+    "operation_ref": "lode://operation/boss_read_job_detail",
+    "operation_mode": "read",
+    "sensitivity": {
+      "url": "user_provided",
+      "securityId": "user_provided",
+      "encryptJobId": "user_provided",
+      "include_source_refs": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "Provide a supported BOSS Zhipin URL."
+      },
+      {
+        "code": "input_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on https://www.zhipin.com",
+        "recovery_hint": "Use the site origin declared by this package."
+      },
+      {
+        "code": "input_query_missing",
+        "field": "query",
+        "lode_failure_class": "query_missing",
+        "trigger": "query is absent for job search",
+        "recovery_hint": "Provide a non-empty job search query."
+      },
+      {
+        "code": "input_security_id_missing",
+        "field": "securityId",
+        "lode_failure_class": "input_missing_security_id",
+        "trigger": "detail read lacks securityId from job-search",
+        "recovery_hint": "Use a detail ref emitted by job-search."
+      },
+      {
+        "code": "input_page_out_of_scope",
+        "field": "page",
+        "lode_failure_class": "pagination_limited",
+        "trigger": "page is greater than first page",
+        "recovery_hint": "Use page 1; batch pagination is out of scope for this package."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}

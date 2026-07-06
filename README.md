@@ -56,6 +56,7 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
 - [小红书与 BOSS 站点知识吸收边界](docs/adr/0006-xhs-boss-site-knowledge-selection.md)
 - [小红书只读能力包合同](docs/contracts/xiaohongshu-read-capabilities.md)
+- [BOSS 直聘只读能力包合同](docs/contracts/boss-read-capabilities.md)
 
 ## 本地校验
 
@@ -96,6 +97,20 @@ python3 tools/lode_validate_package.py --registry-index registry/local-packages.
 
 这两个包只提供 Lode 可校验资产、脱敏固定样本、post-check 和失败分类。真实
 页面验证需要人工拥有的已登录小红书浏览器现场，当前标记为
+`pending_human_runtime`；本仓不保存账号状态、运行会话、原始页面、网络载荷或
+生产证据。
+
+## BOSS 直聘只读能力包
+
+当前 BOSS 直聘真实站点只读包包括：
+
+- `sites/boss/job-search`：声明已登录求职者身份、页面就绪、搜索输入/输出、
+  职位列表字段来源、`securityId` 和后续详情引用。
+- `sites/boss/read-job-detail`：声明详情 URL 与 `securityId` 输入、职位详情输出、
+  职位描述、薪资、地点、公司和招聘者摘要。
+
+这两个包只提供 Lode 可校验资产、脱敏固定样本、post-check 和失败分类。真实
+页面验证需要人工拥有的已登录 BOSS 直聘浏览器现场，当前标记为
 `pending_human_runtime`；本仓不保存账号状态、运行会话、原始页面、网络载荷或
 生产证据。
 

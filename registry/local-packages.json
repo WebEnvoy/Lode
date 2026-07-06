@@ -512,6 +512,164 @@
       },
       "work_item": "LODE-207",
       "lock_work_item": "LODE-207"
+    },
+    {
+      "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/boss/job-search",
+      "manifest_path": "sites/boss/job-search/manifest.json",
+      "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+      "lock_path": "sites/boss/job-search/package-lock.json",
+      "site_slug": "boss",
+      "capability_id": "job-search",
+      "operation_id": "boss_job_search",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/boss/job-search@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "real_site_read_package": {
+        "status": "fixture_present_live_pending",
+        "work_item": "LODE-210",
+        "covered_work_items": [
+          "LODE-209",
+          "LODE-210",
+          "LODE-211",
+          "LODE-212"
+        ],
+        "semantic_stories": [
+          "#18",
+          "#19",
+          "#20"
+        ],
+        "fixture_path": "sites/boss/job-search/fixtures/job-search.fixture.json",
+        "core_consumption_fixture_path": "sites/boss/job-search/fixtures/core-consumption.fixture.json",
+        "catalog_metadata_path": "sites/boss/job-search/catalog-metadata.json",
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in BOSS Zhipin browser session."
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-210",
+      "lock_work_item": "LODE-210"
+    },
+    {
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/boss/read-job-detail",
+      "manifest_path": "sites/boss/read-job-detail/manifest.json",
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+      "lock_path": "sites/boss/read-job-detail/package-lock.json",
+      "site_slug": "boss",
+      "capability_id": "read-job-detail",
+      "operation_id": "boss_read_job_detail",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "real_site_read_package": {
+        "status": "fixture_present_live_pending",
+        "work_item": "LODE-211",
+        "covered_work_items": [
+          "LODE-209",
+          "LODE-210",
+          "LODE-211",
+          "LODE-212"
+        ],
+        "semantic_stories": [
+          "#18",
+          "#19",
+          "#20"
+        ],
+        "fixture_path": "sites/boss/read-job-detail/fixtures/read-job-detail.fixture.json",
+        "core_consumption_fixture_path": "sites/boss/read-job-detail/fixtures/core-consumption.fixture.json",
+        "catalog_metadata_path": "sites/boss/read-job-detail/catalog-metadata.json",
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in BOSS Zhipin browser session."
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-211",
+      "lock_work_item": "LODE-211"
     }
   ],
   "non_goals": [

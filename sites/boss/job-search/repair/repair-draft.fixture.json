@@ -1,0 +1,119 @@
+{
+  "schema_version": "lode.repair-draft.v0",
+  "repair_draft_id": "boss.job-search.repair-draft",
+  "repair_draft_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "capability_id": "job-search",
+  "operation_id": "boss_job_search",
+  "operation_mode": "read",
+  "failure_to_repair": [
+    {
+      "failure_class": "invalid_contract",
+      "repair_owner": "Lode package maintainer",
+      "draft_action": "refresh package mapping or requirement",
+      "app_summary": "Repair package metadata or source mapping."
+    },
+    {
+      "failure_class": "site_changed",
+      "repair_owner": "Lode package maintainer",
+      "draft_action": "refresh package mapping or requirement",
+      "app_summary": "Repair package metadata or source mapping."
+    },
+    {
+      "failure_class": "post_check_failed",
+      "repair_owner": "Lode package maintainer",
+      "draft_action": "refresh package mapping or requirement",
+      "app_summary": "Repair package metadata or source mapping."
+    },
+    {
+      "failure_class": "evidence_expired",
+      "repair_owner": "Lode package maintainer",
+      "draft_action": "refresh package mapping or requirement",
+      "app_summary": "Repair package metadata or source mapping."
+    },
+    {
+      "failure_class": "field_missing",
+      "repair_owner": "Lode package maintainer",
+      "draft_action": "refresh package mapping or requirement",
+      "app_summary": "Repair package metadata or source mapping."
+    },
+    {
+      "failure_class": "permission_denied",
+      "repair_owner": "WebEnvoy Core/App with user action",
+      "draft_action": "refresh identity or explain permission boundary",
+      "app_summary": "Ask user to use an allowed BOSS identity."
+    }
+  ],
+  "draft_lifecycle": {
+    "states": [
+      "candidate",
+      "validated",
+      "promoted",
+      "rejected"
+    ],
+    "allowed_transitions": [
+      "candidate->validated",
+      "validated->promoted",
+      "candidate->rejected",
+      "validated->rejected"
+    ]
+  },
+  "validation_and_promotion": {
+    "draft_validation_checks": [
+      "offline package validator",
+      "fixture shape check",
+      "post-check fixture output check"
+    ],
+    "promotion_checks": [
+      "new package version if public shape changes",
+      "fresh evidence refs from Harbor before promotion"
+    ],
+    "promotion_target": {
+      "target_kind": "package_update",
+      "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+      "requires_new_version": true
+    }
+  },
+  "repair_drafts": [
+    {
+      "draft_ref": "lode://repair-draft/site-capability/boss/job-search/site-change@0.1.1-draft",
+      "source_failure_class": "site_changed",
+      "status": "candidate",
+      "summary": "Placeholder repair draft for BOSS job search page or wapi source shape drift.",
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "wapi_joblist_summary"
+        }
+      ],
+      "asset_boundary": {
+        "allowed_asset_kinds": [
+          "user_overlay",
+          "fork",
+          "repair_draft"
+        ],
+        "forbidden_material": [
+          "account state",
+          "browser runtime state",
+          "raw evidence",
+          "raw page body",
+          "network body",
+          "production payload",
+          "user business data"
+        ]
+      }
+    }
+  ],
+  "forbidden_material_policy": {
+    "raw_runtime_material": "forbidden",
+    "sensitive_user_material": "forbidden",
+    "private_browser_material": "forbidden"
+  },
+  "consumer_boundary": "App may display repair draft refs and status only. Core may map run failures to this vocabulary but owns run records and result envelopes.",
+  "non_goals": [
+    "No marketplace publishing.",
+    "No hosted sync.",
+    "No crawler queue.",
+    "No true write execution."
+  ]
+}

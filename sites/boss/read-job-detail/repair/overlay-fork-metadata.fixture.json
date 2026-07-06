@@ -1,0 +1,72 @@
+{
+  "schema_version": "lode.overlay-fork-metadata.v0",
+  "overlay_metadata_id": "boss.read-job-detail.overlay-fork",
+  "overlay_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "capability_id": "read-job-detail",
+  "operation_id": "boss_read_job_detail",
+  "operation_mode": "read",
+  "asset_boundary": {
+    "allowed_asset_kinds": [
+      "user_overlay",
+      "fork",
+      "repair_draft"
+    ],
+    "truth_owner": "Lode",
+    "forbidden_material": [
+      "account state",
+      "browser runtime state",
+      "raw evidence",
+      "raw page body",
+      "network body",
+      "production payload",
+      "user business data"
+    ]
+  },
+  "private_invalidation_boundary": {
+    "private_report_status": "local_signal_only",
+    "platform_report_status": "deferred",
+    "forbidden_private_material": [
+      "account state",
+      "browser runtime state",
+      "raw evidence",
+      "raw page body",
+      "network body",
+      "production payload",
+      "user business data"
+    ]
+  },
+  "overlay_fork_examples": [
+    {
+      "asset_kind": "user_overlay",
+      "asset_ref": "lode://overlay/site-capability/boss/read-job-detail/local-field-map@0.1.0",
+      "source": "fixture",
+      "status": "example_only",
+      "boundary": "May override local mapping hints without changing platform package truth."
+    },
+    {
+      "asset_kind": "repair_draft",
+      "asset_ref": "lode://repair-draft/site-capability/boss/read-job-detail/site-change@0.1.1-draft",
+      "source": "fixture",
+      "status": "candidate",
+      "boundary": "May propose package repair without storing private browser material."
+    }
+  ],
+  "update_acceptance": {
+    "acceptance_checks": [
+      "package ref remains aligned",
+      "offline validator passes",
+      "no forbidden material stored"
+    ],
+    "promotion_requires": [
+      "new package version for public contract changes",
+      "fresh evidence refs from Harbor"
+    ],
+    "reject_if": [
+      "contains account state",
+      "contains raw runtime material",
+      "claims write behavior"
+    ]
+  },
+  "consumer_boundary": "Lode owns overlay/fork metadata truth; App may render local intent only."
+}

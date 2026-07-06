@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/boss/job-search/input@0.1.0",
+  "title": "Search BOSS Zhipin jobs Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "query"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://www\\.zhipin\\.com/(?:web/geek/job.*)?$",
+      "description": "BOSS Zhipin job search page on www.zhipin.com."
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Job search keyword."
+    },
+    "city_code": {
+      "type": "string",
+      "pattern": "^[0-9]{6,}$",
+      "default": "101010100",
+      "description": "BOSS city code, for example 101010100 for Beijing."
+    },
+    "experience_code": {
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "default": "",
+      "description": "Optional BOSS experience filter code."
+    },
+    "degree_code": {
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "default": "",
+      "description": "Optional BOSS degree filter code."
+    },
+    "salary_code": {
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "default": "",
+      "description": "Optional BOSS salary filter code."
+    },
+    "industry_code": {
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "default": "",
+      "description": "Optional BOSS industry filter code."
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1,
+      "default": 1,
+      "description": "First page only. Batch pagination is outside this package."
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 15,
+      "default": 15
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "examples": [
+    {
+      "url": "https://www.zhipin.com/web/geek/job?query=AI%20agent&city=101010100",
+      "query": "AI agent",
+      "city_code": "101010100",
+      "page": 1
+    }
+  ],
+  "x-lode": {
+    "schema_id": "boss.job-search.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+    "operation_ref": "lode://operation/boss_job_search",
+    "operation_mode": "read",
+    "sensitivity": {
+      "url": "user_provided",
+      "query": "user_provided",
+      "city_code": "user_provided",
+      "experience_code": "user_provided",
+      "degree_code": "user_provided",
+      "salary_code": "user_provided",
+      "industry_code": "user_provided",
+      "page": "user_provided",
+      "limit": "user_provided",
+      "include_source_refs": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "Provide a supported BOSS Zhipin URL."
+      },
+      {
+        "code": "input_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on https://www.zhipin.com",
+        "recovery_hint": "Use the site origin declared by this package."
+      },
+      {
+        "code": "input_query_missing",
+        "field": "query",
+        "lode_failure_class": "query_missing",
+        "trigger": "query is absent for job search",
+        "recovery_hint": "Provide a non-empty job search query."
+      },
+      {
+        "code": "input_security_id_missing",
+        "field": "securityId",
+        "lode_failure_class": "input_missing_security_id",
+        "trigger": "detail read lacks securityId from job-search",
+        "recovery_hint": "Use a detail ref emitted by job-search."
+      },
+      {
+        "code": "input_page_out_of_scope",
+        "field": "page",
+        "lode_failure_class": "pagination_limited",
+        "trigger": "page is greater than first page",
+        "recovery_hint": "Use page 1; batch pagination is out of scope for this package."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}
