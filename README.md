@@ -58,6 +58,7 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [小红书只读能力包合同](docs/contracts/xiaohongshu-read-capabilities.md)
 - [BOSS 直聘只读能力包合同](docs/contracts/boss-read-capabilities.md)
 - [真实页面写前验证能力合同](docs/contracts/write-precheck-capabilities.md)
+- [bb-sites 小红书与 BOSS 吸收冻结](docs/contracts/bb-sites-xhs-boss-absorption-freeze.md)
 
 ## 本地校验
 
