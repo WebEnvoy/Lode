@@ -7,7 +7,7 @@
 - Current Stop: PR #218 已合并，覆盖 issue 已写入 post-merge closeout evidence 并关闭。
 - Next Step: no_active_item；后续由 Lode #198/#199/#200 继续真实能力包实现。
 - Blockers: None recorded.
-- Latest Validation Summary: `git diff --check`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-197 --json`; `loom suite evidence validate --target . --item LODE-197 --json`; `loom suite carrier validate --target . --item LODE-197 --json` 本地通过。初始 `loom suite validate` 和 `loom suite evidence validate` 暴露过载体形态缺口，已在最终重跑前修正。`loom verify` 报 Codex 插件运行环境缓存过期，但 CLI/source payload 是当前版本；归类为 host runtime cache surface，不是仓库代码阻断项。
+- Latest Validation Summary: `git diff --check`; `jq empty .loom/bootstrap/init-result.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; local `loom pr gate --surface closeout` passed for PR #219. This is a closeout-carrier-only review; it does not change Lode product semantics or implement #198/#199/#200.
 - Recovery Boundary: 仅限 Lode 文档和事项专属 Loom 载体；不实现能力包、不写运行环境代码、不改结构定义/固定样本数据/校验器、不编辑 sources/research，也不改 Harbor/Core/App。
 - Current Lane: milestone #13 站点知识选择
 
