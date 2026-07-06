@@ -10,12 +10,12 @@
 - Recovery Entry: .loom/progress/LODE-209.md
 - Review Entry: .loom/reviews/LODE-209.json
 - Validation Entry: package validator; registry checks; py_compile; git diff --check; loom verify; loom fact-chain; loom suite checks.
-- Closing Condition: Implementation PR created and checks recorded. Execution subagent must not merge PR or close #199/#209/#210/#211/#212.
-- Current Checkpoint: implementation_validated
-- Current Stop: BOSS package assets, registry entries, contract docs, and Loom carriers are locally validated and ready for PR creation.
-- Next Step: commit, push branch, create PR, read back PR body/head/branch, and report PR Ready to the main controller.
+- Closing Condition: Implementation PR merged, #199/#209/#210/#211/#212 closeout evidence posted, and current pointer returns to no_active_item.
+- Current Checkpoint: closed_out
+- Current Stop: PR #224 已合并，#199/#209/#210/#211/#212 已写入 post-merge closeout evidence 并关闭。
+- Next Step: no_active_item；后续由 Lode #200 继续真实页面写前验证能力。
 - Blockers: None recorded.
-- Latest Validation Summary: package validators, registry validator, py_compile, diff check, Loom verify, Loom fact-chain, Loom suite validate, Loom suite evidence validate, and Loom suite carrier validate passed for the implementation head before PR creation.
+- Latest Validation Summary: `git diff --check`; `jq empty .loom/bootstrap/init-result.json .loom/reviews/LODE-209.json .loom/reviews/LODE-209.spec.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; closeout evidence comments posted for #199/#209/#210/#211/#212 after PR #224 merged to main at b2a4d0fc703f3d02152df212ded7fccb0d7f8e44. This is a closeout-carrier-only review; it does not change Lode package semantics or claim live BOSS validation.
 - Recovery Boundary: Lode package/catalog/fixture/contract truth only; no BOSS greeting, chat, send, apply, resume upload, batch recruitment automation, login automation, CAPTCHA/safety bypass, Harbor/Core/App changes, or `sources/`/`research/` edits.
 - Current Lane: FR #199 BOSS real read-only capability conversion
 
@@ -33,3 +33,13 @@
 - Dynamic Truth: .loom/progress/LODE-209.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
+
+## Terminal Closeout Metadata
+
+- Terminal State: closed_out
+- Issue: #199
+- PR: #224
+- Merge Commit: b2a4d0fc703f3d02152df212ded7fccb0d7f8e44
+- Target Branch: main
+- Closed At: 2026-07-06T07:24:42Z
+- Evidence Locator: GitHub issue closeout comments on #199, #209, #210, #211, and #212
