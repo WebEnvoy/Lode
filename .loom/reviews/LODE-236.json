@@ -4,7 +4,7 @@
   "decision": "allow",
   "reviewer": "Codex master controller thread 019f2731-5b28-72d1-897e-8d1199e94fdc",
   "authored_at": "2026-07-06T16:31:04Z",
-  "reviewed_head": "3016a7a5afe83fe7b054882afe8809fb2fc18b61",
+  "reviewed_head": "f034d102c01b7c7ff94fb3b01ae2111f3f5d7544",
   "reviewed_validation_summary": "`python3 tools/lode_validate_package.py sites/xiaohongshu/search-notes --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/xiaohongshu/read-note-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/xiaohongshu/publish-note-precheck --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; JSON readability; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-236 --json`; `loom suite evidence validate --target . --item LODE-236 --json`; `loom suite carrier validate --target . --item LODE-236 --json` passed locally.",
   "reviewed_validation_summary_hash": "54e4759cb58b2c864fe7737a1bf5920b299b58a3317d76bc834bc7acf698cc74",
   "validation_summary_source": "recovery.latest_validation_summary",
