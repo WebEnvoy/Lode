@@ -3,9 +3,9 @@
 ## Dynamic Facts
 
 - Item ID: LODE-241
-- Current Checkpoint: merge_ready
-- Current Stop: PR #250 is ready for current-head review and merge gate after controller carrier refresh.
-- Next Step: Run gate, merge PR #250 if checks pass, then create closeout/retire lane and close #241-#244 plus parent #240 with post-merge evidence.
+- Current Checkpoint: closed_out
+- Current Stop: PR #250 has merged; this closeout lane retires the Lode active pointer and records post-merge issue evidence for #240-#244.
+- Next Step: Write post-merge issue closeout evidence for #241-#244 and parent #240 after this carrier sync reaches main.
 - Blockers: None recorded.
 - Latest Validation Summary: `python3 tools/lode_validate_package.py sites/boss/job-search --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/read-job-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; JSON readability; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-241 --json`; `loom suite evidence validate --target . --item LODE-241 --json`; `loom suite carrier validate --target . --item LODE-241 --json` passed locally.
 - Recovery Boundary: Lode package/catalog/fixture/contract truth only; no BOSS real account access, no live site evidence, no apply/greet/chat/send/save/upload/candidate-management actions, no safety-control bypass, no Harbor/Core/App changes, no `sources/` or `research/` edits.
@@ -48,3 +48,13 @@
 ## Scope Notes
 
 - Live BOSS validation requires a user-authorized logged-in browser runtime and was not attempted under this Work Item's forbidden-action boundary.
+
+## Terminal Closeout Metadata
+
+- Terminal State: closed_out
+- Issue: 241
+- PR: 250
+- Merge Commit: 268a62fdabd5b9172b9db068c8c7525cc50f8777
+- Target Branch: main
+- Closed At: 2026-07-06T17:28:53Z
+- Evidence Locator: https://github.com/WebEnvoy/Lode/pull/250
