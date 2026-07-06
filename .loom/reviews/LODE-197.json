@@ -3,10 +3,10 @@
   "item_id": "LODE-197",
   "decision": "allow",
   "kind": "code_review",
-  "summary": "通过：LODE-197 closeout carrier 仅同步 post-merge closeout 与 closed_out 状态，可供 closeout PR 消费。",
+  "summary": "通过：LODE-197 current pointer retire 仅把仓库状态退回 no_active_item / idle；review 仍绑定已合并实现事实，不扩大产品语义。",
   "reviewer": "codex-main-controller",
-  "authored_at": "2026-07-06T05:29:51Z",
-  "reviewed_head": "3a56037cab0287819f33b99fd1e9d705c9045efa",
+  "authored_at": "2026-07-06T05:39:04Z",
+  "reviewed_head": "e3c5229ef3592d8b8cab970a490810244b00f06f",
   "reviewed_validation_summary": "`git diff --check`; `jq empty .loom/bootstrap/init-result.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; local `loom pr gate --surface closeout` passed for PR #219. This is a closeout-carrier-only review; it does not change Lode product semantics or implement #198/#199/#200.",
   "reviewed_validation_summary_hash": "0ab24c9aee6b81d0c46ea3b5e285c9bf10bd892f9062dcc211f578a0b17ac2a3",
   "validation_summary_source": "recovery.latest_validation_summary",
@@ -16,45 +16,18 @@
   "blocking_issues": [],
   "follow_ups": [],
   "consumed_inputs": {
-    "work_item": ".loom/work-items/LODE-197.md",
-    "recovery_entry": ".loom/progress/LODE-197.md",
-    "status_surface": ".loom/status/current.md",
-    "build_checkpoint": "pass",
-    "budget_risk": {
-      "schema_version": "loom-execution-budget-risk/v1",
-      "status": "not_applicable",
-      "enforcement": "advisory",
-      "highest_risk": "none",
-      "risk_dimensions": [],
-      "summary": "execution budget is not_applicable; budget risk remains advisory and non-blocking",
-      "budget_summary": "execution budget is not collected for this invocation.",
-      "adapter_evidence_locator": "",
-      "provenance": {
-        "source": "github_host"
-      }
-    },
-    "engine_adapter": null,
-    "engine_evidence": null,
-    "normalized_findings": null,
-    "suite_evidence_validation": "loom suite evidence validate --target /Volumes/2T/dev/WebEnvoy/Lode --item LODE-197 --json",
-    "suite_carrier_validation": "loom suite carrier validate --target /Volumes/2T/dev/WebEnvoy/Lode --item LODE-197 --json",
-    "suite_evidence_map": ".loom/specs/LODE-197/evidence-map.md",
-    "suite_consistency_analysis": null,
-    "suite_task_carriers": [
-      ".loom/specs/LODE-197/task-carrier.md"
-    ],
-    "suite_evidence_consumed_contracts": [
-      "docs/methodology/harness/full-spec-suite-cli-surface.md",
-      "docs/methodology/templates/evidence-map.md"
-    ],
-    "suite_carrier_consumed_contracts": [
-      "docs/methodology/harness/task-carrier-contract.md",
-      "docs/methodology/templates/execution-breakdown.md",
-      "docs/methodology/harness/full-spec-suite-cli-surface.md"
-    ]
+    "repository": "WebEnvoy/Lode",
+    "retire_pull_request": "https://github.com/WebEnvoy/Lode/pull/220",
+    "closeout_pull_request": "https://github.com/WebEnvoy/Lode/pull/219",
+    "implementation_pull_request": "https://github.com/WebEnvoy/Lode/pull/218",
+    "work_item": "LODE-197",
+    "covered_work_items": "#197 #201 #202 #203 #204 #217",
+    "closeout_scope": "PR #220 only retires the LODE-197 current pointer to no_active_item / idle; #198 #199 #200 remain open.",
+    "reviewed_diff": "git diff origin/main...5f7878a6556e893a8c7021902fe116e2c93a6ccc",
+    "validation": "`git diff --check`; `jq empty .loom/bootstrap/init-result.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; PR #220 metadata preflight passed. This retire PR only returns LODE-197 current pointer to no_active_item / idle after PR #219 closeout merged; it does not change Lode product semantics or implement #198/#199/#200."
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "Closeout carrier review approved the current head for terminal closeout consumption."
+    "reason": "Closeout carrier review approved the terminal closeout and current-pointer retire remains carrier-only."
   }
 }
