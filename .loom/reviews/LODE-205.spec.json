@@ -3,26 +3,30 @@
   "item_id": "LODE-205",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "Spec review accepts the bounded Xiaohongshu read capability conversion for Lode #198.",
-  "reviewer": "Codex thread 019f2731-5b28-72d1-897e-8d1199e94fdc",
-  "authored_at": "2026-07-06T06:34:09Z",
-  "reviewed_head": "90805801917f985206c92fc8d1ac2a624f017d02",
-  "reviewed_validation_summary": "`python3 tools/lode_validate_package.py sites/xiaohongshu/search-notes --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/xiaohongshu/read-note-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-205 --json`; `loom suite evidence validate --target . --item LODE-205 --json`; `loom suite carrier validate --target . --item LODE-205 --json` passed locally. Hosted py-compile, demo-bootstrap, repo-local-cli, and loom-check passed on PR #221 run 28771263137. Live Xiaohongshu page validation remains pending human-owned logged-in runtime and is not fabricated.",
-  "reviewed_validation_summary_hash": "3ce4864e795257b73f1fdf0e5cfed4ef42b33a03defa927d6f6bc8a8922f4972",
+  "summary": "通过：LODE-205 closeout carrier 只记录 PR #221 合并、issue closeout 和 closed_out 状态，不扩大 Lode 产品语义。",
+  "reviewer": "codex-main-controller",
+  "authored_at": "2026-07-06T06:46:54Z",
+  "reviewed_head": "e07d19dc36f1ded8eec9dfbaa8c35eae2bb3408e",
+  "reviewed_validation_summary": "`git diff --check`; `jq empty .loom/bootstrap/init-result.json .loom/reviews/LODE-205.json .loom/reviews/LODE-205.spec.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; closeout evidence comments posted for #198/#205/#206/#207/#208 after PR #221 merged to main at c3ebbab102bcf7607c5f2a7004ac57a3ef8bf679. This is a closeout-carrier-only review; it does not change Lode package semantics or claim live Xiaohongshu validation.",
+  "reviewed_validation_summary_hash": "e0d7ca22e5ba439a668a1da53c618d8bb6b8034ce3c4d057e694e9a7c1113f20",
   "validation_summary_source": "recovery.latest_validation_summary",
   "validation_summary_locator": ".loom/progress/LODE-205.md",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
-  "follow_ups": [
-    "Real Xiaohongshu validation must be run later in a human-owned logged-in Harbor identity session before claiming live-site completion."
-  ],
+  "follow_ups": [],
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "The spec stays inside Lode site capability/package/catalog truth and excludes account custody, login automation, batch crawling, write/engagement actions, Harbor runtime launch, Core execution, and App UI."
+    "reason": "Closeout carrier review approved the current head for terminal closeout consumption."
   },
   "implementation_review_disposition": {
     "status": "passed",
     "reason": "Implementation is limited to capability package assets, registry fixtures, docs, validators, and item-specific carrier."
+  },
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-205.md",
+    "recovery_entry": ".loom/progress/LODE-205.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass"
   }
 }
