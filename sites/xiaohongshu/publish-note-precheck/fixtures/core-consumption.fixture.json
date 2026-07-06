@@ -7,7 +7,7 @@
   "capability_id": "publish-note-precheck",
   "operation_id": "xhs_publish_note_precheck",
   "operation_mode": "validate_only",
-  "work_item": "LODE-213",
+  "work_item": "LODE-236",
   "purpose": "Repo-local fixture that WebEnvoy Core can read for write-precheck admission and schema validation without executing runtime behavior.",
   "owner_boundary": {
     "fixture_owner": "Lode",
@@ -209,7 +209,8 @@
     "failure_mapping": "write_precheck_classes_readable",
     "stable_admission_claimed": false,
     "runtime_execution_claimed": false,
-    "write_behavior_claimed": false
+    "write_behavior_claimed": false,
+    "live_account_access_claimed": false
   },
   "non_goals": [
     "No WebEnvoy Core code changes.",
@@ -217,5 +218,13 @@
     "No runtime execution, browser automation, live source lookup, live evidence lookup, profile selection, or provider routing.",
     "No hosted registry, marketplace, sync service, crawler queue, benchmark contract, or write capability behavior.",
     "No cookies, tokens, account state, raw evidence bodies, complete DOM, HAR, screenshots, production payloads, or user business data."
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "real_site_contract_status": "validate_only_no_submit_ready_for_core_admission"
 }

@@ -1,6 +1,7 @@
 # 真实页面写前验证能力
 
-本合同覆盖 GitHub #200/#213/#214/#215/#216。Lode 提供能力包、结构定义、脱敏固定样本、
+本合同原覆盖 GitHub #200/#213/#214/#215/#216。LODE-236 在 milestone #14 下
+刷新小红书部分以覆盖 FR #235/#238/#239。Lode 提供能力包、结构定义、脱敏固定样本、
 后置检查、失败分类和本地登记表发现能力；Core/App/Harbor 后续可消费这些事实生成写前预览。
 本合同不授权真实发布、投递、打招呼、发送消息、上传或保存到外部站点。
 
@@ -29,18 +30,36 @@
 
 小红书吸收：
 
+- `docs/contracts/bb-sites-xhs-boss-absorption-freeze.md`
 - `docs/adr/0006-xhs-boss-site-knowledge-selection.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md`
 - `research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/5.6-site-sitemaps.md`
 - `research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/21-xiao-hong-shu-ming-ling-mian-sou-suo-xiang-qing-yong-hu-zhu-ye-yu-bian-ji-qi-shu-ru.md`
 - `research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/22-shou-kong-shi-shi-xie-ru-fa-bu-zhun-ru-yu-shang-chuan-zheng-ju-bu-huo.md`
 - `research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/23-feng-xian-men-jin-zhang-hao-an-quan-yu-xie-ru-mo-ren-suo.md`
 - `sources/epiral/bb-sites/xiaohongshu/search.js`
 - `sources/epiral/bb-sites/xiaohongshu/note.js`
+- `sources/epiral/bb-sites/xiaohongshu/comments.js`
+- `sources/epiral/bb-sites/xiaohongshu/user_posts.js`
+- `sources/epiral/bb-sites/xiaohongshu/feed.js`
 - `sources/epiral/bb-sites/xiaohongshu/me.js`
 
 吸收内容：创作中心独立来源、发布页 URL、内容编辑入口、编辑器输入验证、页面就绪、
-登录/风控/签名链接/来源引用的失败分类。未吸收：源码复制、图片上传、文件选择、
-草稿保存、发布按钮、定时发布和真实写入路径。
+登录/风控/签名链接/来源引用的失败分类，以及 bb-sites 的同源会话、结构化失败和
+搜索到详情引用机制。未吸收：源码复制、图片上传、文件选择、草稿保存、发布按钮、
+定时发布和真实写入路径。
+
+LODE-236 小红书写前验证补充：
+
+- `publish-note-precheck` 只声明 `validate_only`，`no_submit_guard: active`，
+  `true_write_execution: blocked`。
+- 输出必须包含 `expected_change`、`risk_hints`、`no_submit_guard_status`、
+  `source_refs` 和 `evidence_refs`。
+- 后置检查计划只验证目标仍可定位、预期变更仍是 preview、外部提交仍为 false、
+  source/evidence 仍为 refs-only。
 
 BOSS 吸收：
 

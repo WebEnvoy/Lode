@@ -161,5 +161,56 @@
     "No runtime acquisition or fallback ordering.",
     "No fixture or post-check payload.",
     "No Core, Harbor, App, registry, marketplace, crawler queue, benchmark, or write execution behavior."
-  ]
+  ],
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236",
+  "real_site_entrypoints": [
+    {
+      "entrypoint_id": "xhs-creator-publish-page",
+      "origin": "https://creator.xiaohongshu.com",
+      "route_patterns": [
+        "/publish/publish*"
+      ],
+      "mode": "validate_only",
+      "required_no_submit_guard": "active"
+    },
+    {
+      "entrypoint_id": "xhs-main-site-session-check",
+      "origin": "https://www.xiaohongshu.com",
+      "route_patterns": [
+        "/explore*"
+      ],
+      "mode": "readiness_probe_only",
+      "required_no_submit_guard": "active"
+    }
+  ],
+  "evidence_requirements": {
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "required_ref_kinds": [
+      "creator_publish_page_summary",
+      "dom_snapshot_summary",
+      "snapshot_ref",
+      "post_check_ref"
+    ],
+    "forbidden_evidence_material": [
+      "raw DOM",
+      "HAR",
+      "network response body",
+      "screenshot body",
+      "cookie",
+      "token",
+      "profile state",
+      "runtime session",
+      "production payload",
+      "user business data"
+    ],
+    "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution"
+  }
 }

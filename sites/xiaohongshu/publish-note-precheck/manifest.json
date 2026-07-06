@@ -37,7 +37,7 @@
       "status": "present",
       "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
       "schema_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "normalized_output_schema",
@@ -45,7 +45,7 @@
       "status": "present",
       "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
       "schema_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "resource_requirements",
@@ -53,7 +53,7 @@
       "status": "present",
       "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
       "resource_requirements_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "version_lifecycle_metadata",
@@ -61,7 +61,7 @@
       "status": "present",
       "lifecycle_metadata_id": "xiaohongshu.publish-note-precheck.lifecycle",
       "lifecycle_metadata_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "write_deferred_guardrail",
@@ -69,7 +69,7 @@
       "status": "present",
       "guardrail_id": "xiaohongshu.publish-note-precheck.write-deferred-guardrail",
       "guardrail_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "fixture",
@@ -79,7 +79,7 @@
       "fixture_version": "0.1.0",
       "source_shape": "xiaohongshu.publish-note-precheck.source.document-summary@0.1.0",
       "redaction": "summary_only",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "core_consumption_fixture",
@@ -88,7 +88,7 @@
       "fixture_id": "xiaohongshu.publish-note-precheck.core-consumption-fixture",
       "fixture_version": "0.1.0",
       "consumer": "WebEnvoy Core admission and schema validation",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "post_check",
@@ -96,7 +96,7 @@
       "status": "present",
       "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
       "post_check_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "failure_mapping",
@@ -104,7 +104,7 @@
       "status": "present",
       "failure_mapping_id": "xiaohongshu.publish-note-precheck.failure-mapping",
       "failure_mapping_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "catalog_metadata",
@@ -113,7 +113,7 @@
       "catalog_metadata_id": "xiaohongshu.publish-note-precheck.catalog-metadata",
       "catalog_metadata_version": "0.1.0",
       "consumer": "WebEnvoy App Library",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "repair_draft",
@@ -122,7 +122,7 @@
       "repair_draft_id": "xiaohongshu.publish-note-precheck.repair-draft",
       "repair_draft_version": "0.1.0",
       "consumer": "WebEnvoy App repair draft display and WebEnvoy Core failure attribution hints",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "overlay_fork_metadata",
@@ -131,7 +131,7 @@
       "overlay_metadata_id": "xiaohongshu.publish-note-precheck.overlay-fork",
       "overlay_metadata_version": "0.1.0",
       "consumer": "WebEnvoy App invalidation, overlay, fork, and repair draft status display",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     },
     {
       "role": "package_lock",
@@ -140,7 +140,7 @@
       "lock_id": "xiaohongshu.publish-note-precheck.lock",
       "lock_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-236"
     }
   ],
   "lifecycle_metadata": {
@@ -255,26 +255,66 @@
   ],
   "source_knowledge": {
     "status": "absorbed_without_source_copy",
+    "reference_boundary": "Mechanisms, route shapes, field names, failure classes, and evidence requirements only; no bb-sites source code, cookies, account state, raw DOM, HAR, network bodies, screenshots, or production payloads are copied into Lode.",
     "absorbed_locators": [
+      "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
       "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
-      "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/5.6-site-sitemaps.md",
-      "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/21-xiao-hong-shu-ming-ling-mian-sou-suo-xiang-qing-yong-hu-zhu-ye-yu-bian-ji-qi-shu-ru.md",
-      "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/22-shou-kong-shi-shi-xie-ru-fa-bu-zhun-ru-yu-shang-chuan-zheng-ju-bu-huo.md",
-      "research/subjects/rmourey26/WebEnvoy/wiki/versions/HEAD/pages/23-feng-xian-men-jin-zhang-hao-an-quan-yu-xie-ru-mo-ren-suo.md",
+      "sites/xiaohongshu/search-notes/**",
+      "sites/xiaohongshu/read-note-detail/**",
+      "sites/xiaohongshu/publish-note-precheck/**",
+      "registry/local-packages.json",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/index.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/4.1-xiaohongshu-suite.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
       "sources/epiral/bb-sites/xiaohongshu/search.js",
       "sources/epiral/bb-sites/xiaohongshu/note.js",
+      "sources/epiral/bb-sites/xiaohongshu/comments.js",
+      "sources/epiral/bb-sites/xiaohongshu/user_posts.js",
+      "sources/epiral/bb-sites/xiaohongshu/feed.js",
       "sources/epiral/bb-sites/xiaohongshu/me.js"
     ],
+    "forbidden_runtime_material": [
+      "cookie or token material",
+      "profile or runtime session state",
+      "raw DOM, HAR, network response body, or screenshot body",
+      "real publish/upload/save/comment/like/follow actions",
+      "safety-control or captcha bypass"
+    ],
+    "covered_issues": [
+      "#235",
+      "#236",
+      "#237",
+      "#238",
+      "#239"
+    ],
     "absorbed": [
-      "创作中心独立来源、发布页 URL 和内容编辑入口作为页面要求。",
-      "编辑器输入验证、焦点定位、submitted/published 均为 false 的旧写前边界。",
-      "小红书登录、页面就绪、站点风控、签名链接和来源引用作为失败分类与资源要求。"
+      "creator.xiaohongshu.com publish page and www.xiaohongshu.com origin boundary.",
+      "Logged-in identity, publish page, editor target, source refs, and evidence refs as Harbor/Core facts.",
+      "Expected-change preview for note title/body/visibility with external_submit=false.",
+      "Risk hints for user review, target changes, evidence freshness, and no-submit enforcement.",
+      "Post-check plan that verifies expected_change, risk_hints, no_submit_guard_status, source refs, and evidence refs.",
+      "Failure categories for login, permission, page change, target not writable, safety challenge, preview unavailable, user cancellation, and stale evidence."
     ],
     "not_absorbed": [
-      "不复制 bb-sites 或 OpenCLI 源码。",
-      "不接入图片上传、文件选择、草稿保存、发布按钮、定时发布或真实写入流程。",
-      "不保存账号、运行现场、完整页面、网络响应或生产材料。"
-    ],
-    "sensitive_material_policy": "Only public package contracts, locator references, placeholder refs, and redacted fixtures are stored in Lode."
-  }
+      "bb-sites read adapter source code or helper code.",
+      "OpenCLI publish/draft runtime code, file picker, image upload, save draft, publish, scheduled publish, or any submit path.",
+      "raw creator-center DOM, screenshots, HAR, network bodies, account state, or production draft payloads."
+    ]
+  },
+  "covered_issues": [
+    "#235",
+    "#236",
+    "#237",
+    "#238",
+    "#239"
+  ],
+  "anchor_work_item": "LODE-236",
+  "non_goals": [
+    "No login automation or real account access in Lode.",
+    "No bb-sites source copy or runtime adapter migration.",
+    "No cookies, tokens, profile state, runtime session, raw DOM, HAR, screenshot body, network body, production payload, or user business data.",
+    "No publish, upload, save, comment, like, collect, follow, delete, message, or safety-control bypass.",
+    "No Harbor/Core/App code change."
+  ]
 }

@@ -77,11 +77,11 @@
         "recovery_hint": "Use the site origin declared by this package."
       },
       {
-        "code": "input_signed_ref_missing",
-        "field": "url",
-        "lode_failure_class": "signed_ref_missing",
-        "trigger": "detail URL lacks signed follow-up parameter",
-        "recovery_hint": "Use a URL emitted by the search package."
+        "code": "input_invalid_sort",
+        "field": "sort",
+        "lode_failure_class": "input_invalid",
+        "trigger": "sort is outside general/latest/likes/comments/collects",
+        "recovery_hint": "Use a sort value declared by this schema."
       }
     ],
     "forbidden_fields": [
