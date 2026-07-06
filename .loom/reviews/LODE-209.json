@@ -3,34 +3,30 @@
   "item_id": "LODE-209",
   "decision": "allow",
   "kind": "code_review",
-  "summary": "Implementation review accepts the BOSS Zhipin job search and job detail read capability packages, page/login readiness requirements, refs-only fixtures, registry entries, contract docs, failure taxonomy, and validator coverage for Lode #209/#210/#211/#212.",
-  "reviewer": "Codex execution subagent for Lode #199",
-  "authored_at": "2026-07-06T07:20:04Z",
-  "reviewed_head": "c13654e440ffcda4f26307cb4114b139af52b653",
-  "reviewed_validation_summary": "`python3 tools/lode_validate_package.py sites/boss/job-search --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/read-job-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-209 --json`; `loom suite evidence validate --target . --item LODE-209 --json`; `loom suite carrier validate --target . --item LODE-209 --json` passed locally. Hosted py-compile, demo-bootstrap, repo-local-cli, and loom-check passed on PR #224 run 28774629884. Live BOSS page validation remains pending human-owned logged-in runtime and is not fabricated.",
-  "reviewed_validation_summary_hash": "27ed0ba0d738ad9be3cc50c7e83302769efc95b9920101ed9a505e307f8808d4",
+  "summary": "通过：LODE-209 closeout carrier 仅同步 post-merge closeout 与 closed_out 状态，可供 closeout PR 消费。",
+  "reviewer": "codex-main-controller",
+  "authored_at": "2026-07-06T07:25:54Z",
+  "reviewed_head": "aa091dd074bc50ed0a836c511da43aa6728eccc9",
+  "reviewed_validation_summary": "`git diff --check`; `jq empty .loom/bootstrap/init-result.json .loom/reviews/LODE-209.json .loom/reviews/LODE-209.spec.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; closeout evidence comments posted for #199/#209/#210/#211/#212 after PR #224 merged to main at b2a4d0fc703f3d02152df212ded7fccb0d7f8e44. This is a closeout-carrier-only review; it does not change Lode package semantics or claim live BOSS validation.",
+  "reviewed_validation_summary_hash": "48677d874a4547f8cab62e653b76db86265dca0200cc9999b37e82b121061f8b",
   "validation_summary_source": "recovery.latest_validation_summary",
   "validation_summary_locator": ".loom/progress/LODE-209.md",
   "fallback_to": null,
   "findings": [],
   "blocking_issues": [],
-  "follow_ups": [
-    "Real BOSS validation must be run later in a human-owned logged-in Harbor identity session before claiming live-site completion."
-  ],
+  "follow_ups": [],
   "consumed_inputs": {
     "work_item": ".loom/work-items/LODE-209.md",
     "recovery_entry": ".loom/progress/LODE-209.md",
     "suite_evidence_map": ".loom/specs/LODE-209/evidence-map.md",
     "suite_task_carriers": [
       ".loom/specs/LODE-209/task-carrier.md"
-    ]
+    ],
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass"
   },
   "semantic_review_disposition": {
     "status": "passed",
-    "reason": "The package truth is scoped to BOSS read-only capabilities, explicit login/page readiness requirements, refs-only fixtures, and failure classifications; it does not fabricate live evidence or introduce write-side recruitment actions."
-  },
-  "implementation_review_disposition": {
-    "status": "passed",
-    "reason": "Package validators, registry validation, Python compile, diff check, Loom verification, and suite carrier/evidence checks pass locally."
+    "reason": "Closeout carrier review approved the current head for terminal closeout consumption."
   }
 }
