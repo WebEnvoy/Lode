@@ -18,4 +18,4 @@
 - Acceptance Locator: .loom/specs/LODE-197/spec.md
 - Validation Evidence Locator: .loom/specs/LODE-197/evidence-map.md
 - Handoff Notes Locator: .loom/specs/LODE-197/task-carrier.md
-- Evidence Freshness: 当前
+- Evidence Freshness: current
