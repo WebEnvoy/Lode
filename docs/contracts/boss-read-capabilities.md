@@ -1,17 +1,18 @@
 # BOSS Zhipin Read Capability Packages
 
-Status: proposed, 2026-07-06.
+Status: proposed, refreshed for LODE-241 / milestone #14 on 2026-07-06 UTC.
 
 ## Scope
 
-This contract covers Lode #199 and Work Items #209, #210, #211, and #212.
-It implements two repo-local read packages:
+This contract originally covered Lode #199 and Work Items #209, #210, #211,
+and #212. LODE-241 refreshes the BOSS portion for FR #240 and Work Items
+#241, #242, and #244 without claiming live account execution. It covers two
+repo-local read packages:
 
 - `lode://site-capability/boss/job-search@0.1.0`
 - `lode://site-capability/boss/read-job-detail@0.1.0`
 
-Covered semantic stories: #18, #19, and #20 from
-https://github.com/WebEnvoy/Lode/issues/199#issuecomment-4888807564.
+Covered milestone #14 issues: #240, #241, #242, and #244.
 
 ## Runtime Boundary
 
@@ -19,8 +20,9 @@ Lode declares package contracts, resource requirements, fixtures, post-checks,
 and failure classes. Core owns execution and result envelopes. Harbor owns the
 browser identity, runtime session, source refs, and evidence refs.
 
-Real BOSS validation is pending a human-owned logged-in browser session. This
-PR does not fabricate live evidence.
+Real BOSS validation requires a user-owned logged-in browser session and was
+not attempted under LODE-241 because this worker is forbidden to access real
+accounts or real sites. This PR does not fabricate live evidence.
 
 ## Site Readiness
 
@@ -90,8 +92,10 @@ Referenced locators:
 - `sources/epiral/bb-sites/boss/search.js`
 - `sources/epiral/bb-sites/boss/detail.js`
 - `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md`
 - `research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md`
-- `research/subjects/browser-use/browser-harness/wiki/versions/6d208666/pages/4.6-specialized-and-saas-domain-skills.md`
+- `research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md`
 - `docs/adr/0006-xhs-boss-site-knowledge-selection.md`
 
 Absorbed:

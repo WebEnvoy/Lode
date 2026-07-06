@@ -188,7 +188,10 @@
           "lifecycle": "proposed",
           "manifest_path": "sites/boss/job-search/manifest.json",
           "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
-          "live_validation": "pending_human_runtime"
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "status": "real_site_contract_ready",
+          "required_runtime_owner": "Core/Harbor",
+          "evidence_policy": "refs_only_no_raw_bodies"
         },
         {
           "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
@@ -200,9 +203,20 @@
           "lifecycle": "proposed",
           "manifest_path": "sites/boss/read-job-detail/manifest.json",
           "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
-          "live_validation": "pending_human_runtime"
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "status": "real_site_contract_ready",
+          "required_runtime_owner": "Core/Harbor",
+          "evidence_policy": "refs_only_no_raw_bodies"
         }
-      ]
+      ],
+      "covered_issues": [
+        "#240",
+        "#241",
+        "#242",
+        "#244"
+      ],
+      "live_validation": "not_attempted_real_account_access_forbidden",
+      "evidence_policy": "refs_only_no_raw_bodies"
     },
     {
       "query_id": "real-page-write-precheck-packages",
@@ -271,7 +285,7 @@
           "true_write_execution": "blocked",
           "write_pre_candidate": {
             "candidate_id": "boss.greet-precheck.write-pre-candidate",
-            "candidate_status": "selected_real_site_write_precheck_fixture",
+            "candidate_status": "selected_real_site_write_precheck_contract_ready",
             "selection_reason": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
             "supported_stage6_modes": [
               "validate_only",
@@ -292,7 +306,15 @@
             "post_check_id": "boss.greet-precheck.post-check",
             "lifecycle": "proposed",
             "operation_mode": "validate_only"
-          }
+          },
+          "status": "real_site_write_precheck_contract_ready",
+          "covered_issues": [
+            "#240",
+            "#243",
+            "#244"
+          ],
+          "live_validation": "not_attempted_real_account_access_forbidden",
+          "evidence_policy": "refs_only_no_raw_bodies"
         }
       ]
     },
@@ -362,6 +384,78 @@
             ],
             "draft_preview_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/publish-note-precheck.fixture.json",
             "core_consumption_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/core-consumption.fixture.json"
+          }
+        }
+      ],
+      "live_validation": "not_attempted_real_account_access_forbidden",
+      "evidence_policy": "refs_only_no_raw_bodies"
+    },
+    {
+      "query_id": "boss-fr-240-real-site-capabilities",
+      "purpose": "Expose the LODE-241 anchored BOSS FR #240 package batch for Core/App discovery.",
+      "filters": {
+        "site_slug": "boss",
+        "covered_issue": "#240"
+      },
+      "covered_issues": [
+        "#240",
+        "#241",
+        "#242",
+        "#243",
+        "#244"
+      ],
+      "results": [
+        {
+          "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+          "capability_id": "job-search",
+          "operation_id": "boss_job_search",
+          "operation_mode": "read",
+          "manifest_path": "sites/boss/job-search/manifest.json",
+          "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+          "status": "real_site_contract_ready",
+          "covers": [
+            "#241",
+            "#244"
+          ]
+        },
+        {
+          "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+          "capability_id": "read-job-detail",
+          "operation_id": "boss_read_job_detail",
+          "operation_mode": "read",
+          "manifest_path": "sites/boss/read-job-detail/manifest.json",
+          "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+          "status": "real_site_contract_ready",
+          "covers": [
+            "#242",
+            "#244"
+          ]
+        },
+        {
+          "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+          "capability_id": "greet-precheck",
+          "operation_id": "boss_greet_precheck",
+          "operation_mode": "validate_only",
+          "manifest_path": "sites/boss/greet-precheck/manifest.json",
+          "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+          "status": "real_site_write_precheck_contract_ready",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked",
+          "covers": [
+            "#243",
+            "#244"
+          ],
+          "write_pre_candidate": {
+            "candidate_id": "boss.greet-precheck.write-pre-candidate",
+            "candidate_status": "selected_real_site_write_precheck_contract_ready",
+            "selection_reason": "BOSS job or recruiter communication target precheck with expected change, risk hints, and no-submit guard.",
+            "supported_stage6_modes": [
+              "validate_only",
+              "draft",
+              "preview"
+            ],
+            "draft_preview_fixture_path": "sites/boss/greet-precheck/fixtures/greet-precheck.fixture.json",
+            "core_consumption_fixture_path": "sites/boss/greet-precheck/fixtures/core-consumption.fixture.json"
           }
         }
       ],

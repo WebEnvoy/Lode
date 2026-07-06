@@ -263,8 +263,8 @@
       "resource requirement profile changes",
       "validator report fails after GH-96 validator coverage exists",
       "post-check validation fails",
-      "Core fixture consumption fails after LODE-213",
-      "write deferred guardrail validation fails after LODE-213",
+      "Core fixture consumption fails after LODE-241",
+      "write deferred guardrail validation fails after LODE-241",
       "package lock validation fails"
     ],
     "evidence_boundary": "Invalidation notes may point to redacted fixtures, review notes, or external Core/Harbor evidence refs. They must not inline live evidence, raw payloads, runtime session state, credentials, or user business data."

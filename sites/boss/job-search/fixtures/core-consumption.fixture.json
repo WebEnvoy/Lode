@@ -7,7 +7,7 @@
   "capability_id": "job-search",
   "operation_id": "boss_job_search",
   "operation_mode": "read",
-  "work_item": "LODE-210",
+  "work_item": "LODE-241",
   "purpose": "Repo-local fixture Core can read for package admission and schema validation without executing runtime behavior.",
   "owner_boundary": {
     "fixture_owner": "Lode",
