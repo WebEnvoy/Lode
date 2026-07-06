@@ -3,12 +3,12 @@
   "item_id": "LODE-197",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "通过：范围、非目标、语义故事和验证证据与 Lode #197/#201/#202/#203/#204/#217 一致；本审查只覆盖站点知识选择文档和事项载体，不代表 #198/#199/#200 能力实现完成。",
+  "summary": "通过：LODE-197 closeout carrier 只记录 PR #218 合并、issue closeout 和 closed_out 状态，不扩大产品语义。",
   "reviewer": "codex-main-controller",
-  "authored_at": "2026-07-06T05:00:54Z",
-  "reviewed_head": "9eb572e0d3f046301e05f1bfd89df3819b63cea7",
-  "reviewed_validation_summary": "`git diff --check`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `loom doctor --target . --json`; `loom verify --target . --json`; `loom fact-chain --target . --json`; `loom suite validate --target . --item LODE-197 --json`; `loom suite evidence validate --target . --item LODE-197 --json`; `loom suite carrier validate --target . --item LODE-197 --json` 本地通过。初始 `loom suite validate` 和 `loom suite evidence validate` 暴露过载体形态缺口，已在最终重跑前修正。`loom verify` 报 Codex 插件运行环境缓存过期，但 CLI/source payload 是当前版本；归类为 host runtime cache surface，不是仓库代码阻断项。",
-  "reviewed_validation_summary_hash": "5a6948ab0b164d7ea70c7659eda77a32c2fecc83028f2edeebbd209423aaa40f",
+  "authored_at": "2026-07-06T05:29:51Z",
+  "reviewed_head": "3a56037cab0287819f33b99fd1e9d705c9045efa",
+  "reviewed_validation_summary": "`git diff --check`; `jq empty .loom/bootstrap/init-result.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; local `loom pr gate --surface closeout` passed for PR #219. This is a closeout-carrier-only review; it does not change Lode product semantics or implement #198/#199/#200.",
+  "reviewed_validation_summary_hash": "0ab24c9aee6b81d0c46ea3b5e285c9bf10bd892f9062dcc211f578a0b17ac2a3",
   "validation_summary_source": "recovery.latest_validation_summary",
   "validation_summary_locator": ".loom/progress/LODE-197.md",
   "fallback_to": null,
@@ -50,5 +50,9 @@
       "docs/methodology/harness/full-spec-suite-cli-surface.md",
       "docs/methodology/templates/spec-suite.md"
     ]
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Closeout carrier review approved the current head for terminal closeout consumption."
   }
 }
