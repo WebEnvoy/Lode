@@ -10,7 +10,7 @@
 - Recovery Entry: .loom/progress/LODE-213.md
 - Review Entry: .loom/reviews/LODE-213.json
 - Validation Entry: package validator; registry checks; sensitive-material scan; git diff --check; loom verify; loom fact-chain; loom suite checks.
-- Closing Condition: Implementation PR is non-draft and PR Ready for main controller review. Merge, issue closeout, and current pointer retirement remain out of scope for this execution subagent.
+- Closing Condition: Implementation PR merged, #200/#213/#214/#215/#216 closeout evidence posted, and current pointer returns to no_active_item.
 
 ## Covered Work Items
 

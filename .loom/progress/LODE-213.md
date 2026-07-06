@@ -3,12 +3,12 @@
 ## Dynamic Facts
 
 - Item ID: LODE-213
-- Current Checkpoint: implementation
-- Current Stop: Non-draft implementation PR #227 is open. Local validation passed, PR metadata preflight passed, and hosted checks started. Hosted `loom-pr-merge-gate` is blocked on missing current-head review artifacts, which is a merge-ready/review gate blocker for the main controller, not a package implementation failure.
-- Next Step: main controller should run current-head spec/implementation review and merge-ready flow; this execution subagent must not merge, close issues, or fabricate review artifacts.
+- Current Checkpoint: closed_out
+- Current Stop: PR #227 已合并，#200/#213/#214/#215/#216 已写入 post-merge closeout evidence 并关闭。
+- Next Step: no_active_item；Lode milestone #13 已无 open issue，可由主控线程关闭 milestone。
 - Blockers: None recorded.
-- Latest Validation Summary: package validators passed for Xiaohongshu publish-note precheck and BOSS greet precheck; registry batch validation passed for 10 packages; sensitive-material key scan passed for new write-precheck packages; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py` passed and generated cache was removed; `git diff --check` passed; `loom suite validate --target . --item LODE-213 --json` passed; `loom suite evidence validate --target . --item LODE-213 --json` passed; `loom suite carrier validate --target . --item LODE-213 --json` passed; `loom fact-chain --target . --json` passed; `loom verify --target . --json` passed with runtime cache stale advisory only; PR metadata preflight passed after PR body readback; hosted run 28777921930 passed `py-compile`, `demo-bootstrap`, `loom-check`, and `repo-local-cli`, while `loom-pr-merge-gate` blocked on missing review artifacts `.loom/reviews/LODE-213.json` and `.loom/reviews/LODE-213.spec.json`.
-- Recovery Boundary: Lode package/catalog/fixture/contract truth only; no Xiaohongshu publish/save/upload, no BOSS greet/chat/send/apply, no real account access, no live site evidence, no Harbor/Core/App changes, no `sources/`/`research/` edits, no merge or issue closeout.
+- Latest Validation Summary: `git diff --check`; `jq empty .loom/reviews/LODE-213.json .loom/reviews/LODE-213.spec.json`; `loom fact-chain --target . --json`; `loom verify --target . --json`; closeout evidence comments posted for #200/#213/#214/#215/#216 after PR #227 merged to main at 98f157ec07db762204e9208ed8ad75129b5bfc52. This is a closeout-carrier-only review; it does not change Lode package semantics or claim live Xiaohongshu/BOSS validation.
+- Recovery Boundary: Lode package/catalog/fixture/contract truth only; no Xiaohongshu publish/save/upload, no BOSS greet/chat/send/apply, no real account access, no live site evidence, no Harbor/Core/App changes, no `sources/`/`research/` edits.
 - Current Lane: FR #200 real-page write-precheck capability batch
 
 ## Execution Ledger
@@ -48,10 +48,10 @@
 - PR: https://github.com/WebEnvoy/Lode/pull/227
 - Branch: work/lode-200-write-precheck-capabilities
 - Target Branch: main
-- PR State: open, non-draft implementation PR
-- Merge / Issue Closeout: out of scope for this execution subagent
-- Hosted Run Evidence: https://github.com/WebEnvoy/Lode/actions/runs/28777921930
-- Hosted Check Classification: implementation checks passed in the recorded run; `loom-pr-merge-gate` is blocked because current-head review/spec-review artifacts are missing and semantic review disposition is absent. A carrier-only push may create a newer run with the same merge-gate blocker.
+- PR State: merged
+- Merge / Issue Closeout: PR #227 merged; #200/#213/#214/#215/#216 closed with post-merge closeout evidence.
+- Hosted Run Evidence: https://github.com/WebEnvoy/Lode/actions/runs/28778302784
+- Hosted Check Classification: implementation PR #227 hosted checks passed after current-head review carrier was added.
 
 ## Blockers
 
@@ -59,4 +59,14 @@
 
 ## Next Step
 
-Main controller should run current-head spec/implementation review and merge-ready flow. Execution subagent stops at PR Ready and leaves merge/closeout untouched.
+Return current pointer to no_active_item after closeout carrier lands on main.
+
+## Terminal Closeout Metadata
+
+- Terminal State: closed_out
+- Issue: #200
+- PR: #227
+- Merge Commit: 98f157ec07db762204e9208ed8ad75129b5bfc52
+- Target Branch: main
+- Closed At: 2026-07-06T08:30:30Z
+- Evidence Locator: GitHub issue closeout comments on #200, #213, #214, #215, and #216
