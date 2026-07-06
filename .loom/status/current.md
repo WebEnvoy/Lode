@@ -6,7 +6,7 @@
 - Goal: 吸收 bb-sites 小红书/BOSS 站点知识并冻结 Lode 首批真实站点能力边界。
 - Scope: 覆盖 Lode #230/#231/#232/#233/#234；只修改 Lode 文档和 LODE-231 事实载体。
 - Execution Path: work/lode-231-bb-sites-knowledge
-- Workspace Entry: /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-231-bb-sites-knowledge
+- Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-231.md
 - Review Entry: .loom/reviews/LODE-231.json
 - Validation Entry: python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; git diff --check; loom fact-chain/verify/suite checks
