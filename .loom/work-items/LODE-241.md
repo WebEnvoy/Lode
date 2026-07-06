@@ -6,7 +6,7 @@
 - Goal: Implement the BOSS real read and write-precheck package batch for FR #240.
 - Scope: Covers GitHub issues #240, #241, #242, #243, and #244. Ownership is limited to BOSS package assets, local registry fixtures, package contracts, and LODE-241 Loom carriers. It refreshes `job-search`, `read-job-detail`, and `greet-precheck` as consumable real-site capability definitions with refs-only evidence requirements and no-submit write-precheck boundaries.
 - Execution Path: work/lode-241-boss-real-read-write-precheck
-- Workspace Entry: /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-241-boss-real-read-write-precheck
+- Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-241.md
 - Review Entry: .loom/reviews/LODE-241.json
 - Validation Entry: package validator, registry validation, py_compile, JSON readability, git diff --check, Loom fact-chain, Loom verify, suite validation, and PR metadata readback.

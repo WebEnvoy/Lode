@@ -3,11 +3,11 @@
 ## Dynamic Facts
 
 - Item ID: LODE-241
-- Current Checkpoint: build
-- Current Stop: BOSS package assets, registry entries, contract docs, and LODE-241 carrier are being refreshed for PR Ready.
-- Next Step: Run package validators, registry validation, JSON readability, git diff check, Loom checks, commit, push, create PR, and stop.
+- Current Checkpoint: merge_ready
+- Current Stop: PR #250 is ready for current-head review and merge gate after controller carrier refresh.
+- Next Step: Run gate, merge PR #250 if checks pass, then create closeout/retire lane and close #241-#244 plus parent #240 with post-merge evidence.
 - Blockers: None recorded.
-- Latest Validation Summary: 2026-07-06T17:18Z local package, registry, JSON, py_compile, diff, fact-chain, verify, and suite checks passed for the current worktree state before PR creation.
+- Latest Validation Summary: `python3 tools/lode_validate_package.py sites/boss/job-search --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/read-job-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; JSON readability; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-241 --json`; `loom suite evidence validate --target . --item LODE-241 --json`; `loom suite carrier validate --target . --item LODE-241 --json` passed locally.
 - Recovery Boundary: Lode package/catalog/fixture/contract truth only; no BOSS real account access, no live site evidence, no apply/greet/chat/send/save/upload/candidate-management actions, no safety-control bypass, no Harbor/Core/App changes, no `sources/` or `research/` edits.
 - Current Lane: FR #240 BOSS real read and write-precheck capability batch
 
