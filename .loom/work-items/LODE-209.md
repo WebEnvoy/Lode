@@ -10,7 +10,7 @@
 - Recovery Entry: .loom/progress/LODE-209.md
 - Review Entry: .loom/reviews/LODE-209.json
 - Validation Entry: package validator; registry checks; py_compile; git diff --check; loom verify; loom fact-chain; loom suite checks.
-- Closing Condition: Implementation PR created and checks recorded. Execution subagent must not merge PR or close #199/#209/#210/#211/#212.
+- Closing Condition: Implementation PR merged, #199/#209/#210/#211/#212 closeout evidence posted, and current pointer returns to no_active_item.
 
 ## Covered Work Items
 
