@@ -3,14 +3,14 @@
 ## Static Facts
 
 - Item ID: LODE-231
-- Goal: Absorb bb-sites Xiaohongshu/BOSS site knowledge and freeze the first real-site capability boundary for Lode #230.
-- Scope: Covers Lode #230/#231/#232/#233/#234. Ownership is limited to Lode docs and item-specific Loom carriers for bb-sites absorption, field mapping, license/copy boundary, first-batch read/write-precheck capability boundary, and pre-execution user confirmation.
-- Execution Path: lode-231-bb-sites-knowledge
+- Goal: 吸收 bb-sites 小红书/BOSS 站点知识并冻结 Lode 首批真实站点能力边界。
+- Scope: 覆盖 Lode #230/#231/#232/#233/#234；只修改 Lode 文档和 LODE-231 事实载体。
+- Execution Path: work/lode-231-bb-sites-knowledge
 - Workspace Entry: /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-231-bb-sites-knowledge
 - Recovery Entry: .loom/progress/LODE-231.md
 - Review Entry: .loom/reviews/LODE-231.json
-- Validation Entry: git diff --check; package validator batch; JSON readability; loom verify/fact-chain/suite checks where available.
-- Closing Condition: PR ready for review. Merge, issue closeout, and milestone closeout remain out of scope for this execution thread.
+- Validation Entry: python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json; git diff --check; loom fact-chain/verify/suite checks
+- Closing Condition: PR 合并，#231-#234 与 #230 写入 closeout evidence 并关闭，随后 current pointer 回到 no_active_item。
 
 ## Covered Work Items
 

@@ -3,12 +3,12 @@
 ## Dynamic Facts
 
 - Item ID: LODE-231
-- Current Checkpoint: build
-- Current Stop: Local validation passed; ready to commit, push, and open PR.
-- Next Step: commit, push, create PR, then read back PR metadata and head SHA.
+- Current Checkpoint: merge_ready
+- Current Stop: PR #246 已创建，等待主控 review 与 hosted gate。
+- Next Step: 合并 PR #246 后写 closeout evidence。
 - Blockers: None recorded.
-- Latest Validation Summary: `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json` passed for 10 packages; `git diff --check` passed; readability check for new docs/carriers passed; `loom fact-chain --target . --json` passed; `loom verify --target . --json` passed with a Codex runtime cache stale advisory only; `loom suite validate --target . --item LODE-231 --json` passed; `loom suite evidence validate --target . --item LODE-231 --json` passed; `loom suite carrier validate --target . --item LODE-231 --json` passed.
-- Recovery Boundary: Lode docs and item-specific Loom carrier only; no bb-sites source copy, no runtime execution, no real account access, no live evidence, no Harbor/Core/App changes.
+- Latest Validation Summary: `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-231 --json`; `loom suite evidence validate --target . --item LODE-231 --json`; `loom suite carrier validate --target . --item LODE-231 --json` passed locally.
+- Recovery Boundary: Lode 文档和 item-specific Loom carrier only；不复制 bb-sites 源码，不访问真实账号，不生成真实证据，不修改 Harbor/Core/App。
 - Current Lane: FR #230 bb-sites site-knowledge absorption freeze.
 
 ## Execution Ledger
