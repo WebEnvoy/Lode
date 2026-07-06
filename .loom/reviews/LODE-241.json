@@ -1,0 +1,21 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-241",
+  "reviewed_head": "dcf6c98ed908ca6f163796e1728b01791aa394b2",
+  "reviewed_validation_summary": "`python3 tools/lode_validate_package.py sites/boss/job-search --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/read-job-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; JSON readability; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-241 --json`; `loom suite evidence validate --target . --item LODE-241 --json`; `loom suite carrier validate --target . --item LODE-241 --json` passed locally.",
+  "reviewed_validation_summary_hash": "bc75df3d6bc9fc59ea9b7dc8acf34ce610d1f7a8a554baa0366e0a252ede7874",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-241.md",
+  "decision": "allow",
+  "kind": "code_review",
+  "reviewer": "Codex master controller thread 019f2731-5b28-72d1-897e-8d1199e94fdc",
+  "authored_at": "2026-07-06T17:24:00Z",
+  "summary": "Implementation review accepts the BOSS read and write-precheck package batch for Lode #240/#241/#242/#243/#244.",
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "The package updates turn bb-sites BOSS research into Lode-owned package metadata, schemas, fixtures, post-checks, failure classes, and no-submit write-precheck semantics without copying source code or storing sensitive runtime material."
+  }
+}

@@ -36,7 +36,7 @@
       "status": "present",
       "schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
       "schema_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "normalized_output_schema",
@@ -44,7 +44,7 @@
       "status": "present",
       "schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
       "schema_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "resource_requirements",
@@ -52,7 +52,7 @@
       "status": "present",
       "resource_requirements_id": "boss.greet-precheck.resources",
       "resource_requirements_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "version_lifecycle_metadata",
@@ -60,7 +60,7 @@
       "status": "present",
       "lifecycle_metadata_id": "boss.greet-precheck.lifecycle",
       "lifecycle_metadata_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "write_deferred_guardrail",
@@ -68,7 +68,7 @@
       "status": "present",
       "guardrail_id": "boss.greet-precheck.write-deferred-guardrail",
       "guardrail_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "fixture",
@@ -78,7 +78,7 @@
       "fixture_version": "0.1.0",
       "source_shape": "boss.greet-precheck.source.document-summary@0.1.0",
       "redaction": "summary_only",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "core_consumption_fixture",
@@ -87,7 +87,7 @@
       "fixture_id": "boss.greet-precheck.core-consumption-fixture",
       "fixture_version": "0.1.0",
       "consumer": "WebEnvoy Core admission and schema validation",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "post_check",
@@ -95,7 +95,7 @@
       "status": "present",
       "post_check_id": "boss.greet-precheck.post-check",
       "post_check_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "failure_mapping",
@@ -103,7 +103,7 @@
       "status": "present",
       "failure_mapping_id": "boss.greet-precheck.failure-mapping",
       "failure_mapping_version": "0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "catalog_metadata",
@@ -112,7 +112,7 @@
       "catalog_metadata_id": "boss.greet-precheck.catalog-metadata",
       "catalog_metadata_version": "0.1.0",
       "consumer": "WebEnvoy App Library",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "repair_draft",
@@ -121,7 +121,7 @@
       "repair_draft_id": "boss.greet-precheck.repair-draft",
       "repair_draft_version": "0.1.0",
       "consumer": "WebEnvoy App repair draft display and WebEnvoy Core failure attribution hints",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "overlay_fork_metadata",
@@ -130,7 +130,7 @@
       "overlay_metadata_id": "boss.greet-precheck.overlay-fork",
       "overlay_metadata_version": "0.1.0",
       "consumer": "WebEnvoy App invalidation, overlay, fork, and repair draft status display",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     },
     {
       "role": "package_lock",
@@ -139,7 +139,7 @@
       "lock_id": "boss.greet-precheck.lock",
       "lock_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
-      "work_item": "LODE-213"
+      "work_item": "LODE-241"
     }
   ],
   "lifecycle_metadata": {
@@ -199,7 +199,7 @@
   },
   "sample_read_package": {
     "status": "replaced_by_real_site_write_precheck_package",
-    "work_item": "LODE-213",
+    "work_item": "LODE-241",
     "sample_role": "real_site_write_precheck_candidate",
     "selection_rationale": [
       "职位搜索和详情结果中的 securityId、encryptJobId、职位、公司和招聘者摘要作为沟通目标引用。",
@@ -255,11 +255,15 @@
   "source_knowledge": {
     "status": "absorbed_without_source_copy",
     "absorbed_locators": [
+      "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
       "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
       "sources/epiral/bb-sites/boss/search.js",
       "sources/epiral/bb-sites/boss/detail.js",
-      "research/subjects/jackwener/OpenCLI/wiki/versions/raw/pages/3.1-built-in-commands-reference.md",
-      "research/subjects/Panniantong/Agent-Reach/wiki/versions/raw/pages/3.9-instagram-linkedin-and-boss-channels.md"
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+      "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+      "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md",
+      "research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md"
     ],
     "absorbed": [
       "职位搜索和详情结果中的 securityId、encryptJobId、职位、公司和招聘者摘要作为沟通目标引用。",

@@ -7,7 +7,7 @@
   "capability_id": "greet-precheck",
   "operation_id": "boss_greet_precheck",
   "operation_mode": "validate_only",
-  "work_item": "LODE-213",
+  "work_item": "LODE-241",
   "purpose": "Repo-local fixture that WebEnvoy Core can read for write-precheck admission and schema validation without executing runtime behavior.",
   "owner_boundary": {
     "fixture_owner": "Lode",

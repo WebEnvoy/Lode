@@ -6,7 +6,7 @@
   "capability_id": "greet-precheck",
   "operation_id": "boss_greet_precheck",
   "operation_mode": "validate_only",
-  "work_item": "LODE-213",
+  "work_item": "LODE-241",
   "guardrail": {
     "status": "active",
     "applies_to_operation_modes": [

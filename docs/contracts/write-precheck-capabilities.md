@@ -1,8 +1,9 @@
 # 真实页面写前验证能力
 
 本合同原覆盖 GitHub #200/#213/#214/#215/#216。LODE-236 在 milestone #14 下
-刷新小红书部分以覆盖 FR #235/#238/#239。Lode 提供能力包、结构定义、脱敏固定样本、
-后置检查、失败分类和本地登记表发现能力；Core/App/Harbor 后续可消费这些事实生成写前预览。
+刷新小红书部分以覆盖 FR #235/#238/#239；LODE-241 刷新 BOSS 部分以覆盖
+FR #240/#243/#244。Lode 提供能力包、结构定义、脱敏固定样本、后置检查、
+失败分类和本地登记表发现能力；Core/App/Harbor 后续可消费这些事实生成写前预览。
 本合同不授权真实发布、投递、打招呼、发送消息、上传或保存到外部站点。
 
 ## 能力包
@@ -63,16 +64,29 @@ LODE-236 小红书写前验证补充：
 
 BOSS 吸收：
 
+- `docs/contracts/bb-sites-xhs-boss-absorption-freeze.md`
 - `docs/adr/0006-xhs-boss-site-knowledge-selection.md`
 - `sources/epiral/bb-sites/boss/search.js`
 - `sources/epiral/bb-sites/boss/detail.js`
-- `research/subjects/jackwener/OpenCLI/wiki/versions/raw/pages/3.1-built-in-commands-reference.md`
-- `research/subjects/Panniantong/Agent-Reach/wiki/versions/raw/pages/3.9-instagram-linkedin-and-boss-channels.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md`
+- `research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md`
+- `research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md`
+- `research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md`
 
 吸收内容：职位搜索/详情中的 `securityId`、`encryptJobId`、职位、公司和招聘者摘要作为
 沟通目标引用；greet/send/batchgreet 等写侧命令只作为必须阻断真实动作的站点表面；
 登录、职位下架、目标不可写、页面变化和沟通入口缺失作为失败分类。未吸收：源码复制、
 打招呼、批量打招呼、发送消息、投递简历和聊天动作。
+
+LODE-241 BOSS 写前验证补充：
+
+- `greet-precheck` 只声明 `validate_only`，`no_submit_guard: active`，
+  `true_write_execution: blocked`。
+- 输出必须包含沟通目标引用、拟输入公共摘要、`expected_change`、`risk_hints`、
+  `no_submit_guard_status`、`source_refs` 和 `evidence_refs`。
+- 后置检查计划只验证目标仍可定位、预期变更仍是 preview、外部提交仍为 false、
+  source/evidence 仍为 refs-only。
 
 ## 非目标
 

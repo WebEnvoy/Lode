@@ -245,7 +245,7 @@
       }
     ],
     "source_refs_required": true,
-    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_LODE-213_post_check_output"
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_LODE-241_post_check_output"
   },
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_by_GH-96_validator",

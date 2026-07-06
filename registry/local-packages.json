@@ -597,7 +597,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T17:07:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -610,23 +610,32 @@
         "status": "self_for_initial_version"
       },
       "real_site_read_package": {
-        "status": "fixture_present_live_pending",
-        "work_item": "LODE-210",
+        "status": "real_site_contract_ready",
+        "work_item": "LODE-241",
         "covered_work_items": [
-          "LODE-209",
-          "LODE-210",
-          "LODE-211",
-          "LODE-212"
+          "LODE-241",
+          "LODE-244"
         ],
         "semantic_stories": [
-          "#18",
-          "#19",
-          "#20"
+          "#240",
+          "#241",
+          "#244"
         ],
         "fixture_path": "sites/boss/job-search/fixtures/job-search.fixture.json",
         "core_consumption_fixture_path": "sites/boss/job-search/fixtures/core-consumption.fixture.json",
         "catalog_metadata_path": "sites/boss/job-search/catalog-metadata.json",
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in BOSS Zhipin browser session."
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, BOSS search/detail follow-up refs, and refs-only evidence requirements. Live runtime validation was not attempted because this Work Item forbids real account access.",
+        "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "sources/epiral/bb-sites/boss/search.js",
+          "sources/epiral/bb-sites/boss/detail.js",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+          "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md",
+          "research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md"
+        ]
       },
       "asset_roles": [
         "input_schema",
@@ -653,8 +662,15 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-210",
-      "lock_work_item": "LODE-210"
+      "work_item": "LODE-241",
+      "lock_work_item": "LODE-241",
+      "anchor_work_item": "LODE-241",
+      "covered_issues": [
+        "#240",
+        "#241",
+        "#244"
+      ],
+      "milestone": "#14"
     },
     {
       "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
@@ -676,7 +692,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T17:07:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -689,23 +705,32 @@
         "status": "self_for_initial_version"
       },
       "real_site_read_package": {
-        "status": "fixture_present_live_pending",
-        "work_item": "LODE-211",
+        "status": "real_site_contract_ready",
+        "work_item": "LODE-241",
         "covered_work_items": [
-          "LODE-209",
-          "LODE-210",
-          "LODE-211",
-          "LODE-212"
+          "LODE-242",
+          "LODE-244"
         ],
         "semantic_stories": [
-          "#18",
-          "#19",
-          "#20"
+          "#240",
+          "#242",
+          "#244"
         ],
         "fixture_path": "sites/boss/read-job-detail/fixtures/read-job-detail.fixture.json",
         "core_consumption_fixture_path": "sites/boss/read-job-detail/fixtures/core-consumption.fixture.json",
         "catalog_metadata_path": "sites/boss/read-job-detail/catalog-metadata.json",
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in BOSS Zhipin browser session."
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, BOSS search/detail follow-up refs, and refs-only evidence requirements. Live runtime validation was not attempted because this Work Item forbids real account access.",
+        "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
+          "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+          "sources/epiral/bb-sites/boss/search.js",
+          "sources/epiral/bb-sites/boss/detail.js",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+          "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md",
+          "research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md"
+        ]
       },
       "asset_roles": [
         "input_schema",
@@ -732,8 +757,15 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-211",
-      "lock_work_item": "LODE-211"
+      "work_item": "LODE-241",
+      "lock_work_item": "LODE-241",
+      "anchor_work_item": "LODE-241",
+      "covered_issues": [
+        "#240",
+        "#242",
+        "#244"
+      ],
+      "milestone": "#14"
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
@@ -870,7 +902,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T00:00:00Z",
+      "updated_at": "2026-07-06T17:07:00Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -907,18 +939,19 @@
           "unsupported_version"
         ]
       },
-      "work_item": "LODE-213",
-      "lock_work_item": "LODE-213",
+      "work_item": "LODE-241",
+      "lock_work_item": "LODE-241",
       "write_precheck_package": {
-        "status": "selected",
-        "work_item": "LODE-213",
+        "status": "selected_real_site_write_precheck_contract_ready",
+        "work_item": "LODE-241",
         "covered_work_items": [
-          "LODE-214",
-          "LODE-215",
-          "LODE-216"
+          "LODE-243",
+          "LODE-244"
         ],
         "semantic_stories": [
-          "#22"
+          "#240",
+          "#243",
+          "#244"
         ],
         "operation_modes": [
           "validate_only",
@@ -932,14 +965,30 @@
         "resource_requirements_path": "sites/boss/greet-precheck/resource-requirements.json",
         "guardrail_path": "sites/boss/greet-precheck/write-deferred-guardrail.json",
         "source_knowledge_locators": [
+          "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
           "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
           "sources/epiral/bb-sites/boss/search.js",
           "sources/epiral/bb-sites/boss/detail.js",
-          "research/subjects/jackwener/OpenCLI/wiki/versions/raw/pages/3.1-built-in-commands-reference.md",
-          "research/subjects/Panniantong/Agent-Reach/wiki/versions/raw/pages/3.9-instagram-linkedin-and-boss-channels.md"
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+          "research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
+          "research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md",
+          "research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md"
         ],
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping for write-precheck preview only. This package does not save, publish, apply, greet, or send."
-      }
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, expected-change/risk/no-submit fields, and post-check plans for BOSS greet write-precheck preview only. This package does not save, apply, greet, chat, or send.",
+        "covered_issues": [
+          "#240",
+          "#243",
+          "#244"
+        ]
+      },
+      "anchor_work_item": "LODE-241",
+      "covered_issues": [
+        "#240",
+        "#243",
+        "#244"
+      ],
+      "milestone": "#14"
     }
   ],
   "non_goals": [

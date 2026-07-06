@@ -34,7 +34,7 @@
       "role": "input_schema",
       "path": "schemas/input.schema.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "schema_id": "lode://schema/site-capability/boss/read-job-detail/input@0.1.0",
       "schema_version": "0.1.0"
     },
@@ -42,7 +42,7 @@
       "role": "normalized_output_schema",
       "path": "schemas/output.schema.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
       "schema_version": "0.1.0"
     },
@@ -50,7 +50,7 @@
       "role": "resource_requirements",
       "path": "resource-requirements.json",
       "status": "present",
-      "work_item": "LODE-209",
+      "work_item": "LODE-241",
       "resource_requirements_id": "boss.read-job-detail.resources",
       "resource_requirements_version": "0.1.0"
     },
@@ -58,7 +58,7 @@
       "role": "version_lifecycle_metadata",
       "path": "lifecycle-metadata.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "lifecycle_metadata_id": "boss.read-job-detail.lifecycle",
       "lifecycle_metadata_version": "0.1.0"
     },
@@ -66,7 +66,7 @@
       "role": "write_deferred_guardrail",
       "path": "write-deferred-guardrail.json",
       "status": "present",
-      "work_item": "LODE-212",
+      "work_item": "LODE-241",
       "guardrail_id": "boss.read-job-detail.write-deferred-guardrail",
       "guardrail_version": "0.1.0"
     },
@@ -74,7 +74,7 @@
       "role": "fixture",
       "path": "fixtures/read-job-detail.fixture.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "fixture_id": "boss.read-job-detail.fixture",
       "fixture_version": "0.1.0",
       "source_shape": "boss.read-job-detail.source.wapi-detail-summary",
@@ -84,7 +84,7 @@
       "role": "core_consumption_fixture",
       "path": "fixtures/core-consumption.fixture.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "fixture_id": "boss.read-job-detail.core-consumption-fixture",
       "fixture_version": "0.1.0",
       "consumer": "WebEnvoy Core admission and schema validation"
@@ -93,7 +93,7 @@
       "role": "post_check",
       "path": "checks/post-check.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "post_check_id": "boss.read-job-detail.post-check",
       "post_check_version": "0.1.0"
     },
@@ -101,7 +101,7 @@
       "role": "failure_mapping",
       "path": "failure-mapping.json",
       "status": "present",
-      "work_item": "LODE-212",
+      "work_item": "LODE-241",
       "failure_mapping_id": "boss.read-job-detail.failure-mapping",
       "failure_mapping_version": "0.1.0"
     },
@@ -109,7 +109,7 @@
       "role": "catalog_metadata",
       "path": "catalog-metadata.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "catalog_metadata_id": "boss.read-job-detail.catalog-metadata",
       "catalog_metadata_version": "0.1.0"
     },
@@ -117,7 +117,7 @@
       "role": "repair_draft",
       "path": "repair/repair-draft.fixture.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "repair_draft_id": "boss.read-job-detail.repair-draft",
       "repair_draft_version": "0.1.0"
     },
@@ -125,7 +125,7 @@
       "role": "overlay_fork_metadata",
       "path": "repair/overlay-fork-metadata.fixture.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "overlay_metadata_id": "boss.read-job-detail.overlay-fork",
       "overlay_metadata_version": "0.1.0"
     },
@@ -133,7 +133,7 @@
       "role": "package_lock",
       "path": "package-lock.json",
       "status": "present",
-      "work_item": "LODE-211",
+      "work_item": "LODE-241",
       "lock_id": "boss.read-job-detail.lock",
       "lock_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0"
@@ -145,8 +145,11 @@
       "/Volumes/2T/dev/WebEnvoy/sources/epiral/bb-sites/boss/search.js",
       "/Volumes/2T/dev/WebEnvoy/sources/epiral/bb-sites/boss/detail.js",
       "/Volumes/2T/dev/WebEnvoy/research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/5.2-boss-zhipin-adapters.md",
+      "/Volumes/2T/dev/WebEnvoy/research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.2-adapter-patterns-and-approaches.md",
+      "/Volumes/2T/dev/WebEnvoy/research/subjects/epiral/bb-sites/wiki/versions/9aba7d0d/pages/3.3-authentication-and-browser-sessions.md",
       "/Volumes/2T/dev/WebEnvoy/research/subjects/jackwener/OpenCLI/wiki/versions/09a0af7a/pages/3.1-built-in-commands-reference.md",
-      "/Volumes/2T/dev/WebEnvoy/research/subjects/browser-use/browser-harness/wiki/versions/6d208666/pages/4.6-specialized-and-saas-domain-skills.md",
+      "/Volumes/2T/dev/WebEnvoy/research/subjects/Panniantong/Agent-Reach/wiki/versions/ca2e8552/pages/3.9-instagram-linkedin-and-boss-channels.md",
+      "docs/contracts/bb-sites-xhs-boss-absorption-freeze.md",
       "docs/adr/0006-xhs-boss-site-knowledge-selection.md"
     ],
     "absorbed": [
