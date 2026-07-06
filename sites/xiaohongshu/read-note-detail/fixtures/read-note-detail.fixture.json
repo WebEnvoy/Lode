@@ -1,0 +1,220 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "xiaohongshu.read-note-detail.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+  "capability_id": "read-note-detail",
+  "operation_id": "xhs_read_note_detail",
+  "operation_mode": "read",
+  "fixture_kind": "redacted_read_result",
+  "source_shape": {
+    "source_shape_id": "xhs.read-note-detail.source.pinia-note-store",
+    "source_shape_version": "0.1.0",
+    "source_kind": "pinia_store_summary",
+    "schema_hint": "xhs.read-note-detail.source.pinia-note-store@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic fixture based on public field names and placeholder refs; no live account, session, customer, or runtime material is represented.",
+    "allowed_material": [
+      "site route shape",
+      "public field names",
+      "synthetic note ids",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-1",
+      "source_kind": "pinia_store_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xhs.read-note-detail.source.pinia-note-store@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    },
+    {
+      "ref_id": "fixture-source-2",
+      "source_kind": "network_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xhs-network-summary@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-1",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-1",
+    "source_kind": "pinia_store_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+      "title": "Quiet coffee shops for a city walk",
+      "public_text_summary": "Redacted note detail summary with author, body excerpt, interaction metrics, and source citation.",
+      "available_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status",
+        "normalized.author",
+        "normalized.body_summary",
+        "normalized.interaction_metrics",
+        "normalized.source_citation"
+      ],
+      "live_validation": "pending_human_runtime"
+    }
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/xiaohongshu/read-note-detail/output@0.1.0",
+    "integrity_hint": "sha256:fixture-placeholder",
+    "data": {
+      "result_kind": "xhs_note_detail",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+        "title": "Quiet coffee shops for a city walk",
+        "summary": "Redacted note detail summary with author, body excerpt, interaction metrics, and source citation.",
+        "source_status": "located",
+        "note_id": "66aa00000000000001000111",
+        "author": {
+          "display_name": "sample author",
+          "author_id": "xhs_user_001",
+          "profile_url": "https://www.xiaohongshu.com/user/profile/xhs_user_001"
+        },
+        "body_summary": "A short redacted body summary suitable for fixture validation only.",
+        "interaction_metrics": {
+          "likes": "1k+",
+          "comments": "20+",
+          "collects": "100+",
+          "shares": "unknown"
+        },
+        "tags": [
+          "city walk",
+          "coffee"
+        ],
+        "published_at": "fixture-redacted",
+        "ip_location": "fixture-redacted",
+        "source_citation": {
+          "kind": "xhs_note_detail_ref",
+          "note_id": "66aa00000000000001000111",
+          "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+          "field_sources": [
+            "note.title",
+            "note.desc",
+            "note.user.nickname",
+            "note.interactInfo",
+            "note.tagList",
+            "note.ipLocation"
+          ]
+        }
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "pinia_store_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xhs.read-note-detail.source.pinia-note-store@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-2",
+          "source_kind": "network_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xhs-network-summary@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.title",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.author",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.body_summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.interaction_metrics",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_citation",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_post_check_output"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_only",
+    "real_page_validation": "pending_human_runtime_with_logged_in_xiaohongshu_page",
+    "post_check_scope": "declarative result contract and fixture output only"
+  },
+  "non_goals": [
+    "No live runtime session, account state, raw DOM, network body, screenshot body, production payload, or user business data.",
+    "No Core result envelope or live runtime post-check execution.",
+    "No write behavior."
+  ]
+}

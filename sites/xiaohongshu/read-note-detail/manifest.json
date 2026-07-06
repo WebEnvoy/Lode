@@ -1,0 +1,162 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "xiaohongshu",
+    "display_name": "Xiaohongshu",
+    "supported_origins": [
+      "https://www.xiaohongshu.com"
+    ]
+  },
+  "capability": {
+    "capability_id": "read-note-detail",
+    "operation_id": "xhs_read_note_detail",
+    "operation_ref": "lode://operation/xhs_read_note_detail",
+    "capability_family": "content_detail",
+    "operation_mode": "read",
+    "target_type": "note_detail_page",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": [
+      "site:xiaohongshu",
+      "xhs",
+      "real-site",
+      "risk:read"
+    ]
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/xiaohongshu/read-note-detail/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/read-note-detail/input@0.1.0",
+      "schema_version": "0.1.0"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/read-note-detail/output@0.1.0",
+      "schema_version": "0.1.0"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "present",
+      "work_item": "LODE-205",
+      "resource_requirements_id": "xiaohongshu.read-note-detail.resources",
+      "resource_requirements_version": "0.1.0"
+    },
+    {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "lifecycle_metadata_id": "xiaohongshu.read-note-detail.lifecycle",
+      "lifecycle_metadata_version": "0.1.0"
+    },
+    {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "work_item": "LODE-208",
+      "guardrail_id": "xiaohongshu.read-note-detail.write-deferred-guardrail",
+      "guardrail_version": "0.1.0"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/read-note-detail.fixture.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "fixture_id": "xiaohongshu.read-note-detail.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "xhs.read-note-detail.source.pinia-note-store",
+      "redaction": "summary_only"
+    },
+    {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "fixture_id": "xiaohongshu.read-note-detail.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "post_check_id": "xiaohongshu.read-note-detail.post-check",
+      "post_check_version": "0.1.0"
+    },
+    {
+      "role": "failure_mapping",
+      "path": "failure-mapping.json",
+      "status": "present",
+      "work_item": "LODE-208",
+      "failure_mapping_id": "xiaohongshu.read-note-detail.failure-mapping",
+      "failure_mapping_version": "0.1.0"
+    },
+    {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "catalog_metadata_id": "xiaohongshu.read-note-detail.catalog-metadata",
+      "catalog_metadata_version": "0.1.0"
+    },
+    {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "repair_draft_id": "xiaohongshu.read-note-detail.repair-draft",
+      "repair_draft_version": "0.1.0"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "overlay_metadata_id": "xiaohongshu.read-note-detail.overlay-fork",
+      "overlay_metadata_version": "0.1.0"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "work_item": "LODE-207",
+      "lock_id": "xiaohongshu.read-note-detail.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0"
+    }
+  ],
+  "source_knowledge": {
+    "reference_boundary": "Mechanisms and field ideas only; no bb-sites or research source code is copied.",
+    "absorbed": [
+      "same-origin browser identity requirement",
+      "Vue/Pinia readiness probes",
+      "search to detail signed follow-up ref",
+      "structured failure hints"
+    ],
+    "not_absorbed": [
+      "runtime adapter code",
+      "browser prototype interception code",
+      "write actions",
+      "raw page or network payloads"
+    ]
+  },
+  "non_goals": [
+    "No login automation.",
+    "No comments, feed, profile, creator center, publish, like, follow, message, or batch crawling.",
+    "No Harbor/Core/App code change."
+  ]
+}

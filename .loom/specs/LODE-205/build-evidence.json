@@ -1,0 +1,121 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "required_inputs": {
+    "target_repo": "WebEnvoy/Lode",
+    "work_item": "LODE-205",
+    "branch": "work/lode-198-xhs-read-capabilities",
+    "suite_path": "minimal",
+    "worktree": "."
+  },
+  "ownership_contract": {
+    "task_goal": "PR Ready implementation for Lode FR #198 Xiaohongshu real read-only capability packages.",
+    "context_locators": [
+      "https://github.com/WebEnvoy/Lode/issues/198",
+      "https://github.com/WebEnvoy/Lode/issues/205",
+      "https://github.com/WebEnvoy/Lode/issues/206",
+      "https://github.com/WebEnvoy/Lode/issues/207",
+      "https://github.com/WebEnvoy/Lode/issues/208",
+      "https://github.com/WebEnvoy/Lode/issues/198#issuecomment-4888807384",
+      ".loom/specs/LODE-205/evidence-map.md"
+    ],
+    "read_scope": "Lode repository, GitHub issue/PR metadata, and read-only research/source locators outside Lode.",
+    "write_ownership": "Lode Xiaohongshu package assets, registry files, contract docs, and LODE-205 Loom carriers only.",
+    "non_goals": [
+      "No Harbor/Core/App changes",
+      "No research/source edits",
+      "No live Xiaohongshu account automation",
+      "No write or engagement actions",
+      "No batch crawling",
+      "No CAPTCHA or safety-control bypass",
+      "No live evidence fabrication"
+    ],
+    "validation_expectation": [
+      "python3 tools/lode_validate_package.py sites/xiaohongshu/search-notes --registry-index registry/local-packages.json --json",
+      "python3 tools/lode_validate_package.py sites/xiaohongshu/read-note-detail --registry-index registry/local-packages.json --json",
+      "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+      "python3 -m py_compile tools/lode_validate_package.py",
+      "git diff --check",
+      "loom verify --target . --json",
+      "loom fact-chain --target . --json",
+      "loom suite validate --target . --item LODE-205 --json",
+      "loom suite evidence validate --target . --item LODE-205 --json",
+      "loom suite carrier validate --target . --item LODE-205 --json"
+    ],
+    "output_format": "Implementation PR with metadata covering #198 #205 #206 #207 #208 and final subagent report to the main controller.",
+    "integration_target": [
+      "sites/xiaohongshu/search-notes/**",
+      "sites/xiaohongshu/read-note-detail/**",
+      "registry/local-packages.json",
+      "registry/local-query.fixture.json",
+      "docs/contracts/xiaohongshu-read-capabilities.md",
+      ".loom/work-items/LODE-205.md",
+      ".loom/progress/LODE-205.md",
+      ".loom/specs/LODE-205/**"
+    ]
+  },
+  "ownership_constraints": [
+    "Write ownership is limited to Lode package assets, registry fixtures, contract docs, and LODE-205 Loom carriers.",
+    "Forbidden writes include App, Harbor, WebEnvoy/Core, research, and sources paths.",
+    "No live Xiaohongshu login automation, write or engagement actions, batch crawling, CAPTCHA/safety bypass, merge, or issue closeout actions in the execution subagent."
+  ],
+  "ownership_constraints_detail": {
+    "write_ownership": [
+      "sites/xiaohongshu/search-notes/**",
+      "sites/xiaohongshu/read-note-detail/**",
+      "registry/local-packages.json",
+      "registry/local-query.fixture.json",
+      "docs/contracts/xiaohongshu-read-capabilities.md",
+      ".loom/work-items/LODE-205.md",
+      ".loom/progress/LODE-205.md",
+      ".loom/specs/LODE-205/**",
+      ".loom/status/current.md",
+      ".loom/bootstrap/init-result.json"
+    ],
+    "forbidden_writes": [
+      "App/**",
+      "Harbor/**",
+      "WebEnvoy/**",
+      "Core/**",
+      "/Volumes/2T/dev/WebEnvoy/research/**",
+      "/Volumes/2T/dev/WebEnvoy/sources/**"
+    ],
+    "external_action_boundary": "No live Xiaohongshu login automation, write or engagement actions, batch crawling, CAPTCHA/safety bypass, merge, or issue closeout actions in the execution subagent."
+  },
+  "delegations": [],
+  "delegation_evidence": {
+    "used_nested_subagents": false,
+    "unintegrated_subagent_output": false
+  },
+  "integration_evidence": [
+    "Added Xiaohongshu search-notes and read-note-detail package assets using existing validator-supported package roles.",
+    "Added resource requirements, login/page readiness, signed-ref handoff, post-check, failure mapping, redacted fixtures, registry entries, query fixture, and package contract documentation.",
+    "Validation passed: package validators, full registry validation, Python compile, git diff --check, Loom verify, Loom fact-chain, Loom suite validate, Loom suite evidence validate, and Loom suite carrier validate."
+  ],
+  "integration_evidence_detail": {
+    "assets": [
+      "sites/xiaohongshu/search-notes validates as a read package.",
+      "sites/xiaohongshu/read-note-detail validates as a read package.",
+      "registry/local-packages.json and registry/local-query.fixture.json expose both package refs for Core/App discovery."
+    ],
+    "validation": [
+      "search package validator passed",
+      "detail package validator passed",
+      "full registry validator passed",
+      "python3 -m py_compile tools/lode_validate_package.py passed",
+      "git diff --check passed",
+      "loom verify passed",
+      "loom fact-chain passed",
+      "loom suite validate passed",
+      "loom suite evidence validate passed",
+      "loom suite carrier validate passed"
+    ]
+  },
+  "ownership_conflicts": [],
+  "repeated_blocker_signal": null,
+  "suite_path_consumption": {
+    "suite_path": "minimal",
+    "not_applicable_rationale": "This PR adds repo-local Lode package assets, registry fixtures, and docs only; it does not add runtime code, cross-repo API ownership, live evidence storage, or executable browser automation.",
+    "consumer_boundary": "Validator, registry, Core/App package discovery, resource requirement declaration, fixture shape, post-check fixture output, and failure vocabulary.",
+    "recheck_condition": "Upgrade to full suite when a later PR adds live runtime execution, Core result envelopes, Harbor evidence schemas, write/precheck behavior, hosted registry behavior, or cross-repo contract ownership changes."
+  }
+}

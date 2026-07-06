@@ -1,16 +1,8 @@
-# Current Status
+# LODE-205 Progress
 
-## Derived Fact Chain View
+## Dynamic Facts
 
 - Item ID: LODE-205
-- Goal: Define Xiaohongshu login/page readiness and convert the real read capability batch for Lode #198.
-- Scope: Covers Lode #198/#205/#206/#207/#208 and semantic stories #15/#16/#17. Ownership is limited to Lode package assets, registry fixtures, contract docs, and LODE-205 Loom carriers. Adds Xiaohongshu search and note-detail read packages, resource requirements, fixtures, post-checks, failure mapping, registry entries, and package contract docs.
-- Execution Path: work/lode-198-xhs-read-capabilities
-- Workspace Entry: .
-- Recovery Entry: .loom/progress/LODE-205.md
-- Review Entry: .loom/reviews/LODE-205.json
-- Validation Entry: package validator; registry checks; py_compile; git diff --check; loom verify; loom fact-chain.
-- Closing Condition: Implementation PR merged, #198/#205/#206/#207/#208 closeout evidence posted, and current pointer returns to no_active_item.
 - Current Checkpoint: merge
 - Current Stop: PR #221 has a controller-authored review carrier and refreshed PR metadata for the current branch head.
 - Next Step: Controlled merge by the main controller, then post-merge closeout evidence for #198/#205/#206/#207/#208.
@@ -19,17 +11,20 @@
 - Recovery Boundary: Lode package/catalog/fixture/contract truth only; no Stage 7, no Xiaohongshu write or engagement action, no login automation, no batch crawling, no captcha or safety-control bypass, no Harbor/Core/App changes, and no `sources/` or `research/` edits.
 - Current Lane: FR #198 Xiaohongshu real read-only capability conversion
 
-## Runtime Evidence
+## Execution Ledger
 
-- Run Entry: .loom/progress/LODE-205.md
-- Logs Entry: not_applicable
-- Diagnostics Entry: not_applicable
-- Verification Entry: loom verify --target . --json
-- Lane Entry: .loom/specs/LODE-205/task-carrier.md
+- Ledger Binding: recovery_entry
+- Plan Locator: .loom/specs/LODE-205/plan.md
+- Acceptance Locator: .loom/specs/LODE-205/spec.md
+- Validation Evidence Locator: .loom/specs/LODE-205/evidence-map.md
+- Handoff Notes Locator: .loom/specs/LODE-205/task-carrier.md
+- Evidence Freshness: current
 
-## Sources
+## Completed
 
-- Static Truth: .loom/work-items/LODE-205.md
-- Dynamic Truth: .loom/progress/LODE-205.md
-- Locator Truth: .loom/bootstrap/init-result.json
-- Fact Chain CLI: loom fact-chain --target . --json
+- Read Lode governance docs, #198/#205/#206/#207/#208, milestone #13 story index, #198 story baseline comment, #197 ADR, PR #218, and read-only Xiaohongshu research locators.
+- Added Xiaohongshu `search-notes` package.
+- Added Xiaohongshu `read-note-detail` package.
+- Added repo-local registry entries and query fixture result.
+- Added failure classes for login, readiness, signed refs, safety challenge, missing fields, site drift, and runtime resources.
+- Added contract doc that records absorbed and rejected source material.

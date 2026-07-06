@@ -1,0 +1,95 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "xiaohongshu.search-notes.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+  "capability_id": "search-notes",
+  "operation_id": "xhs_search_notes",
+  "operation_mode": "read",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "Xiaohongshu",
+    "manifest_path": "sites/xiaohongshu/search-notes/manifest.json"
+  },
+  "display": {
+    "name": "Search Xiaohongshu notes",
+    "summary": "Read Xiaohongshu search result cards from a logged-in browser page and return note refs for detail follow-up.",
+    "site_name": "Xiaohongshu",
+    "category": "Social search"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+      "status": "self_for_initial_version"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+        "candidate_kind": "previous_known_good"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "fixture_only",
+    "updated_at": "2026-07-06"
+  },
+  "risk": {
+    "level": "medium",
+    "operation": "read",
+    "reason": "Read-only search package. Requires an already logged-in Xiaohongshu browser surface and placeholder refs only."
+  },
+  "facets": [
+    "site:xiaohongshu",
+    "xhs",
+    "real-site",
+    "risk:read"
+  ],
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present",
+    "post_check_fixture_status": "passed",
+    "runtime_execution": "pending_human_runtime"
+  },
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+    "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/output@0.1.0",
+    "resource_requirements_id": "xiaohongshu.search-notes.resources",
+    "post_check_id": "xiaohongshu.search-notes.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "read"
+  },
+  "consumer_boundary": "App may render catalog metadata and local install intent. Lode remains owner of package, catalog, version, lock, fixture, and test metadata truth.",
+  "forbidden_contents": [
+    "credentials",
+    "cookies",
+    "account state",
+    "runtime session",
+    "raw evidence body",
+    "raw DOM",
+    "network body",
+    "production payload",
+    "user business data"
+  ]
+}
