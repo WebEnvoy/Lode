@@ -3,9 +3,9 @@
 ## Dynamic Facts
 
 - Item ID: LODE-153
-- Current Checkpoint: implemented
-- Current Stop: LODE-153 PR #169 is merged and issue #153 is closed; this carrier-only PR is retiring the current pointer.
-- Next Step: Merge carrier-only closeout PR, then keep Stage 5 dependency evidence aligned.
+- Current Checkpoint: closed_out
+- Current Stop: LODE-153 PR #169 is merged and issue #153 is closed; carrier is retained as historical evidence only.
+- Next Step: not_applicable
 - Blockers: None recorded.
 - Latest Validation Summary: python3 tools/lode_validate_package.py sites/example/read-public-page, git diff --check, suite validate, suite evidence validate, suite carrier validate, fact-chain, and verify passed on LODE-153.
 - Recovery Boundary: Lode package/catalog metadata fixture only; no hosted registry, App state, Core run truth, Harbor evidence payload, or Stage 6 behavior.
