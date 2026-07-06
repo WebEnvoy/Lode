@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/read-note-detail/input@0.1.0",
+  "title": "Read Xiaohongshu note detail Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://www\\.xiaohongshu\\.com/(?:explore|search_result)/[A-Za-z0-9]+(?:\\?.*)?$",
+      "description": "Signed Xiaohongshu note URL, preferably emitted by search-notes."
+    },
+    "note_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+$",
+      "description": "Optional note id if Core already resolved it from the URL."
+    },
+    "xsec_token": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional signed note parameter. Prefer preserving the URL from search results."
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "examples": [
+    {
+      "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source="
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.read-note-detail.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+    "operation_ref": "lode://operation/xhs_read_note_detail",
+    "operation_mode": "read",
+    "sensitivity": {
+      "url": "user_provided",
+      "keyword": "user_provided",
+      "sort": "user_provided",
+      "include_source_refs": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "Provide a supported Xiaohongshu URL."
+      },
+      {
+        "code": "input_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on https://www.xiaohongshu.com",
+        "recovery_hint": "Use the site origin declared by this package."
+      },
+      {
+        "code": "input_signed_ref_missing",
+        "field": "url",
+        "lode_failure_class": "signed_ref_missing",
+        "trigger": "detail URL lacks signed follow-up parameter",
+        "recovery_hint": "Use a URL emitted by the search package."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/search-notes/input@0.1.0",
+  "title": "Search Xiaohongshu notes Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "keyword"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://www\\.xiaohongshu\\.com/(?:explore|search_result/?.*)$",
+      "description": "Entry page or search result URL on www.xiaohongshu.com."
+    },
+    "keyword": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Search keyword Core asks the Xiaohongshu page to query."
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "general",
+        "latest",
+        "likes",
+        "comments",
+        "collects"
+      ],
+      "default": "general"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 10
+    },
+    "include_source_refs": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "examples": [
+    {
+      "url": "https://www.xiaohongshu.com/explore",
+      "keyword": "city coffee"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.search-notes.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+    "operation_ref": "lode://operation/xhs_search_notes",
+    "operation_mode": "read",
+    "sensitivity": {
+      "url": "user_provided",
+      "keyword": "user_provided",
+      "sort": "user_provided",
+      "include_source_refs": "public"
+    },
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_url",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is absent",
+        "recovery_hint": "Provide a supported Xiaohongshu URL."
+      },
+      {
+        "code": "input_origin_not_allowed",
+        "field": "url",
+        "lode_failure_class": "input_invalid",
+        "trigger": "url is not on https://www.xiaohongshu.com",
+        "recovery_hint": "Use the site origin declared by this package."
+      },
+      {
+        "code": "input_signed_ref_missing",
+        "field": "url",
+        "lode_failure_class": "signed_ref_missing",
+        "trigger": "detail URL lacks signed follow-up parameter",
+        "recovery_hint": "Use a URL emitted by the search package."
+      }
+    ],
+    "forbidden_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}

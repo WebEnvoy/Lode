@@ -1,0 +1,174 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "xiaohongshu.search-notes.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+  "operation_ref": "lode://operation/xhs_search_notes",
+  "operation_mode": "read",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "notes": [
+      "Lode declares abstract resource requirements only.",
+      "Core matches requirements against current Harbor facts.",
+      "Harbor owns browser identity, runtime session, page source, and evidence refs."
+    ]
+  },
+  "matching_semantics": {
+    "profile_match_rule": "one_profile_must_match",
+    "profile_order": "not_priority",
+    "matched_meaning": "Current Harbor facts satisfy one declared profile for admission.",
+    "unmatched_meaning": "Current Harbor facts are insufficient; this is not a package-invalid signal.",
+    "invalid_contract_meaning": "The declaration uses forbidden fields or contradicts read requirements.",
+    "offline_validator_scope": "contract_shape_and_forbidden_field_checks_only_no_live_harbor_matching"
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "search-notes-logged-in-ready-page",
+      "description": "Read Xiaohongshu search result cards from a logged-in browser page and return note refs for detail follow-up.",
+      "operation_boundary": "read",
+      "required_harbor_facts": [
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core has a bound browser surface for the read attempt."
+        },
+        {
+          "fact_key": "runtime.origin.www_xiaohongshu_com.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The bound page can navigate or already sits on www.xiaohongshu.com."
+        },
+        {
+          "fact_key": "identity.user_logged_in.confirmed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Harbor/Core can confirm the user is logged in without Lode storing account state."
+        },
+        {
+          "fact_key": "page.vue_app.ready",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The Xiaohongshu Vue app is hydrated."
+        },
+        {
+          "fact_key": "page.pinia_store.ready",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The relevant Pinia store map is available."
+        },
+        {
+          "fact_key": "source.refs.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core can bind extracted fields to source refs."
+        },
+        {
+          "fact_key": "evidence.snapshot_ref.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Harbor can provide a snapshot evidence ref without inlining evidence."
+        },
+        {
+          "fact_key": "safety.challenge.absent",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "No visible verification or safety challenge is blocking the page."
+        }
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/search-notes/input@0.1.0",
+        "allowed_origins": [
+          "https://www.xiaohongshu.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "keyword"
+        ]
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/search-notes/output@0.1.0",
+        "required_available_status_refs": [
+          "source_refs"
+        ],
+        "supported_source_kinds": [
+          "pinia_store_summary",
+          "network_summary",
+          "dom_snapshot_summary"
+        ],
+        "supported_evidence_kinds": [
+          "snapshot_ref",
+          "network_summary_ref",
+          "post_check_ref"
+        ]
+      }
+    }
+  ],
+  "admission_states": {
+    "matched": {
+      "owner": "WebEnvoy Core",
+      "meaning": "At least one requirement profile matches current Harbor facts.",
+      "does_not_prove": [
+        "capability success",
+        "post-check success",
+        "output validity"
+      ]
+    },
+    "unmatched": {
+      "owner": "WebEnvoy Core",
+      "lode_failure_class": "resource_unavailable",
+      "meaning": "The declaration is valid but current Harbor facts cannot satisfy the read profile."
+    },
+    "invalid_contract": {
+      "owner": "Lode validator or Core admission",
+      "lode_failure_class": "invalid_contract",
+      "meaning": "The resource declaration is malformed or contradicts the package operation mode."
+    }
+  },
+  "failure_class_mapping": {
+    "not_logged_in": "User must log in manually in the bound browser.",
+    "login_expired": "User must refresh the site login in the same browser.",
+    "page_not_ready": "Wait for hydration or refresh the route.",
+    "signed_ref_missing": "Use a search result follow-up ref or signed URL.",
+    "safety_challenge": "Stop and require manual handling.",
+    "network_resource_unavailable": "Refresh runtime, source, and evidence refs."
+  },
+  "forbidden_fields": [
+    "provider_key",
+    "harbor_profile_id",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "cookie",
+    "cookies",
+    "token",
+    "tokens",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "non_goals": [
+    "No provider or profile selection.",
+    "No Harbor live fact matching in Lode.",
+    "No runtime acquisition or fallback ordering.",
+    "No external visible action."
+  ]
+}

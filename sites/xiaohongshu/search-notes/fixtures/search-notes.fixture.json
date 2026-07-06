@@ -1,0 +1,234 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "xiaohongshu.search-notes.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+  "capability_id": "search-notes",
+  "operation_id": "xhs_search_notes",
+  "operation_mode": "read",
+  "fixture_kind": "redacted_read_result",
+  "source_shape": {
+    "source_shape_id": "xhs.search-notes.source.pinia-search-store",
+    "source_shape_version": "0.1.0",
+    "source_kind": "pinia_store_summary",
+    "schema_hint": "xhs.search-notes.source.pinia-search-store@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic fixture based on public field names and placeholder refs; no live account, session, customer, or runtime material is represented.",
+    "allowed_material": [
+      "site route shape",
+      "public field names",
+      "synthetic note ids",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-1",
+      "source_kind": "pinia_store_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xhs.search-notes.source.pinia-search-store@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    },
+    {
+      "ref_id": "fixture-source-2",
+      "source_kind": "network_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xhs-network-summary@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-1",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-1",
+    "source_kind": "pinia_store_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://www.xiaohongshu.com/search_result/?keyword=city%20coffee",
+      "title": "Xiaohongshu search results for city coffee",
+      "public_text_summary": "Two redacted note cards with signed follow-up refs for detail reading.",
+      "available_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status",
+        "normalized.keyword",
+        "normalized.notes"
+      ],
+      "live_validation": "pending_human_runtime"
+    }
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/xiaohongshu/search-notes/output@0.1.0",
+    "integrity_hint": "sha256:fixture-placeholder",
+    "data": {
+      "result_kind": "xhs_note_search",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.xiaohongshu.com/search_result/?keyword=city%20coffee",
+        "title": "Xiaohongshu search results for city coffee",
+        "summary": "Two redacted note cards with signed follow-up refs for detail reading.",
+        "source_status": "located",
+        "keyword": "city coffee",
+        "sort": "general",
+        "result_count": 2,
+        "has_more": "unknown",
+        "notes": [
+          {
+            "note_id": "66aa00000000000001000111",
+            "title": "Quiet coffee shops for a city walk",
+            "author": {
+              "display_name": "sample author",
+              "author_id": "xhs_user_001"
+            },
+            "interaction_metrics": {
+              "likes": "1k+",
+              "comments": "20+",
+              "collects": "100+"
+            },
+            "note_url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+            "follow_up_ref": {
+              "kind": "xhs_note_detail_ref",
+              "note_id": "66aa00000000000001000111",
+              "xsec_token": "fixture-xsec-1",
+              "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source="
+            },
+            "source_fields": [
+              "noteCard.displayTitle",
+              "noteCard.user.nickname",
+              "noteCard.interactInfo",
+              "item.xsecToken"
+            ]
+          },
+          {
+            "note_id": "66aa00000000000001000222",
+            "title": "Weekend cafe route",
+            "author": {
+              "display_name": "sample author two",
+              "author_id": "xhs_user_002"
+            },
+            "interaction_metrics": {
+              "likes": "500+",
+              "comments": "10+",
+              "collects": "80+"
+            },
+            "note_url": "https://www.xiaohongshu.com/explore/66aa00000000000001000222?xsec_token=fixture-xsec-2&xsec_source=",
+            "follow_up_ref": {
+              "kind": "xhs_note_detail_ref",
+              "note_id": "66aa00000000000001000222",
+              "xsec_token": "fixture-xsec-2",
+              "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000222?xsec_token=fixture-xsec-2&xsec_source="
+            },
+            "source_fields": [
+              "noteCard.displayTitle",
+              "noteCard.user.nickname",
+              "noteCard.interactInfo",
+              "item.xsecToken"
+            ]
+          }
+        ]
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "pinia_store_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xhs.search-notes.source.pinia-search-store@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-2",
+          "source_kind": "network_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xhs-network-summary@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.title",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.keyword",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.notes",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_post_check_output"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_only",
+    "real_page_validation": "pending_human_runtime_with_logged_in_xiaohongshu_page",
+    "post_check_scope": "declarative result contract and fixture output only"
+  },
+  "non_goals": [
+    "No live runtime session, account state, raw DOM, network body, screenshot body, production payload, or user business data.",
+    "No Core result envelope or live runtime post-check execution.",
+    "No write behavior."
+  ]
+}

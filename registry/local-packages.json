@@ -354,6 +354,164 @@
         "guardrail_path": "sites/example/preview-contact-form/write-deferred-guardrail.json",
         "consumer_boundary": "Core may consume this entry for validate-only action request admission. This package does not submit, publish, save, upload, schedule, or execute writes."
       }
+    },
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/xiaohongshu/search-notes",
+      "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+      "lock_path": "sites/xiaohongshu/search-notes/package-lock.json",
+      "site_slug": "xiaohongshu",
+      "capability_id": "search-notes",
+      "operation_id": "xhs_search_notes",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "real_site_read_package": {
+        "status": "fixture_present_live_pending",
+        "work_item": "LODE-206",
+        "covered_work_items": [
+          "LODE-205",
+          "LODE-206",
+          "LODE-207",
+          "LODE-208"
+        ],
+        "semantic_stories": [
+          "#15",
+          "#16",
+          "#17"
+        ],
+        "fixture_path": "sites/xiaohongshu/search-notes/fixtures/search-notes.fixture.json",
+        "core_consumption_fixture_path": "sites/xiaohongshu/search-notes/fixtures/core-consumption.fixture.json",
+        "catalog_metadata_path": "sites/xiaohongshu/search-notes/catalog-metadata.json",
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in Xiaohongshu browser session."
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-206",
+      "lock_work_item": "LODE-206"
+    },
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/xiaohongshu/read-note-detail",
+      "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "lock_path": "sites/xiaohongshu/read-note-detail/package-lock.json",
+      "site_slug": "xiaohongshu",
+      "capability_id": "read-note-detail",
+      "operation_id": "xhs_read_note_detail",
+      "operation_mode": "read",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-07-06T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "real_site_read_package": {
+        "status": "fixture_present_live_pending",
+        "work_item": "LODE-207",
+        "covered_work_items": [
+          "LODE-205",
+          "LODE-206",
+          "LODE-207",
+          "LODE-208"
+        ],
+        "semantic_stories": [
+          "#15",
+          "#16",
+          "#17"
+        ],
+        "fixture_path": "sites/xiaohongshu/read-note-detail/fixtures/read-note-detail.fixture.json",
+        "core_consumption_fixture_path": "sites/xiaohongshu/read-note-detail/fixtures/core-consumption.fixture.json",
+        "catalog_metadata_path": "sites/xiaohongshu/read-note-detail/catalog-metadata.json",
+        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, and failure mapping. Live runtime validation is pending a logged-in Xiaohongshu browser session."
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-207",
+      "lock_work_item": "LODE-207"
     }
   ],
   "non_goals": [

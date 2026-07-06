@@ -8,6 +8,7 @@
 | input/output/source schema、fixture、post-check、validator 报告边界 | [ADR 0003](../adr/0003-schema-fixtures-and-post-check.md) |
 | asset taxonomy、workflow package、registry / version / invalidation 边界 | [ADR 0004](../adr/0004-asset-types-and-registry.md) |
 | Lode 技术栈、资产文件责任、JSON Schema 权威、tooling 最小边界、deferred / rejected 禁线 | [ADR 0005](../adr/0005-lode-technical-architecture-baseline.md) |
+| 小红书真实只读能力包 | [Xiaohongshu read capability packages](xiaohongshu-read-capabilities.md) |
 | implementation-time / external-contract 未决项 | [pending decisions](../adr/pending-decisions.md) |
 
 实现、测试、schema、validator、runtime 或 generated facts 不应引用 `docs/draft/` 作为权威合同。

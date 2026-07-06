@@ -1,0 +1,63 @@
+{
+  "schema_version": "lode.lifecycle-metadata.v0",
+  "lifecycle_metadata_id": "xiaohongshu.read-note-detail.lifecycle",
+  "lifecycle_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+  "package_version": "0.1.0",
+  "lifecycle_state_vocabulary": {
+    "states": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "allowed_transitions": [
+      "proposed->active",
+      "active->suspected_broken",
+      "suspected_broken->active",
+      "suspected_broken->broken",
+      "broken->active",
+      "active->deprecated"
+    ]
+  },
+  "lifecycle": {
+    "state": "proposed",
+    "updated_at": "2026-07-06",
+    "reason": "Initial Xiaohongshu real-site read package fixture. Live validation remains pending human runtime."
+  },
+  "version_identity": {
+    "version_scheme": "semver",
+    "current_version": "0.1.0",
+    "latest_version": "0.1.0",
+    "default_locked_version": "0.1.0",
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "breaking_change_requires_new_version": [
+      "input fields removed or renamed",
+      "normalized output required fields changed",
+      "resource fact requirements changed",
+      "failure class meanings changed"
+    ]
+  },
+  "rollback": {
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "package_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "status": "self_for_initial_version"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "package_version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "candidate_kind": "previous_known_good"
+      }
+    ]
+  },
+  "lock_input": {
+    "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+    "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json"
+  }
+}

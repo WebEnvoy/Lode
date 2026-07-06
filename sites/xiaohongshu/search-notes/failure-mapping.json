@@ -1,0 +1,245 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "xiaohongshu.search-notes.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+  "capability_id": "search-notes",
+  "operation_id": "xhs_search_notes",
+  "operation_mode": "read",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares stable failure class meaning and consumer hints. Core owns final envelope fields, and App owns final presentation."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Package manifest, schema, lifecycle, post-check, resource, fixture, or failure mapping contract is malformed or contradicts package identity.",
+      "owner": "Lode validator or Core admission",
+      "core_mapping": {
+        "category": "contract_violation",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_needs_repair",
+        "severity": "error"
+      },
+      "recovery_hint": "Repair the package asset contract before admission or execution."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Current Harbor facts cannot satisfy the required Xiaohongshu browser, page, source-ref, or evidence-ref profile.",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "resource_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "setup_or_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Open a supported Xiaohongshu page in the bound browser and request fresh Harbor facts."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "The Xiaohongshu page route, store shape, source refs, or field mapping no longer matches the package fixture and post-check expectations.",
+      "owner": "Lode package maintainer after Core/Harbor detects source or mapping drift",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_update_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "Refresh source shape, fixture, normalizer, or post-check requirements without storing live raw evidence in Lode."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "A valid read produces no note cards or detail fields for the requested target.",
+      "owner": "WebEnvoy Core result projection from Lode output classification",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "empty_state",
+        "severity": "info"
+      },
+      "recovery_hint": "Surface an empty state; do not treat it as package or runtime failure."
+    },
+    {
+      "lode_failure_class": "not_logged_in",
+      "trigger": "The Xiaohongshu page shows a login wall or the user store does not report an active account.",
+      "owner": "WebEnvoy Core admission with Harbor page facts",
+      "core_mapping": {
+        "category": "auth_required",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "login_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the user to log in manually in the bound browser profile, then retry."
+    },
+    {
+      "lode_failure_class": "login_expired",
+      "trigger": "The page initially had account indicators but later redirects to login or rejects read probes.",
+      "owner": "WebEnvoy Core admission with Harbor page facts",
+      "core_mapping": {
+        "category": "auth_expired",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "login_refresh_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the user to refresh the Xiaohongshu login in the same browser profile."
+    },
+    {
+      "lode_failure_class": "page_not_ready",
+      "trigger": "Vue app, Pinia store, route, result grid, or note detail map is unavailable within the current execution window.",
+      "owner": "WebEnvoy Core runtime read using Harbor page facts",
+      "core_mapping": {
+        "category": "page_not_ready",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "wait_or_refresh_page",
+        "severity": "warning"
+      },
+      "recovery_hint": "Wait for page hydration or refresh the target route before retrying."
+    },
+    {
+      "lode_failure_class": "signed_ref_missing",
+      "trigger": "A detail read lacks the signed note URL parameter or search follow-up ref needed by Xiaohongshu.",
+      "owner": "WebEnvoy Core input projection from Lode follow-up refs",
+      "core_mapping": {
+        "category": "missing_signed_ref",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "open_from_search_result",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Use a note URL emitted by search-notes or preserve the full signed URL from the page."
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "The page shows a verification, abnormal traffic, or safety challenge prompt.",
+      "owner": "Harbor page facts consumed by Core",
+      "core_mapping": {
+        "category": "safety_challenge",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "manual_verification_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Stop automation and ask the user to resolve the challenge manually; do not bypass it."
+    },
+    {
+      "lode_failure_class": "field_missing",
+      "trigger": "A required public field such as title, author, body summary, interaction metrics, or source citation is absent.",
+      "owner": "Lode post-check or Core projection",
+      "core_mapping": {
+        "category": "field_missing",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_repair_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "Treat as partial result or repair package mapping after fresh evidence refs are available."
+    },
+    {
+      "lode_failure_class": "network_resource_unavailable",
+      "trigger": "Network or browser resource facts report a failed read, blocked request, stale source ref, or missing evidence ref.",
+      "owner": "WebEnvoy Core with Harbor evidence facts",
+      "core_mapping": {
+        "category": "network_or_evidence_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "fresh_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Request fresh browser, source, and evidence refs; do not store raw runtime material in Lode."
+    }
+  ],
+  "aliases": [
+    {
+      "source": "login_wall",
+      "maps_to": "not_logged_in",
+      "source_owner": "Harbor page facts"
+    },
+    {
+      "source": "session_revoked",
+      "maps_to": "login_expired",
+      "source_owner": "Harbor page facts"
+    },
+    {
+      "source": "pinia_missing",
+      "maps_to": "page_not_ready",
+      "source_owner": "Core runtime read"
+    },
+    {
+      "source": "xsec_missing",
+      "maps_to": "signed_ref_missing",
+      "source_owner": "Core input projection"
+    },
+    {
+      "source": "captcha_or_verify_prompt",
+      "maps_to": "safety_challenge",
+      "source_owner": "Harbor page facts"
+    },
+    {
+      "source": "mapping_incomplete",
+      "maps_to": "field_missing",
+      "source_owner": "Lode post-check"
+    },
+    {
+      "source": "source_shape_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "empty",
+      "maps_to": "empty_result",
+      "source_owner": "Lode output schema"
+    }
+  ],
+  "consumer_boundary": {
+    "core": "Core may consume category, outcome_hint, retryable, and requires_user_action as compatibility hints, but Core owns the final envelope schema.",
+    "app": "App may consume display and severity as presentation hints, but App owns final UI copy.",
+    "lode": "Lode validator checks identity, required classes, and forbidden fields only; it does not execute runtime matching."
+  },
+  "non_goals": [
+    "No Core result envelope schema.",
+    "No App UI copy contract.",
+    "No live runtime matching, external writes, credentials, production payloads, or raw evidence bodies."
+  ]
+}

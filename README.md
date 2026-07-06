@@ -55,6 +55,7 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [路线图](ROADMAP.md)
 - [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
 - [小红书与 BOSS 站点知识吸收边界](docs/adr/0006-xhs-boss-site-knowledge-selection.md)
+- [小红书只读能力包合同](docs/contracts/xiaohongshu-read-capabilities.md)
 
 ## 本地校验
 
@@ -83,6 +84,20 @@ python3 tools/lode_validate_package.py --registry-index registry/local-packages.
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
 版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
 安装/更新、托管登记表、Core 运行记录或运行环境执行已经实现。
+
+## 小红书只读能力包
+
+当前小红书真实站点只读包包括：
+
+- `sites/xiaohongshu/search-notes`：声明登录态、页面就绪、搜索输入/输出、
+  搜索结果字段来源、笔记链接和后续详情引用。
+- `sites/xiaohongshu/read-note-detail`：声明签名笔记 URL 输入、详情输出、
+  标题、作者、正文摘要、互动指标和来源引用。
+
+这两个包只提供 Lode 可校验资产、脱敏固定样本、post-check 和失败分类。真实
+页面验证需要人工拥有的已登录小红书浏览器现场，当前标记为
+`pending_human_runtime`；本仓不保存账号状态、运行会话、原始页面、网络载荷或
+生产证据。
 
 ## 首个样例只读能力包
 

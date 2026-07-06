@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/read-note-detail/output@0.1.0",
+  "title": "Read Xiaohongshu note detail Normalized Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "xhs_note_detail"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/content_detail"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string"
+    },
+    "unavailable_reason": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "$defs": {
+    "content_detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_url",
+        "title",
+        "summary",
+        "source_status",
+        "note_id",
+        "author",
+        "body_summary",
+        "interaction_metrics",
+        "source_citation"
+      ],
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located"
+          ]
+        },
+        "note_id": {
+          "type": "string"
+        },
+        "author": {
+          "type": "object"
+        },
+        "body_summary": {
+          "type": "string"
+        },
+        "interaction_metrics": {
+          "type": "object"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "published_at": {
+          "type": "string"
+        },
+        "ip_location": {
+          "type": "string"
+        },
+        "source_citation": {
+          "type": "object"
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string"
+        },
+        "source_kind": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "redaction": {
+          "type": "string"
+        },
+        "schema_hint": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string"
+        },
+        "evidence_kind": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "redaction": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.read-note-detail.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+    "operation_ref": "lode://operation/xhs_read_note_detail",
+    "operation_mode": "read",
+    "result_owner_boundary": "Core owns the result envelope; Lode owns this normalized public shape."
+  }
+}

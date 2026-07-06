@@ -123,6 +123,40 @@
           }
         }
       ]
+    },
+    {
+      "query_id": "xiaohongshu-real-read-packages",
+      "purpose": "Expose Xiaohongshu real-site read packages for Core/App local registry lookup.",
+      "filters": {
+        "site_slug": "xiaohongshu",
+        "operation_mode": "read"
+      },
+      "results": [
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+          "site_slug": "xiaohongshu",
+          "capability_id": "search-notes",
+          "operation_id": "xhs_search_notes",
+          "operation_mode": "read",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+          "live_validation": "pending_human_runtime"
+        },
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+          "site_slug": "xiaohongshu",
+          "capability_id": "read-note-detail",
+          "operation_id": "xhs_read_note_detail",
+          "operation_mode": "read",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+          "live_validation": "pending_human_runtime"
+        }
+      ]
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",
