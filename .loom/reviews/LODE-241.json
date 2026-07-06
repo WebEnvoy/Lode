@@ -1,7 +1,7 @@
 {
   "schema_version": "loom-review/v1",
   "item_id": "LODE-241",
-  "reviewed_head": "dcf6c98ed908ca6f163796e1728b01791aa394b2",
+  "reviewed_head": "268a62fdabd5b9172b9db068c8c7525cc50f8777",
   "reviewed_validation_summary": "`python3 tools/lode_validate_package.py sites/boss/job-search --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/read-job-detail --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; JSON readability; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-241 --json`; `loom suite evidence validate --target . --item LODE-241 --json`; `loom suite carrier validate --target . --item LODE-241 --json` passed locally.",
   "reviewed_validation_summary_hash": "bc75df3d6bc9fc59ea9b7dc8acf34ce610d1f7a8a554baa0366e0a252ede7874",
   "validation_summary_source": "recovery.latest_validation_summary",
