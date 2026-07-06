@@ -1,0 +1,232 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "boss.read-job-detail.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "capability_id": "read-job-detail",
+  "operation_id": "boss_read_job_detail",
+  "operation_mode": "read",
+  "fixture_kind": "redacted_read_result",
+  "source_shape": {
+    "source_shape_id": "boss.read-job-detail.source.wapi-detail-summary",
+    "source_shape_version": "0.1.0",
+    "source_kind": "wapi_job_detail_summary",
+    "schema_hint": "boss.read-job-detail.source.wapi-detail@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic fixture based on public field names and placeholder refs; no live account, session, customer, or runtime material is represented.",
+    "allowed_material": [
+      "site route shape",
+      "public field names",
+      "synthetic job ids",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-1",
+      "source_kind": "wapi_job_detail_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss.read-job-detail.source.wapi-detail@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    },
+    {
+      "ref_id": "fixture-source-2",
+      "source_kind": "dom_snapshot_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss-job-detail-dom-summary@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-1",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-1",
+    "source_kind": "wapi_job_detail_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://www.zhipin.com/job_detail/fixture-job-1.html",
+      "title": "AI Agent Product Engineer",
+      "public_text_summary": "Redacted job detail with job description, company information, recruiter summary, and source citation.",
+      "available_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status",
+        "normalized.job",
+        "normalized.company",
+        "normalized.recruiter",
+        "normalized.source_citation"
+      ],
+      "live_validation": "pending_human_runtime"
+    }
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
+    "integrity_hint": "sha256:fixture-placeholder",
+    "data": {
+      "result_kind": "boss_job_detail",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.zhipin.com/job_detail/fixture-job-1.html",
+        "title": "AI Agent Product Engineer",
+        "summary": "Redacted job detail with job description, company information, recruiter summary, and source citation.",
+        "source_status": "located",
+        "securityId": "fixture-security-1",
+        "encryptJobId": "fixture-job-1",
+        "job": {
+          "title": "AI Agent Product Engineer",
+          "salary": "20-35K",
+          "experience": "3-5 years",
+          "degree": "Bachelor",
+          "location": "Beijing Haidian",
+          "address": "fixture-redacted public business district",
+          "skills": [
+            "TypeScript",
+            "LLM",
+            "Browser automation"
+          ],
+          "description": "A redacted fixture-only job description summary.",
+          "status": "open"
+        },
+        "company": {
+          "name": "sample company one",
+          "stage": "B round",
+          "scale": "100-499",
+          "industry": "AI",
+          "intro": "Redacted company intro summary."
+        },
+        "recruiter": {
+          "name": "sample recruiter",
+          "title": "Tech Lead"
+        },
+        "source_citation": {
+          "kind": "boss_job_detail_ref",
+          "securityId": "fixture-security-1",
+          "encryptJobId": "fixture-job-1",
+          "url": "https://www.zhipin.com/job_detail/fixture-job-1.html",
+          "field_sources": [
+            "zpData.jobInfo",
+            "zpData.brandComInfo",
+            "zpData.bossInfo"
+          ]
+        }
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "wapi_job_detail_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss.read-job-detail.source.wapi-detail@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-2",
+          "source_kind": "dom_snapshot_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss-job-detail-dom-summary@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.title",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.securityId",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.job",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.company",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.recruiter",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_citation",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_post_check_output"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_only",
+    "real_page_validation": "pending_human_runtime_with_logged_in_boss_zhipin_page",
+    "post_check_scope": "declarative result contract and fixture output only"
+  },
+  "non_goals": [
+    "No live runtime session, account state, raw DOM, network body, screenshot body, production payload, or user business data.",
+    "No Core result envelope or live runtime post-check execution.",
+    "No write behavior."
+  ]
+}

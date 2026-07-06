@@ -1,0 +1,109 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "post_check_id": "boss.job-search.post-check",
+  "post_check_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "capability_id": "job-search",
+  "operation_id": "boss_job_search",
+  "operation_mode": "read",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "execution_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "summary": "Lode declares success conditions and output shape only. Core decides when to run the check and Harbor owns live source and evidence refs."
+  },
+  "result_contract": {
+    "schema_version": "lode.post-check-result.v0",
+    "status_values": [
+      "passed",
+      "failed",
+      "skipped"
+    ],
+    "required_fields": [
+      "status",
+      "reason",
+      "source_refs",
+      "evidence_refs"
+    ],
+    "status_meaning": {
+      "passed": "Required public fields are present and bound to declared source/evidence refs.",
+      "failed": "One or more required public fields or bindings are missing or inconsistent.",
+      "skipped": "The check did not run because admission or runtime conditions were not met."
+    },
+    "reason_policy": "Always provide a short reason.",
+    "source_ref_policy": "Use source ref ids declared by fixture or Core result source refs.",
+    "evidence_ref_policy": "Use evidence ref ids declared by fixture or Harbor/Core evidence refs; do not inline bodies."
+  },
+  "requirements": [
+    {
+      "requirement_id": "target-located",
+      "description": "The normalized result identifies the BOSS job search target as located.",
+      "required_status": "available",
+      "required_normalized_fields": [
+        "canonical_url",
+        "title",
+        "summary",
+        "source_status"
+      ],
+      "required_source_refs": [
+        "fixture-source-1"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-1"
+      ],
+      "on_failure": "post_check_failed"
+    },
+    {
+      "requirement_id": "field-source-binding",
+      "description": "Required normalized fields have source and evidence ref binding.",
+      "required_binding_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status",
+        "normalized.query",
+        "normalized.jobs"
+      ],
+      "required_source_refs": [
+        "fixture-source-1",
+        "fixture-source-2"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-1"
+      ],
+      "on_failure": "field_missing"
+    }
+  ],
+  "fixture_post_check_output": {
+    "status": "passed",
+    "reason": "The redacted fixture contains required public fields and binds them to placeholder source/evidence refs.",
+    "source_refs": [
+      {
+        "ref_id": "fixture-source-1",
+        "source_kind": "wapi_joblist_summary"
+      },
+      {
+        "ref_id": "fixture-source-2",
+        "source_kind": "dom_snapshot_summary"
+      }
+    ],
+    "evidence_refs": [
+      {
+        "ref_id": "fixture-evidence-1",
+        "evidence_kind": "snapshot_ref"
+      }
+    ]
+  },
+  "failure_boundary": {
+    "post_check_failed": "Required public result fields or ref bindings are absent or inconsistent.",
+    "field_missing": "A required normalized field is not traceable to declared source/evidence refs.",
+    "network_resource_unavailable": "Required evidence refs are absent, expired, or unavailable."
+  },
+  "real_page_validation": "pending_human_runtime_with_logged_in_boss_zhipin_page",
+  "non_goals": [
+    "No browser automation steps in Lode.",
+    "No Core result envelope.",
+    "No Harbor evidence schema or live evidence body.",
+    "No write action."
+  ]
+}

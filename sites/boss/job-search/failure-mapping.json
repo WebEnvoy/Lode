@@ -1,0 +1,325 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "boss.job-search.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "capability_id": "job-search",
+  "operation_id": "boss_job_search",
+  "operation_mode": "read",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares stable failure class meaning and consumer hints. Core owns final envelope fields, and App owns final presentation."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Package manifest, schema, lifecycle, post-check, resource, fixture, or failure mapping contract is malformed or contradicts package identity.",
+      "owner": "Lode validator or Core admission",
+      "core_mapping": {
+        "category": "contract_violation",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_needs_repair",
+        "severity": "error"
+      },
+      "recovery_hint": "Repair the package asset contract before admission or execution."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Current Harbor facts cannot satisfy the required BOSS Zhipin browser, page, source-ref, or evidence-ref profile.",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "resource_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "setup_or_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Open a supported BOSS Zhipin page in the bound browser and request fresh Harbor facts."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "The BOSS Zhipin route, wapi response shape, source refs, or field mapping no longer matches fixture and post-check expectations.",
+      "owner": "Lode package maintainer after Core/Harbor detects source or mapping drift",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_update_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "Refresh source shape, fixture, normalizer, or post-check requirements without storing live raw evidence in Lode."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "A valid read produces no job cards or detail fields for the requested target.",
+      "owner": "WebEnvoy Core result projection from Lode output classification",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "empty_state",
+        "severity": "info"
+      },
+      "recovery_hint": "Surface an empty state; do not treat it as package or runtime failure."
+    },
+    {
+      "lode_failure_class": "not_logged_in",
+      "trigger": "The page shows a login wall or the current identity is not logged in.",
+      "owner": "WebEnvoy Core admission with Harbor page facts",
+      "core_mapping": {
+        "category": "auth_required",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "login_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the user to log in manually in the bound browser profile, then retry."
+    },
+    {
+      "lode_failure_class": "identity_insufficient",
+      "trigger": "The current BOSS identity cannot access job seeker read surfaces required by this package.",
+      "owner": "WebEnvoy Core admission with Harbor identity facts",
+      "core_mapping": {
+        "category": "identity_insufficient",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "identity_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the user to switch to a BOSS job seeker identity in the bound browser."
+    },
+    {
+      "lode_failure_class": "captcha_required",
+      "trigger": "The page shows CAPTCHA, verification, abnormal traffic, or risk-control prompt.",
+      "owner": "Harbor page facts consumed by Core",
+      "core_mapping": {
+        "category": "safety_challenge",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "manual_verification_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Stop automation and ask the user to resolve verification manually; do not bypass it."
+    },
+    {
+      "lode_failure_class": "page_not_ready",
+      "trigger": "The SPA, route, wapi source, result grid, or detail container is unavailable in the current execution window.",
+      "owner": "WebEnvoy Core runtime read using Harbor page facts",
+      "core_mapping": {
+        "category": "page_not_ready",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "wait_or_refresh_page",
+        "severity": "warning"
+      },
+      "recovery_hint": "Wait for page hydration or refresh the target route before retrying."
+    },
+    {
+      "lode_failure_class": "input_missing_security_id",
+      "trigger": "A detail read lacks the securityId emitted by job-search.",
+      "owner": "WebEnvoy Core input projection from Lode follow-up refs",
+      "core_mapping": {
+        "category": "input_invalid",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "open_from_search_result",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Use a detail_ref emitted by job-search."
+    },
+    {
+      "lode_failure_class": "query_missing",
+      "trigger": "A search read lacks a non-empty query.",
+      "owner": "WebEnvoy Core input projection",
+      "core_mapping": {
+        "category": "input_invalid",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "query_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Provide a job search query."
+    },
+    {
+      "lode_failure_class": "city_unresolved",
+      "trigger": "The requested city or filter code cannot be resolved to a supported BOSS value.",
+      "owner": "WebEnvoy Core input projection",
+      "core_mapping": {
+        "category": "input_invalid",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "filter_needs_adjustment",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Use a supported city or filter code."
+    },
+    {
+      "lode_failure_class": "pagination_limited",
+      "trigger": "The request asks for batch pagination beyond the first page package boundary.",
+      "owner": "WebEnvoy Core input projection",
+      "core_mapping": {
+        "category": "out_of_scope",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "scope_limited",
+        "severity": "info"
+      },
+      "recovery_hint": "Use the first page package only; batch pagination requires a later Work Item."
+    },
+    {
+      "lode_failure_class": "job_expired",
+      "trigger": "The selected job is offline, deleted, hidden, or no longer returned by the detail endpoint.",
+      "owner": "WebEnvoy Core result projection from BOSS source status",
+      "core_mapping": {
+        "category": "target_unavailable",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "job_no_longer_available",
+        "severity": "info"
+      },
+      "recovery_hint": "Surface job unavailable and ask the user to choose another search result."
+    },
+    {
+      "lode_failure_class": "permission_denied",
+      "trigger": "The current identity or page lacks permission to read the requested job detail.",
+      "owner": "WebEnvoy Core admission or runtime read",
+      "core_mapping": {
+        "category": "permission_denied",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "permission_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Ask the user to open BOSS manually with an identity allowed to view the job."
+    },
+    {
+      "lode_failure_class": "field_missing",
+      "trigger": "A required public field such as job title, company, location, salary, recruiter, or description is absent.",
+      "owner": "Lode post-check or Core projection",
+      "core_mapping": {
+        "category": "field_missing",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_repair_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "Treat as partial result or repair package mapping after fresh evidence refs are available."
+    },
+    {
+      "lode_failure_class": "network_resource_unavailable",
+      "trigger": "Network or browser resource facts report a failed read, blocked request, stale source ref, or missing evidence ref.",
+      "owner": "WebEnvoy Core with Harbor evidence facts",
+      "core_mapping": {
+        "category": "network_or_evidence_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "fresh_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "Request fresh browser, source, and evidence refs; do not store raw runtime material in Lode."
+    }
+  ],
+  "aliases": [
+    {
+      "source": "login_wall",
+      "maps_to": "not_logged_in",
+      "source_owner": "Harbor page facts"
+    },
+    {
+      "source": "geek_identity_missing",
+      "maps_to": "identity_insufficient",
+      "source_owner": "Harbor identity facts"
+    },
+    {
+      "source": "captcha_or_verify_prompt",
+      "maps_to": "captcha_required",
+      "source_owner": "Harbor page facts"
+    },
+    {
+      "source": "boss_wapi_code_nonzero",
+      "maps_to": "permission_denied",
+      "source_owner": "Core runtime read"
+    },
+    {
+      "source": "security_id_absent",
+      "maps_to": "input_missing_security_id",
+      "source_owner": "Core input projection"
+    },
+    {
+      "source": "job_status_offline",
+      "maps_to": "job_expired",
+      "source_owner": "Core result projection"
+    },
+    {
+      "source": "source_shape_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "empty",
+      "maps_to": "empty_result",
+      "source_owner": "Lode output schema"
+    }
+  ],
+  "consumer_boundary": {
+    "core": "Core may consume category, outcome_hint, retryable, and requires_user_action as compatibility hints, but Core owns the final envelope schema.",
+    "app": "App may consume display and severity as presentation hints, but App owns final UI copy.",
+    "lode": "Lode validator checks identity, required classes, and forbidden fields only; it does not execute runtime matching."
+  },
+  "non_goals": [
+    "No Core result envelope schema.",
+    "No App UI copy contract.",
+    "No live runtime matching, external writes, credentials, production payloads, or raw evidence bodies."
+  ]
+}

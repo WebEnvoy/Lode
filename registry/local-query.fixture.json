@@ -157,6 +157,40 @@
           "live_validation": "pending_human_runtime"
         }
       ]
+    },
+    {
+      "query_id": "boss-real-read-packages",
+      "purpose": "Expose BOSS Zhipin real-site read packages for Core/App local registry lookup.",
+      "filters": {
+        "site_slug": "boss",
+        "operation_mode": "read"
+      },
+      "results": [
+        {
+          "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+          "site_slug": "boss",
+          "capability_id": "job-search",
+          "operation_id": "boss_job_search",
+          "operation_mode": "read",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "manifest_path": "sites/boss/job-search/manifest.json",
+          "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+          "live_validation": "pending_human_runtime"
+        },
+        {
+          "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+          "site_slug": "boss",
+          "capability_id": "read-job-detail",
+          "operation_id": "boss_read_job_detail",
+          "operation_mode": "read",
+          "version": "0.1.0",
+          "lifecycle": "proposed",
+          "manifest_path": "sites/boss/read-job-detail/manifest.json",
+          "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+          "live_validation": "pending_human_runtime"
+        }
+      ]
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",

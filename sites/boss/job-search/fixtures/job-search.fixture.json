@@ -1,0 +1,281 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "boss.job-search.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "capability_id": "job-search",
+  "operation_id": "boss_job_search",
+  "operation_mode": "read",
+  "fixture_kind": "redacted_read_result",
+  "source_shape": {
+    "source_shape_id": "boss.job-search.source.wapi-joblist-summary",
+    "source_shape_version": "0.1.0",
+    "source_kind": "wapi_joblist_summary",
+    "schema_hint": "boss.job-search.source.wapi-joblist@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic fixture based on public field names and placeholder refs; no live account, session, customer, or runtime material is represented.",
+    "allowed_material": [
+      "site route shape",
+      "public field names",
+      "synthetic job ids",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "cookies",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-1",
+      "source_kind": "wapi_joblist_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss.job-search.source.wapi-joblist@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    },
+    {
+      "ref_id": "fixture-source-2",
+      "source_kind": "dom_snapshot_summary",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss-job-search-dom-summary@0.1.0",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-1",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-07-06T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only",
+      "integrity_hint": "sha256:fixture-placeholder"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-1",
+    "source_kind": "wapi_joblist_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://www.zhipin.com/web/geek/job?query=AI%20agent&city=101010100",
+      "title": "BOSS Zhipin job search results for AI agent",
+      "public_text_summary": "Two redacted job cards with securityId and encryptJobId detail refs.",
+      "available_fields": [
+        "normalized.canonical_url",
+        "normalized.title",
+        "normalized.summary",
+        "normalized.source_status",
+        "normalized.query",
+        "normalized.jobs"
+      ],
+      "live_validation": "pending_human_runtime"
+    }
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/boss/job-search/output@0.1.0",
+    "integrity_hint": "sha256:fixture-placeholder",
+    "data": {
+      "result_kind": "boss_job_search",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.zhipin.com/web/geek/job?query=AI%20agent&city=101010100",
+        "title": "BOSS Zhipin job search results for AI agent",
+        "summary": "Two redacted job cards with securityId and encryptJobId detail refs.",
+        "source_status": "located",
+        "query": "AI agent",
+        "city": {
+          "code": "101010100",
+          "name": "Beijing"
+        },
+        "filters": {
+          "experience_code": "",
+          "degree_code": "",
+          "salary_code": "",
+          "industry_code": ""
+        },
+        "result_count": 2,
+        "total_count": 2,
+        "page": 1,
+        "has_more": "unknown",
+        "jobs": [
+          {
+            "job_title": "AI Agent Product Engineer",
+            "salary": "20-35K",
+            "company": {
+              "name": "sample company one",
+              "industry": "AI",
+              "scale": "100-499",
+              "stage": "B round"
+            },
+            "location": {
+              "city": "Beijing",
+              "area": "Haidian",
+              "district": "Zhongguancun"
+            },
+            "experience": "3-5 years",
+            "degree": "Bachelor",
+            "skills": [
+              "TypeScript",
+              "LLM",
+              "Browser automation"
+            ],
+            "welfare": [
+              "Five insurances",
+              "Flexible schedule"
+            ],
+            "recruiter": {
+              "name": "sample recruiter",
+              "title": "Tech Lead",
+              "online": "unknown"
+            },
+            "detail_ref": {
+              "kind": "boss_job_detail_ref",
+              "securityId": "fixture-security-1",
+              "encryptJobId": "fixture-job-1",
+              "url": "https://www.zhipin.com/job_detail/fixture-job-1.html"
+            },
+            "source_fields": [
+              "zpData.jobList[].jobName",
+              "zpData.jobList[].salaryDesc",
+              "zpData.jobList[].brandName",
+              "zpData.jobList[].securityId",
+              "zpData.jobList[].encryptJobId"
+            ]
+          },
+          {
+            "job_title": "Frontend Engineer, AI Platform",
+            "salary": "18-30K",
+            "company": {
+              "name": "sample company two",
+              "industry": "SaaS",
+              "scale": "500-999",
+              "stage": "listed"
+            },
+            "location": {
+              "city": "Beijing",
+              "area": "Chaoyang",
+              "district": "Wangjing"
+            },
+            "experience": "1-3 years",
+            "degree": "Bachelor",
+            "skills": [
+              "React",
+              "Node.js",
+              "AI product"
+            ],
+            "welfare": [
+              "Annual bonus",
+              "Meal allowance"
+            ],
+            "recruiter": {
+              "name": "sample recruiter two",
+              "title": "HRBP",
+              "online": "unknown"
+            },
+            "detail_ref": {
+              "kind": "boss_job_detail_ref",
+              "securityId": "fixture-security-2",
+              "encryptJobId": "fixture-job-2",
+              "url": "https://www.zhipin.com/job_detail/fixture-job-2.html"
+            },
+            "source_fields": [
+              "zpData.jobList[].jobName",
+              "zpData.jobList[].salaryDesc",
+              "zpData.jobList[].brandName",
+              "zpData.jobList[].securityId",
+              "zpData.jobList[].encryptJobId"
+            ]
+          }
+        ]
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "wapi_joblist_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss.job-search.source.wapi-joblist@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-2",
+          "source_kind": "dom_snapshot_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss-job-search-dom-summary@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.title",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.query",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.jobs",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_post_check_output"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_only",
+    "real_page_validation": "pending_human_runtime_with_logged_in_boss_zhipin_page",
+    "post_check_scope": "declarative result contract and fixture output only"
+  },
+  "non_goals": [
+    "No live runtime session, account state, raw DOM, network body, screenshot body, production payload, or user business data.",
+    "No Core result envelope or live runtime post-check execution.",
+    "No write behavior."
+  ]
+}

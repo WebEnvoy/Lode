@@ -1,0 +1,176 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "boss.job-search.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "operation_ref": "lode://operation/boss_job_search",
+  "operation_mode": "read",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "notes": [
+      "Lode declares abstract resource requirements only.",
+      "Core matches requirements against current Harbor facts.",
+      "Harbor owns browser identity, runtime session, page source, and evidence refs."
+    ]
+  },
+  "matching_semantics": {
+    "profile_match_rule": "one_profile_must_match",
+    "profile_order": "not_priority",
+    "matched_meaning": "Current Harbor facts satisfy one declared profile for admission.",
+    "unmatched_meaning": "Current Harbor facts are insufficient; this is not a package-invalid signal.",
+    "invalid_contract_meaning": "The declaration uses forbidden fields or contradicts read requirements.",
+    "offline_validator_scope": "contract_shape_and_forbidden_field_checks_only_no_live_harbor_matching"
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "job-search-logged-in-ready-page",
+      "description": "Read BOSS Zhipin job search result cards from an already logged-in browser page and return detail refs.",
+      "operation_boundary": "read",
+      "required_harbor_facts": [
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core has a bound browser surface for the read attempt."
+        },
+        {
+          "fact_key": "runtime.origin.www_zhipin_com.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The bound page can navigate to, or already sits on, www.zhipin.com."
+        },
+        {
+          "fact_key": "identity.boss_geek_logged_in.confirmed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Harbor/Core can confirm an existing BOSS job seeker login without Lode storing account state."
+        },
+        {
+          "fact_key": "page.boss_spa.ready",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The BOSS Zhipin web app is hydrated enough for read-only extraction."
+        },
+        {
+          "fact_key": "network.wapi_zpgeek.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "The current origin can read BOSS zpgeek endpoints through the existing browser identity."
+        },
+        {
+          "fact_key": "source.refs.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core can bind extracted fields to source refs."
+        },
+        {
+          "fact_key": "evidence.snapshot_ref.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Harbor can provide a snapshot evidence ref without inlining evidence."
+        },
+        {
+          "fact_key": "safety.challenge.absent",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "No visible verification, CAPTCHA, or safety challenge blocks the page."
+        }
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/boss/job-search/input@0.1.0",
+        "allowed_origins": [
+          "https://www.zhipin.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "query"
+        ]
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/boss/job-search/output@0.1.0",
+        "required_available_status_refs": [
+          "source_refs"
+        ],
+        "supported_source_kinds": [
+          "wapi_joblist_summary",
+          "dom_snapshot_summary"
+        ],
+        "supported_evidence_kinds": [
+          "snapshot_ref",
+          "network_summary_ref",
+          "post_check_ref"
+        ]
+      }
+    }
+  ],
+  "admission_states": {
+    "matched": {
+      "owner": "WebEnvoy Core",
+      "meaning": "At least one requirement profile matches current Harbor facts.",
+      "does_not_prove": [
+        "capability success",
+        "post-check success",
+        "output validity"
+      ]
+    },
+    "unmatched": {
+      "owner": "WebEnvoy Core",
+      "lode_failure_class": "resource_unavailable",
+      "meaning": "The declaration is valid but current Harbor facts cannot satisfy the read profile."
+    },
+    "invalid_contract": {
+      "owner": "Lode validator or Core admission",
+      "lode_failure_class": "invalid_contract",
+      "meaning": "The resource declaration is malformed or contradicts the package operation mode."
+    }
+  },
+  "failure_class_mapping": {
+    "not_logged_in": "User must log in manually in the bound browser.",
+    "identity_insufficient": "The bound identity is not a job seeker page state accepted for read-only job access.",
+    "captcha_required": "Manual verification is required; do not bypass it.",
+    "page_not_ready": "Wait for hydration or refresh the route.",
+    "input_missing_security_id": "Use a job-search detail_ref with securityId.",
+    "job_expired": "The selected job is no longer available.",
+    "permission_denied": "Current identity lacks permission for this read.",
+    "site_changed": "Refresh source shape, fixture, normalizer, or post-check requirements.",
+    "network_resource_unavailable": "Refresh runtime, source, and evidence refs."
+  },
+  "forbidden_fields": [
+    "provider_key",
+    "harbor_profile_id",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "cookie",
+    "cookies",
+    "token",
+    "tokens",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "non_goals": [
+    "No provider or profile selection.",
+    "No Harbor live fact matching in Lode.",
+    "No runtime acquisition or fallback ordering.",
+    "No external visible action."
+  ]
+}

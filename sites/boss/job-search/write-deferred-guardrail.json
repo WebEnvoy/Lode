@@ -1,0 +1,90 @@
+{
+  "schema_version": "lode.write-deferred-guardrail.v0",
+  "guardrail_id": "boss.job-search.write-deferred-guardrail",
+  "guardrail_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+  "capability_id": "job-search",
+  "operation_id": "boss_job_search",
+  "operation_mode": "read",
+  "guardrail": {
+    "status": "deferred",
+    "applies_to_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "current_package_allowed_modes": [
+      "read"
+    ],
+    "blocked_claims": [
+      "greeting recruiters, opening chat, sending messages, applying to jobs, uploading resumes, or changing candidate/recruiter state on BOSS Zhipin",
+      "bulk pagination, batch recruitment automation, or candidate management",
+      "bypassing login, verification, risk controls, or permission prompts"
+    ]
+  },
+  "validate_only_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "target and input validation",
+      "risk and resource declaration",
+      "expected-change preview without external submission"
+    ],
+    "blocked_now": [
+      "submitting changes to an external site",
+      "claiming validation success as write success",
+      "storing live account or runtime state"
+    ],
+    "requires_before_admission": [
+      "Core action risk contract",
+      "App confirmation contract",
+      "Harbor target binding and evidence reference contract"
+    ]
+  },
+  "draft_preview_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "local draft payload",
+      "discardable preview payload"
+    ],
+    "blocked_now": [
+      "saving or sending BOSS communication",
+      "uploading a resume",
+      "changing application or recruiter-side state"
+    ],
+    "requires_before_admission": [
+      "idempotency requirement",
+      "write operation reference",
+      "expected-change schema",
+      "post-check result contract"
+    ]
+  },
+  "true_write_boundary": {
+    "execution_status": "deferred",
+    "entry_condition_only": true,
+    "deferred_until": [
+      "a later Work Item authorizes true write or write-precheck package scope",
+      "explicit user confirmation flow is accepted",
+      "runtime target binding and completion evidence refs are accepted"
+    ]
+  },
+  "admission_guardrail": {
+    "write_execution": "blocked",
+    "must_reject_if": [
+      "package claims executable write behavior",
+      "package declares submit, greet, chat, send, apply, upload, save, or recruiter-side steps",
+      "package stores account state, live runtime state, raw evidence, production payload, or user business data"
+    ],
+    "allowed_now": [
+      "read-only package",
+      "static deferred guardrail declaration",
+      "offline validator checks"
+    ]
+  },
+  "consumer_boundary": "Core may read this file to fail closed on write-side claims. This file does not authorize Core, App, Harbor, or Lode to execute write behavior.",
+  "non_goals": [
+    "No true write capability package.",
+    "No live write execution.",
+    "No Core, Harbor, or App code change."
+  ]
+}
