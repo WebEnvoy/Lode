@@ -1,0 +1,276 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "boss",
+    "display_name": "BOSS 直聘",
+    "supported_origins": [
+      "https://www.zhipin.com"
+    ]
+  },
+  "capability": {
+    "capability_id": "greet-precheck",
+    "operation_id": "boss_greet_precheck",
+    "operation_ref": "lode://operation/boss_greet_precheck",
+    "capability_family": "boss_communication_precheck",
+    "operation_mode": "validate_only",
+    "target_type": "job_or_recruiter_communication_target",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": [
+      "site:boss",
+      "real-site",
+      "write-precheck",
+      "risk:no-submit"
+    ]
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/boss/greet-precheck/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "present",
+      "resource_requirements_id": "boss.greet-precheck.resources",
+      "resource_requirements_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "lifecycle_metadata_id": "boss.greet-precheck.lifecycle",
+      "lifecycle_metadata_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "guardrail_id": "boss.greet-precheck.write-deferred-guardrail",
+      "guardrail_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/greet-precheck.fixture.json",
+      "status": "present",
+      "fixture_id": "boss.greet-precheck.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "boss.greet-precheck.source.document-summary@0.1.0",
+      "redaction": "summary_only",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "fixture_id": "boss.greet-precheck.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "present",
+      "post_check_id": "boss.greet-precheck.post-check",
+      "post_check_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "failure_mapping",
+      "path": "failure-mapping.json",
+      "status": "present",
+      "failure_mapping_id": "boss.greet-precheck.failure-mapping",
+      "failure_mapping_version": "0.1.0",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "catalog_metadata_id": "boss.greet-precheck.catalog-metadata",
+      "catalog_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App Library",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "repair_draft_id": "boss.greet-precheck.repair-draft",
+      "repair_draft_version": "0.1.0",
+      "consumer": "WebEnvoy App repair draft display and WebEnvoy Core failure attribution hints",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "overlay_metadata_id": "boss.greet-precheck.overlay-fork",
+      "overlay_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App invalidation, overlay, fork, and repair draft status display",
+      "work_item": "LODE-213"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "lock_id": "boss.greet-precheck.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "work_item": "LODE-213"
+    }
+  ],
+  "lifecycle_metadata": {
+    "path": "lifecycle-metadata.json",
+    "lifecycle_metadata_id": "boss.greet-precheck.lifecycle",
+    "lifecycle_metadata_version": "0.1.0",
+    "package_version": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+    "rollback_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+    "deprecation_status": "not_deprecated",
+    "invalidation_status": "not_invalidated",
+    "lock_input_ref": "lode://site-capability/boss/greet-precheck/lifecycle@0.1.0#lock-input"
+  },
+  "fixture_metadata": {
+    "path": "fixtures/greet-precheck.fixture.json",
+    "fixture_id": "boss.greet-precheck.fixture",
+    "fixture_version": "0.1.0",
+    "source_shape": "boss.greet-precheck.source.job_recruiter_target_summary@0.1.0",
+    "normalized_output_schema": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+    "redaction": "summary_only",
+    "source_ref_policy": "placeholder_refs_only",
+    "evidence_ref_policy": "placeholder_refs_only"
+  },
+  "core_consumption_fixture_metadata": {
+    "path": "fixtures/core-consumption.fixture.json",
+    "fixture_id": "boss.greet-precheck.core-consumption-fixture",
+    "fixture_version": "0.1.0",
+    "consumer": "WebEnvoy Core",
+    "purpose": "repo-local package admission and schema validation fixture",
+    "runtime_execution": "out_of_scope"
+  },
+  "write_deferred_guardrail_metadata": {
+    "path": "write-deferred-guardrail.json",
+    "guardrail_id": "boss.greet-precheck.write-deferred-guardrail",
+    "guardrail_version": "0.1.0",
+    "status": "active",
+    "current_package_allowed_modes": [
+      "validate_only"
+    ],
+    "deferred_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "runtime_execution": "out_of_scope",
+    "write_execution": "blocked"
+  },
+  "sample_read_package": {
+    "status": "replaced_by_real_site_write_precheck_package",
+    "work_item": "LODE-213",
+    "sample_role": "real_site_write_precheck_candidate",
+    "selection_rationale": [
+      "职位搜索和详情结果中的 securityId、encryptJobId、职位、公司和招聘者摘要作为沟通目标引用。",
+      "greet/send/batchgreet 等 BOSS 写侧命令仅作为需要禁止真实动作的站点表面。",
+      "登录、职位下架、目标不可写、页面变化和沟通入口缺失作为失败分类。"
+    ],
+    "fixture_binding": {
+      "fixture_id": "boss.greet-precheck.fixture",
+      "fixture_version": "0.1.0",
+      "path": "fixtures/greet-precheck.fixture.json",
+      "normalized_output_schema": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+      "redaction": "summary_only"
+    },
+    "consumer_entrypoints": {
+      "local_registry_index": "registry/local-packages.json",
+      "manifest_path": "sites/boss/greet-precheck/manifest.json",
+      "package_lock": "sites/boss/greet-precheck/package-lock.json",
+      "catalog_metadata_path": "sites/boss/greet-precheck/catalog-metadata.json",
+      "repair_draft_path": "sites/boss/greet-precheck/repair/repair-draft.fixture.json",
+      "overlay_fork_metadata_path": "sites/boss/greet-precheck/repair/overlay-fork-metadata.fixture.json",
+      "fixture_path": "sites/boss/greet-precheck/fixtures/greet-precheck.fixture.json",
+      "core_consumption_fixture_path": "sites/boss/greet-precheck/fixtures/core-consumption.fixture.json",
+      "write_deferred_guardrail_path": "sites/boss/greet-precheck/write-deferred-guardrail.json"
+    },
+    "admission_boundary": [
+      "offline validator shape checks",
+      "fixture and post-check contract checks",
+      "repo-local package resolution checks",
+      "static no-submit guardrail check",
+      "Core-readable static fixture for write-precheck admission"
+    ],
+    "not_yet_claimed": [
+      "runtime execution",
+      "live site validation",
+      "true write execution"
+    ]
+  },
+  "known_limitations": [
+    "Package lifecycle remains proposed until parent FR closeout consumes all Work Items.",
+    "Live site validation requires a human-owned logged-in browser session and is not claimed by this asset.",
+    "The package declares write-precheck preview semantics only; it does not save, publish, apply, greet, or send."
+  ],
+  "forbidden_contents": [
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "live_tab_state",
+    "production_payload",
+    "raw_evidence_body",
+    "user_business_data"
+  ],
+  "source_knowledge": {
+    "status": "absorbed_without_source_copy",
+    "absorbed_locators": [
+      "docs/adr/0006-xhs-boss-site-knowledge-selection.md",
+      "sources/epiral/bb-sites/boss/search.js",
+      "sources/epiral/bb-sites/boss/detail.js",
+      "research/subjects/jackwener/OpenCLI/wiki/versions/raw/pages/3.1-built-in-commands-reference.md",
+      "research/subjects/Panniantong/Agent-Reach/wiki/versions/raw/pages/3.9-instagram-linkedin-and-boss-channels.md"
+    ],
+    "absorbed": [
+      "职位搜索和详情结果中的 securityId、encryptJobId、职位、公司和招聘者摘要作为沟通目标引用。",
+      "greet/send/batchgreet 等 BOSS 写侧命令仅作为需要禁止真实动作的站点表面。",
+      "登录、职位下架、目标不可写、页面变化和沟通入口缺失作为失败分类。"
+    ],
+    "not_absorbed": [
+      "不复制 bb-sites、OpenCLI 或 Agent-Reach 源码。",
+      "不执行打招呼、批量打招呼、发送消息、投递简历或聊天动作。",
+      "不保存账号、运行现场、完整页面、网络响应或候选人/职位业务明文。"
+    ],
+    "sensitive_material_policy": "Only public package contracts, locator references, placeholder refs, and redacted fixtures are stored in Lode."
+  }
+}

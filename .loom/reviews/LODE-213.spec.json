@@ -1,0 +1,32 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-213",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "通过：LODE-213 的规格覆盖语义故事 #21/#22、GitHub #200/#213/#214/#215/#216 和只预览不提交边界。",
+  "reviewer": "codex-main-controller",
+  "authored_at": "2026-07-06T08:27:51Z",
+  "reviewed_head": "b2f9c4be10ad17b6c3ab1c3067aadd3d7d6dd28a",
+  "reviewed_validation_summary": "package validators passed for Xiaohongshu publish-note precheck and BOSS greet precheck; registry batch validation passed for 10 packages; sensitive-material key scan passed for new write-precheck packages; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py` passed and generated cache was removed; `git diff --check` passed; `loom suite validate --target . --item LODE-213 --json` passed; `loom suite evidence validate --target . --item LODE-213 --json` passed; `loom suite carrier validate --target . --item LODE-213 --json` passed; `loom fact-chain --target . --json` passed; `loom verify --target . --json` passed with runtime cache stale advisory only; PR metadata preflight passed after PR body readback; hosted run 28777921930 passed `py-compile`, `demo-bootstrap`, `loom-check`, and `repo-local-cli`, while `loom-pr-merge-gate` blocked on missing review artifacts `.loom/reviews/LODE-213.json` and `.loom/reviews/LODE-213.spec.json`.",
+  "reviewed_validation_summary_hash": "fffd82481f72f18271b6dd037e2e2db7b35e44f7d404e7926f8fb8b5b933bce2",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-213.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Specification review approved the declared write-precheck scope: generate expected change, risk hints, page requirements, no-submit guardrails, and failure classification for Xiaohongshu draft publishing and BOSS greet preview without live submission."
+  },
+  "implementation_review_disposition": {
+    "status": "passed",
+    "reason": "Implementation is limited to Lode package assets, registry fixtures, contract docs, validator-consumable samples, and item-specific carrier."
+  },
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-213.md",
+    "recovery_entry": ".loom/progress/LODE-213.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "required_inputs": {
+    "target_repo": "WebEnvoy/Lode",
+    "work_item": "LODE-213",
+    "branch": "work/lode-200-write-precheck-capabilities",
+    "suite_path": "minimal",
+    "worktree": "/Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-200-write-precheck-capabilities"
+  },
+  "ownership_contract": {
+    "task_goal": "PR Ready implementation for Lode FR #200 real-page write-precheck capability packages.",
+    "context_locators": [
+      "https://github.com/WebEnvoy/Lode/issues/200",
+      "https://github.com/WebEnvoy/Lode/issues/213",
+      "https://github.com/WebEnvoy/Lode/issues/214",
+      "https://github.com/WebEnvoy/Lode/issues/215",
+      "https://github.com/WebEnvoy/Lode/issues/216",
+      "https://github.com/WebEnvoy/Lode/issues/200#issuecomment-4888811134",
+      "https://github.com/WebEnvoy/Lode/issues/200#issuecomment-4888811137",
+      ".loom/specs/LODE-213/evidence-map.md"
+    ],
+    "read_scope": "Lode repository, GitHub issue/PR metadata, and read-only research/source locators outside Lode.",
+    "write_ownership": "Lode write-precheck package assets, registry files, contract docs, and LODE-213 Loom carriers only.",
+    "non_goals": [
+      "No Harbor/Core/App changes",
+      "No research/source edits",
+      "No live Xiaohongshu or BOSS login automation",
+      "No publish/save/upload/schedule actions",
+      "No greet/chat/send/apply/resume actions",
+      "No safety-control bypass",
+      "No live evidence fabrication",
+      "No merge or issue closeout by this execution subagent"
+    ],
+    "validation_expectation": [
+      "python3 tools/lode_validate_package.py sites/xiaohongshu/publish-note-precheck --registry-index registry/local-packages.json --json",
+      "python3 tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json",
+      "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py",
+      "sensitive-material key scan for new write-precheck packages and registry entries",
+      "git diff --check",
+      "loom verify --target . --json",
+      "loom fact-chain --target . --json",
+      "loom suite validate --target . --item LODE-213 --json",
+      "loom suite evidence validate --target . --item LODE-213 --json",
+      "loom suite carrier validate --target . --item LODE-213 --json"
+    ],
+    "output_format": "Implementation PR with metadata covering #200 #213 #214 #215 #216 and final subagent report to the main controller.",
+    "integration_target": [
+      "sites/xiaohongshu/publish-note-precheck/**",
+      "sites/boss/greet-precheck/**",
+      "registry/local-packages.json",
+      "registry/local-query.fixture.json",
+      "docs/contracts/write-precheck-capabilities.md",
+      "README.md",
+      "docs/contracts/README.md",
+      ".loom/work-items/LODE-213.md",
+      ".loom/progress/LODE-213.md",
+      ".loom/specs/LODE-213/**"
+    ]
+  },
+  "ownership_constraints": [
+    "Write ownership is limited to Lode package assets, registry fixtures, contract docs, and LODE-213 Loom carriers.",
+    "Forbidden writes include App, Harbor, WebEnvoy/Core, research, and sources paths.",
+    "No live Xiaohongshu or BOSS login automation, external-visible publish/save/greet/send/apply actions, safety bypass, merge, or issue closeout actions in the execution subagent."
+  ],
+  "delegations": [],
+  "delegation_evidence": {
+    "used_nested_subagents": false,
+    "unintegrated_subagent_output": false
+  },
+  "integration_evidence": [
+    "Added Xiaohongshu publish-note-precheck package assets using existing validator-supported package roles.",
+    "Added BOSS greet-precheck package assets using existing validator-supported package roles.",
+    "Added expected change, risk hints, no-submit guard, post-check, failure mapping, redacted fixtures, registry entries, query fixture, and package contract documentation.",
+    "Local package validators, registry validation, sensitive-material scan, diff check, Loom verify, fact-chain, suite validate, suite evidence validate, and suite carrier validate were run for PR Ready."
+  ],
+  "ownership_conflicts": [],
+  "repeated_blocker_signal": null,
+  "suite_path_consumption": {
+    "suite_path": "minimal",
+    "not_applicable_rationale": "This PR adds repo-local Lode package assets, registry fixtures, and docs only; it does not add runtime code, cross-repo API ownership, live evidence storage, or executable browser automation.",
+    "consumer_boundary": "Validator, registry, Core/App package discovery, resource requirement declaration, fixture shape, expected-change/risk/no-submit output, post-check fixture output, and failure vocabulary.",
+    "recheck_condition": "Upgrade to full suite when a later PR adds live runtime execution, Core result envelopes, Harbor evidence schemas, true write behavior, hosted registry behavior, or cross-repo contract ownership changes."
+  }
+}

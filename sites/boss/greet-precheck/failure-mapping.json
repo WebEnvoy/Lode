@@ -1,0 +1,302 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "boss.greet-precheck.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+  "capability_id": "greet-precheck",
+  "operation_id": "boss_greet_precheck",
+  "operation_mode": "validate_only",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares stable failure class meaning and consumer hints. Core owns exact result envelope fields, and App owns final presentation."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "能力包清单、结构定义、生命周期、后置检查、资源、样本或失败映射合同不一致。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "contract_violation",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_needs_repair",
+        "severity": "error"
+      },
+      "recovery_hint": "修复能力包合同后再进入准入或执行。"
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "当前 Harbor facts 不能满足写前验证所需页面、来源引用或证据引用。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "resource_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "setup_or_runtime_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "请求 Core/Harbor 提供当前执行窗口的页面、来源引用和证据引用。"
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "目标页面结构、字段来源或写前目标定位方式与能力包预期不一致。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "package_update_needed",
+        "severity": "warning"
+      },
+      "recovery_hint": "刷新来源形态、固定样本、映射或后置检查，不把现场原文放入 Lode。"
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "目标页面有效但没有可生成写前预览的公开安全摘要。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "empty_state",
+        "severity": "info"
+      },
+      "recovery_hint": "展示空状态，不把它当作站点或运行时失败。"
+    },
+    {
+      "lode_failure_class": "preview_unavailable",
+      "trigger": "预期变更、风险提示、后置检查输入或预览证据引用不足。",
+      "owner": "Lode package contract consumed by WebEnvoy Core",
+      "core_mapping": {
+        "category": "preview_unavailable",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "preview_unavailable",
+        "severity": "action_required"
+      },
+      "recovery_hint": "刷新预览字段或证据引用；不要把该状态表述为已提交。"
+    },
+    {
+      "lode_failure_class": "page_changed",
+      "trigger": "目标页面在预览来源捕获后发生变化，需要刷新写前验证。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "page_changed",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "page_changed_refresh_preview",
+        "severity": "warning"
+      },
+      "recovery_hint": "重新获取页面摘要并重新生成写前验证。"
+    },
+    {
+      "lode_failure_class": "user_cancelled",
+      "trigger": "用户在任何外部提交前取消预览或后续确认。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "user_cancelled",
+        "outcome_hint": "cancelled",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "cancelled",
+        "severity": "info"
+      },
+      "recovery_hint": "记录取消，保持真实写入未开始。"
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "结构准入后，固定样本或运行结果未满足后置检查要求。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "post_check_failed",
+        "outcome_hint": "failed_or_partial",
+        "retryable": true,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "repair_draft_available",
+        "severity": "warning"
+      },
+      "recovery_hint": "通过修复草稿刷新样本、映射或后置检查。"
+    },
+    {
+      "lode_failure_class": "evidence_expired",
+      "trigger": "验证修复或预览所需证据引用已过期或不可用。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "evidence_expired",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "fresh_evidence_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "请求新的证据引用，Lode 不保存私有现场材料。"
+    },
+    {
+      "lode_failure_class": "login_required",
+      "trigger": "BOSS 沟通入口要求已登录求职者身份后才能定位写前目标。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "runtime_permission",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "login_required",
+        "severity": "action_required"
+      },
+      "recovery_hint": "让用户在自己控制的浏览器中登录 BOSS 直聘 后重新验证。"
+    },
+    {
+      "lode_failure_class": "permission_insufficient",
+      "trigger": "当前身份没有查看或使用该职位沟通入口的权限。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "runtime_permission",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "permission_insufficient",
+        "severity": "action_required"
+      },
+      "recovery_hint": "让用户检查身份、页面权限或目标可用性。"
+    },
+    {
+      "lode_failure_class": "target_not_writable",
+      "trigger": "职位、招聘者或沟通入口不可用，不能生成打招呼写前预览。",
+      "owner": "Lode package contract consumed by WebEnvoy Core",
+      "core_mapping": {
+        "category": "target_not_writable",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "target_not_writable",
+        "severity": "action_required"
+      },
+      "recovery_hint": "更换目标或刷新页面；不可生成会误导用户的写前预览。"
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "站点出现验证、风控或安全拦截，需要人工处理，Lode 不绕过。",
+      "owner": "WebEnvoy Core admission with Harbor fact inputs",
+      "core_mapping": {
+        "category": "site_safety_challenge",
+        "outcome_hint": "blocked",
+        "retryable": true,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "safety_challenge",
+        "severity": "action_required"
+      },
+      "recovery_hint": "停止自动流程，交给用户处理站点安全提示。"
+    }
+  ],
+  "aliases": [
+    {
+      "source": "source_shape_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "source_schema_changed",
+      "maps_to": "site_changed",
+      "source_owner": "Lode invalidation marker"
+    },
+    {
+      "source": "mapping_incomplete",
+      "maps_to": "site_changed",
+      "source_owner": "Lode post-check or output validation"
+    },
+    {
+      "source": "post_check_mismatch",
+      "maps_to": "post_check_failed",
+      "source_owner": "Lode post-check validation"
+    },
+    {
+      "source": "preview_unavailable",
+      "maps_to": "preview_unavailable",
+      "source_owner": "Lode preview post-check"
+    },
+    {
+      "source": "page_changed",
+      "maps_to": "page_changed",
+      "source_owner": "Harbor target provenance"
+    },
+    {
+      "source": "user_cancelled",
+      "maps_to": "user_cancelled",
+      "source_owner": "Core cancellation run record"
+    },
+    {
+      "source": "stale_evidence_ref",
+      "maps_to": "evidence_expired",
+      "source_owner": "Harbor evidence lifecycle"
+    },
+    {
+      "source": "empty",
+      "maps_to": "empty_result",
+      "source_owner": "Lode normalized output schema"
+    },
+    {
+      "source": "login_required",
+      "maps_to": "login_required",
+      "source_owner": "Harbor runtime identity facts"
+    },
+    {
+      "source": "permission_insufficient",
+      "maps_to": "permission_insufficient",
+      "source_owner": "Harbor/Core target admission"
+    },
+    {
+      "source": "target_not_writable",
+      "maps_to": "target_not_writable",
+      "source_owner": "Lode write-precheck post-check"
+    },
+    {
+      "source": "safety_challenge",
+      "maps_to": "safety_challenge",
+      "source_owner": "Harbor page readiness facts"
+    }
+  ],
+  "consumer_boundary": {
+    "core": "Core may consume category, outcome_hint, retryable, and requires_user_action as compatibility hints, but Core owns the final envelope schema.",
+    "app": "App may consume display and severity as presentation hints, but App owns final UI copy.",
+    "lode": "Lode validator checks identity, required classes, and forbidden fields only; it does not execute runtime matching."
+  },
+  "non_goals": [
+    "No Core result envelope schema.",
+    "No App UI copy contract.",
+    "No hosted registry, marketplace, crawler queue, benchmark contract, live runtime matching, external writes, credentials, production payloads, or raw evidence bodies."
+  ]
+}

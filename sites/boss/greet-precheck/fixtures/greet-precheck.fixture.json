@@ -1,0 +1,261 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "boss.greet-precheck.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+  "capability_id": "greet-precheck",
+  "operation_id": "boss_greet_precheck",
+  "operation_mode": "validate_only",
+  "fixture_kind": "redacted_write_precheck_preview",
+  "source_shape": {
+    "source_shape_id": "boss.greet-precheck.source.job_recruiter_target_summary",
+    "source_shape_version": "0.1.0",
+    "source_kind": "job_recruiter_target_summary",
+    "schema_hint": "boss-greet-precheck-source@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic BOSS 直聘 write-precheck fixture only; no production account, runtime, customer, or raw page material is represented.",
+    "allowed_material": [
+      "declared target URL",
+      "public-safe target summary",
+      "expected change summary",
+      "risk hint summary",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "provider_route",
+      "local_path",
+      "storage_url",
+      "raw_evidence_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "production_payload",
+      "user_business_data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-1",
+      "source_kind": "job_recruiter_target_summary",
+      "producer": "fixture",
+      "captured_at": "2026-06-30T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss-greet-precheck-source@0.1.0",
+      "integrity_hint": "sha256:1e0f7803646005ba9f117679edc5e232c3fbef09dce8cb85d8567a2cf1752821"
+    },
+    {
+      "ref_id": "fixture-source-2",
+      "source_kind": "http_metadata",
+      "producer": "fixture",
+      "captured_at": "2026-06-30T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "boss-greet-precheck-http-metadata@0.1.0",
+      "integrity_hint": "sha256:1e0f7803646005ba9f117679edc5e232c3fbef09dce8cb85d8567a2cf1752821"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-1",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-06-30T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only",
+      "integrity_hint": "sha256:288b8411231004c864c2b8b0870996a6e12e81bf71836c8c6660cc8911073767"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-1",
+    "source_kind": "document_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://www.zhipin.com/job_detail/fixture.html?securityId=fixture-security",
+      "http_status": 200,
+      "title": "BOSS 打招呼写前验证",
+      "public_text_summary": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+      "canonical_url": "https://www.zhipin.com/job_detail/fixture.html?securityId=fixture-security",
+      "available_fields": [
+        "title",
+        "summary",
+        "canonical_url",
+        "source_status",
+        "target_ref",
+        "expected_change_summary",
+        "no_submit_guard_status"
+      ]
+    },
+    "omitted_raw_material": [
+      "raw_html_body",
+      "full_dom",
+      "har",
+      "screenshot_body",
+      "network_response_body",
+      "runtime_session",
+      "profile_state"
+    ],
+    "source_refs_used": [
+      "fixture-source-1",
+      "fixture-source-2"
+    ],
+    "evidence_refs_used": [
+      "fixture-evidence-1"
+    ]
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+    "integrity_hint": "sha256:6df2d824022e4d5eb72410bf4afe1a1fa114937fe5cf31477977879801da3ad9",
+    "data": {
+      "result_kind": "boss_greet_precheck",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://www.zhipin.com/job_detail/fixture.html?securityId=fixture-security",
+        "target_ref": "writable-target:boss/job-recruiter-greet",
+        "title": "BOSS 打招呼写前验证",
+        "summary": "识别 BOSS 职位或招聘者沟通目标，生成打招呼内容预览、风险提示和不发送边界。",
+        "source_status": "located",
+        "expected_change": {
+          "change_kind": "greet_message_preview",
+          "target_ref": "writable-target:boss/job-recruiter-greet",
+          "summary": "校验职位和招聘者目标引用，生成打招呼内容预览，不投递、不打招呼、不发送消息。",
+          "field_effects": [
+            {
+              "field_ref": "job.security_id_ref",
+              "effect": "bind_existing_read_ref",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "recruiter.summary",
+              "effect": "preview_target_reference",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "greet.message_summary",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            }
+          ],
+          "external_submit": false
+        },
+        "expected_change_summary": "校验职位和招聘者目标引用，生成打招呼内容预览，不投递、不打招呼、不发送消息。",
+        "risk_hints": [
+          {
+            "risk_hint": "requires_user_review",
+            "severity": "warning",
+            "owner": "app",
+            "mitigation": "展示职位、招聘者和招呼语摘要后再进入任何后续人工确认。"
+          },
+          {
+            "risk_hint": "target_may_change",
+            "severity": "warning",
+            "owner": "core",
+            "mitigation": "若职位下架、招聘者变化或沟通入口消失，要求刷新写前验证。"
+          },
+          {
+            "risk_hint": "no_submit_guard_required",
+            "severity": "blocked",
+            "owner": "core",
+            "mitigation": "拒绝打招呼、发送消息、投递简历或任何外部提交步骤。"
+          }
+        ],
+        "no_submit_guard_status": "active"
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "job_recruiter_target_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss-greet-precheck-source@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-2",
+          "source_kind": "http_metadata",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "boss-greet-precheck-http-metadata@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.target_ref",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.title",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.expected_change",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.expected_change_summary",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.risk_hints",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.no_submit_guard_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_for_LODE-213_post_check_output"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_by_GH-96_validator",
+    "post_check_scope": "write-precheck post-check requires expected change, risk hints, and no-submit guard facts.",
+    "failure_mapping_scope": "Failure classification includes page change, login, permission, target-not-writable, safety challenge, and user cancellation.",
+    "stable_gate_note": "This fixture alone does not make the package stable."
+  },
+  "non_goals": [
+    "No live runtime session, profile, provider, cookie, token, DOM, HAR, screenshot body, network body, production payload, or user business data.",
+    "No post-check runner, Core result envelope, or live runtime post-check execution.",
+    "No registry, marketplace, crawler queue, benchmark contract, Core, Harbor, App, or true write behavior."
+  ]
+}

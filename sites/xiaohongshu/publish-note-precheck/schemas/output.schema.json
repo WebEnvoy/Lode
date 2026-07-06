@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
+  "title": "小红书发布草稿写前验证归一化输出",
+  "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "xhs_publish_note_precheck"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/xhs_publish_note_precheck"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string",
+      "enum": [
+        "page_has_no_public_content",
+        "target_not_found"
+      ]
+    },
+    "unavailable_reason": {
+      "type": "string",
+      "enum": [
+        "source_unavailable",
+        "evidence_unavailable",
+        "not_normalizable"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mapping_incomplete",
+          "source_refs_partial",
+          "evidence_refs_partial"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "enum": [
+              "success_result",
+              "partial_result"
+            ]
+          },
+          "normalized": {
+            "$ref": "#/$defs/xhs_publish_note_precheck"
+          }
+        },
+        "required": [
+          "source_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "empty_result"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "empty_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "not_normalizable"
+          },
+          "normalized": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "unavailable_reason"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "xhs_publish_note_precheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_url",
+        "target_ref",
+        "title",
+        "summary",
+        "source_status",
+        "expected_change",
+        "expected_change_summary",
+        "risk_hints",
+        "no_submit_guard_status"
+      ],
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(www\\.)?xiaohongshu\\.com(?:/.*)?$|^https://creator\\.xiaohongshu\\.com(?:/.*)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Harbor/Core 提供的写前目标引用。"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located"
+          ]
+        },
+        "expected_change": {
+          "$ref": "#/$defs/expected_change"
+        },
+        "expected_change_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_hints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/risk_hint"
+          }
+        },
+        "no_submit_guard_status": {
+          "const": "active"
+        }
+      }
+    },
+    "expected_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_kind",
+        "target_ref",
+        "summary",
+        "field_effects",
+        "external_submit"
+      ],
+      "properties": {
+        "change_kind": {
+          "const": "note_draft_preview"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_effects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field_ref",
+              "effect",
+              "redaction"
+            ],
+            "properties": {
+              "field_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "effect": {
+                "type": "string",
+                "enum": [
+                  "validate_presence",
+                  "preview_local_value"
+                ]
+              },
+              "redaction": {
+                "const": "summary_only"
+              }
+            }
+          }
+        },
+        "external_submit": {
+          "const": false
+        }
+      }
+    },
+    "risk_hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_hint",
+        "severity",
+        "owner",
+        "mitigation"
+      ],
+      "properties": {
+        "risk_hint": {
+          "type": "string",
+          "enum": [
+            "requires_user_review",
+            "target_may_change",
+            "evidence_may_stale",
+            "no_submit_guard_required"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "blocked"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "lode",
+            "core",
+            "harbor",
+            "app"
+          ]
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "document_summary",
+            "http_metadata",
+            "dom_snapshot_summary"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        },
+        "schema_hint": {
+          "type": "string",
+          "examples": [
+            "xiaohongshu-publish-note-precheck-source@0.1.0"
+          ]
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "evidence_kind": {
+          "type": "string",
+          "enum": [
+            "snapshot_ref",
+            "network_summary_ref",
+            "post_check_ref"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "result_kind": "xhs_publish_note_precheck",
+      "status": "available",
+      "classification": "success_result",
+      "normalized": {
+        "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+        "target_ref": "writable-target:xiaohongshu/creator-publish-note",
+        "title": "小红书发布草稿写前验证",
+        "summary": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+        "source_status": "located",
+        "expected_change": {
+          "change_kind": "note_draft_preview",
+          "target_ref": "writable-target:xiaohongshu/creator-publish-note",
+          "summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
+          "field_effects": [
+            {
+              "field_ref": "note.title",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "note.body",
+              "effect": "preview_local_value",
+              "redaction": "summary_only"
+            },
+            {
+              "field_ref": "note.visibility",
+              "effect": "check_publish_page_requirement",
+              "redaction": "summary_only"
+            }
+          ],
+          "external_submit": false
+        },
+        "expected_change_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
+        "risk_hints": [
+          {
+            "risk_hint": "requires_user_review",
+            "severity": "warning",
+            "owner": "app",
+            "mitigation": "展示标题、正文和可见性预览后再进入任何后续人工确认。"
+          },
+          {
+            "risk_hint": "target_may_change",
+            "severity": "warning",
+            "owner": "core",
+            "mitigation": "若创作中心页面或编辑器焦点变化，要求刷新写前验证。"
+          },
+          {
+            "risk_hint": "no_submit_guard_required",
+            "severity": "blocked",
+            "owner": "core",
+            "mitigation": "拒绝保存、上传、发布、定时发布或任何外部提交步骤。"
+          }
+        ],
+        "no_submit_guard_status": "active"
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-1",
+          "source_kind": "creator_publish_page_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xiaohongshu-publish-note-precheck-source@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-1",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    },
+    {
+      "result_kind": "xhs_publish_note_precheck",
+      "status": "empty",
+      "classification": "empty_result",
+      "empty_reason": "target_has_no_writable_surface"
+    },
+    {
+      "result_kind": "xhs_publish_note_precheck",
+      "status": "unavailable",
+      "classification": "not_normalizable",
+      "unavailable_reason": "resource_unavailable"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-precheck.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_precheck",
+    "result_kind": "xhs_publish_note_precheck",
+    "core_envelope_owner": "WebEnvoy Core",
+    "failure_class_mapping": {
+      "invalid_contract": "invalid_contract",
+      "resource_unavailable": "resource_unavailable",
+      "empty": "empty_result",
+      "empty_result": "empty_result",
+      "site_changed": "site_changed",
+      "source_unavailable": "source_unavailable",
+      "evidence_unavailable": "evidence_unavailable",
+      "preview_unavailable": "preview_unavailable",
+      "page_changed": "site_changed",
+      "user_cancelled": "user_cancelled",
+      "not_normalizable": "normalization_failed",
+      "mapping_incomplete": "mapping_incomplete",
+      "login_required": "login_required",
+      "permission_insufficient": "permission_insufficient",
+      "target_not_writable": "target_not_writable",
+      "safety_challenge": "safety_challenge"
+    },
+    "risk_hint_taxonomy": [
+      "requires_user_review",
+      "target_may_change",
+      "evidence_may_stale",
+      "no_submit_guard_required"
+    ],
+    "forbidden_inline_fields": [
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "live_tab_state",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data",
+      "full_dom",
+      "har",
+      "screenshot_body"
+    ]
+  }
+}

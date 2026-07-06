@@ -1,0 +1,165 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+  "operation_ref": "lode://operation/xhs_publish_note_precheck",
+  "operation_mode": "validate_only",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "notes": [
+      "Lode declares abstract public resource requirements only.",
+      "Core matches these requirements against current Harbor facts.",
+      "Harbor owns runtime session, snapshot, refmap, evidence, identity, and freshness facts."
+    ]
+  },
+  "matching_semantics": {
+    "profile_match_rule": "one_profile_must_match",
+    "profile_order": "not_priority",
+    "matched_meaning": "Current Harbor facts satisfy one declared profile for admission.",
+    "unmatched_meaning": "Current Harbor facts are insufficient; this is not a package-invalid signal.",
+    "invalid_contract_meaning": "The declaration uses forbidden fields, unsupported vocabulary, or inconsistent read requirements.",
+    "offline_validator_scope": "contract_shape_and_forbidden_field_checks_only_no_live_harbor_matching"
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "xhs-creator-publish-page-precheck",
+      "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+      "operation_boundary": "validate_only",
+      "required_harbor_facts": [
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core 有绑定的浏览器运行面，但 Lode 不保存运行现场。"
+        },
+        {
+          "fact_key": "runtime.public_https_navigation.allowed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "目标 URL 位于声明的小红书来源。"
+        },
+        {
+          "fact_key": "runtime.site_identity.logged_in",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Harbor/Core 可确认当前页面具备用户已登录事实引用；Lode 不保存账号状态。"
+        },
+        {
+          "fact_key": "snapshot.creator_publish_page.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "页面摘要能定位发布页、标题输入、正文编辑区和可见的不发布边界。"
+        },
+        {
+          "fact_key": "refmap.write_target_refs.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core 可把预览字段绑定到 Harbor 拥有的目标引用。"
+        },
+        {
+          "fact_key": "evidence.snapshot_ref.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "Core 可附加脱敏证据引用用于后置检查。"
+        }
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
+        "allowed_origins": [
+          "https://www.xiaohongshu.com",
+          "https://creator.xiaohongshu.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "target_ref",
+          "no_submit_guard"
+        ]
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
+        "required_available_status_refs": [
+          "source_refs"
+        ],
+        "supported_source_kinds": [
+          "creator_publish_page_summary",
+          "dom_snapshot_summary",
+          "http_metadata"
+        ],
+        "supported_evidence_kinds": [
+          "snapshot_ref",
+          "post_check_ref"
+        ]
+      }
+    }
+  ],
+  "admission_states": {
+    "matched": {
+      "owner": "WebEnvoy Core",
+      "meaning": "At least one resource requirement profile matches current Harbor facts.",
+      "does_not_prove": [
+        "capability success",
+        "post-check success",
+        "source availability",
+        "output validity"
+      ]
+    },
+    "unmatched": {
+      "owner": "WebEnvoy Core",
+      "lode_failure_class": "resource_unavailable",
+      "meaning": "The declaration is valid but current Harbor facts cannot satisfy the read profile."
+    },
+    "invalid_contract": {
+      "owner": "Lode validator or Core admission",
+      "lode_failure_class": "invalid_contract",
+      "meaning": "The resource requirement declaration is malformed, uses forbidden runtime identity fields, or contradicts the package operation mode."
+    }
+  },
+  "failure_class_mapping": {
+    "resource_unavailable": "Current Harbor facts do not satisfy a required runtime, snapshot, refmap, or evidence capability.",
+    "requires_user_action": "Core may surface setup or permission repair when Harbor facts indicate user action is needed.",
+    "evidence_unavailable": "Evidence refs required by this profile or later post-check policy are absent or expired.",
+    "invalid_contract": "The package resource declaration violates the Lode/Harbor/Core ownership boundary.",
+    "login_required": "当前站点身份事实不足，无法定位写前目标。",
+    "permission_insufficient": "当前身份权限不足，不能生成该目标的写前预览。",
+    "target_not_writable": "目标页面或沟通/编辑入口不可写。",
+    "safety_challenge": "站点安全或风控挑战需要人工处理。"
+  },
+  "forbidden_fields": [
+    "provider_key",
+    "harbor_profile_id",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "cookie",
+    "cookies",
+    "token",
+    "tokens",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "non_goals": [
+    "No provider or Harbor profile selection.",
+    "No Harbor live fact matching in Lode.",
+    "No runtime acquisition or fallback ordering.",
+    "No fixture or post-check payload.",
+    "No Core, Harbor, App, registry, marketplace, crawler queue, benchmark, or write execution behavior."
+  ]
+}
