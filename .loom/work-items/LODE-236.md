@@ -6,7 +6,7 @@
 - Goal: Implement the Xiaohongshu real read and write-precheck package batch for FR #235.
 - Scope: Covers GitHub issues #235, #236, #237, #238, and #239. Ownership is limited to Xiaohongshu package assets, local registry fixtures, package contracts, and LODE-236 Loom carriers. It refreshes `search-notes`, `read-note-detail`, and `publish-note-precheck` as consumable real-site capability definitions with refs-only evidence requirements and no-submit write-precheck boundaries.
 - Execution Path: work/lode-236-xhs-real-read-write-precheck
-- Workspace Entry: /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-236-xhs-real-read-write-precheck
+- Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-236.md
 - Review Entry: .loom/reviews/LODE-236.json
 - Validation Entry: package validator, py_compile, JSON readability, git diff --check, Loom fact-chain, Loom verify, suite validation, and PR metadata readback.
