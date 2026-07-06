@@ -4,7 +4,7 @@
   "decision": "allow",
   "reviewer": "Codex master controller thread 019f2731-5b28-72d1-897e-8d1199e94fdc",
   "authored_at": "2026-07-06T15:48:00Z",
-  "reviewed_head": "2ddf4faee11ab89ca86d0c78c0703d452f36f1f3",
+  "reviewed_head": "8dc2315da13cf74bc7f404592bbe32d1ea285a56",
   "reviewed_validation_summary": "`python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-231 --json`; `loom suite evidence validate --target . --item LODE-231 --json`; `loom suite carrier validate --target . --item LODE-231 --json` passed locally.",
   "reviewed_validation_summary_hash": "a9b6238de8f83c3de08f9b279934794d623d2f62e6f6e5d4c80edbf6e5b05aac",
   "validation_summary_source": "recovery.latest_validation_summary",
