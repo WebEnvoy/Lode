@@ -6,7 +6,7 @@
 - Goal: Define Xiaohongshu publish-note write-precheck capability and deliver the real-page write-precheck batch for Lode #200.
 - Scope: Covers Lode #200/#213/#214/#215/#216 and semantic stories #21/#22. Ownership is limited to Lode write-precheck package assets, registry fixtures, contract docs, and LODE-213 Loom carriers. Adds Xiaohongshu publish-note precheck and BOSS greet precheck packages, unified expected-change/risk/no-submit output, failure mapping, registry entries, and package contract docs.
 - Execution Path: work/lode-200-write-precheck-capabilities
-- Workspace Entry: /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-200-write-precheck-capabilities
+- Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-213.md
 - Review Entry: .loom/reviews/LODE-213.json
 - Validation Entry: package validator; registry checks; sensitive-material scan; git diff --check; loom verify; loom fact-chain; loom suite checks.
