@@ -11,6 +11,7 @@
 | 小红书真实只读能力包 | [Xiaohongshu read capability packages](xiaohongshu-read-capabilities.md) |
 | BOSS 直聘真实只读能力包 | [BOSS Zhipin read capability packages](boss-read-capabilities.md) |
 | 小红书与 BOSS 真实页面写前验证能力包 | [Write-precheck capability packages](write-precheck-capabilities.md) |
+| Lode runtime boundary、Core registry consumption、closeout evidence | [Lode runtime boundary and closeout evidence](runtime-boundary-closeout.md) |
 | LODE-236 小红书真实只读与写前验证批次 | [Xiaohongshu read capability packages](xiaohongshu-read-capabilities.md)、[Write-precheck capability packages](write-precheck-capabilities.md) |
 | LODE-241 BOSS 真实只读与写前验证批次 | [BOSS Zhipin read capability packages](boss-read-capabilities.md)、[Write-precheck capability packages](write-precheck-capabilities.md) |
 | bb-sites 小红书与 BOSS 吸收冻结 | [bb-sites XHS/BOSS absorption freeze](bb-sites-xhs-boss-absorption-freeze.md) |
