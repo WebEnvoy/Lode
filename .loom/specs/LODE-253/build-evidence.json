@@ -12,8 +12,8 @@
     ],
     "branch": "work/lode-253-runtime-boundary",
     "suite_path": "minimal",
-    "worktree": "/Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-253-runtime-boundary",
-    "head_sha": "776fef335a33421f3d521d8d2be921bac9d52fd8"
+    "worktree": ".",
+    "head_sha": "0cdde9e4013a3845c2bb74a28f8c4c134db43e3a"
   },
   "ownership_contract": {
     "task_goal": "Correct Lode runtime-boundary and Core registry consumption contracts for FR #252.",
@@ -35,7 +35,7 @@
       "No real Xiaohongshu or BOSS page access",
       "No account, profile, Cookie, or browser state handling",
       "No publish, save, upload, submit, greet, chat, send, apply, schedule, or other external visible action",
-      "No hosted registry, marketplace, runtime server, PR creation, push, or issue closeout"
+      "No hosted registry, marketplace, runtime server, issue closeout, or external visible action; PR creation and push are main-controller duties after worker handoff"
     ],
     "validation_expectation": [
       "python3 tools/validate_runtime_boundary_contract.py",
@@ -83,7 +83,7 @@
   "repeated_blocker_signal": null,
   "validation": {
     "status": "passed",
-    "generated_at": "2026-07-08T07:36:14Z",
+    "generated_at": "2026-07-08T08:49:14Z",
     "commands": [
       {
         "command": "python3 tools/validate_runtime_boundary_contract.py",
@@ -130,7 +130,7 @@
         "result": "passed"
       },
       {
-        "command": "loom workspace check --target . --path /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-253-runtime-boundary --branch work/lode-253-runtime-boundary --item LODE-253 --json",
+        "command": "loom workspace check --target . --path . --branch work/lode-253-runtime-boundary --item LODE-253 --json",
         "result": "passed"
       },
       {

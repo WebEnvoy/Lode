@@ -6,7 +6,7 @@
 - Parent FR: #252.
 - Milestone: Lode #14.
 - Target branch: `work/lode-253-runtime-boundary`.
-- Target worktree: `/Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-253-runtime-boundary`.
+- Target worktree: `.`.
 
 ## Ownership Contract
 
