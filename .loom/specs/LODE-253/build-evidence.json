@@ -1,0 +1,148 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "required_inputs": {
+    "target_repo": "WebEnvoy/Lode",
+    "work_item": "LODE-253",
+    "covered_issues": [
+      "#253",
+      "#254",
+      "#255",
+      "#256",
+      "#257"
+    ],
+    "branch": "work/lode-253-runtime-boundary",
+    "suite_path": "minimal",
+    "worktree": ".",
+    "head_sha": "0cdde9e4013a3845c2bb74a28f8c4c134db43e3a"
+  },
+  "ownership_contract": {
+    "task_goal": "Correct Lode runtime-boundary and Core registry consumption contracts for FR #252.",
+    "context_locators": [
+      "https://github.com/WebEnvoy/Lode/issues/252",
+      "https://github.com/WebEnvoy/Lode/issues/253",
+      "https://github.com/WebEnvoy/Lode/issues/254",
+      "https://github.com/WebEnvoy/Lode/issues/255",
+      "https://github.com/WebEnvoy/Lode/issues/256",
+      "https://github.com/WebEnvoy/Lode/issues/257",
+      "VISION.md",
+      "ROADMAP.md",
+      "docs/contracts/runtime-boundary-closeout.md"
+    ],
+    "read_scope": "Lode repository plus read-only GitHub issue metadata for #252-#257.",
+    "write_ownership": "Lode registry/query fixture, capability boundary docs, focused validator, and LODE-253 Loom carriers only.",
+    "non_goals": [
+      "No App/Core/Harbor repository changes",
+      "No real Xiaohongshu or BOSS page access",
+      "No account, profile, Cookie, or browser state handling",
+      "No publish, save, upload, submit, greet, chat, send, apply, schedule, or other external visible action",
+      "No hosted registry, marketplace, runtime server, issue closeout, or external visible action; PR creation and push are main-controller duties after worker handoff"
+    ],
+    "validation_expectation": [
+      "python3 tools/validate_runtime_boundary_contract.py",
+      "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py",
+      "jq empty registry/local-packages.json registry/local-query.fixture.json .loom/specs/LODE-253/build-evidence.json",
+      "git diff --check",
+      "loom doctor --target . --json",
+      "loom fact-chain --target . --json",
+      "loom verify --target . --json",
+      "loom suite validate --target . --item LODE-253 --json",
+      "loom suite evidence validate --target . --item LODE-253 --json",
+      "loom suite carrier validate --target . --item LODE-253 --json"
+    ],
+    "output_format": "Worker handoff with worktree, branch, HEAD, status, changed files, validation results, covered issues, and risks.",
+    "integration_target": [
+      "registry/local-packages.json",
+      "registry/local-query.fixture.json",
+      "docs/contracts/runtime-boundary-closeout.md",
+      "docs/contracts/README.md",
+      "tools/validate_runtime_boundary_contract.py",
+      ".loom/work-items/LODE-253.md",
+      ".loom/progress/LODE-253.md",
+      ".loom/specs/LODE-253/**"
+    ]
+  },
+  "ownership_constraints": [
+    "Write ownership stayed inside Lode registry, docs, tools, and LODE-253 carriers.",
+    "No live runtime, account, profile, Cookie, production page, or external visible action was touched."
+  ],
+  "delegations": [],
+  "delegation_evidence": {
+    "used_nested_subagents": false,
+    "rationale": "No nested subagent used because this worker owns a narrow shared registry/carrier correction; splitting writes would increase carrier conflict risk.",
+    "unintegrated_subagent_output": false
+  },
+  "integration_evidence": [
+    "Registry entries expose site/task kind, runtime_execution out_of_scope, required_browser_session, identity_profile_requirements, evidence_requirements, write_precheck_boundary, and failure_taxonomy_refs.",
+    "Query fixture results expose the same Core-readable fields for the six XHS/BOSS package refs.",
+    "Write-precheck packages declare submitted false, no_submit_guard active, and true_write_execution blocked.",
+    "Runtime-boundary closeout doc states Lode is not a runner and fixture/contract evidence is not live runtime evidence.",
+    "Focused validator passes for all six target package refs."
+  ],
+  "ownership_conflicts": [],
+  "repeated_blocker_signal": null,
+  "validation": {
+    "status": "passed",
+    "generated_at": "2026-07-08T08:49:14Z",
+    "commands": [
+      {
+        "command": "python3 tools/validate_runtime_boundary_contract.py",
+        "result": "passed"
+      },
+      {
+        "command": "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+        "result": "passed"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py",
+        "result": "passed"
+      },
+      {
+        "command": "jq empty registry/local-packages.json registry/local-query.fixture.json .loom/specs/LODE-253/build-evidence.json",
+        "result": "passed"
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed"
+      },
+      {
+        "command": "loom doctor --target . --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom fact-chain --target . --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom verify --target . --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom suite validate --target . --item LODE-253 --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom suite evidence validate --target . --item LODE-253 --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom suite carrier validate --target . --item LODE-253 --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom workspace check --target . --path . --branch work/lode-253-runtime-boundary --item LODE-253 --json",
+        "result": "passed"
+      },
+      {
+        "command": "loom build --target . --item LODE-253 --build-evidence .loom/specs/LODE-253/build-evidence.json --json",
+        "result": "passed"
+      }
+    ]
+  },
+  "suite_path_consumption": {
+    "suite_path": "minimal",
+    "not_applicable_rationale": "This branch changes repo-local Lode assets, registry fixtures, docs, focused validation, and item-specific carriers only; it does not add runtime code, cross-repo API ownership, live evidence storage, true write behavior, hosted registry behavior, or browser automation.",
+    "consumer_boundary": "Lode validator, local registry, Core/App package discovery, Harbor/Core refs-only evidence requirements, fixture shape, post-check declarations, failure vocabulary, and closeout wording.",
+    "recheck_condition": "Upgrade to full suite when a later PR adds live runtime execution, Core result envelopes, Harbor evidence schemas, true write behavior, hosted registry behavior, or cross-repo contract ownership changes."
+  }
+}

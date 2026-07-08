@@ -464,7 +464,127 @@
         "#238",
         "#239"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_read",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+        "manifest_path": "sites/xiaohongshu/search-notes/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/xiaohongshu/search-notes/output@0.1.0",
+        "resource_requirements_id": "xiaohongshu.search-notes.resources",
+        "post_check_id": "xiaohongshu.search-notes.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "read",
+        "site_slug": "xiaohongshu",
+        "capability_id": "search-notes",
+        "operation_id": "xhs_search_notes",
+        "task_kind": "real_site_read",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/xiaohongshu/search-notes/resource-requirements.json",
+        "failure_mapping_path": "sites/xiaohongshu/search-notes/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "xhs-user-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "Xiaohongshu",
+        "site_origins": [
+          "https://www.xiaohongshu.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_xiaohongshu_com.available",
+          "identity.user_logged_in.confirmed",
+          "page.vue_app.ready",
+          "page.pinia_store.ready",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "xiaohongshu_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "identity.user_logged_in.confirmed"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "pinia_store_summary",
+          "network_summary",
+          "dom_snapshot_summary",
+          "snapshot_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": false,
+        "no_submit_guard": "not_applicable_read_only",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/xiaohongshu/search-notes/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/xiaohongshu/search-notes/fixtures/core-consumption.fixture.json"
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/xiaohongshu/search-notes/failure-mapping.json",
+        "failure_mapping_id": "xiaohongshu.search-notes.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "login_expired",
+          "page_not_ready",
+          "signed_ref_missing",
+          "safety_challenge",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#255"
+      ]
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
@@ -575,7 +695,128 @@
         "#238",
         "#239"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_read",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+        "manifest_path": "sites/xiaohongshu/read-note-detail/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/xiaohongshu/read-note-detail/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/xiaohongshu/read-note-detail/output@0.1.0",
+        "resource_requirements_id": "xiaohongshu.read-note-detail.resources",
+        "post_check_id": "xiaohongshu.read-note-detail.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "read",
+        "site_slug": "xiaohongshu",
+        "capability_id": "read-note-detail",
+        "operation_id": "xhs_read_note_detail",
+        "task_kind": "real_site_read",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/xiaohongshu/read-note-detail/resource-requirements.json",
+        "failure_mapping_path": "sites/xiaohongshu/read-note-detail/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "xhs-user-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "Xiaohongshu",
+        "site_origins": [
+          "https://www.xiaohongshu.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_xiaohongshu_com.available",
+          "identity.user_logged_in.confirmed",
+          "page.vue_app.ready",
+          "page.pinia_store.ready",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent",
+          "input.signed_note_ref.available"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "xiaohongshu_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "identity.user_logged_in.confirmed"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "pinia_store_summary",
+          "network_summary",
+          "dom_snapshot_summary",
+          "snapshot_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": false,
+        "no_submit_guard": "not_applicable_read_only",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/xiaohongshu/read-note-detail/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/xiaohongshu/read-note-detail/fixtures/core-consumption.fixture.json"
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/xiaohongshu/read-note-detail/failure-mapping.json",
+        "failure_mapping_id": "xiaohongshu.read-note-detail.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "login_expired",
+          "page_not_ready",
+          "signed_ref_missing",
+          "safety_challenge",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#255"
+      ]
     },
     {
       "package_ref": "lode://site-capability/boss/job-search@0.1.0",
@@ -670,7 +911,130 @@
         "#241",
         "#244"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_read",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+        "manifest_path": "sites/boss/job-search/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/boss/job-search/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/boss/job-search/output@0.1.0",
+        "resource_requirements_id": "boss.job-search.resources",
+        "post_check_id": "boss.job-search.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "read",
+        "site_slug": "boss",
+        "capability_id": "job-search",
+        "operation_id": "boss_job_search",
+        "task_kind": "real_site_read",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/boss/job-search/resource-requirements.json",
+        "failure_mapping_path": "sites/boss/job-search/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "boss-job-seeker-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "BOSS Zhipin",
+        "site_origins": [
+          "https://www.zhipin.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_zhipin_com.available",
+          "identity.boss_geek_logged_in.confirmed",
+          "page.boss_spa.ready",
+          "network.wapi_zpgeek.available",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "boss_job_seeker_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "identity.boss_geek_logged_in.confirmed"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "snapshot_ref",
+          "network_summary_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session state",
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-253_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": false,
+        "no_submit_guard": "not_applicable_read_only",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/boss/job-search/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/boss/job-search/fixtures/core-consumption.fixture.json"
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/boss/job-search/failure-mapping.json",
+        "failure_mapping_id": "boss.job-search.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "identity_insufficient",
+          "captcha_required",
+          "page_not_ready",
+          "input_missing_security_id",
+          "query_missing",
+          "city_unresolved",
+          "pagination_limited",
+          "job_expired",
+          "permission_denied",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#256"
+      ]
     },
     {
       "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
@@ -765,7 +1129,131 @@
         "#242",
         "#244"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_read",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+        "manifest_path": "sites/boss/read-job-detail/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/boss/read-job-detail/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
+        "resource_requirements_id": "boss.read-job-detail.resources",
+        "post_check_id": "boss.read-job-detail.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "read",
+        "site_slug": "boss",
+        "capability_id": "read-job-detail",
+        "operation_id": "boss_read_job_detail",
+        "task_kind": "real_site_read",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/boss/read-job-detail/resource-requirements.json",
+        "failure_mapping_path": "sites/boss/read-job-detail/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "boss-job-seeker-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "BOSS Zhipin",
+        "site_origins": [
+          "https://www.zhipin.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_zhipin_com.available",
+          "identity.boss_geek_logged_in.confirmed",
+          "page.boss_spa.ready",
+          "network.wapi_zpgeek.available",
+          "input.boss_security_id.available",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "boss_job_seeker_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "identity.boss_geek_logged_in.confirmed"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "snapshot_ref",
+          "network_summary_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session state",
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-253_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": false,
+        "no_submit_guard": "not_applicable_read_only",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/boss/read-job-detail/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/boss/read-job-detail/fixtures/core-consumption.fixture.json"
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/boss/read-job-detail/failure-mapping.json",
+        "failure_mapping_id": "boss.read-job-detail.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "identity_insufficient",
+          "captcha_required",
+          "page_not_ready",
+          "input_missing_security_id",
+          "query_missing",
+          "city_unresolved",
+          "pagination_limited",
+          "job_expired",
+          "permission_denied",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#256"
+      ]
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
@@ -880,7 +1368,139 @@
         "#238",
         "#239"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_write_precheck",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
+        "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
+        "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "validate_only",
+        "site_slug": "xiaohongshu",
+        "capability_id": "publish-note-precheck",
+        "operation_id": "xhs_publish_note_precheck",
+        "task_kind": "real_site_write_precheck",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/xiaohongshu/publish-note-precheck/resource-requirements.json",
+        "failure_mapping_path": "sites/xiaohongshu/publish-note-precheck/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "xhs-creator-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "Xiaohongshu",
+        "site_origins": [
+          "https://www.xiaohongshu.com",
+          "https://creator.xiaohongshu.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.public_https_navigation.allowed",
+          "runtime.site_identity.logged_in",
+          "snapshot.creator_publish_page.available",
+          "refmap.write_target_refs.available",
+          "evidence.snapshot_ref.available"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "xiaohongshu_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "runtime.site_identity.logged_in"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "creator_publish_page_summary",
+          "dom_snapshot_summary",
+          "snapshot_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": true,
+        "no_submit_guard": "active",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/xiaohongshu/publish-note-precheck/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/core-consumption.fixture.json",
+        "blocked_external_actions": [
+          "publish",
+          "save",
+          "upload",
+          "submit",
+          "greet",
+          "chat",
+          "send",
+          "apply",
+          "schedule"
+        ]
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/xiaohongshu/publish-note-precheck/failure-mapping.json",
+        "failure_mapping_id": "xiaohongshu.publish-note-precheck.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "preview_unavailable",
+          "page_changed",
+          "user_cancelled",
+          "post_check_failed",
+          "evidence_expired",
+          "login_required",
+          "permission_insufficient",
+          "target_not_writable",
+          "safety_challenge"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#255",
+        "#257"
+      ]
     },
     {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
@@ -988,7 +1608,136 @@
         "#243",
         "#244"
       ],
-      "milestone": "#14"
+      "milestone": "#14",
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_write_precheck",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "manifest_path": "sites/boss/greet-precheck/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",
+        "resource_requirements_id": "boss.greet-precheck.resources",
+        "post_check_id": "boss.greet-precheck.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "validate_only",
+        "site_slug": "boss",
+        "capability_id": "greet-precheck",
+        "operation_id": "boss_greet_precheck",
+        "task_kind": "real_site_write_precheck",
+        "runtime_execution": "out_of_scope",
+        "resource_requirements_path": "sites/boss/greet-precheck/resource-requirements.json",
+        "failure_mapping_path": "sites/boss/greet-precheck/failure-mapping.json"
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "not_attempted_real_account_access_forbidden",
+        "must_fail_closed_without": [
+          "required_browser_session",
+          "identity_profile_requirements",
+          "source_refs",
+          "evidence_refs"
+        ]
+      },
+      "required_browser_session": {
+        "required": true,
+        "requirement_id": "boss-job-seeker-logged-in-browser",
+        "owner": "Harbor",
+        "session_kind": "user_authorized_logged_in_browser",
+        "site_display": "BOSS Zhipin",
+        "site_origins": [
+          "https://www.zhipin.com"
+        ],
+        "required_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.public_https_navigation.allowed",
+          "runtime.site_identity.logged_in",
+          "snapshot.job_or_recruiter_target.available",
+          "refmap.write_target_refs.available",
+          "evidence.snapshot_ref.available"
+        ]
+      },
+      "identity_profile_requirements": {
+        "owner": "Harbor facts consumed by WebEnvoy Core",
+        "identity_profile_kind": "boss_job_seeker_logged_in_user",
+        "freshness": "current_execution_window",
+        "lode_storage": "forbidden",
+        "required_fact_keys": [
+          "runtime.site_identity.logged_in"
+        ]
+      },
+      "evidence_requirements": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "snapshot_ref",
+          "post_check_ref"
+        ],
+        "forbidden_evidence_material": [
+          "cookie",
+          "token",
+          "profile state",
+          "runtime session state",
+          "raw DOM",
+          "HAR",
+          "network response body",
+          "screenshot body",
+          "production payload",
+          "user business data"
+        ],
+        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-253_execution",
+        "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
+        "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
+      },
+      "write_precheck_boundary": {
+        "applies": true,
+        "no_submit_guard": "active",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "true_write_execution": "blocked",
+        "guardrail_path": "sites/boss/greet-precheck/write-deferred-guardrail.json",
+        "core_consumption_fixture_path": "sites/boss/greet-precheck/fixtures/core-consumption.fixture.json",
+        "blocked_external_actions": [
+          "publish",
+          "save",
+          "upload",
+          "submit",
+          "greet",
+          "chat",
+          "send",
+          "apply",
+          "schedule"
+        ]
+      },
+      "failure_taxonomy_refs": {
+        "failure_mapping_path": "sites/boss/greet-precheck/failure-mapping.json",
+        "failure_mapping_id": "boss.greet-precheck.failure-mapping",
+        "classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "preview_unavailable",
+          "page_changed",
+          "user_cancelled",
+          "post_check_failed",
+          "evidence_expired",
+          "login_required",
+          "permission_insufficient",
+          "target_not_writable",
+          "safety_challenge"
+        ]
+      },
+      "covered_corrective_work_items": [
+        "#253",
+        "#254",
+        "#256",
+        "#257"
+      ]
     }
   ],
   "non_goals": [
@@ -998,5 +1747,61 @@
     "No runtime execution, provider/profile selection, live tab binding, or write capability."
   ],
   "candidate_selection_path": "registry/read-capability-candidates.json",
-  "query_fixture_path": "registry/local-query.fixture.json"
+  "query_fixture_path": "registry/local-query.fixture.json",
+  "core_consumption_contract": {
+    "status": "lode252_boundary_declared",
+    "covered_work_items": [
+      "LODE-253",
+      "LODE-254",
+      "LODE-255",
+      "LODE-256",
+      "LODE-257"
+    ],
+    "consumer_owner": "WebEnvoy Core",
+    "asset_owner": "Lode",
+    "runtime_execution": "out_of_scope",
+    "required_entry_fields": [
+      "site_slug",
+      "task_kind",
+      "capability_id",
+      "operation_id",
+      "operation_mode",
+      "runtime_execution",
+      "required_browser_session",
+      "identity_profile_requirements",
+      "evidence_requirements",
+      "write_precheck_boundary",
+      "failure_taxonomy_refs"
+    ],
+    "write_precheck_requirement": {
+      "operation_modes": [
+        "validate_only",
+        "draft",
+        "preview"
+      ],
+      "no_submit_guard": "active",
+      "submitted": false,
+      "true_write_execution": "blocked"
+    },
+    "must_not_infer": [
+      "hosted registry",
+      "package install or sync",
+      "runtime execution",
+      "profile or provider selection",
+      "live source lookup",
+      "live evidence lookup",
+      "user-visible task success",
+      "write submission permission"
+    ],
+    "fail_closed_if_missing": [
+      "manifest locator",
+      "schema locator",
+      "resource requirements",
+      "post-check declaration",
+      "write-precheck no-submit guard",
+      "Harbor runtime facts",
+      "refs-only evidence",
+      "failure taxonomy refs"
+    ]
+  }
 }
