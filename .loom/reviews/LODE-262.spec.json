@@ -3,31 +3,18 @@
   "item_id": "LODE-262",
   "decision": "allow",
   "kind": "spec_review",
-  "summary": "Spec review accepts the two-operation proposed read admission boundary for LODE-262.",
+  "summary": "规格审查确认：仅静态 Lode allowlist 边界，两个 immutable consumer 及其用途精确固定；完整拒绝条件集合均为 reject。最小 suite 的非适用理由、运行时边界和重新验证条件仍成立。",
   "reviewer": "Codex main controller",
-  "authored_at": "2026-07-10T20:49:24Z",
-  "reviewed_head": "aaf120cdb92f36bc1e59f3a53f5fde63fb44a84f",
-  "reviewed_validation_summary": "2026-07-10T20:48Z passed: allowlist validator with fail-closed mutations; all-package local registry validator; runtime-boundary validator; Python compile; JSON readability; `git diff --check`; Loom fact-chain; suite validation; suite evidence validation; suite carrier validation; and build readiness.",
-  "reviewed_validation_summary_hash": "792b217ae8cc1e3f7dcf1421aaac3121b5ae05df136a485dfefd87652138d749",
+  "authored_at": "2026-07-10T21:13:09Z",
+  "reviewed_head": "4b2f8efd2c9d7f05e09b459d4756a8943951e633",
+  "reviewed_validation_summary": "2026-07-10T21:06Z passed: allowlist self-test including exact consumers, missing/empty reject maps, non-reject values, and active lifecycle; all-package local registry validator; runtime-boundary validator; Python compile; `git diff --check`; Loom fact-chain; suite validation; suite evidence validation; and suite carrier validation.",
+  "reviewed_validation_summary_hash": "acf84d9b967341bdc12f3acf5d77d104b5dac45a72661b97ef5a63faa11e85ab",
   "validation_summary_source": "recovery.latest_validation_summary",
   "validation_summary_locator": ".loom/progress/LODE-262.md",
   "fallback_to": null,
-  "findings": [
-    {
-      "id": "compat-follow-up-1",
-      "summary": "Harbor #245 and Core #267 must provide separate live runtime evidence; this static asset is not proof of execution.",
-      "severity": "warn",
-      "rebuttal": null,
-      "disposition": {
-        "status": "deferred",
-        "summary": "Projected from compatibility `follow_ups`."
-      }
-    }
-  ],
+  "findings": [],
   "blocking_issues": [],
-  "follow_ups": [
-    "Harbor #245 and Core #267 must provide separate live runtime evidence; this static asset is not proof of execution."
-  ],
+  "follow_ups": [],
   "consumed_inputs": {
     "work_item": ".loom/work-items/LODE-262.md",
     "recovery_entry": ".loom/progress/LODE-262.md",
@@ -46,7 +33,7 @@
         "source": "github_host"
       }
     },
-    "engine_adapter": "loom/default-codex-exec",
+    "engine_adapter": null,
     "engine_evidence": null,
     "normalized_findings": null,
     "suite_validation": "suite validate",

@@ -15,6 +15,27 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST_PATH = Path("registry/runtime-consumption-allowlist.json")
 REGISTRY_PATH = Path("registry/local-packages.json")
 EXPECTED_OPERATIONS = {"xhs_search_notes", "boss_job_search"}
+EXPECTED_CONSUMERS = [
+    {
+        "repository": "WebEnvoy/Harbor",
+        "issue": "#245",
+        "purpose": "allowlisted one-shot read-only operation admission",
+    },
+    {
+        "repository": "WebEnvoy/WebEnvoy",
+        "issue": "#267",
+        "purpose": "lock-bound read-only task admission and run recording",
+    },
+]
+EXPECTED_FAIL_CLOSED_CONDITIONS = {
+    "unknown_operation",
+    "package_lock_or_version_drift",
+    "non_https_origin",
+    "non_read_operation_mode",
+    "missing_resource_requirements",
+    "missing_failure_taxonomy",
+    "missing_refs_only_evidence_or_post_check",
+}
 REQUIRED_ENTRY_KEYS = {
     "package_ref",
     "lock_ref",
@@ -185,9 +206,13 @@ def validate(data: Any) -> list[str]:
     boundary = data.get("consumer_boundary")
     if not isinstance(boundary, dict) or boundary.get("runtime_execution") != "out_of_scope" or "does not prove" not in str(boundary.get("admission_meaning", "")):
         add_error(errors, "allowlist.consumer_boundary", "must preserve the admission-only, non-runner boundary")
+    elif boundary.get("allowed_consumers") != EXPECTED_CONSUMERS:
+        add_error(errors, "allowlist.consumer_boundary.allowed_consumers", "must exactly and exclusively bind Harbor #245 and Core #267 with their declared purposes")
     fail_closed = data.get("fail_closed")
-    if not isinstance(fail_closed, dict) or any(value != "reject" for value in fail_closed.values()):
-        add_error(errors, "allowlist.fail_closed", "must reject every declared failure condition")
+    if not isinstance(fail_closed, dict) or set(fail_closed) != EXPECTED_FAIL_CLOSED_CONDITIONS or any(
+        fail_closed.get(condition) != "reject" for condition in EXPECTED_FAIL_CLOSED_CONDITIONS
+    ):
+        add_error(errors, "allowlist.fail_closed", "must contain exactly the expected failure conditions and reject every one")
     entries = data.get("entries")
     if not isinstance(entries, list) or len(entries) != len(EXPECTED_OPERATIONS):
         add_error(errors, "allowlist.entries", "must contain exactly the two allowlisted operations")
@@ -210,6 +235,11 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("non HTTPS origin", lambda value: value["entries"][0].__setitem__("allowed_origins", ["http://www.xiaohongshu.com"])),
         ("write mode", lambda value: value["entries"][0].__setitem__("operation_mode", "write")),
         ("missing evidence", lambda value: value["entries"][0].__setitem__("evidence_and_post_check", {})),
+        ("arbitrary consumer", lambda value: value["consumer_boundary"]["allowed_consumers"].append({"repository": "WebEnvoy/App", "issue": "#999", "purpose": "unauthorized"})),
+        ("missing reject map", lambda value: value.pop("fail_closed")),
+        ("empty reject map", lambda value: value.__setitem__("fail_closed", {})),
+        ("non-reject failure condition", lambda value: value["fail_closed"].__setitem__("unknown_operation", "allow")),
+        ("active lifecycle", lambda value: value["entries"][0].__setitem__("lifecycle", "active")),
     ]
     failures: list[str] = []
     for name, mutate in cases:
