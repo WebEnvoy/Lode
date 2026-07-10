@@ -6,7 +6,7 @@
     "covered_issues": [
       "#262"
     ],
-    "branch": "work/lode-262-runtime-consumption-allowlist",
+    "branch": "work/lode-262-allowlist-correction",
     "suite_path": "minimal",
     "worktree": ".",
     "head_sha": "829933df56e0af03089f8d8eaafdbcfebaa3d6c6"
