@@ -1,4 +1,4 @@
-name: Loom advisory delivery gate
+name: Loom delivery gate
 
 on:
   pull_request:
@@ -42,7 +42,7 @@ jobs:
 
   loom-delivery-gate:
     needs: host-facts
-    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@f446eaed33aede51de9b346f4f83eb2e5d62b015
+    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@af7d08dbf81ab330f288f8cd7d146af52d0405ea
     permissions:
       contents: read
       pull-requests: read
@@ -50,4 +50,5 @@ jobs:
       host_facts: ${{ needs.host-facts.outputs.host_facts }}
       profile: light
       validation_command: python3 tools/lode_validate_package.py sites/example/read-public-page --json
-      loom_ref: f446eaed33aede51de9b346f4f83eb2e5d62b015
+      loom_ref: af7d08dbf81ab330f288f8cd7d146af52d0405ea
+      enforcement: enforce
