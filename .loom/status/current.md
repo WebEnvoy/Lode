@@ -2,34 +2,34 @@
 
 ## Derived Fact Chain View
 
-- Item ID: LODE-253
-- Goal: Correct Lode runtime-boundary and Core consumption contracts for FR #252.
-- Scope: Covers GitHub issues #253, #254, #255, #256, and #257. Ownership is limited to Lode capability assets, repo-local registry/query fixtures, contract docs, focused validation, and this LODE-253 carrier. It does not create a runtime runner or live evidence.
-- Execution Path: work/lode-253-runtime-boundary
-- Workspace Entry: .
-- Recovery Entry: .loom/progress/LODE-253.md
-- Review Entry: .loom/reviews/LODE-253.json
-- Validation Entry: focused runtime-boundary validator, package registry validator, JSON readability, py_compile, git diff --check, Loom fact-chain/verify/suite carrier checks when available.
-- Closing Condition: PR #258 is reviewed, gated, merged to main, and issues #253-#257 receive post-merge closeout evidence. No issue closeout before merge.
-- Current Checkpoint: merge
-- Current Stop: PR #258 is open on `work/lode-253-runtime-boundary` at head `04477e2610e9b036ae82da8c1c613558c9010db8`; current-head review and metadata are present, and this carrier is ready for merge-gate readback.
-- Next Step: Rerun PR metadata readback plus hosted/local merge gates, then merge and close out issues #253-#257 if gates pass.
-- Blockers: None recorded.
-- Latest Validation Summary: 2026-07-08T08:49Z passed: `python3 tools/validate_runtime_boundary_contract.py`; `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`; `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py`; `git diff --check`; `loom fact-chain --target . --json`; `loom verify --target . --json`; `loom suite validate --target . --item LODE-253 --json`; `loom suite evidence validate --target . --item LODE-253 --json`; `loom suite carrier validate --target . --item LODE-253 --json`.
-- Recovery Boundary: Lode package/catalog/fixture/contract truth only; no Xiaohongshu/BOSS real account access, no live site evidence, no publish/save/upload/submit/greet/chat/send/apply actions, no safety-control bypass, no Harbor/Core/App changes, no `sources/` or `research/` edits.
-- Current Lane: FR #252 runtime-boundary corrective batch.
+- Item ID: LODE-262
+- Goal: Freeze the two proposed, lock-bound Xiaohongshu and BOSS read-operation admission entries for Harbor #245 and Core/WebEnvoy #267.
+- Scope: Lode registry/capability assets, offline validators, tests, and LODE-262 Loom carriers only.
+- Execution Path: `work/lode-262-runtime-consumption-allowlist`
+- Workspace Entry: `.`
+- Recovery Entry: `.loom/progress/LODE-262.md`
+- Review Entry: `.loom/reviews/LODE-262.json`
+- Validation Entry: allowlist validator/self-test, package registry validator, runtime-boundary validator, py_compile, diff check, and Loom fact-chain/suite checks.
+- Closing Condition: A reviewed and merged PR proves the static allowlist and fail-closed validator. This does not close a live-runtime user story or prove a site operation succeeded.
+- Current Checkpoint: implementation
+- Current Stop: Build the static allowlist and focused validator, then validate and create a PR.
+- Next Step: Run current-head validation, update this carrier with the exact head and PR metadata, then submit the ready PR.
+- Blockers: None. The inherited LODE-253 pointer was stale after merged PR #258 and is superseded by this current carrier.
+- Latest Validation Summary: 2026-07-10T20:32Z passed: allowlist validator with fail-closed mutations; all-package local registry validator; runtime-boundary validator; Python compile; JSON readability; and `git diff --check`. Loom suite facts will be refreshed after the carrier is complete.
+- Recovery Boundary: Lode assets and offline validation only. No browser, production-site, account, profile, Cookie, session, runtime execution, write action, or issue closeout.
+- Current Lane: FR #261 lock-bound runtime-consumption allowlist.
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
-- Verification Entry: loom verify --target . --json
-- Lane Entry: FR #252 runtime-boundary corrective batch
+- Verification Entry: `loom verify --target . --json`
+- Lane Entry: FR #261 lock-bound runtime-consumption allowlist
 
 ## Sources
 
-- Static Truth: .loom/work-items/LODE-253.md
-- Dynamic Truth: .loom/progress/LODE-253.md
+- Static Truth: .loom/work-items/LODE-262.md
+- Dynamic Truth: .loom/progress/LODE-262.md
 - Locator Truth: .loom/bootstrap/init-result.json
-- Fact Chain CLI: loom fact-chain --target . --json
+- Fact Chain CLI: `loom fact-chain --target . --json`
