@@ -3,11 +3,11 @@
 ## Dynamic Facts
 
 - Item ID: LODE-262
-- Current Checkpoint: implementation
-- Current Stop: Build the static allowlist and focused validator, then validate and create a PR.
-- Next Step: Run current-head validation, update this carrier with the exact head and PR metadata, then submit the ready PR.
-- Blockers: None. The inherited LODE-253 pointer was stale after merged PR #258 and is superseded by this current carrier.
-- Latest Validation Summary: 2026-07-10T20:32Z passed: allowlist validator with fail-closed mutations; all-package local registry validator; runtime-boundary validator; Python compile; JSON readability; and `git diff --check`. Loom suite facts will be refreshed after the carrier is complete.
+- Current Checkpoint: build
+- Current Stop: Static implementation is committed at `829933df56e0af03089f8d8eaafdbcfebaa3d6c6`; run the build gate against its declared evidence.
+- Next Step: Run build, then create the ready PR and bind current-head review metadata.
+- Blockers: None recorded.
+- Latest Validation Summary: 2026-07-10T20:36Z passed: allowlist validator with fail-closed mutations; all-package local registry validator; runtime-boundary validator; Python compile; JSON readability; `git diff --check`; Loom fact-chain; suite validation; suite evidence validation; and suite carrier validation.
 - Recovery Boundary: Lode assets and offline validation only. No browser, production-site, account, profile, Cookie, session, runtime execution, write action, or issue closeout.
 - Current Lane: FR #261 lock-bound runtime-consumption allowlist.
 

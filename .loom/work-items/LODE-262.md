@@ -4,7 +4,7 @@
 
 - Item ID: LODE-262
 - Goal: Freeze the two proposed, lock-bound Xiaohongshu and BOSS read-operation admission entries for Harbor #245 and Core/WebEnvoy #267.
-- Scope: Lode registry/capability assets, offline validators, tests, and LODE-262 Loom carriers only.
+- Scope: Ownership is limited to Lode registry/capability assets, offline validators, tests, and LODE-262 Loom carriers only.
 - Execution Path: work/lode-262-runtime-consumption-allowlist
 - Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-262.md
@@ -22,6 +22,7 @@
 - `.loom/specs/LODE-262/implementation-contract.md`
 - `.loom/specs/LODE-262/evidence-map.md`
 - `.loom/specs/LODE-262/task-carrier.md`
+- `.loom/specs/LODE-262/build-evidence.json`
 
 ## GitHub Binding
 
