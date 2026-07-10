@@ -23,6 +23,8 @@
 - `.loom/specs/LODE-262/evidence-map.md`
 - `.loom/specs/LODE-262/task-carrier.md`
 - `.loom/specs/LODE-262/build-evidence.json`
+- `.loom/reviews/LODE-262.spec.json`
+- `.loom/reviews/LODE-262.json`
 
 ## GitHub Binding
 
