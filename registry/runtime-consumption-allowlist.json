@@ -1,0 +1,173 @@
+{
+  "schema_version": "lode.runtime-consumption-allowlist.v0",
+  "allowlist_id": "lode.xhs-boss.read.runtime-consumption",
+  "allowlist_version": "0.1.0",
+  "asset_owner": "Lode",
+  "consumer_boundary": {
+    "allowed_consumers": [
+      {
+        "repository": "WebEnvoy/Harbor",
+        "issue": "#245",
+        "purpose": "allowlisted one-shot read-only operation admission"
+      },
+      {
+        "repository": "WebEnvoy/WebEnvoy",
+        "issue": "#267",
+        "purpose": "lock-bound read-only task admission and run recording"
+      }
+    ],
+    "admission_meaning": "The entry may be used only for limited runtime admission. It does not make a proposed capability active and does not prove that a site operation succeeded.",
+    "runtime_execution": "out_of_scope"
+  },
+  "entries": [
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+      "version": "0.1.0",
+      "site_slug": "xiaohongshu",
+      "capability_id": "search-notes",
+      "operation_id": "xhs_search_notes",
+      "operation_mode": "read",
+      "lifecycle": "proposed",
+      "allowed_origins": [
+        "https://www.xiaohongshu.com"
+      ],
+      "resource_requirements": {
+        "path": "sites/xiaohongshu/search-notes/resource-requirements.json",
+        "resource_requirements_id": "xiaohongshu.search-notes.resources",
+        "resource_requirements_version": "0.1.0",
+        "required_harbor_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_xiaohongshu_com.available",
+          "identity.user_logged_in.confirmed",
+          "page.vue_app.ready",
+          "page.pinia_store.ready",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent"
+        ]
+      },
+      "failure_taxonomy": {
+        "path": "sites/xiaohongshu/search-notes/failure-mapping.json",
+        "failure_mapping_id": "xiaohongshu.search-notes.failure-mapping",
+        "failure_mapping_version": "0.1.0",
+        "required_classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "login_expired",
+          "page_not_ready",
+          "signed_ref_missing",
+          "safety_challenge",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "evidence_and_post_check": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "pinia_store_summary",
+          "network_summary",
+          "dom_snapshot_summary",
+          "snapshot_ref",
+          "post_check_ref"
+        ],
+        "post_check_path": "sites/xiaohongshu/search-notes/checks/post-check.json",
+        "post_check_id": "xiaohongshu.search-notes.post-check",
+        "post_check_version": "0.1.0",
+        "required_post_check_fields": [
+          "status",
+          "reason",
+          "source_refs",
+          "evidence_refs"
+        ]
+      }
+    },
+    {
+      "package_ref": "lode://site-capability/boss/job-search@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/job-search@0.1.0",
+      "version": "0.1.0",
+      "site_slug": "boss",
+      "capability_id": "job-search",
+      "operation_id": "boss_job_search",
+      "operation_mode": "read",
+      "lifecycle": "proposed",
+      "allowed_origins": [
+        "https://www.zhipin.com"
+      ],
+      "resource_requirements": {
+        "path": "sites/boss/job-search/resource-requirements.json",
+        "resource_requirements_id": "boss.job-search.resources",
+        "resource_requirements_version": "0.1.0",
+        "required_harbor_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.origin.www_zhipin_com.available",
+          "identity.boss_geek_logged_in.confirmed",
+          "page.boss_spa.ready",
+          "network.wapi_zpgeek.available",
+          "source.refs.available",
+          "evidence.snapshot_ref.available",
+          "safety.challenge.absent"
+        ]
+      },
+      "failure_taxonomy": {
+        "path": "sites/boss/job-search/failure-mapping.json",
+        "failure_mapping_id": "boss.job-search.failure-mapping",
+        "failure_mapping_version": "0.1.0",
+        "required_classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "not_logged_in",
+          "identity_insufficient",
+          "captcha_required",
+          "page_not_ready",
+          "input_missing_security_id",
+          "query_missing",
+          "city_unresolved",
+          "pagination_limited",
+          "job_expired",
+          "permission_denied",
+          "field_missing",
+          "network_resource_unavailable"
+        ]
+      },
+      "evidence_and_post_check": {
+        "source_ref_policy": "summary_refs_only",
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": [
+          "snapshot_ref",
+          "network_summary_ref",
+          "post_check_ref"
+        ],
+        "post_check_path": "sites/boss/job-search/checks/post-check.json",
+        "post_check_id": "boss.job-search.post-check",
+        "post_check_version": "0.1.0",
+        "required_post_check_fields": [
+          "status",
+          "reason",
+          "source_refs",
+          "evidence_refs"
+        ]
+      }
+    }
+  ],
+  "fail_closed": {
+    "unknown_operation": "reject",
+    "package_lock_or_version_drift": "reject",
+    "non_https_origin": "reject",
+    "non_read_operation_mode": "reject",
+    "missing_resource_requirements": "reject",
+    "missing_failure_taxonomy": "reject",
+    "missing_refs_only_evidence_or_post_check": "reject"
+  },
+  "non_goals": [
+    "No browser, page, profile, session, or runtime execution.",
+    "No active lifecycle promotion or claim of site-operation success.",
+    "No page parsing, Core run record, hosted registry, marketplace, or account material."
+  ]
+}

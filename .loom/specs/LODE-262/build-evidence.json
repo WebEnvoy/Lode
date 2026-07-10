@@ -1,0 +1,88 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "required_inputs": {
+    "target_repo": "WebEnvoy/Lode",
+    "work_item": "LODE-262",
+    "covered_issues": [
+      "#262"
+    ],
+    "branch": "work/lode-262-runtime-consumption-allowlist",
+    "suite_path": "minimal",
+    "worktree": ".",
+    "head_sha": "829933df56e0af03089f8d8eaafdbcfebaa3d6c6"
+  },
+  "ownership_contract": {
+    "task_goal": "Freeze lock-bound runtime-consumption admission for xhs_search_notes and boss_job_search.",
+    "context_locators": [
+      "https://github.com/WebEnvoy/Lode/issues/261",
+      "https://github.com/WebEnvoy/Lode/issues/262",
+      "https://github.com/WebEnvoy/Harbor/issues/245",
+      "https://github.com/WebEnvoy/WebEnvoy/issues/267",
+      "registry/runtime-consumption-allowlist.json"
+    ],
+    "read_scope": "Lode assets plus read-only GitHub metadata for #261/#262 and the two downstream dependencies.",
+    "write_ownership": "Lode runtime-consumption allowlist, its offline validator, and LODE-262 carrier artifacts only.",
+    "non_goals": [
+      "No App, Harbor, or Core repository changes",
+      "No browser, production page, account, profile, Cookie, or session access",
+      "No runtime runner, page parsing, Core run/result, active lifecycle promotion, write action, hosted registry, marketplace, merge, or issue closeout"
+    ],
+    "validation_expectation": [
+      "python3 tools/validate_runtime_consumption_allowlist.py --self-test",
+      "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+      "python3 tools/validate_runtime_boundary_contract.py",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py",
+      "git diff --check",
+      "loom fact-chain --target . --json",
+      "loom suite validate --target . --item LODE-262 --json",
+      "loom suite evidence validate --target . --item LODE-262 --json",
+      "loom suite carrier validate --target . --item LODE-262 --json"
+    ],
+    "output_format": "Worktree, branch, head, changed files, validation, PR URL, and residual risk.",
+    "integration_target": [
+      "registry/runtime-consumption-allowlist.json",
+      "tools/validate_runtime_consumption_allowlist.py",
+      ".loom/work-items/LODE-262.md",
+      ".loom/progress/LODE-262.md",
+      ".loom/specs/LODE-262/**"
+    ]
+  },
+  "ownership_constraints": [
+    "Static Lode asset evidence does not establish live runtime success.",
+    "Unknown operation, lock/version drift, non-HTTPS origin, write mode, and missing requirements fail closed."
+  ],
+  "delegations": [],
+  "delegation_evidence": {
+    "used_nested_subagents": false,
+    "rationale": "The work writes one shared registry asset and its carrier; splitting ownership would create carrier conflicts.",
+    "unintegrated_subagent_output": false
+  },
+  "integration_evidence": [
+    "Exactly two proposed read operations are present.",
+    "Each entry is bound to manifest, package lock, registry, resource requirements, failure taxonomy, refs-only evidence, and post-check assets.",
+    "In-memory mutations prove the specified drift and policy conditions fail closed."
+  ],
+  "ownership_conflicts": [],
+  "repeated_blocker_signal": null,
+  "validation": {
+    "status": "passed",
+    "generated_at": "2026-07-10T20:36:40Z",
+    "commands": [
+      {"command": "python3 tools/validate_runtime_consumption_allowlist.py --self-test", "result": "passed"},
+      {"command": "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "result": "passed"},
+      {"command": "python3 tools/validate_runtime_boundary_contract.py", "result": "passed"},
+      {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py", "result": "passed"},
+      {"command": "git diff --check", "result": "passed"},
+      {"command": "loom fact-chain --target . --json", "result": "passed"},
+      {"command": "loom suite validate --target . --item LODE-262 --json", "result": "passed"},
+      {"command": "loom suite evidence validate --target . --item LODE-262 --json", "result": "passed"},
+      {"command": "loom suite carrier validate --target . --item LODE-262 --json", "result": "passed"}
+    ]
+  },
+  "suite_path_consumption": {
+    "suite_path": "minimal",
+    "not_applicable_rationale": "This Work Item changes static Lode assets and offline validation only; it has no runtime execution, browser automation, live evidence storage, or write path.",
+    "consumer_boundary": "Lode local registry and downstream Harbor #245/Core #267 admission only.",
+    "recheck_condition": "Upgrade to a full suite for runtime API, browser/session, Core envelope, live evidence, or write behavior changes."
+  }
+}

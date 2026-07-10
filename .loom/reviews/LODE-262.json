@@ -1,0 +1,73 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-262",
+  "decision": "allow",
+  "kind": "code_review",
+  "summary": "Implementation review accepts the lock-bound allowlist and offline fail-closed validator for LODE-262.",
+  "reviewer": "Codex main controller",
+  "authored_at": "2026-07-10T20:49:43Z",
+  "reviewed_head": "aaf120cdb92f36bc1e59f3a53f5fde63fb44a84f",
+  "reviewed_validation_summary": "2026-07-10T20:48Z passed: allowlist validator with fail-closed mutations; all-package local registry validator; runtime-boundary validator; Python compile; JSON readability; `git diff --check`; Loom fact-chain; suite validation; suite evidence validation; suite carrier validation; and build readiness.",
+  "reviewed_validation_summary_hash": "792b217ae8cc1e3f7dcf1421aaac3121b5ae05df136a485dfefd87652138d749",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-262.md",
+  "fallback_to": null,
+  "findings": [
+    {
+      "id": "compat-follow-up-1",
+      "summary": "No real browser, account, production page, or external action was reviewed or performed.",
+      "severity": "warn",
+      "rebuttal": null,
+      "disposition": {
+        "status": "deferred",
+        "summary": "Projected from compatibility `follow_ups`."
+      }
+    }
+  ],
+  "blocking_issues": [],
+  "follow_ups": [
+    "No real browser, account, production page, or external action was reviewed or performed."
+  ],
+  "consumed_inputs": {
+    "work_item": ".loom/work-items/LODE-262.md",
+    "recovery_entry": ".loom/progress/LODE-262.md",
+    "status_surface": ".loom/status/current.md",
+    "build_checkpoint": "pass",
+    "budget_risk": {
+      "schema_version": "loom-execution-budget-risk/v1",
+      "status": "not_applicable",
+      "enforcement": "advisory",
+      "highest_risk": "none",
+      "risk_dimensions": [],
+      "summary": "execution budget is not_applicable; budget risk remains advisory and non-blocking",
+      "budget_summary": "execution budget is not collected for this invocation.",
+      "adapter_evidence_locator": "",
+      "provenance": {
+        "source": "github_host"
+      }
+    },
+    "engine_adapter": "loom/default-codex-exec",
+    "engine_evidence": null,
+    "normalized_findings": null,
+    "suite_evidence_validation": "loom suite evidence validate --target /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-262-runtime-consumption-allowlist --item LODE-262 --json",
+    "suite_carrier_validation": "loom suite carrier validate --target /Volumes/2T/dev/WebEnvoy/Lode.worktrees/lode-262-runtime-consumption-allowlist --item LODE-262 --json",
+    "suite_evidence_map": ".loom/specs/LODE-262/evidence-map.md",
+    "suite_consistency_analysis": null,
+    "suite_task_carriers": [
+      ".loom/specs/LODE-262/task-carrier.md"
+    ],
+    "suite_evidence_consumed_contracts": [
+      "docs/methodology/harness/full-spec-suite-cli-surface.md",
+      "docs/methodology/templates/evidence-map.md"
+    ],
+    "suite_carrier_consumed_contracts": [
+      "docs/methodology/harness/task-carrier-contract.md",
+      "docs/methodology/templates/execution-breakdown.md",
+      "docs/methodology/harness/full-spec-suite-cli-surface.md"
+    ]
+  },
+  "semantic_review_disposition": {
+    "status": "passed",
+    "reason": "Authored implementation review approved the current head for merge checkpoint consumption."
+  }
+}
