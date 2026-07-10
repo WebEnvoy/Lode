@@ -42,7 +42,7 @@ jobs:
 
   loom-delivery-gate:
     needs: host-facts
-    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@af7d08dbf81ab330f288f8cd7d146af52d0405ea
+    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
     permissions:
       contents: read
       pull-requests: read
@@ -50,5 +50,5 @@ jobs:
       host_facts: ${{ needs.host-facts.outputs.host_facts }}
       profile: light
       validation_command: python3 tools/lode_validate_package.py sites/example/read-public-page --json
-      loom_ref: af7d08dbf81ab330f288f8cd7d146af52d0405ea
+      loom_ref: edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
       enforcement: enforce
