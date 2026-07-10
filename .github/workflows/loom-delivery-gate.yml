@@ -1,0 +1,54 @@
+name: Loom delivery gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  host-facts:
+    name: loom-delivery-host-facts
+    runs-on: ubuntu-latest
+    outputs:
+      host_facts: ${{ steps.collect.outputs.host_facts }}
+    steps:
+      - name: Read pull-request host facts
+        id: collect
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pull = context.payload.pull_request;
+            if (!pull) {
+              core.setFailed("pull_request payload is required");
+              return;
+            }
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pull.number,
+              per_page: 100,
+            });
+            const changed_paths = [...new Set(files.map((file) => file.filename))].sort();
+            core.setOutput("host_facts", JSON.stringify({
+              schema_version: "loom-delivery-gate-host-facts/v1",
+              event: "pull_request",
+              repository: { owner: context.repo.owner, name: context.repo.repo },
+              change: { number: pull.number, base_sha: pull.base.sha, head_sha: pull.head.sha },
+              changed_paths,
+            }));
+
+  loom-delivery-gate:
+    needs: host-facts
+    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
+    permissions:
+      contents: read
+      pull-requests: read
+    with:
+      host_facts: ${{ needs.host-facts.outputs.host_facts }}
+      profile: light
+      validation_command: python3 tools/lode_validate_package.py sites/example/read-public-page --json
+      loom_ref: edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
+      enforcement: enforce
