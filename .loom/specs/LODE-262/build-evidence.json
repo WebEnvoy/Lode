@@ -9,7 +9,7 @@
     "branch": "work/lode-262-allowlist-correction",
     "suite_path": "minimal",
     "worktree": ".",
-    "head_sha": "829933df56e0af03089f8d8eaafdbcfebaa3d6c6"
+    "head_sha": "52be2528d4f26f9e24c24de17703ca80efae4114"
   },
   "ownership_contract": {
     "task_goal": "Freeze lock-bound runtime-consumption admission for xhs_search_notes and boss_job_search.",
@@ -66,7 +66,7 @@
   "repeated_blocker_signal": null,
   "validation": {
     "status": "passed",
-    "generated_at": "2026-07-10T20:36:40Z",
+    "generated_at": "2026-07-10T21:08:00Z",
     "commands": [
       {"command": "python3 tools/validate_runtime_consumption_allowlist.py --self-test", "result": "passed"},
       {"command": "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "result": "passed"},

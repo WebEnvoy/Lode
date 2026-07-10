@@ -13,7 +13,7 @@
 - Closing Condition: A reviewed and merged PR proves the static allowlist and fail-closed validator. This does not close a live-runtime user story or prove a site operation succeeded.
 - Current Checkpoint: build
 - Current Stop: Correct the fail-closed consumer and rejection-map validation defects found in prior review.
-- Next Step: Commit the corrective validation and carrier refresh, then author a current-head review record and open a corrective PR.
+- Next Step: Run build and pre-review against the corrected commit, then author a current-head review record and open a corrective PR.
 - Blockers: None recorded.
 - Latest Validation Summary: 2026-07-10T21:06Z passed: allowlist self-test including exact consumers, missing/empty reject maps, non-reject values, and active lifecycle; all-package local registry validator; runtime-boundary validator; Python compile; `git diff --check`; Loom fact-chain; suite validation; suite evidence validation; and suite carrier validation.
 - Recovery Boundary: Lode assets and offline validation only. No browser, production-site, account, profile, Cookie, session, runtime execution, write action, or issue closeout.
