@@ -17,3 +17,14 @@
 - Work Item: https://github.com/WebEnvoy/Lode/issues/268
 - Parent FR: https://github.com/WebEnvoy/Lode/issues/261
 - Consumers: https://github.com/WebEnvoy/Harbor/issues/252 and https://github.com/WebEnvoy/WebEnvoy/issues/270
+
+## Associated Artifacts
+
+- .loom/specs/LODE-268/spec.md
+- .loom/specs/LODE-268/plan.md
+- .loom/specs/LODE-268/implementation-contract.md
+- .loom/specs/LODE-268/evidence-map.md
+- .loom/specs/LODE-268/task-carrier.md
+- registry/detail-runtime-consumption.json
+- registry/detail-runtime-consumption.schema.json
+- tools/validate_detail_runtime_consumption.py
