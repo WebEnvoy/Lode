@@ -3,7 +3,7 @@
   "fixture_id": "xiaohongshu.publish-note-precheck.core-consumption-fixture",
   "fixture_version": "0.1.0",
   "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
   "capability_id": "publish-note-precheck",
   "operation_id": "xhs_publish_note_precheck",
   "operation_mode": "validate_only",
@@ -46,7 +46,7 @@
     },
     "package_lock": {
       "path": "sites/xiaohongshu/publish-note-precheck/package-lock.json",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0"
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1"
     },
     "input_schema": {
       "path": "sites/xiaohongshu/publish-note-precheck/schemas/input.schema.json",
@@ -73,7 +73,7 @@
   },
   "admission_fixture": {
     "requested_package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
     "accepted_operation_modes": [
       "validate_only"
     ],

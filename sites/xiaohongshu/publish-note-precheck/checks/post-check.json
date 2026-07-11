@@ -23,7 +23,8 @@
       "status",
       "reason",
       "source_refs",
-      "evidence_refs"
+      "evidence_refs",
+      "submitted"
     ],
     "status_meaning": {
       "passed": "Required public fields are present and bound to declared source/evidence refs.",
@@ -32,7 +33,8 @@
     },
     "reason_policy": "Always provide a short human-readable reason for the status.",
     "source_ref_policy": "Use source ref ids declared by the fixture or Core result source refs.",
-    "evidence_ref_policy": "Use evidence ref ids declared by the fixture or Harbor/Core evidence refs; do not inline evidence bodies."
+    "evidence_ref_policy": "Use evidence ref ids declared by the fixture or Harbor/Core evidence refs; do not inline evidence bodies.",
+    "submitted_policy": "submitted must be present and exactly false; missing or true fails closed."
   },
   "requirements": [
     {
@@ -111,7 +113,8 @@
         "ref_id": "fixture-evidence-1",
         "evidence_kind": "snapshot_ref"
       }
-    ]
+    ],
+    "submitted": false
   },
   "failure_boundary": {
     "preview_unavailable": "Expected change, risk hint, or no-submit guard fields are absent or inconsistent.",

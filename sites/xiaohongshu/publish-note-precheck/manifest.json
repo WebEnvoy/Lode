@@ -138,9 +138,9 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "xiaohongshu.publish-note-precheck.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "work_item": "LODE-236"
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+      "work_item": "LODE-266"
     }
   ],
   "lifecycle_metadata": {
@@ -158,7 +158,7 @@
     ],
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-    "rollback_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+    "rollback_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
     "deprecation_status": "not_deprecated",
     "invalidation_status": "not_invalidated",
     "lock_input_ref": "lode://site-capability/xiaohongshu/publish-note-precheck/lifecycle@0.1.0#lock-input"

@@ -139,7 +139,7 @@
     "previous_known_good": {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
       "package_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
       "status": "self_for_initial_version",
       "validated_at": "2026-07-05T00:00:00Z",
       "validation_source": "tools/lode_validate_package.py sites/boss/greet-precheck --registry-index registry/local-packages.json --json"
@@ -147,7 +147,7 @@
     "rollback_candidates": [
       {
         "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "status": "self_for_initial_version"
       }
     ],
@@ -225,7 +225,7 @@
       },
       {
         "role": "package_lock",
-        "ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "version": "0.1.0"
       },
       {

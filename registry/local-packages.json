@@ -1260,7 +1260,7 @@
       "package_type": "site-capability",
       "package_path": "sites/xiaohongshu/publish-note-precheck",
       "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
       "lock_path": "sites/xiaohongshu/publish-note-precheck/package-lock.json",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-precheck",
@@ -1284,7 +1284,7 @@
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
         "status": "self_for_initial_version"
       },
       "asset_roles": [
@@ -1313,7 +1313,7 @@
         ]
       },
       "work_item": "LODE-236",
-      "lock_work_item": "LODE-236",
+      "lock_work_item": "LODE-266",
       "write_precheck_package": {
         "status": "selected_real_site_write_precheck_contract_ready",
         "work_item": "LODE-236",
@@ -1374,7 +1374,7 @@
       "core_admission_fields": {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
         "version": "0.1.0",
-        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
         "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
         "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
         "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
@@ -1507,7 +1507,7 @@
       "package_type": "site-capability",
       "package_path": "sites/boss/greet-precheck",
       "manifest_path": "sites/boss/greet-precheck/manifest.json",
-      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
       "lock_path": "sites/boss/greet-precheck/package-lock.json",
       "site_slug": "boss",
       "capability_id": "greet-precheck",
@@ -1531,7 +1531,7 @@
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-        "previous_known_good_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "previous_known_good_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "status": "self_for_initial_version"
       },
       "asset_roles": [
@@ -1560,7 +1560,7 @@
         ]
       },
       "work_item": "LODE-241",
-      "lock_work_item": "LODE-241",
+      "lock_work_item": "LODE-266",
       "write_precheck_package": {
         "status": "selected_real_site_write_precheck_contract_ready",
         "work_item": "LODE-241",
@@ -1614,7 +1614,7 @@
       "core_admission_fields": {
         "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
         "version": "0.1.0",
-        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "manifest_path": "sites/boss/greet-precheck/manifest.json",
         "input_schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
         "output_schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",

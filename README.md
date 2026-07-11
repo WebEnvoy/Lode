@@ -62,12 +62,13 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 
 ## 本地校验
 
-当前最小校验器命令行使用 Python 标准库，离线校验单个能力包（capability package）的
+当前最小校验器命令行离线校验单个能力包（capability package）的
 清单（manifest）、结构定义、固定样本数据、后置检查、失败映射和仓库本地登记表（repo-local registry）
 引用，不访问真实账号、
 浏览器运行环境、Core、Harbor 或 App：
 
 ```bash
+python3 -m pip install --requirement requirements-validator.txt
 python3 tools/lode_validate_package.py sites/example/read-public-page --json
 ```
 
@@ -83,6 +84,9 @@ python3 tools/lode_validate_package.py sites/example/read-public-page --registry
 ```bash
 python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
 ```
+
+批量入口会同时执行严格 JSON Schema 和 validate-only runtime-consumption truth 校验；
+缺少 `jsonschema` 依赖时 fail closed。
 
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
 版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App

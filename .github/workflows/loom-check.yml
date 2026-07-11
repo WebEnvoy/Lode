@@ -82,10 +82,11 @@ jobs:
         with:
           node-version: "24"
       - run: npm install -g "@mc-and-his-agents/loom@${LOOM_VERSION}"
+      - run: python3 -m pip install --requirement requirements-validator.txt
       - run: test ! -d "$GITHUB_WORKSPACE/.loom/bin"
       - run: loom version --json
       - run: loom installed-state validate --target "$GITHUB_WORKSPACE" --json
-      - run: python3 tools/lode_validate_package.py sites/example/read-public-page --json
+      - run: python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
 
   loom-check:
     name: loom-check

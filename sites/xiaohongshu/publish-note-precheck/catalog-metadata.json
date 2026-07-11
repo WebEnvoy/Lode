@@ -3,7 +3,7 @@
   "catalog_metadata_id": "xiaohongshu.publish-note-precheck.catalog-metadata",
   "catalog_metadata_version": "0.1.0",
   "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
   "capability_id": "publish-note-precheck",
   "operation_id": "xhs_publish_note_precheck",
   "operation_mode": "validate_only",
@@ -34,12 +34,12 @@
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good": {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0"
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1"
     },
     "rollback_candidates": [
       {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
         "status": "self_for_initial_version"
       }
     ]
@@ -95,7 +95,7 @@
   "core_admission_fields": {
     "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
     "version": "0.1.0",
-    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
     "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
     "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
     "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",

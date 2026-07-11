@@ -1,0 +1,9 @@
+{
+  "schema_version": "lode.validate-only-runtime-consumption-fixture.v0",
+  "truth_ref": "registry/validate-only-runtime-consumption.json",
+  "accepted_operations": ["boss_greet_precheck", "xhs_publish_note_precheck"],
+  "expected_mode": "validate_only",
+  "expected_submitted": false,
+  "required_runtime_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
+  "rejection_cases": ["unknown_operation", "lock_drift", "asset_digest_drift", "version_drift", "origin_drift", "page_drift", "challenge_present", "write_mode", "stale_facts", "missing_field_source_ref", "missing_evidence_ref", "missing_post_check_ref", "missing_runtime_result_ref", "submitted_true", "submit_requested", "missing_blocked_action", "unknown_source_kind", "unknown_nested_key", "missing_freshness_merged_head_ref", "drift_freshness_merged_head_ref", "missing_freshness_page_ref", "drift_freshness_page_ref", "missing_freshness_identity_ref", "drift_freshness_identity_ref", "missing_freshness_session_ref", "drift_freshness_session_ref", "missing_freshness_run_ref", "drift_freshness_run_ref", "missing_freshness_result_ref", "drift_freshness_result_ref", "missing_freshness_resource_refs", "drift_freshness_resource_refs", "missing_freshness_field_source_refs", "drift_freshness_field_source_refs", "missing_freshness_evidence_refs", "drift_freshness_evidence_refs", "missing_freshness_post_check_ref", "drift_freshness_post_check_ref", "missing_freshness_submitted_result_ref", "drift_freshness_submitted_result_ref"]
+}

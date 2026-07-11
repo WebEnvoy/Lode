@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/registry/validate-only-runtime-consumption@0.1.0",
+  "title": "Lode validate-only runtime consumption truth",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "truth_id", "truth_version", "asset_owner", "consumer_boundary", "entries", "fail_closed", "non_goals"],
+  "properties": {
+    "$schema": {"const": "./validate-only-runtime-consumption.schema.json"},
+    "schema_version": {"const": "lode.validate-only-runtime-consumption.v0"},
+    "truth_id": {"const": "lode.xhs-boss.write-precheck.runtime-consumption"},
+    "truth_version": {"const": "0.1.0"},
+    "asset_owner": {"const": "Lode"},
+    "consumer_boundary": {"$ref": "#/$defs/consumer_boundary"},
+    "entries": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"oneOf": [{"$ref": "#/$defs/xhs_entry"}, {"$ref": "#/$defs/boss_entry"}]}
+    },
+    "fail_closed": {"$ref": "#/$defs/fail_closed"},
+    "non_goals": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "purpose"],
+      "properties": {
+        "repository": {"enum": ["WebEnvoy/Harbor", "WebEnvoy/WebEnvoy"]},
+        "purpose": {"type": "string", "minLength": 1}
+      }
+    },
+    "consumer_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_consumers", "admission_meaning", "runtime_execution", "live_success"],
+      "properties": {
+        "allowed_consumers": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/consumer"}},
+        "admission_meaning": {"type": "string", "minLength": 1},
+        "runtime_execution": {"const": "out_of_scope"},
+        "live_success": {"const": "not_proven_by_lode"}
+      }
+    },
+    "page_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_kind", "required_page_fact", "required_visible_fields", "challenge_fact", "page_change_policy"],
+      "properties": {
+        "target_kind": {"enum": ["creator_publish_page", "job_or_recruiter_communication_target"]},
+        "required_page_fact": {"enum": ["snapshot.creator_publish_page.available", "snapshot.job_or_recruiter_target.available"]},
+        "required_visible_fields": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string"}},
+        "challenge_fact": {"const": "safety.challenge.absent"},
+        "page_change_policy": {"const": "reject"}
+      }
+    },
+    "resource_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "resource_requirements_id", "resource_requirements_version", "required_harbor_fact_keys"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^sites/"},
+        "resource_requirements_id": {"type": "string", "minLength": 1},
+        "resource_requirements_version": {"const": "0.1.0"},
+        "required_harbor_fact_keys": {"type": "array", "minItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "applies_to", "stale_policy"],
+      "properties": {
+        "policy": {"const": "current_execution_window"},
+        "applies_to": {"type": "array", "minItems": 11, "uniqueItems": true, "items": {"enum": ["merged_head_ref", "page_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "resource_refs", "field_source_refs", "evidence_refs", "post_check_ref", "submitted_result_ref"]}},
+        "stale_policy": {"const": "reject"}
+      }
+    },
+    "field_sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ref_policy", "required_fields", "missing_or_unreferenced_field_policy"],
+      "properties": {
+        "source_ref_policy": {"const": "summary_refs_only"},
+        "required_fields": {"type": "object"},
+        "missing_or_unreferenced_field_policy": {"const": "reject"}
+      }
+    },
+    "source_kinds": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {"enum": ["creator_publish_page_summary", "job_recruiter_target_summary", "dom_snapshot_summary"]}
+    },
+    "failure_taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "failure_mapping_id", "failure_mapping_version", "required_classes"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^sites/"},
+        "failure_mapping_id": {"type": "string", "minLength": 1},
+        "failure_mapping_version": {"const": "0.1.0"},
+        "required_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "evidence_and_post_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ref_policy", "required_ref_kinds", "post_check_path", "post_check_id", "post_check_version", "required_post_check_fields"],
+      "properties": {
+        "evidence_ref_policy": {"const": "refs_only_no_inline_bodies"},
+        "required_ref_kinds": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "post_check_path": {"type": "string", "pattern": "^sites/"},
+        "post_check_id": {"type": "string", "minLength": 1},
+        "post_check_version": {"const": "0.1.0"},
+        "required_post_check_fields": {
+          "const": ["status", "reason", "source_refs", "evidence_refs", "submitted"]
+        }
+      }
+    },
+    "runtime_result_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_refs", "result_field", "required_result_value"],
+      "properties": {
+        "required_refs": {"const": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"]},
+        "result_field": {"const": "submitted"},
+        "required_result_value": {"const": false}
+      }
+    },
+    "safety_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["no_submit_guard", "submitted", "submitted_must_remain_false", "blocked_external_actions"],
+      "properties": {
+        "no_submit_guard": {"const": "active"},
+        "submitted": {"const": false},
+        "submitted_must_remain_false": {"const": true},
+        "blocked_external_actions": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "locked_asset_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_schema", "normalized_output_schema", "resource_requirements", "version_lifecycle_metadata", "write_deferred_guardrail", "fixture", "core_consumption_fixture", "post_check", "failure_mapping", "catalog_metadata", "repair_draft", "overlay_fork_metadata"],
+      "properties": {
+        "input_schema": {"$ref": "#/$defs/sha256"},
+        "normalized_output_schema": {"$ref": "#/$defs/sha256"},
+        "resource_requirements": {"$ref": "#/$defs/sha256"},
+        "version_lifecycle_metadata": {"$ref": "#/$defs/sha256"},
+        "write_deferred_guardrail": {"$ref": "#/$defs/sha256"},
+        "fixture": {"$ref": "#/$defs/sha256"},
+        "core_consumption_fixture": {"$ref": "#/$defs/sha256"},
+        "post_check": {"$ref": "#/$defs/sha256"},
+        "failure_mapping": {"$ref": "#/$defs/sha256"},
+        "catalog_metadata": {"$ref": "#/$defs/sha256"},
+        "repair_draft": {"$ref": "#/$defs/sha256"},
+        "overlay_fork_metadata": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "base_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package_ref", "lock_ref", "lock_version", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle", "allowed_origins", "page_requirement", "resource_requirements", "freshness", "field_sources", "failure_taxonomy", "evidence_and_post_check", "runtime_result_requirements", "safety_boundary", "locked_asset_sha256"],
+      "properties": {
+      "package_ref": {"type": "string", "pattern": "^lode://site-capability/"},
+      "lock_ref": {"type": "string", "pattern": "^lode://lock/site-capability/"},
+      "lock_version": {"const": "0.1.1"},
+      "version": {"const": "0.1.0"},
+      "site_slug": {"enum": ["xiaohongshu", "boss"]},
+      "capability_id": {"enum": ["publish-note-precheck", "greet-precheck"]},
+      "operation_id": {"enum": ["xhs_publish_note_precheck", "boss_greet_precheck"]},
+      "operation_mode": {"const": "validate_only"},
+      "lifecycle": {"const": "proposed"},
+      "allowed_origins": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^https://"}},
+      "page_requirement": {"$ref": "#/$defs/page_requirement"},
+      "resource_requirements": {"$ref": "#/$defs/resource_requirements"},
+      "freshness": {"$ref": "#/$defs/freshness"},
+      "field_sources": {"$ref": "#/$defs/field_sources"},
+      "failure_taxonomy": {"$ref": "#/$defs/failure_taxonomy"},
+      "evidence_and_post_check": {"$ref": "#/$defs/evidence_and_post_check"},
+      "runtime_result_requirements": {"$ref": "#/$defs/runtime_result_requirements"},
+      "safety_boundary": {"$ref": "#/$defs/safety_boundary"},
+      "locked_asset_sha256": {"$ref": "#/$defs/locked_asset_sha256"}
+      }
+    },
+    "xhs_entry": {
+      "allOf": [{"$ref": "#/$defs/base_entry"}, {"properties": {
+        "site_slug": {"const": "xiaohongshu"},
+        "capability_id": {"const": "publish-note-precheck"},
+        "operation_id": {"const": "xhs_publish_note_precheck"},
+        "package_ref": {"const": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0"},
+        "lock_ref": {"const": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1"},
+        "allowed_origins": {"const": ["https://www.xiaohongshu.com", "https://creator.xiaohongshu.com"]},
+        "page_requirement": {"allOf": [{"$ref": "#/$defs/page_requirement"}, {"properties": {"target_kind": {"const": "creator_publish_page"}, "required_page_fact": {"const": "snapshot.creator_publish_page.available"}, "required_visible_fields": {"const": ["title_input", "content_editor", "publish_control"]}}}]},
+        "field_sources": {"allOf": [{"$ref": "#/$defs/field_sources"}, {"properties": {"required_fields": {"type": "object", "additionalProperties": false, "required": ["title_input", "content_editor", "publish_control"], "properties": {"title_input": {"const": ["creator_publish_page_summary", "dom_snapshot_summary"]}, "content_editor": {"const": ["creator_publish_page_summary", "dom_snapshot_summary"]}, "publish_control": {"const": ["creator_publish_page_summary", "dom_snapshot_summary"]}}}}}]},
+        "safety_boundary": {"allOf": [{"$ref": "#/$defs/safety_boundary"}, {"properties": {"blocked_external_actions": {"const": ["publish", "save", "upload", "submit", "schedule"]}}}]}
+      }}]
+    },
+    "boss_entry": {
+      "allOf": [{"$ref": "#/$defs/base_entry"}, {"properties": {
+        "site_slug": {"const": "boss"},
+        "capability_id": {"const": "greet-precheck"},
+        "operation_id": {"const": "boss_greet_precheck"},
+        "package_ref": {"const": "lode://site-capability/boss/greet-precheck@0.1.0"},
+        "lock_ref": {"const": "lode://lock/site-capability/boss/greet-precheck@0.1.1"},
+        "allowed_origins": {"const": ["https://www.zhipin.com"]},
+        "page_requirement": {"allOf": [{"$ref": "#/$defs/page_requirement"}, {"properties": {"target_kind": {"const": "job_or_recruiter_communication_target"}, "required_page_fact": {"const": "snapshot.job_or_recruiter_target.available"}, "required_visible_fields": {"const": ["job_target", "recruiter_target", "greet_editor", "send_control"]}}}]},
+        "field_sources": {"allOf": [{"$ref": "#/$defs/field_sources"}, {"properties": {"required_fields": {"type": "object", "additionalProperties": false, "required": ["job_target", "recruiter_target", "greet_editor", "send_control"], "properties": {"job_target": {"const": ["job_recruiter_target_summary", "dom_snapshot_summary"]}, "recruiter_target": {"const": ["job_recruiter_target_summary", "dom_snapshot_summary"]}, "greet_editor": {"const": ["job_recruiter_target_summary", "dom_snapshot_summary"]}, "send_control": {"const": ["job_recruiter_target_summary", "dom_snapshot_summary"]}}}}}]},
+        "safety_boundary": {"allOf": [{"$ref": "#/$defs/safety_boundary"}, {"properties": {"blocked_external_actions": {"const": ["greet", "chat", "send", "apply", "submit"]}}}]}
+      }}]
+    },
+    "fail_closed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unknown_operation", "package_lock_or_version_drift", "origin_or_page_drift", "non_validate_only_mode", "write_or_submit_requested", "missing_or_stale_resource_facts", "missing_or_stale_field_source_refs", "missing_evidence_or_post_check_refs", "missing_runtime_result_refs", "submitted_not_false", "challenge_or_risk_control"],
+      "properties": {
+        "unknown_operation": {"const": "reject"},
+        "package_lock_or_version_drift": {"const": "reject"},
+        "origin_or_page_drift": {"const": "reject"},
+        "non_validate_only_mode": {"const": "reject"},
+        "write_or_submit_requested": {"const": "reject"},
+        "missing_or_stale_resource_facts": {"const": "reject"},
+        "missing_or_stale_field_source_refs": {"const": "reject"},
+        "missing_evidence_or_post_check_refs": {"const": "reject"},
+        "missing_runtime_result_refs": {"const": "reject"},
+        "submitted_not_false": {"const": "reject"},
+        "challenge_or_risk_control": {"const": "reject"}
+      }
+    }
+  }
+}
