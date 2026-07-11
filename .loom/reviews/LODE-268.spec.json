@@ -1,0 +1,18 @@
+{
+  "schema_version": "loom-review/v1",
+  "item_id": "LODE-268",
+  "decision": "allow",
+  "kind": "spec_review",
+  "summary": "The spec limits public input to a Core-persisted opaque detail ref, binds static package requirements, and preserves Lode's non-runner boundary.",
+  "reviewer": "codex-main-controller",
+  "authored_at": "2026-07-11T17:37:00Z",
+  "reviewed_head": "88bf540b0b447a87ee38611dc2872ded3f608767",
+  "reviewed_validation_summary": "Targeted detail self-tests, all-package validation, read allowlist regression, runtime-boundary validation, compile, JSON parse, diff, suite, evidence, and carrier checks passed.",
+  "validation_summary_source": "recovery.latest_validation_summary",
+  "validation_summary_locator": ".loom/progress/LODE-268.md",
+  "fallback_to": null,
+  "findings": [],
+  "blocking_issues": [],
+  "follow_ups": [],
+  "consumed_inputs": {"work_item": ".loom/work-items/LODE-268.md", "recovery_entry": ".loom/progress/LODE-268.md", "build_checkpoint": "pass", "suite_validation": "pass", "suite_spec": ".loom/specs/LODE-268/spec.md", "suite_plan": ".loom/specs/LODE-268/plan.md"}
+}
