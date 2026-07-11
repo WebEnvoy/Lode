@@ -6,8 +6,14 @@
   "asset_owner": "Lode",
   "consumer_boundary": {
     "allowed_consumers": [
-      {"repository": "WebEnvoy/Harbor", "purpose": "provide current page, identity, session, resource, and evidence refs"},
-      {"repository": "WebEnvoy/WebEnvoy", "purpose": "admit and record an exact validate-only precheck"}
+      {
+        "repository": "WebEnvoy/Harbor",
+        "purpose": "provide current page, identity, session, resource, and evidence refs"
+      },
+      {
+        "repository": "WebEnvoy/WebEnvoy",
+        "purpose": "admit and record an exact validate-only precheck"
+      }
     ],
     "admission_meaning": "Exact static admission truth only; consumers must independently prove current runtime facts and fail closed before any page interaction that can write or submit.",
     "runtime_execution": "out_of_scope",
@@ -16,18 +22,25 @@
   "entries": [
     {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
       "version": "0.1.0",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-precheck",
       "operation_id": "xhs_publish_note_precheck",
       "operation_mode": "validate_only",
       "lifecycle": "proposed",
-      "allowed_origins": ["https://www.xiaohongshu.com", "https://creator.xiaohongshu.com"],
+      "allowed_origins": [
+        "https://www.xiaohongshu.com",
+        "https://creator.xiaohongshu.com"
+      ],
       "page_requirement": {
         "target_kind": "creator_publish_page",
         "required_page_fact": "snapshot.creator_publish_page.available",
-        "required_visible_fields": ["title_input", "content_editor", "publish_control"],
+        "required_visible_fields": [
+          "title_input",
+          "content_editor",
+          "publish_control"
+        ],
         "challenge_fact": "safety.challenge.absent",
         "page_change_policy": "reject"
       },
@@ -35,19 +48,47 @@
         "path": "sites/xiaohongshu/publish-note-precheck/resource-requirements.json",
         "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
         "resource_requirements_version": "0.1.0",
-        "required_harbor_fact_keys": ["runtime.execution_surface.available", "runtime.public_https_navigation.allowed", "runtime.site_identity.logged_in", "snapshot.creator_publish_page.available", "refmap.write_target_refs.available", "evidence.snapshot_ref.available"]
+        "required_harbor_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.public_https_navigation.allowed",
+          "runtime.site_identity.logged_in",
+          "snapshot.creator_publish_page.available",
+          "refmap.write_target_refs.available",
+          "evidence.snapshot_ref.available"
+        ]
       },
       "freshness": {
         "policy": "current_execution_window",
-        "applies_to": ["page_ref", "identity_ref", "session_ref", "resource_refs", "field_source_refs", "evidence_refs"],
+        "applies_to": [
+          "merged_head_ref",
+          "page_ref",
+          "identity_ref",
+          "session_ref",
+          "run_ref",
+          "result_ref",
+          "resource_refs",
+          "field_source_refs",
+          "evidence_refs",
+          "post_check_ref",
+          "submitted_result_ref"
+        ],
         "stale_policy": "reject"
       },
       "field_sources": {
         "source_ref_policy": "summary_refs_only",
         "required_fields": {
-          "title_input": ["creator_publish_page_summary", "dom_snapshot_summary"],
-          "content_editor": ["creator_publish_page_summary", "dom_snapshot_summary"],
-          "publish_control": ["creator_publish_page_summary", "dom_snapshot_summary"]
+          "title_input": [
+            "creator_publish_page_summary",
+            "dom_snapshot_summary"
+          ],
+          "content_editor": [
+            "creator_publish_page_summary",
+            "dom_snapshot_summary"
+          ],
+          "publish_control": [
+            "creator_publish_page_summary",
+            "dom_snapshot_summary"
+          ]
         },
         "missing_or_unreferenced_field_policy": "reject"
       },
@@ -55,18 +96,51 @@
         "path": "sites/xiaohongshu/publish-note-precheck/failure-mapping.json",
         "failure_mapping_id": "xiaohongshu.publish-note-precheck.failure-mapping",
         "failure_mapping_version": "0.1.0",
-        "required_classes": ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "preview_unavailable", "page_changed", "user_cancelled", "post_check_failed", "evidence_expired", "login_required", "permission_insufficient", "target_not_writable", "safety_challenge"]
+        "required_classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "preview_unavailable",
+          "page_changed",
+          "user_cancelled",
+          "post_check_failed",
+          "evidence_expired",
+          "login_required",
+          "permission_insufficient",
+          "target_not_writable",
+          "safety_challenge"
+        ]
       },
       "evidence_and_post_check": {
         "evidence_ref_policy": "refs_only_no_inline_bodies",
-        "required_ref_kinds": ["creator_publish_page_summary", "dom_snapshot_summary", "snapshot_ref", "post_check_ref"],
+        "required_ref_kinds": [
+          "creator_publish_page_summary",
+          "dom_snapshot_summary",
+          "snapshot_ref",
+          "post_check_ref"
+        ],
         "post_check_path": "sites/xiaohongshu/publish-note-precheck/checks/post-check.json",
         "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
         "post_check_version": "0.1.0",
-        "required_post_check_fields": ["status", "reason", "source_refs", "evidence_refs", "submitted"]
+        "required_post_check_fields": [
+          "status",
+          "reason",
+          "source_refs",
+          "evidence_refs",
+          "submitted"
+        ]
       },
       "runtime_result_requirements": {
-        "required_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
+        "required_refs": [
+          "merged_head_ref",
+          "identity_ref",
+          "session_ref",
+          "run_ref",
+          "result_ref",
+          "evidence_refs",
+          "post_check_ref"
+        ],
         "result_field": "submitted",
         "required_result_value": false
       },
@@ -74,23 +148,51 @@
         "no_submit_guard": "active",
         "submitted": false,
         "submitted_must_remain_false": true,
-        "blocked_external_actions": ["publish", "save", "upload", "submit", "schedule"]
+        "blocked_external_actions": [
+          "publish",
+          "save",
+          "upload",
+          "submit",
+          "schedule"
+        ]
+      },
+      "lock_version": "0.1.1",
+      "locked_asset_sha256": {
+        "input_schema": "dd5d0656f848b7efa924b5e9157eec0cfeb69a23efe28d243a28eb1ebd79d9ea",
+        "normalized_output_schema": "bf87d9593f1fff4fa63fcc7b86976860c0a887221c4b444e0d888cc58fdb231a",
+        "resource_requirements": "2be72023adbaec07223d09111444f0f51416569dffb36358a10b77a0be99e1fe",
+        "version_lifecycle_metadata": "d665fb223c5648e3fc7c0edf826beeb9cace848b78746c2cab971cba2e2939c8",
+        "write_deferred_guardrail": "dc1d901d9763557adcfca8d1fbd03b2a1a86bd151fe979e2f68e8dc7a1d17f77",
+        "fixture": "2c26f717241f91869d669664baa99404ad05372db7ebb987a415cb0fabb1ff44",
+        "core_consumption_fixture": "7f31d2c54c9d6d5cbb7b9535cc582a35de10487218625d3f63149cf739c12656",
+        "post_check": "4b0361089c4ba02680c4cfa8c7b199ad0006a378382e87a6dbb64c1f3b6e0f42",
+        "failure_mapping": "f9d81218d65efdb60a40dd10badc7e33b057e9da4f03d0494ec84c2489bdd054",
+        "catalog_metadata": "d392667051f8c0923dbd33b4fb4ab2293e079c091f0bfc6310a6ec764865ca40",
+        "repair_draft": "fb0423334add3e1556f844b2d56c171a3992cb1aa97a956a925b3ccfa2a2ab02",
+        "overlay_fork_metadata": "660214d6f2d1359fc7acad75f65c68ccd4b3e8fa922b32309712ac36c44639bc"
       }
     },
     {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
       "version": "0.1.0",
       "site_slug": "boss",
       "capability_id": "greet-precheck",
       "operation_id": "boss_greet_precheck",
       "operation_mode": "validate_only",
       "lifecycle": "proposed",
-      "allowed_origins": ["https://www.zhipin.com"],
+      "allowed_origins": [
+        "https://www.zhipin.com"
+      ],
       "page_requirement": {
         "target_kind": "job_or_recruiter_communication_target",
         "required_page_fact": "snapshot.job_or_recruiter_target.available",
-        "required_visible_fields": ["job_target", "recruiter_target", "greet_editor", "send_control"],
+        "required_visible_fields": [
+          "job_target",
+          "recruiter_target",
+          "greet_editor",
+          "send_control"
+        ],
         "challenge_fact": "safety.challenge.absent",
         "page_change_policy": "reject"
       },
@@ -98,20 +200,51 @@
         "path": "sites/boss/greet-precheck/resource-requirements.json",
         "resource_requirements_id": "boss.greet-precheck.resources",
         "resource_requirements_version": "0.1.0",
-        "required_harbor_fact_keys": ["runtime.execution_surface.available", "runtime.public_https_navigation.allowed", "runtime.site_identity.logged_in", "snapshot.job_or_recruiter_target.available", "refmap.write_target_refs.available", "evidence.snapshot_ref.available"]
+        "required_harbor_fact_keys": [
+          "runtime.execution_surface.available",
+          "runtime.public_https_navigation.allowed",
+          "runtime.site_identity.logged_in",
+          "snapshot.job_or_recruiter_target.available",
+          "refmap.write_target_refs.available",
+          "evidence.snapshot_ref.available"
+        ]
       },
       "freshness": {
         "policy": "current_execution_window",
-        "applies_to": ["page_ref", "identity_ref", "session_ref", "resource_refs", "field_source_refs", "evidence_refs"],
+        "applies_to": [
+          "merged_head_ref",
+          "page_ref",
+          "identity_ref",
+          "session_ref",
+          "run_ref",
+          "result_ref",
+          "resource_refs",
+          "field_source_refs",
+          "evidence_refs",
+          "post_check_ref",
+          "submitted_result_ref"
+        ],
         "stale_policy": "reject"
       },
       "field_sources": {
         "source_ref_policy": "summary_refs_only",
         "required_fields": {
-          "job_target": ["job_recruiter_target_summary", "dom_snapshot_summary"],
-          "recruiter_target": ["job_recruiter_target_summary", "dom_snapshot_summary"],
-          "greet_editor": ["job_recruiter_target_summary", "dom_snapshot_summary"],
-          "send_control": ["job_recruiter_target_summary", "dom_snapshot_summary"]
+          "job_target": [
+            "job_recruiter_target_summary",
+            "dom_snapshot_summary"
+          ],
+          "recruiter_target": [
+            "job_recruiter_target_summary",
+            "dom_snapshot_summary"
+          ],
+          "greet_editor": [
+            "job_recruiter_target_summary",
+            "dom_snapshot_summary"
+          ],
+          "send_control": [
+            "job_recruiter_target_summary",
+            "dom_snapshot_summary"
+          ]
         },
         "missing_or_unreferenced_field_policy": "reject"
       },
@@ -119,18 +252,49 @@
         "path": "sites/boss/greet-precheck/failure-mapping.json",
         "failure_mapping_id": "boss.greet-precheck.failure-mapping",
         "failure_mapping_version": "0.1.0",
-        "required_classes": ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "preview_unavailable", "page_changed", "user_cancelled", "post_check_failed", "evidence_expired", "login_required", "permission_insufficient", "target_not_writable", "safety_challenge"]
+        "required_classes": [
+          "invalid_contract",
+          "resource_unavailable",
+          "site_changed",
+          "empty_result",
+          "preview_unavailable",
+          "page_changed",
+          "user_cancelled",
+          "post_check_failed",
+          "evidence_expired",
+          "login_required",
+          "permission_insufficient",
+          "target_not_writable",
+          "safety_challenge"
+        ]
       },
       "evidence_and_post_check": {
         "evidence_ref_policy": "refs_only_no_inline_bodies",
-        "required_ref_kinds": ["snapshot_ref", "post_check_ref"],
+        "required_ref_kinds": [
+          "snapshot_ref",
+          "post_check_ref"
+        ],
         "post_check_path": "sites/boss/greet-precheck/checks/post-check.json",
         "post_check_id": "boss.greet-precheck.post-check",
         "post_check_version": "0.1.0",
-        "required_post_check_fields": ["status", "reason", "source_refs", "evidence_refs", "submitted"]
+        "required_post_check_fields": [
+          "status",
+          "reason",
+          "source_refs",
+          "evidence_refs",
+          "submitted"
+        ]
       },
       "runtime_result_requirements": {
-        "required_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
+        "required_refs": [
+          "merged_head_ref",
+          "identity_ref",
+          "session_ref",
+          "run_ref",
+          "result_ref",
+          "evidence_refs",
+          "post_check_ref"
+        ],
         "result_field": "submitted",
         "required_result_value": false
       },
@@ -138,7 +302,28 @@
         "no_submit_guard": "active",
         "submitted": false,
         "submitted_must_remain_false": true,
-        "blocked_external_actions": ["greet", "chat", "send", "apply", "submit"]
+        "blocked_external_actions": [
+          "greet",
+          "chat",
+          "send",
+          "apply",
+          "submit"
+        ]
+      },
+      "lock_version": "0.1.1",
+      "locked_asset_sha256": {
+        "input_schema": "27d18c6058bb7063fc2f444cb1ab67dc6566ccced47ee76df001b617a4c8af11",
+        "normalized_output_schema": "cf504adaf78b5bfcc93cc88eaaf8db1eb73e8ccfcb36fd4ad1cf8a98495a6359",
+        "resource_requirements": "d44238b451fc9ec33d301448f9141af708848ea12e9695f7286e483e666a6b63",
+        "version_lifecycle_metadata": "f27591a2583beb93daa07e81ae9e87482a8b411a55d25bb12feaffcafd5837b5",
+        "write_deferred_guardrail": "7d6ed1a37c0e73db5fb458f7f8fa9777c73cf9e3dd51ed71dc6f8942f1cd1433",
+        "fixture": "fe32baab335818336d0e1ecc81934e5c883eae03540e6a4dcd832873e3aa75f1",
+        "core_consumption_fixture": "ceeb256be8eec5cc5cbd1ef4780a1e2b3d73983d0007f5dee2c0653e41c2d654",
+        "post_check": "ae2db0c84354b6af9a8578e468093d09730197c276a6a9349fb56d0cccd0e230",
+        "failure_mapping": "06d996ba85199a162381568b0324af50aa901f32418d78bb68cd2fd44e7d8fe0",
+        "catalog_metadata": "3b9f51445300083c0b9f16b88227ecf44c93216c51abbc86b3b573fec95f51f1",
+        "repair_draft": "a65bf6148ba17b43d40369bdc9675652fcea74edbcc3ae9edfca5fd13865bc6d",
+        "overlay_fork_metadata": "8b9d45bcd29fc89af2489b2dd94eb978de999d51ddaf3cda114cd3389a0e3c00"
       }
     }
   ],

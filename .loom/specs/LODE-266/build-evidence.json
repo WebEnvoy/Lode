@@ -18,12 +18,12 @@
     "non_goals": ["No other repository changes", "No browser/account/session/live execution", "No write, submit, merge, issue closeout, or live-success claim"],
     "validation_expectation": ["python3 tools/validate_validate_only_runtime_consumption.py --self-test", "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "python3 tools/validate_runtime_boundary_contract.py", "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py tools/validate_validate_only_runtime_consumption.py", "git diff --check", "loom fact-chain --target . --json", "loom suite validate --target . --item LODE-266 --json", "loom suite evidence validate --target . --item LODE-266 --json", "loom suite carrier validate --target . --item LODE-266 --json"],
     "output_format": "Worktree, branch, head, files, tests, PR, and residual risks.",
-    "integration_target": ["registry/validate-only-runtime-consumption.json", "registry/validate-only-runtime-consumption.schema.json", "registry/validate-only-runtime-consumption.fixture.json", "tools/validate_validate_only_runtime_consumption.py", "sites/xiaohongshu/publish-note-precheck/checks/post-check.json", "sites/boss/greet-precheck/checks/post-check.json", ".loom/**/LODE-266*", ".loom/status/current.md"]
+    "integration_target": ["registry/validate-only-runtime-consumption.json", "registry/validate-only-runtime-consumption.schema.json", "registry/validate-only-runtime-consumption.fixture.json", "registry/local-packages.json", "tools/validate_validate_only_runtime_consumption.py", "sites/xiaohongshu/publish-note-precheck/manifest.json", "sites/xiaohongshu/publish-note-precheck/package-lock.json", "sites/xiaohongshu/publish-note-precheck/catalog-metadata.json", "sites/xiaohongshu/publish-note-precheck/checks/post-check.json", "sites/boss/greet-precheck/manifest.json", "sites/boss/greet-precheck/package-lock.json", "sites/boss/greet-precheck/catalog-metadata.json", "sites/boss/greet-precheck/checks/post-check.json", ".loom/**/LODE-266*", ".loom/status/current.md"]
   },
   "ownership_constraints": ["Static truth is not live runtime success.", "Any drift, missing/stale refs, write/submit request, challenge, or submitted value other than false fails closed."],
   "delegations": [],
   "delegation_evidence": {"used_nested_subagents": false, "rationale": "No subagent execution tool is available; shared registry and Loom carriers require serial ownership.", "unintegrated_subagent_output": false},
-  "integration_evidence": ["Both package identities bind registry, manifest, and lock.", "Page/resource/freshness/field/evidence/post-check/runtime refs are explicit.", "Mutation tests reject drift, stale or missing refs, write/submit, and submitted=true."],
+  "integration_evidence": ["Both package identities bind registry, manifest, relocked lock identity, and every critical asset SHA-256.", "Freshness explicitly covers every ownership, run, result, evidence, post-check, and submitted-result ref.", "Strict nested validation and mutations reject unknown keys/source kinds, removed blocked actions, drift, stale or missing refs, write/submit, and submitted=true."],
   "ownership_conflicts": [],
   "residual_changes": [
     {"path": "sites/xiaohongshu/publish-note-precheck/checks/post-check.json", "classification": "integrated", "reason": "Requires submitted=false in the bound post-check result."},
@@ -32,6 +32,7 @@
   "repeated_blocker_signal": null,
   "validation": {"status": "passed", "generated_at": "2026-07-11T15:34:00Z", "commands": [
     {"command": "python3 tools/validate_validate_only_runtime_consumption.py --self-test", "result": "passed"},
+    {"command": "uvx check-jsonschema --schemafile registry/validate-only-runtime-consumption.schema.json registry/validate-only-runtime-consumption.json", "result": "passed"},
     {"command": "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "result": "passed"},
     {"command": "python3 tools/validate_runtime_boundary_contract.py", "result": "passed"},
     {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py tools/validate_validate_only_runtime_consumption.py", "result": "passed"},

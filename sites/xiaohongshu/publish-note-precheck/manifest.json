@@ -138,9 +138,9 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "xiaohongshu.publish-note-precheck.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "work_item": "LODE-236"
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+      "work_item": "LODE-266"
     }
   ],
   "lifecycle_metadata": {

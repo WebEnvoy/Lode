@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Callable
@@ -30,6 +31,47 @@ REQUIRED_RUNTIME_REFS = [
     "merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref",
     "evidence_refs", "post_check_ref",
 ]
+REQUIRED_FRESH_REFS = [
+    "merged_head_ref", "page_ref", "identity_ref", "session_ref", "run_ref",
+    "result_ref", "resource_refs", "field_source_refs", "evidence_refs",
+    "post_check_ref", "submitted_result_ref",
+]
+EXPECTED_LOCK_ROLES = {
+    "input_schema", "normalized_output_schema", "resource_requirements",
+    "version_lifecycle_metadata", "write_deferred_guardrail", "fixture",
+    "core_consumption_fixture", "post_check", "failure_mapping",
+    "catalog_metadata", "repair_draft", "overlay_fork_metadata",
+}
+EXPECTED_ENTRY_KEYS = {
+    "package_ref", "lock_ref", "lock_version", "version", "site_slug",
+    "capability_id", "operation_id", "operation_mode", "lifecycle",
+    "allowed_origins", "page_requirement", "resource_requirements", "freshness",
+    "field_sources", "failure_taxonomy", "evidence_and_post_check",
+    "runtime_result_requirements", "safety_boundary", "locked_asset_sha256",
+}
+EXPECTED_OPERATION_DETAILS = {
+    "xhs_publish_note_precheck": {
+        "target_kind": "creator_publish_page",
+        "page_fact": "snapshot.creator_publish_page.available",
+        "visible_fields": ["title_input", "content_editor", "publish_control"],
+        "source_kinds": ["creator_publish_page_summary", "dom_snapshot_summary"],
+        "blocked_actions": ["publish", "save", "upload", "submit", "schedule"],
+    },
+    "boss_greet_precheck": {
+        "target_kind": "job_or_recruiter_communication_target",
+        "page_fact": "snapshot.job_or_recruiter_target.available",
+        "visible_fields": ["job_target", "recruiter_target", "greet_editor", "send_control"],
+        "source_kinds": ["job_recruiter_target_summary", "dom_snapshot_summary"],
+        "blocked_actions": ["greet", "chat", "send", "apply", "submit"],
+    },
+}
+EXPECTED_FIXTURE_REJECTIONS = [
+    "unknown_operation", "lock_drift", "asset_digest_drift", "version_drift", "origin_drift",
+    "page_drift", "write_mode", "submit_requested", "stale_facts",
+    "missing_field_source_ref", "missing_evidence_ref", "missing_post_check_ref",
+    "missing_runtime_result_ref", "submitted_true", "challenge_present",
+    "missing_blocked_action", "unknown_source_kind", "unknown_nested_key",
+]
 
 
 def load_json(path: Path) -> Any:
@@ -38,6 +80,18 @@ def load_json(path: Path) -> Any:
 
 def error(errors: list[str], path: str, message: str) -> None:
     errors.append(f"{path}: {message}")
+
+
+def exact_keys(errors: list[str], value: Any, expected: set[str], path: str) -> bool:
+    if not isinstance(value, dict) or set(value) != expected:
+        actual = set(value) if isinstance(value, dict) else set()
+        error(errors, path, f"keys must be exact; missing={sorted(expected - actual)}, extra={sorted(actual - expected)}")
+        return False
+    return True
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def https_origin(value: Any) -> bool:
@@ -69,6 +123,8 @@ def bind_asset(errors: list[str], entry: dict[str, Any], root: Path, manifest: d
 def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dict[str, Any]) -> None:
     operation_id = entry.get("operation_id")
     path = f"entries[{operation_id}]"
+    if not exact_keys(errors, entry, EXPECTED_ENTRY_KEYS, path):
+        return
     for key in ("package_ref", "lock_ref", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle"):
         if entry.get(key) != registry_entry.get(key):
             error(errors, f"{path}.{key}", "does not match local registry")
@@ -92,31 +148,57 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     for key, value in expected.items():
         if entry.get(key) != value or lock_values.get(key) != value:
             error(errors, f"{path}.{key}", "does not match pinned manifest and lock")
+    if entry.get("lock_version") != lock.get("lock_version") or lock.get("lock_version") != "0.1.1":
+        error(errors, f"{path}.lock_version", "must bind the current relock version")
+    manifest_lock = asset_ref(manifest, "package_lock") or {}
+    if manifest_lock.get("lock_ref") != lock.get("lock_ref") or manifest_lock.get("lock_version") != lock.get("lock_version"):
+        error(errors, f"{path}.lock_ref", "manifest package-lock identity drifted")
+    locked_assets = lock.get("locked_assets")
+    if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES:
+        error(errors, f"{path}.locked_asset_sha256", "package lock must contain the exact critical asset roles")
+    else:
+        lock_hashes = {}
+        for asset in locked_assets:
+            exact_keys(errors, asset, {"role", "path", "ref", "version", "sha256"}, f"{path}.package_lock.locked_assets[{asset.get('role')}]")
+            asset_path = root / str(asset.get("path"))
+            actual_hash = sha256(asset_path) if asset_path.is_file() else None
+            if asset.get("sha256") != actual_hash:
+                error(errors, f"{path}.locked_asset_sha256.{asset.get('role')}", "content digest drifted from package lock")
+            lock_hashes[asset["role"]] = asset.get("sha256")
+        if entry.get("locked_asset_sha256") != lock_hashes:
+            error(errors, f"{path}.locked_asset_sha256", "truth must exactly bind every package-lock digest")
 
     origins = entry.get("allowed_origins")
     if origins != manifest.get("site", {}).get("supported_origins") or not origins or any(not https_origin(origin) for origin in origins):
         error(errors, f"{path}.allowed_origins", "must exactly bind canonical HTTPS manifest origins")
 
     page = entry.get("page_requirement", {})
+    exact_keys(errors, page, {"target_kind", "required_page_fact", "required_visible_fields", "challenge_fact", "page_change_policy"}, f"{path}.page_requirement")
     resources = bind_asset(errors, entry, root, manifest, "resource_requirements", "resource_requirements", "resource_requirements_id", "resource_requirements_version")
+    exact_keys(errors, entry.get("resource_requirements"), {"path", "resource_requirements_id", "resource_requirements_version", "required_harbor_fact_keys"}, f"{path}.resource_requirements")
     if resources:
         profile = resources.get("resource_requirement_profiles", [None])[0] or {}
         facts = [item.get("fact_key") for item in profile.get("required_harbor_facts", [])]
         if entry["resource_requirements"].get("required_harbor_fact_keys") != facts:
             error(errors, f"{path}.resource_requirements", "must bind every required Harbor fact")
-        if page.get("required_page_fact") not in facts or page.get("challenge_fact") != "safety.challenge.absent" or page.get("page_change_policy") != "reject" or not page.get("required_visible_fields"):
+        details = EXPECTED_OPERATION_DETAILS[operation_id]
+        if page.get("target_kind") != details["target_kind"] or page.get("required_page_fact") != details["page_fact"] or page.get("required_page_fact") not in facts or page.get("challenge_fact") != "safety.challenge.absent" or page.get("page_change_policy") != "reject" or page.get("required_visible_fields") != details["visible_fields"]:
             error(errors, f"{path}.page_requirement", "must bind the package page fact, visible fields, and reject page drift")
 
     freshness = entry.get("freshness", {})
-    if freshness.get("policy") != "current_execution_window" or freshness.get("stale_policy") != "reject" or set(freshness.get("applies_to", [])) != {"page_ref", "identity_ref", "session_ref", "resource_refs", "field_source_refs", "evidence_refs"}:
-        error(errors, f"{path}.freshness", "must reject stale page, identity, session, resource, field, or evidence refs")
+    exact_keys(errors, freshness, {"policy", "applies_to", "stale_policy"}, f"{path}.freshness")
+    if freshness.get("policy") != "current_execution_window" or freshness.get("stale_policy") != "reject" or freshness.get("applies_to") != REQUIRED_FRESH_REFS:
+        error(errors, f"{path}.freshness", "must reject every stale ownership, runtime, evidence, post-check, and submitted-result ref")
 
     fields = entry.get("field_sources", {})
-    visible = page.get("required_visible_fields", [])
-    if fields.get("source_ref_policy") != "summary_refs_only" or set(fields.get("required_fields", {})) != set(visible) or any(not refs for refs in fields.get("required_fields", {}).values()) or fields.get("missing_or_unreferenced_field_policy") != "reject":
+    exact_keys(errors, fields, {"source_ref_policy", "required_fields", "missing_or_unreferenced_field_policy"}, f"{path}.field_sources")
+    details = EXPECTED_OPERATION_DETAILS[operation_id]
+    expected_sources = {field: details["source_kinds"] for field in details["visible_fields"]}
+    if fields.get("source_ref_policy") != "summary_refs_only" or fields.get("required_fields") != expected_sources or fields.get("missing_or_unreferenced_field_policy") != "reject":
         error(errors, f"{path}.field_sources", "must bind every visible field to summary refs and reject missing refs")
 
     mapping = bind_asset(errors, entry, root, manifest, "failure_taxonomy", "failure_mapping", "failure_mapping_id", "failure_mapping_version")
+    exact_keys(errors, entry.get("failure_taxonomy"), {"path", "failure_mapping_id", "failure_mapping_version", "required_classes"}, f"{path}.failure_taxonomy")
     if mapping:
         classes = [item.get("lode_failure_class") for item in mapping.get("classes", [])]
         if entry["failure_taxonomy"].get("required_classes") != classes:
@@ -124,6 +206,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
 
     post_check = bind_asset(errors, entry, root, manifest, "evidence_and_post_check", "post_check", "post_check_id", "post_check_version")
     evidence = entry.get("evidence_and_post_check", {})
+    exact_keys(errors, evidence, {"evidence_ref_policy", "required_ref_kinds", "post_check_path", "post_check_id", "post_check_version", "required_post_check_fields"}, f"{path}.evidence_and_post_check")
     registry_evidence = registry_entry.get("evidence_requirements", {})
     if evidence.get("evidence_ref_policy") != "refs_only_no_inline_bodies" or evidence.get("required_ref_kinds") != registry_evidence.get("required_ref_kinds"):
         error(errors, f"{path}.evidence_and_post_check", "must bind exact refs-only registry evidence kinds")
@@ -132,9 +215,11 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
 
     runtime = entry.get("runtime_result_requirements", {})
     safety = entry.get("safety_boundary", {})
+    exact_keys(errors, runtime, {"required_refs", "result_field", "required_result_value"}, f"{path}.runtime_result_requirements")
+    exact_keys(errors, safety, {"no_submit_guard", "submitted", "submitted_must_remain_false", "blocked_external_actions"}, f"{path}.safety_boundary")
     if runtime.get("required_refs") != REQUIRED_RUNTIME_REFS or runtime.get("result_field") != "submitted" or runtime.get("required_result_value") is not False:
         error(errors, f"{path}.runtime_result_requirements", "must require current merged-head/runtime/evidence refs and submitted=false")
-    if safety.get("no_submit_guard") != "active" or safety.get("submitted") is not False or safety.get("submitted_must_remain_false") is not True or not safety.get("blocked_external_actions"):
+    if safety.get("no_submit_guard") != "active" or safety.get("submitted") is not False or safety.get("submitted_must_remain_false") is not True or safety.get("blocked_external_actions") != details["blocked_actions"]:
         error(errors, f"{path}.safety_boundary", "must preserve active no-submit and submitted=false")
     registry_boundary = registry_entry.get("write_precheck_boundary", {})
     if registry_boundary.get("submitted") is not False or registry_boundary.get("true_write_execution") != "blocked":
@@ -145,9 +230,13 @@ def validate(data: Any) -> list[str]:
     errors: list[str] = []
     if not isinstance(data, dict):
         return ["truth: must be an object"]
-    if data.get("schema_version") != "lode.validate-only-runtime-consumption.v0" or data.get("asset_owner") != "Lode":
+    exact_keys(errors, data, {"$schema", "schema_version", "truth_id", "truth_version", "asset_owner", "consumer_boundary", "entries", "fail_closed", "non_goals"}, "truth")
+    if data.get("$schema") != "./validate-only-runtime-consumption.schema.json" or data.get("schema_version") != "lode.validate-only-runtime-consumption.v0" or data.get("truth_id") != "lode.xhs-boss.write-precheck.runtime-consumption" or data.get("truth_version") != "0.1.0" or data.get("asset_owner") != "Lode":
         error(errors, "truth", "schema or owner is unsupported")
     boundary = data.get("consumer_boundary", {})
+    exact_keys(errors, boundary, {"allowed_consumers", "admission_meaning", "runtime_execution", "live_success"}, "consumer_boundary")
+    for index, consumer in enumerate(boundary.get("allowed_consumers", [])):
+        exact_keys(errors, consumer, {"repository", "purpose"}, f"consumer_boundary.allowed_consumers[{index}]")
     if boundary.get("allowed_consumers") != EXPECTED_CONSUMERS or boundary.get("runtime_execution") != "out_of_scope" or boundary.get("live_success") != "not_proven_by_lode":
         error(errors, "consumer_boundary", "must preserve exact consumers and Lode non-runner/non-live-success boundary")
     fail_closed = data.get("fail_closed")
@@ -171,6 +260,7 @@ def self_test(data: dict[str, Any]) -> list[str]:
     mutations: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
         ("unknown operation", lambda value: value["entries"][0].__setitem__("operation_id", "unknown")),
         ("lock drift", lambda value: value["entries"][0].__setitem__("lock_ref", "lode://lock/drift")),
+        ("asset digest drift", lambda value: value["entries"][0]["locked_asset_sha256"].__setitem__("post_check", "0" * 64)),
         ("version drift", lambda value: value["entries"][0].__setitem__("version", "0.2.0")),
         ("origin drift", lambda value: value["entries"][0].__setitem__("allowed_origins", ["http://example.com"])),
         ("page drift", lambda value: value["entries"][0]["page_requirement"].__setitem__("required_page_fact", "page.changed")),
@@ -182,8 +272,14 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("missing runtime ref", lambda value: value["entries"][0]["runtime_result_requirements"]["required_refs"].pop()),
         ("submitted true", lambda value: value["entries"][0]["safety_boundary"].__setitem__("submitted", True)),
         ("submit requested", lambda value: value["entries"][0]["safety_boundary"].__setitem__("no_submit_guard", "inactive")),
+        ("missing blocked action", lambda value: value["entries"][0]["safety_boundary"]["blocked_external_actions"].pop()),
+        ("unknown source kind", lambda value: value["entries"][0]["field_sources"]["required_fields"]["title_input"].append("unknown_summary")),
+        ("unknown nested key", lambda value: value["entries"][0]["freshness"].__setitem__("unknown", True)),
         ("arbitrary consumer", lambda value: value["consumer_boundary"]["allowed_consumers"].append({"repository": "other", "purpose": "run"})),
     ]
+    for ref in REQUIRED_FRESH_REFS:
+        mutations.append((f"missing freshness coverage for {ref}", lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].remove(ref)))
+        mutations.append((f"freshness drift for {ref}", lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].__setitem__(value["entries"][0]["freshness"]["applies_to"].index(ref), f"{ref}.drift")))
     failures: list[str] = []
     for name, mutate in mutations:
         candidate = copy.deepcopy(data)
@@ -200,7 +296,8 @@ def main() -> int:
     data = load_json(TRUTH_PATH)
     errors = validate(data)
     fixture = load_json(FIXTURE_PATH)
-    if fixture.get("accepted_operations") != sorted(EXPECTED_OPERATIONS) or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS:
+    fixture_keys = {"schema_version", "truth_ref", "accepted_operations", "expected_mode", "expected_submitted", "required_runtime_refs", "rejection_cases"}
+    if not exact_keys(errors, fixture, fixture_keys, "fixture") or fixture.get("schema_version") != "lode.validate-only-runtime-consumption-fixture.v0" or fixture.get("truth_ref") != "registry/validate-only-runtime-consumption.json" or fixture.get("accepted_operations") != sorted(EXPECTED_OPERATIONS) or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS or fixture.get("rejection_cases") != EXPECTED_FIXTURE_REJECTIONS:
         errors.append("fixture: acceptance identity drifted")
     if args.self_test and not errors:
         errors.extend(self_test(data))

@@ -5,5 +5,5 @@
   "expected_mode": "validate_only",
   "expected_submitted": false,
   "required_runtime_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
-  "rejection_cases": ["unknown_operation", "lock_drift", "version_drift", "origin_drift", "page_drift", "write_mode", "submit_requested", "stale_facts", "missing_field_source_ref", "missing_evidence_ref", "missing_post_check_ref", "missing_runtime_result_ref", "submitted_true", "challenge_present"]
+  "rejection_cases": ["unknown_operation", "lock_drift", "asset_digest_drift", "version_drift", "origin_drift", "page_drift", "write_mode", "submit_requested", "stale_facts", "missing_field_source_ref", "missing_evidence_ref", "missing_post_check_ref", "missing_runtime_result_ref", "submitted_true", "challenge_present", "missing_blocked_action", "unknown_source_kind", "unknown_nested_key"]
 }

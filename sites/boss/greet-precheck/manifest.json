@@ -137,9 +137,9 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "boss.greet-precheck.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
-      "work_item": "LODE-241"
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
+      "work_item": "LODE-266"
     }
   ],
   "lifecycle_metadata": {

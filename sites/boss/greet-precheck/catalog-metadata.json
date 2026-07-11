@@ -3,7 +3,7 @@
   "catalog_metadata_id": "boss.greet-precheck.catalog-metadata",
   "catalog_metadata_version": "0.1.0",
   "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-  "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+  "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
   "capability_id": "greet-precheck",
   "operation_id": "boss_greet_precheck",
   "operation_mode": "validate_only",
