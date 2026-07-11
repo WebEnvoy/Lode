@@ -49,6 +49,6 @@ jobs:
     with:
       host_facts: ${{ needs.host-facts.outputs.host_facts }}
       profile: light
-      validation_command: python3 tools/lode_validate_package.py sites/example/read-public-page --json
+      validation_command: python3 -m pip install --requirement requirements-validator.txt && python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
       loom_ref: edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
       enforcement: enforce

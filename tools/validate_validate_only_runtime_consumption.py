@@ -11,9 +11,17 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 
+try:
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import SchemaError
+except ImportError:  # Reported as a validation failure below.
+    Draft202012Validator = None
+    SchemaError = Exception
+
 
 ROOT = Path(__file__).resolve().parents[1]
 TRUTH_PATH = ROOT / "registry/validate-only-runtime-consumption.json"
+SCHEMA_PATH = ROOT / "registry/validate-only-runtime-consumption.schema.json"
 FIXTURE_PATH = ROOT / "registry/validate-only-runtime-consumption.fixture.json"
 REGISTRY_PATH = ROOT / "registry/local-packages.json"
 EXPECTED_OPERATIONS = {"xhs_publish_note_precheck", "boss_greet_precheck"}
@@ -65,15 +73,6 @@ EXPECTED_OPERATION_DETAILS = {
         "blocked_actions": ["greet", "chat", "send", "apply", "submit"],
     },
 }
-EXPECTED_FIXTURE_REJECTIONS = [
-    "unknown_operation", "lock_drift", "asset_digest_drift", "version_drift", "origin_drift",
-    "page_drift", "write_mode", "submit_requested", "stale_facts",
-    "missing_field_source_ref", "missing_evidence_ref", "missing_post_check_ref",
-    "missing_runtime_result_ref", "submitted_true", "challenge_present",
-    "missing_blocked_action", "unknown_source_kind", "unknown_nested_key",
-]
-
-
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -92,6 +91,33 @@ def exact_keys(errors: list[str], value: Any, expected: set[str], path: str) -> 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_nested_lock_refs(errors: list[str], value: Any, prefix: str, expected: str, path: str = "$") -> None:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            validate_nested_lock_refs(errors, child, prefix, expected, f"{path}.{key}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            validate_nested_lock_refs(errors, child, prefix, expected, f"{path}[{index}]")
+    elif isinstance(value, str) and value.startswith(prefix) and value != expected:
+        error(errors, path, f"nested consumer or rollback lock ref must equal {expected}")
+
+
+def validate_json_schema(errors: list[str], data: Any) -> None:
+    if Draft202012Validator is None:
+        error(errors, "schema", "jsonschema dependency is unavailable; install requirements-validator.txt")
+        return
+    schema = load_json(SCHEMA_PATH)
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as exc:
+        error(errors, "schema", f"invalid JSON Schema: {exc.message}")
+        return
+    validator = Draft202012Validator(schema)
+    for finding in sorted(validator.iter_errors(data), key=lambda item: list(item.absolute_path)):
+        pointer = ".".join(str(part) for part in finding.absolute_path) or "$"
+        error(errors, f"schema.{pointer}", finding.message)
 
 
 def https_origin(value: Any) -> bool:
@@ -153,6 +179,10 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     manifest_lock = asset_ref(manifest, "package_lock") or {}
     if manifest_lock.get("lock_ref") != lock.get("lock_ref") or manifest_lock.get("lock_version") != lock.get("lock_version"):
         error(errors, f"{path}.lock_ref", "manifest package-lock identity drifted")
+    lock_prefix = f"lode://lock/site-capability/{entry['site_slug']}/{entry['capability_id']}@"
+    expected_lock_ref = str(lock.get("lock_ref"))
+    validate_nested_lock_refs(errors, registry_entry, lock_prefix, expected_lock_ref, f"{path}.registry")
+    validate_nested_lock_refs(errors, manifest, lock_prefix, expected_lock_ref, f"{path}.manifest")
     locked_assets = lock.get("locked_assets")
     if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES:
         error(errors, f"{path}.locked_asset_sha256", "package lock must contain the exact critical asset roles")
@@ -165,6 +195,8 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
             if asset.get("sha256") != actual_hash:
                 error(errors, f"{path}.locked_asset_sha256.{asset.get('role')}", "content digest drifted from package lock")
             lock_hashes[asset["role"]] = asset.get("sha256")
+            if asset_path.suffix == ".json" and asset_path.is_file():
+                validate_nested_lock_refs(errors, load_json(asset_path), lock_prefix, expected_lock_ref, f"{path}.{asset['role']}")
         if entry.get("locked_asset_sha256") != lock_hashes:
             error(errors, f"{path}.locked_asset_sha256", "truth must exactly bind every package-lock digest")
 
@@ -228,6 +260,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
 
 def validate(data: Any) -> list[str]:
     errors: list[str] = []
+    validate_json_schema(errors, data)
     if not isinstance(data, dict):
         return ["truth: must be an object"]
     exact_keys(errors, data, {"$schema", "schema_version", "truth_id", "truth_version", "asset_owner", "consumer_boundary", "entries", "fail_closed", "non_goals"}, "truth")
@@ -256,32 +289,40 @@ def validate(data: Any) -> list[str]:
     return errors
 
 
-def self_test(data: dict[str, Any]) -> list[str]:
-    mutations: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
-        ("unknown operation", lambda value: value["entries"][0].__setitem__("operation_id", "unknown")),
-        ("lock drift", lambda value: value["entries"][0].__setitem__("lock_ref", "lode://lock/drift")),
-        ("asset digest drift", lambda value: value["entries"][0]["locked_asset_sha256"].__setitem__("post_check", "0" * 64)),
-        ("version drift", lambda value: value["entries"][0].__setitem__("version", "0.2.0")),
-        ("origin drift", lambda value: value["entries"][0].__setitem__("allowed_origins", ["http://example.com"])),
-        ("page drift", lambda value: value["entries"][0]["page_requirement"].__setitem__("required_page_fact", "page.changed")),
-        ("challenge present", lambda value: value["entries"][0]["page_requirement"].__setitem__("challenge_fact", "safety.challenge.present")),
-        ("write mode", lambda value: value["entries"][0].__setitem__("operation_mode", "write")),
-        ("stale facts", lambda value: value["entries"][0]["freshness"].__setitem__("policy", "stale_allowed")),
-        ("missing field refs", lambda value: value["entries"][0]["field_sources"]["required_fields"].__setitem__("title_input", [])),
-        ("missing evidence", lambda value: value["entries"][0]["evidence_and_post_check"].__setitem__("required_ref_kinds", [])),
-        ("missing runtime ref", lambda value: value["entries"][0]["runtime_result_requirements"]["required_refs"].pop()),
-        ("submitted true", lambda value: value["entries"][0]["safety_boundary"].__setitem__("submitted", True)),
-        ("submit requested", lambda value: value["entries"][0]["safety_boundary"].__setitem__("no_submit_guard", "inactive")),
-        ("missing blocked action", lambda value: value["entries"][0]["safety_boundary"]["blocked_external_actions"].pop()),
-        ("unknown source kind", lambda value: value["entries"][0]["field_sources"]["required_fields"]["title_input"].append("unknown_summary")),
-        ("unknown nested key", lambda value: value["entries"][0]["freshness"].__setitem__("unknown", True)),
-        ("arbitrary consumer", lambda value: value["consumer_boundary"]["allowed_consumers"].append({"repository": "other", "purpose": "run"})),
-    ]
+def mutation_cases() -> dict[str, Callable[[dict[str, Any]], None]]:
+    mutations: dict[str, Callable[[dict[str, Any]], None]] = {
+        "unknown_operation": lambda value: value["entries"][0].__setitem__("operation_id", "unknown"),
+        "lock_drift": lambda value: value["entries"][0].__setitem__("lock_ref", "lode://lock/drift"),
+        "asset_digest_drift": lambda value: value["entries"][0]["locked_asset_sha256"].__setitem__("post_check", "0" * 64),
+        "version_drift": lambda value: value["entries"][0].__setitem__("version", "0.2.0"),
+        "origin_drift": lambda value: value["entries"][0].__setitem__("allowed_origins", ["http://example.com"]),
+        "page_drift": lambda value: value["entries"][0]["page_requirement"].__setitem__("required_page_fact", "page.changed"),
+        "challenge_present": lambda value: value["entries"][0]["page_requirement"].__setitem__("challenge_fact", "safety.challenge.present"),
+        "write_mode": lambda value: value["entries"][0].__setitem__("operation_mode", "write"),
+        "stale_facts": lambda value: value["entries"][0]["freshness"].__setitem__("policy", "stale_allowed"),
+        "missing_field_source_ref": lambda value: value["entries"][0]["field_sources"]["required_fields"].__setitem__("title_input", []),
+        "missing_evidence_ref": lambda value: value["entries"][0]["evidence_and_post_check"].__setitem__("required_ref_kinds", []),
+        "missing_post_check_ref": lambda value: value["entries"][0]["evidence_and_post_check"].__setitem__("post_check_path", ""),
+        "missing_runtime_result_ref": lambda value: value["entries"][0]["runtime_result_requirements"]["required_refs"].pop(),
+        "submitted_true": lambda value: value["entries"][0]["safety_boundary"].__setitem__("submitted", True),
+        "submit_requested": lambda value: value["entries"][0]["safety_boundary"].__setitem__("no_submit_guard", "inactive"),
+        "missing_blocked_action": lambda value: value["entries"][0]["safety_boundary"]["blocked_external_actions"].pop(),
+        "unknown_source_kind": lambda value: value["entries"][0]["field_sources"]["required_fields"]["title_input"].append("unknown_summary"),
+        "unknown_nested_key": lambda value: value["entries"][0]["freshness"].__setitem__("unknown", True),
+    }
     for ref in REQUIRED_FRESH_REFS:
-        mutations.append((f"missing freshness coverage for {ref}", lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].remove(ref)))
-        mutations.append((f"freshness drift for {ref}", lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].__setitem__(value["entries"][0]["freshness"]["applies_to"].index(ref), f"{ref}.drift")))
+        mutations[f"missing_freshness_{ref}"] = lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].remove(ref)
+        mutations[f"drift_freshness_{ref}"] = lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].__setitem__(value["entries"][0]["freshness"]["applies_to"].index(ref), f"{ref}.drift")
+    return mutations
+
+
+def self_test(data: dict[str, Any], declared_cases: list[str]) -> list[str]:
+    mutations = mutation_cases()
     failures: list[str] = []
-    for name, mutate in mutations:
+    if declared_cases != list(mutations):
+        failures.append(f"fixture rejection_cases do not exactly map executable mutations: declared={declared_cases}, actual={list(mutations)}")
+        return failures
+    for name, mutate in mutations.items():
         candidate = copy.deepcopy(data)
         mutate(candidate)
         if not validate(candidate):
@@ -297,10 +338,10 @@ def main() -> int:
     errors = validate(data)
     fixture = load_json(FIXTURE_PATH)
     fixture_keys = {"schema_version", "truth_ref", "accepted_operations", "expected_mode", "expected_submitted", "required_runtime_refs", "rejection_cases"}
-    if not exact_keys(errors, fixture, fixture_keys, "fixture") or fixture.get("schema_version") != "lode.validate-only-runtime-consumption-fixture.v0" or fixture.get("truth_ref") != "registry/validate-only-runtime-consumption.json" or fixture.get("accepted_operations") != sorted(EXPECTED_OPERATIONS) or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS or fixture.get("rejection_cases") != EXPECTED_FIXTURE_REJECTIONS:
+    if not exact_keys(errors, fixture, fixture_keys, "fixture") or fixture.get("schema_version") != "lode.validate-only-runtime-consumption-fixture.v0" or fixture.get("truth_ref") != "registry/validate-only-runtime-consumption.json" or fixture.get("accepted_operations") != sorted(EXPECTED_OPERATIONS) or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS or fixture.get("rejection_cases") != list(mutation_cases()):
         errors.append("fixture: acceptance identity drifted")
     if args.self_test and not errors:
-        errors.extend(self_test(data))
+        errors.extend(self_test(data, fixture["rejection_cases"]))
     if errors:
         for item in errors:
             print(item)

@@ -34,12 +34,12 @@
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good": {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0"
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1"
     },
     "rollback_candidates": [
       {
         "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+        "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "status": "self_for_initial_version"
       }
     ]
@@ -95,7 +95,7 @@
   "core_admission_fields": {
     "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
     "version": "0.1.0",
-    "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+    "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
     "manifest_path": "sites/boss/greet-precheck/manifest.json",
     "input_schema_id": "lode://schema/site-capability/boss/greet-precheck/input@0.1.0",
     "output_schema_id": "lode://schema/site-capability/boss/greet-precheck/output@0.1.0",

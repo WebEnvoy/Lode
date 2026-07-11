@@ -13,9 +13,12 @@ Lode supplies exact static consumption truth for the two proposed write-precheck
 
 - Both entries pin package, lock, version, operation, validate-only mode, proposed lifecycle, and canonical HTTPS origins.
 - Relocked package locks and truth bind every critical asset content SHA-256 so unchanged refs cannot hide contract drift.
+- Registry consumer fields, manifests, lifecycle/rollback carriers, catalogs, and fixtures all resolve the same `0.1.1` lock; the validator recursively rejects nested stale lock refs.
+- The normal all-package and hosted CI paths install the pinned JSON Schema dependency and execute strict schema validation fail-closed.
 - Page/resource/freshness/field-source/evidence/post-check/runtime-result refs are explicit and missing, stale, or drifted inputs fail closed.
 - No-submit remains active and both post-check and runtime result require `submitted=false`.
 - Unknown/write/submit/challenge paths reject; no Lode runtime execution or live-success claim exists.
+- Every fixture `rejection_cases` entry maps one-to-one to an executed mutation, including missing post-check refs and per-ref freshness removal/drift.
 
 ## Non-Goals
 

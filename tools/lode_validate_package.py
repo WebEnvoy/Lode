@@ -1247,6 +1247,7 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
     index_report = Report(repo_root)
     index = load_json(index_report, repo_root, registry_index, "local_registry_index", rel(repo_root, registry_index))
     package_reports: list[dict[str, Any]] = []
+    runtime_consumption_report: dict[str, Any] = {"status": "not_checked", "errors": []}
     if isinstance(index, dict):
         validate_registry_query_fixture(index_report, repo_root, index, rel(repo_root, registry_index))
         entries = index.get("entries")
@@ -1264,13 +1265,22 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
                 package_root = repo_root / package_path
                 report = validate_package(package_root, registry_index)
                 package_reports.append(report.to_dict())
-    status = "failed" if index_report.errors or any(report.get("status") == "failed" for report in package_reports) else "passed"
+        try:
+            from validate_validate_only_runtime_consumption import load_json as load_consumption_json
+            from validate_validate_only_runtime_consumption import validate as validate_runtime_consumption
+
+            consumption_errors = validate_runtime_consumption(load_consumption_json(repo_root / "registry/validate-only-runtime-consumption.json"))
+            runtime_consumption_report = {"status": "failed" if consumption_errors else "passed", "errors": consumption_errors}
+        except (ImportError, OSError, json.JSONDecodeError) as exc:
+            runtime_consumption_report = {"status": "failed", "errors": [f"validate-only runtime-consumption validation unavailable: {exc}"]}
+    status = "failed" if index_report.errors or runtime_consumption_report["status"] == "failed" or any(report.get("status") == "failed" for report in package_reports) else "passed"
     return {
         "schema_version": "lode-registry-validation-report.v0",
         "status": status,
         "registry_index": rel(repo_root, registry_index),
         "index_report": index_report.to_dict(),
         "package_reports": package_reports,
+        "validate_only_runtime_consumption": runtime_consumption_report,
     }
 
 
