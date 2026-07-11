@@ -1,0 +1,5 @@
+{
+  "schema_version": "lode.detail-runtime-consumption.fixture.v0",
+  "valid_input": {"detail_ref": "detail_ref_fixture_opaque_001"},
+  "rejection_cases": ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_evidence", "post_check_failed"]
+}
