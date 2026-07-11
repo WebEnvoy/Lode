@@ -1,0 +1,163 @@
+{
+  "$schema": "./validate-only-runtime-consumption.schema.json",
+  "schema_version": "lode.validate-only-runtime-consumption.v0",
+  "truth_id": "lode.xhs-boss.write-precheck.runtime-consumption",
+  "truth_version": "0.1.0",
+  "asset_owner": "Lode",
+  "consumer_boundary": {
+    "allowed_consumers": [
+      {"repository": "WebEnvoy/Harbor", "purpose": "provide current page, identity, session, resource, and evidence refs"},
+      {"repository": "WebEnvoy/WebEnvoy", "purpose": "admit and record an exact validate-only precheck"}
+    ],
+    "admission_meaning": "Exact static admission truth only; consumers must independently prove current runtime facts and fail closed before any page interaction that can write or submit.",
+    "runtime_execution": "out_of_scope",
+    "live_success": "not_proven_by_lode"
+  },
+  "entries": [
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "version": "0.1.0",
+      "site_slug": "xiaohongshu",
+      "capability_id": "publish-note-precheck",
+      "operation_id": "xhs_publish_note_precheck",
+      "operation_mode": "validate_only",
+      "lifecycle": "proposed",
+      "allowed_origins": ["https://www.xiaohongshu.com", "https://creator.xiaohongshu.com"],
+      "page_requirement": {
+        "target_kind": "creator_publish_page",
+        "required_page_fact": "snapshot.creator_publish_page.available",
+        "required_visible_fields": ["title_input", "content_editor", "publish_control"],
+        "challenge_fact": "safety.challenge.absent",
+        "page_change_policy": "reject"
+      },
+      "resource_requirements": {
+        "path": "sites/xiaohongshu/publish-note-precheck/resource-requirements.json",
+        "resource_requirements_id": "xiaohongshu.publish-note-precheck.resources",
+        "resource_requirements_version": "0.1.0",
+        "required_harbor_fact_keys": ["runtime.execution_surface.available", "runtime.public_https_navigation.allowed", "runtime.site_identity.logged_in", "snapshot.creator_publish_page.available", "refmap.write_target_refs.available", "evidence.snapshot_ref.available"]
+      },
+      "freshness": {
+        "policy": "current_execution_window",
+        "applies_to": ["page_ref", "identity_ref", "session_ref", "resource_refs", "field_source_refs", "evidence_refs"],
+        "stale_policy": "reject"
+      },
+      "field_sources": {
+        "source_ref_policy": "summary_refs_only",
+        "required_fields": {
+          "title_input": ["creator_publish_page_summary", "dom_snapshot_summary"],
+          "content_editor": ["creator_publish_page_summary", "dom_snapshot_summary"],
+          "publish_control": ["creator_publish_page_summary", "dom_snapshot_summary"]
+        },
+        "missing_or_unreferenced_field_policy": "reject"
+      },
+      "failure_taxonomy": {
+        "path": "sites/xiaohongshu/publish-note-precheck/failure-mapping.json",
+        "failure_mapping_id": "xiaohongshu.publish-note-precheck.failure-mapping",
+        "failure_mapping_version": "0.1.0",
+        "required_classes": ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "preview_unavailable", "page_changed", "user_cancelled", "post_check_failed", "evidence_expired", "login_required", "permission_insufficient", "target_not_writable", "safety_challenge"]
+      },
+      "evidence_and_post_check": {
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": ["creator_publish_page_summary", "dom_snapshot_summary", "snapshot_ref", "post_check_ref"],
+        "post_check_path": "sites/xiaohongshu/publish-note-precheck/checks/post-check.json",
+        "post_check_id": "xiaohongshu.publish-note-precheck.post-check",
+        "post_check_version": "0.1.0",
+        "required_post_check_fields": ["status", "reason", "source_refs", "evidence_refs", "submitted"]
+      },
+      "runtime_result_requirements": {
+        "required_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
+        "result_field": "submitted",
+        "required_result_value": false
+      },
+      "safety_boundary": {
+        "no_submit_guard": "active",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "blocked_external_actions": ["publish", "save", "upload", "submit", "schedule"]
+      }
+    },
+    {
+      "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.0",
+      "version": "0.1.0",
+      "site_slug": "boss",
+      "capability_id": "greet-precheck",
+      "operation_id": "boss_greet_precheck",
+      "operation_mode": "validate_only",
+      "lifecycle": "proposed",
+      "allowed_origins": ["https://www.zhipin.com"],
+      "page_requirement": {
+        "target_kind": "job_or_recruiter_communication_target",
+        "required_page_fact": "snapshot.job_or_recruiter_target.available",
+        "required_visible_fields": ["job_target", "recruiter_target", "greet_editor", "send_control"],
+        "challenge_fact": "safety.challenge.absent",
+        "page_change_policy": "reject"
+      },
+      "resource_requirements": {
+        "path": "sites/boss/greet-precheck/resource-requirements.json",
+        "resource_requirements_id": "boss.greet-precheck.resources",
+        "resource_requirements_version": "0.1.0",
+        "required_harbor_fact_keys": ["runtime.execution_surface.available", "runtime.public_https_navigation.allowed", "runtime.site_identity.logged_in", "snapshot.job_or_recruiter_target.available", "refmap.write_target_refs.available", "evidence.snapshot_ref.available"]
+      },
+      "freshness": {
+        "policy": "current_execution_window",
+        "applies_to": ["page_ref", "identity_ref", "session_ref", "resource_refs", "field_source_refs", "evidence_refs"],
+        "stale_policy": "reject"
+      },
+      "field_sources": {
+        "source_ref_policy": "summary_refs_only",
+        "required_fields": {
+          "job_target": ["job_recruiter_target_summary", "dom_snapshot_summary"],
+          "recruiter_target": ["job_recruiter_target_summary", "dom_snapshot_summary"],
+          "greet_editor": ["job_recruiter_target_summary", "dom_snapshot_summary"],
+          "send_control": ["job_recruiter_target_summary", "dom_snapshot_summary"]
+        },
+        "missing_or_unreferenced_field_policy": "reject"
+      },
+      "failure_taxonomy": {
+        "path": "sites/boss/greet-precheck/failure-mapping.json",
+        "failure_mapping_id": "boss.greet-precheck.failure-mapping",
+        "failure_mapping_version": "0.1.0",
+        "required_classes": ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "preview_unavailable", "page_changed", "user_cancelled", "post_check_failed", "evidence_expired", "login_required", "permission_insufficient", "target_not_writable", "safety_challenge"]
+      },
+      "evidence_and_post_check": {
+        "evidence_ref_policy": "refs_only_no_inline_bodies",
+        "required_ref_kinds": ["snapshot_ref", "post_check_ref"],
+        "post_check_path": "sites/boss/greet-precheck/checks/post-check.json",
+        "post_check_id": "boss.greet-precheck.post-check",
+        "post_check_version": "0.1.0",
+        "required_post_check_fields": ["status", "reason", "source_refs", "evidence_refs", "submitted"]
+      },
+      "runtime_result_requirements": {
+        "required_refs": ["merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref", "evidence_refs", "post_check_ref"],
+        "result_field": "submitted",
+        "required_result_value": false
+      },
+      "safety_boundary": {
+        "no_submit_guard": "active",
+        "submitted": false,
+        "submitted_must_remain_false": true,
+        "blocked_external_actions": ["greet", "chat", "send", "apply", "submit"]
+      }
+    }
+  ],
+  "fail_closed": {
+    "unknown_operation": "reject",
+    "package_lock_or_version_drift": "reject",
+    "origin_or_page_drift": "reject",
+    "non_validate_only_mode": "reject",
+    "write_or_submit_requested": "reject",
+    "missing_or_stale_resource_facts": "reject",
+    "missing_or_stale_field_source_refs": "reject",
+    "missing_evidence_or_post_check_refs": "reject",
+    "missing_runtime_result_refs": "reject",
+    "submitted_not_false": "reject",
+    "challenge_or_risk_control": "reject"
+  },
+  "non_goals": [
+    "No browser, page, profile, session, or runtime execution in Lode.",
+    "No publish, save, upload, greet, chat, send, apply, submit, or other write action.",
+    "No claim of live runtime success; only current downstream Core/Harbor E2E may prove it."
+  ]
+}

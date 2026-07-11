@@ -1,0 +1,45 @@
+{
+  "schema_version": "loom-build-evidence/v1",
+  "required_inputs": {
+    "target_repo": "WebEnvoy/Lode",
+    "work_item": "LODE-266",
+    "covered_issues": ["#266", "#267"],
+    "branch": "work/lode-266-write-precheck-runtime-consumption",
+    "suite_path": "minimal",
+    "worktree": ".",
+    "head_sha": "e36a4a7d51e8e7e3c9e75ea04e4508566113bff5"
+  },
+  "ownership_contract": {
+    "task_goal": "Freeze dual-site validate-only write-precheck runtime-consumption truth.",
+    "context_locators": ["https://github.com/WebEnvoy/Lode/issues/265", "https://github.com/WebEnvoy/Lode/issues/266", "https://github.com/WebEnvoy/Lode/issues/267", "https://github.com/WebEnvoy/Lode/pull/264", "registry/validate-only-runtime-consumption.json"],
+    "read_scope": "Lode assets and read-only issue/PR metadata.",
+    "write_ownership": "Lode registry/schema/fixture, two package post-check contracts, offline validator, and LODE-266 carriers.",
+    "ownership_constraints": ["Static truth is not live runtime success.", "Any drift, missing/stale refs, write/submit request, challenge, or submitted value other than false fails closed."],
+    "non_goals": ["No other repository changes", "No browser/account/session/live execution", "No write, submit, merge, issue closeout, or live-success claim"],
+    "validation_expectation": ["python3 tools/validate_validate_only_runtime_consumption.py --self-test", "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "python3 tools/validate_runtime_boundary_contract.py", "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py tools/validate_validate_only_runtime_consumption.py", "git diff --check", "loom fact-chain --target . --json", "loom suite validate --target . --item LODE-266 --json", "loom suite evidence validate --target . --item LODE-266 --json", "loom suite carrier validate --target . --item LODE-266 --json"],
+    "output_format": "Worktree, branch, head, files, tests, PR, and residual risks.",
+    "integration_target": ["registry/validate-only-runtime-consumption.json", "registry/validate-only-runtime-consumption.schema.json", "registry/validate-only-runtime-consumption.fixture.json", "tools/validate_validate_only_runtime_consumption.py", "sites/xiaohongshu/publish-note-precheck/checks/post-check.json", "sites/boss/greet-precheck/checks/post-check.json", ".loom/**/LODE-266*", ".loom/status/current.md"]
+  },
+  "ownership_constraints": ["Static truth is not live runtime success.", "Any drift, missing/stale refs, write/submit request, challenge, or submitted value other than false fails closed."],
+  "delegations": [],
+  "delegation_evidence": {"used_nested_subagents": false, "rationale": "No subagent execution tool is available; shared registry and Loom carriers require serial ownership.", "unintegrated_subagent_output": false},
+  "integration_evidence": ["Both package identities bind registry, manifest, and lock.", "Page/resource/freshness/field/evidence/post-check/runtime refs are explicit.", "Mutation tests reject drift, stale or missing refs, write/submit, and submitted=true."],
+  "ownership_conflicts": [],
+  "residual_changes": [
+    {"path": "sites/xiaohongshu/publish-note-precheck/checks/post-check.json", "classification": "integrated", "reason": "Requires submitted=false in the bound post-check result."},
+    {"path": "sites/boss/greet-precheck/checks/post-check.json", "classification": "integrated", "reason": "Requires submitted=false in the bound post-check result."}
+  ],
+  "repeated_blocker_signal": null,
+  "validation": {"status": "passed", "generated_at": "2026-07-11T15:34:00Z", "commands": [
+    {"command": "python3 tools/validate_validate_only_runtime_consumption.py --self-test", "result": "passed"},
+    {"command": "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json", "result": "passed"},
+    {"command": "python3 tools/validate_runtime_boundary_contract.py", "result": "passed"},
+    {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/lode_validate_package.py tools/validate_runtime_boundary_contract.py tools/validate_runtime_consumption_allowlist.py tools/validate_validate_only_runtime_consumption.py", "result": "passed"},
+    {"command": "git diff --check", "result": "passed"},
+    {"command": "loom fact-chain --target . --json", "result": "passed"},
+    {"command": "loom suite validate --target . --item LODE-266 --json", "result": "passed"},
+    {"command": "loom suite evidence validate --target . --item LODE-266 --json", "result": "passed"},
+    {"command": "loom suite carrier validate --target . --item LODE-266 --json", "result": "passed"}
+  ]},
+  "suite_path_consumption": {"suite_path": "minimal", "not_applicable_rationale": "Static Lode assets and offline validation only.", "consumer_boundary": "Core/Harbor consume static admission truth; no live success.", "recheck_condition": "Upgrade for runtime, browser/session, live evidence storage, result ownership, or write behavior."}
+}
