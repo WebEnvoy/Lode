@@ -8,6 +8,7 @@
 - Execution Path: work/lode-268-detail-runtime-consumption
 - Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-268.md
+- Review Entry: .loom/reviews/LODE-268.json
 - Validation Entry: detail self-test, repository validators, Python compile, JSON parse, diff check, and Loom checks.
 - Closing Condition: A ready PR proves static capability truth only; downstream live evidence remains owned by Core, Harbor, and App.
 
