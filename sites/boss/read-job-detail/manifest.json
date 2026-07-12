@@ -1,6 +1,6 @@
 {
   "manifest_version": "lode.site-capability.manifest.v0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "package_type": "site-capability",
   "site": {
     "slug": "boss",
@@ -16,7 +16,7 @@
     "capability_family": "job_detail",
     "operation_mode": "read",
     "target_type": "job_detail_page",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "lifecycle": "proposed",
     "tags": [
       "site:boss",
@@ -43,8 +43,8 @@
       "path": "schemas/output.schema.json",
       "status": "present",
       "work_item": "LODE-241",
-      "schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
-      "schema_version": "0.1.0"
+      "schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.1",
+      "schema_version": "0.1.1"
     },
     {
       "role": "resource_requirements",
@@ -60,7 +60,7 @@
       "status": "present",
       "work_item": "LODE-241",
       "lifecycle_metadata_id": "boss.read-job-detail.lifecycle",
-      "lifecycle_metadata_version": "0.1.0"
+      "lifecycle_metadata_version": "0.1.1"
     },
     {
       "role": "write_deferred_guardrail",
@@ -76,7 +76,7 @@
       "status": "present",
       "work_item": "LODE-241",
       "fixture_id": "boss.read-job-detail.fixture",
-      "fixture_version": "0.1.0",
+      "fixture_version": "0.1.1",
       "source_shape": "boss.read-job-detail.source.wapi-detail-summary",
       "redaction": "summary_only"
     },
@@ -86,7 +86,7 @@
       "status": "present",
       "work_item": "LODE-241",
       "fixture_id": "boss.read-job-detail.core-consumption-fixture",
-      "fixture_version": "0.1.0",
+      "fixture_version": "0.1.1",
       "consumer": "WebEnvoy Core admission and schema validation"
     },
     {
@@ -95,7 +95,7 @@
       "status": "present",
       "work_item": "LODE-241",
       "post_check_id": "boss.read-job-detail.post-check",
-      "post_check_version": "0.1.0"
+      "post_check_version": "0.1.1"
     },
     {
       "role": "failure_mapping",
@@ -135,8 +135,8 @@
       "status": "present",
       "work_item": "LODE-241",
       "lock_id": "boss.read-job-detail.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0"
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1"
     }
   ],
   "source_knowledge": {

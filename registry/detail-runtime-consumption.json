@@ -53,24 +53,24 @@
       "capability_id": "read-job-detail",
       "operation_id": "boss_read_job_detail",
       "operation_mode": "read",
-      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
-      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
-      "version": "0.1.0",
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1",
+      "version": "0.1.1",
       "lifecycle": "proposed",
       "detail_ref_kind": "boss_job_detail_ref",
       "search_operation_id": "boss_job_search",
       "allowed_origin": "https://www.zhipin.com",
       "assets": {
-        "manifest": ["sites/boss/read-job-detail/manifest.json", "2df8f467982127c373dcd268af32076000717dd7cd84d3e6e6f67c2eae84d9ed"],
-        "package_lock": ["sites/boss/read-job-detail/package-lock.json", "1ac72d237195388f33420166aa5d7d61f76644311076094edb4d5e38b2f5049d"],
-        "input_schema": ["sites/boss/read-job-detail/schemas/input.schema.json", "684c7a9a47c9b2fc61019e7f953afd53572602f43b400ad28f69e0d82b4d2d66"],
-        "output_schema": ["sites/boss/read-job-detail/schemas/output.schema.json", "bd1e8b9080287d541de362389c4b84713715a2a0f709f145ab523f375c51af2a"],
-        "resources": ["sites/boss/read-job-detail/resource-requirements.json", "86c1975bf1bed36628c699be6afb07b927e2e7fe0e605181d506fe4522cac8b8"],
-        "failures": ["sites/boss/read-job-detail/failure-mapping.json", "cd41f039bbfb0b4d6fc337700347980f9cc72fce41a89e3e9e1c3291d9cc3628"],
-        "post_check": ["sites/boss/read-job-detail/checks/post-check.json", "4ecc2fb5bf46a3977cb4018335b8879ac4dfe3ce2fc1000daea169f89c84c937"]
+        "manifest": ["sites/boss/read-job-detail/manifest.json", "0db70c52edd320ae442677ff449d9407dc0e22e75738d3994ea4da78f64bb6f7"],
+        "package_lock": ["sites/boss/read-job-detail/package-lock.json", "ce58d88b246148111f0ee2b81071044ed8b94664e0c73c66a4a95e19dd0488ea"],
+        "input_schema": ["sites/boss/read-job-detail/schemas/input.schema.json", "a86de209ade7bbe24487b84a44313ec70f12b2d8a296c777bde2322d1d5ff161"],
+        "output_schema": ["sites/boss/read-job-detail/schemas/output.schema.json", "213c0c53a584fb1be96e32e12c72e14a8ca954b16d247420ffe3385d6b6e151c"],
+        "resources": ["sites/boss/read-job-detail/resource-requirements.json", "df6996246c07b871815c785d1269f3bd48b4b4543604fa9635a3c87c58cecd58"],
+        "failures": ["sites/boss/read-job-detail/failure-mapping.json", "1cbfee1c4dfc30a310cd257a39014936489eea3a8692795bf16fb3860f543bb8"],
+        "post_check": ["sites/boss/read-job-detail/checks/post-check.json", "aaf8afd86304cb63fa742a3ab5b7de4b9ddab65d006845550e7beead841ccdd7"]
       },
       "output_contract": {
-        "required_public_fields": ["canonical_url", "title", "summary", "source_status", "job", "company", "recruiter", "source_citation"],
+        "required_public_fields": ["canonical_url", "title", "summary", "source_status", "detail_ref", "job", "company", "recruiter", "source_citation"],
         "bounded_summary": {"field": "summary", "min_length": 1, "max_length": 2000, "reject_whitespace_only": true, "reject_synthetic_placeholder": true},
         "field_binding": {"required_for_every_public_field": true, "required_bindings": ["source_ref", "evidence_ref"]},
         "identifier_policy": {"securityId": "core_internal_binding_only", "public_security_binding": "opaque_detail_ref", "encryptJobId": "core_internal_binding_only"}
@@ -82,7 +82,7 @@
     "required_refs": ["run_ref", "result_ref", "source_ref", "evidence_ref", "post_check_ref"],
     "inline_raw_material": "forbidden",
     "success_requires_post_check": "passed",
-    "forbidden_inline_material": ["raw_dom", "network_response_body", "xsec_token", "cookie", "token", "profile", "raw_profile"]
+    "forbidden_inline_material": ["raw_dom", "network_response_body", "xsec_token", "securityId", "encryptJobId", "cookie", "token", "profile", "raw_profile"]
   },
   "non_goals": ["No browser, account, or page access.", "No live-evidence claim.", "No write, publish, send, apply, save, bulk collection, or risk-control bypass."]
 }

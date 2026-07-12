@@ -1037,17 +1037,17 @@
       ]
     },
     {
-      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
       "package_type": "site-capability",
       "package_path": "sites/boss/read-job-detail",
       "manifest_path": "sites/boss/read-job-detail/manifest.json",
-      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1",
       "lock_path": "sites/boss/read-job-detail/package-lock.json",
       "site_slug": "boss",
       "capability_id": "read-job-detail",
       "operation_id": "boss_read_job_detail",
       "operation_mode": "read",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "lifecycle": "proposed",
       "lifecycle_state_vocabulary": [
         "proposed",
@@ -1056,17 +1056,17 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T17:07:00Z",
+      "updated_at": "2026-07-12T04:30:00Z",
       "version_status": {
-        "current": "0.1.0",
-        "latest": "0.1.0",
-        "default_locked": "0.1.0",
+        "current": "0.1.1",
+        "latest": "0.1.1",
+        "default_locked": "0.1.1",
         "compatibility_range": ">=0.1.0 <0.2.0"
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
         "previous_known_good_lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
-        "status": "self_for_initial_version"
+        "status": "previous_known_good"
       },
       "real_site_read_package": {
         "status": "real_site_contract_ready",
@@ -1133,12 +1133,12 @@
       "runtime_execution": "out_of_scope",
       "task_kind": "real_site_read",
       "core_admission_fields": {
-        "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
-        "version": "0.1.0",
-        "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+        "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
+        "version": "0.1.1",
+        "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1",
         "manifest_path": "sites/boss/read-job-detail/manifest.json",
         "input_schema_id": "lode://schema/site-capability/boss/read-job-detail/input@0.1.0",
-        "output_schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.1",
         "resource_requirements_id": "boss.read-job-detail.resources",
         "post_check_id": "boss.read-job-detail.post-check",
         "lifecycle": "proposed",
@@ -1284,7 +1284,7 @@
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
         "status": "self_for_initial_version"
       },
       "asset_roles": [
@@ -1531,7 +1531,7 @@
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
-      "previous_known_good_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/boss/greet-precheck@0.1.1",
         "status": "self_for_initial_version"
       },
       "asset_roles": [

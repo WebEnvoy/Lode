@@ -15,12 +15,12 @@ TRUTH = ROOT / "registry/detail-runtime-consumption.json"
 SCHEMA = ROOT / "registry/detail-runtime-consumption.schema.json"
 FIXTURE = ROOT / "registry/detail-runtime-consumption.fixture.json"
 OPERATIONS = {"xhs_read_note_detail", "boss_read_job_detail"}
-REJECTIONS = ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_output_schema", "missing_public_field", "empty_summary", "synthetic_summary", "missing_field_binding", "sensitive_material_exposed", "missing_evidence", "post_check_failed"]
+REJECTIONS = ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_output_schema", "missing_public_field", "public_security_identifier", "empty_summary", "synthetic_summary", "missing_field_binding", "sensitive_material_exposed", "missing_evidence", "post_check_failed"]
 EXPECTED_PUBLIC_FIELDS = {
     "xhs_read_note_detail": ["canonical_url", "title", "summary", "source_status", "note_id", "author", "body_summary", "interaction_metrics", "source_citation"],
-    "boss_read_job_detail": ["canonical_url", "title", "summary", "source_status", "job", "company", "recruiter", "source_citation"],
+    "boss_read_job_detail": ["canonical_url", "title", "summary", "source_status", "detail_ref", "job", "company", "recruiter", "source_citation"],
 }
-FORBIDDEN_INLINE = {"raw_dom", "network_response_body", "xsec_token", "cookie", "token", "profile", "raw_profile"}
+FORBIDDEN_INLINE = {"raw_dom", "network_response_body", "xsec_token", "securityId", "encryptJobId", "cookie", "token", "profile", "raw_profile"}
 
 
 def load(path: Path) -> Any:
@@ -71,8 +71,8 @@ def validate(data: dict[str, Any]) -> list[str]:
         expected_fields = EXPECTED_PUBLIC_FIELDS[operation]
         if contract.get("required_public_fields") != expected_fields:
             errors.append(f"{operation}: required public fields drifted")
-        if not set(expected_fields).issubset(schema_fields):
-            errors.append(f"{operation}: pinned output schema omits required public fields")
+        if schema_fields != expected_fields:
+            errors.append(f"{operation}: pinned output schema required fields contradict public output truth")
         summary = contract.get("bounded_summary", {})
         if summary.get("min_length") != 1 or not isinstance(summary.get("max_length"), int) or summary["max_length"] > 2000:
             errors.append(f"{operation}: public summary is not bounded")
@@ -118,6 +118,7 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("asset_digest_drift", lambda x: x["entries"][0]["assets"]["manifest"].__setitem__(1, "0" * 64)),
         ("missing_output_schema", lambda x: x["entries"][0]["assets"].pop("output_schema")),
         ("missing_public_field", lambda x: x["entries"][0]["output_contract"]["required_public_fields"].remove("title")),
+        ("public_security_identifier", lambda x: x["entries"][1]["output_contract"]["required_public_fields"].append("securityId")),
         ("empty_summary", lambda x: x["entries"][0]["output_contract"]["bounded_summary"].__setitem__("min_length", 0)),
         ("synthetic_summary", lambda x: x["entries"][0]["output_contract"]["bounded_summary"].__setitem__("reject_synthetic_placeholder", False)),
         ("missing_field_binding", lambda x: x["entries"][0]["output_contract"]["field_binding"].__setitem__("required_bindings", ["source_ref"])),

@@ -1,9 +1,9 @@
 {
   "schema_version": "lode.core-consumption-fixture.v0",
   "fixture_id": "boss.read-job-detail.core-consumption-fixture",
-  "fixture_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
-  "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+  "fixture_version": "0.1.1",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
+  "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1",
   "capability_id": "read-job-detail",
   "operation_id": "boss_read_job_detail",
   "operation_mode": "read",
@@ -22,7 +22,7 @@
     "manifest_path": "sites/boss/read-job-detail/manifest.json",
     "lock_path": "sites/boss/read-job-detail/package-lock.json",
     "expected_registry_entry": {
-      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
       "package_type": "site-capability",
       "site_slug": "boss",
       "capability_id": "read-job-detail",
@@ -46,7 +46,7 @@
     },
     "package_lock": {
       "path": "sites/boss/read-job-detail/package-lock.json",
-      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0"
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1"
     },
     "input_schema": {
       "path": "sites/boss/read-job-detail/schemas/input.schema.json",
@@ -54,7 +54,7 @@
     },
     "normalized_output_schema": {
       "path": "sites/boss/read-job-detail/schemas/output.schema.json",
-      "schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0"
+      "schema_id": "lode://schema/site-capability/boss/read-job-detail/output@0.1.1"
     },
     "source_fixture": {
       "path": "sites/boss/read-job-detail/fixtures/read-job-detail.fixture.json",
@@ -72,8 +72,8 @@
     }
   },
   "admission_fixture": {
-    "requested_package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
-    "requested_lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+    "requested_package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
+    "requested_lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.1",
     "accepted_operation_modes": [
       "read"
     ],

@@ -368,8 +368,9 @@ def validate_lifecycle_rollback(report: Report, rollback: Any, manifest: dict[st
     require_keys(report, rollback, ["previous_known_good", "rollback_candidates"], f"{path}#rollback")
     known_good = rollback.get("previous_known_good") if isinstance(rollback.get("previous_known_good"), dict) else {}
     require_keys(report, known_good, ["package_ref", "package_version", "lock_ref", "status"], f"{path}#rollback.previous_known_good")
-    if known_good.get("package_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good.package_ref", "Previous known good package_ref must match the initial package until another version exists.", "Use package/version refs only; do not inline package or evidence bodies.")
+    expected_package_ref = previous_patch_ref(manifest.get("package_ref"), nested_get(manifest, ["capability", "version"]))
+    if known_good.get("package_ref") != expected_package_ref:
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good.package_ref", "Previous known good package_ref does not match the preceding patch version.", "Use the current ref for an initial version and the preceding patch ref after a relock.")
     candidates = rollback.get("rollback_candidates")
     if not isinstance(candidates, list) or not candidates:
         add_error(report, "invalid_contract", f"{path}#rollback.rollback_candidates", "Rollback must declare at least one candidate.", "Expose rollback candidates as package/version/lock refs.")
@@ -871,10 +872,11 @@ def validate_registry_rollback(report: Report, rollback: Any, entry_path: str, m
         add_error(report, "invalid_contract", f"{entry_path}.rollback", "Registry rollback must be an object.", "Expose previous known good refs for App/Core.")
         return
     require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{entry_path}.rollback")
-    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_ref", "Registry previous known good package ref must match the initial package until another version exists.", "Expose package refs only.")
-    if rollback.get("previous_known_good_lock_ref") != lock_ref:
-        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_lock_ref", "Registry previous known good lock ref must match entry lock_ref.", "Keep rollback lock refs aligned.")
+    version = nested_get(manifest, ["capability", "version"])
+    if rollback.get("previous_known_good_ref") != previous_patch_ref(manifest.get("package_ref"), version):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_ref", "Registry previous known good package ref does not match the preceding patch version.", "Expose the current ref for an initial version or the preceding patch ref after relock.")
+    if rollback.get("previous_known_good_lock_ref") != previous_patch_ref(lock_ref, version):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_lock_ref", "Registry previous known good lock ref does not match the preceding patch version.", "Keep rollback lock refs aligned with package version history.")
 
 
 def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
@@ -954,10 +956,25 @@ def validate_lock_rollback(report: Report, rollback: Any, manifest: dict[str, An
         return
     require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{path}#rollback")
     package_lock = refs.get("package_lock") if isinstance(refs.get("package_lock"), dict) else {}
-    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_ref", "Rollback package ref must match the initial package until another version exists.", "Expose refs only; do not inline package bodies.")
-    if rollback.get("previous_known_good_lock_ref") != package_lock.get("lock_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_lock_ref", "Rollback lock ref does not match package lock asset ref.", "Keep rollback lock refs aligned.")
+    version = nested_get(manifest, ["capability", "version"])
+    if rollback.get("previous_known_good_ref") != previous_patch_ref(manifest.get("package_ref"), version):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_ref", "Rollback package ref does not match the preceding patch version.", "Expose the current ref for an initial version or the preceding patch ref after relock.")
+    if rollback.get("previous_known_good_lock_ref") != previous_patch_ref(package_lock.get("lock_ref"), version):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_lock_ref", "Rollback lock ref does not match the preceding patch version.", "Keep rollback lock refs aligned with package version history.")
+
+
+def previous_patch_ref(ref: Any, version: Any) -> Any:
+    if not isinstance(ref, str) or not isinstance(version, str):
+        return ref
+    parts = version.split(".")
+    if len(parts) != 3 or not all(part.isdigit() for part in parts):
+        return ref
+    patch = int(parts[2])
+    if patch == 0:
+        return ref
+    previous = f"{parts[0]}.{parts[1]}.{patch - 1}"
+    suffix = f"@{version}"
+    return f"{ref[:-len(suffix)]}@{previous}" if ref.endswith(suffix) else ref
 
 
 def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, dict[str, Any]], path: str) -> None:

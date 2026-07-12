@@ -4,7 +4,7 @@
 
 - Item ID: LODE-268
 - Goal: Correct the merged runtime-consumption truth by pinning both output schemas and freezing complete, bounded, source/evidence-bound public detail fields.
-- Scope: Lode registry truth, schema, fixture, offline validator, README index, and item-specific carriers only.
+- Scope: Lode registry truth, BOSS detail output schema/package relock, fixtures/post-check, offline validators, README index, and item-specific carriers only.
 - Execution Path: work/lode-268-output-truth-correction
 - Workspace Entry: .
 - Recovery Entry: .loom/progress/LODE-268.md

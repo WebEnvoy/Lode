@@ -3,7 +3,7 @@
   "valid_input": {"detail_ref": "detail_ref_fixture_opaque_001"},
   "valid_output_examples": {
     "xhs_read_note_detail": {"public_fields": ["canonical_url", "title", "summary", "source_status", "note_id", "author", "body_summary", "interaction_metrics", "source_citation"], "summary": "Bounded redacted note detail summary.", "all_fields_source_and_evidence_bound": true},
-    "boss_read_job_detail": {"public_fields": ["canonical_url", "title", "summary", "source_status", "job", "company", "recruiter", "source_citation"], "summary": "Bounded redacted job detail summary.", "all_fields_source_and_evidence_bound": true, "security_binding": "opaque_detail_ref"}
+    "boss_read_job_detail": {"public_fields": ["canonical_url", "title", "summary", "source_status", "detail_ref", "job", "company", "recruiter", "source_citation"], "summary": "Bounded redacted job detail summary.", "all_fields_source_and_evidence_bound": true, "security_binding": "opaque_detail_ref"}
   },
-  "rejection_cases": ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_output_schema", "missing_public_field", "empty_summary", "synthetic_summary", "missing_field_binding", "sensitive_material_exposed", "missing_evidence", "post_check_failed"]
+  "rejection_cases": ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_output_schema", "missing_public_field", "public_security_identifier", "empty_summary", "synthetic_summary", "missing_field_binding", "sensitive_material_exposed", "missing_evidence", "post_check_failed"]
 }

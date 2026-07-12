@@ -13,6 +13,7 @@
 - Both package output schema paths and SHA-256 values are pinned, and their required normalized fields cover the complete XHS note and BOSS job public detail shapes.
 - Every public field is source/evidence bound; summaries are non-empty, bounded, and non-synthetic.
 - BOSS security identifiers remain Core-internal behind the opaque detail ref; raw DOM, network bodies, xsec tokens, cookies, tokens, and profile material are forbidden.
+- The BOSS detail package is relocked to `0.1.1`; its public output schema requires opaque `detail_ref` and does not require or permit raw `securityId` / `encryptJobId`, while `0.1.0` remains the previous-known-good rollback ref.
 - Refs-only evidence and a passed post-check are required; every declared rejection has an executable mutation test.
 - Lode remains static truth and makes no live-success claim.
 

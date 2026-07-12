@@ -10,7 +10,7 @@ and #212. LODE-241 refreshes the BOSS portion for FR #240 and Work Items
 repo-local read packages:
 
 - `lode://site-capability/boss/job-search@0.1.0`
-- `lode://site-capability/boss/read-job-detail@0.1.0`
+- `lode://site-capability/boss/read-job-detail@0.1.1`
 
 Covered milestone #14 issues: #240, #241, #242, and #244.
 

@@ -2,7 +2,7 @@
   "schema_version": "lode.failure-mapping.v0",
   "failure_mapping_id": "boss.read-job-detail.failure-mapping",
   "failure_mapping_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "capability_id": "read-job-detail",
   "operation_id": "boss_read_job_detail",
   "operation_mode": "read",
