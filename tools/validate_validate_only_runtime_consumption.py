@@ -126,6 +126,12 @@ def validate_json_schema(errors: list[str], data: Any) -> None:
         error(errors, f"schema.{pointer}", finding.message)
 
 
+def schema_rejects(data: Any) -> bool:
+    errors: list[str] = []
+    validate_json_schema(errors, data)
+    return bool(errors)
+
+
 def https_origin(value: Any) -> bool:
     if not isinstance(value, str):
         return False
@@ -320,7 +326,9 @@ def mutation_cases() -> dict[str, Callable[[dict[str, Any]], None]]:
         "unknown_source_kind": lambda value: value["entries"][0]["field_sources"]["required_fields"]["title_input"].append("unknown_summary"),
         "unknown_nested_key": lambda value: value["entries"][0]["freshness"].__setitem__("unknown", True),
         "XHS_disabled": lambda value: value["entries"][0]["runtime_admission"].__setitem__("enabled", False),
+        "XHS_inverted_to_BOSS": lambda value: value["entries"][0].__setitem__("runtime_admission", copy.deepcopy(EXPECTED_ADMISSION["boss_greet_precheck"])),
         "BOSS_enabled": lambda value: value["entries"][1]["runtime_admission"].__setitem__("enabled", True),
+        "BOSS_inverted_to_XHS": lambda value: value["entries"][1].__setitem__("runtime_admission", copy.deepcopy(EXPECTED_ADMISSION["xhs_publish_note_precheck"])),
         "BOSS_current": lambda value: value["entries"][1]["runtime_admission"].__setitem__("status", "current"),
     }
     for ref in REQUIRED_FRESH_REFS:
@@ -338,6 +346,8 @@ def self_test(data: dict[str, Any], declared_cases: list[str]) -> list[str]:
     for name, mutate in mutations.items():
         candidate = copy.deepcopy(data)
         mutate(candidate)
+        if name in {"XHS_disabled", "XHS_inverted_to_BOSS", "BOSS_enabled", "BOSS_inverted_to_XHS", "BOSS_current"} and not schema_rejects(candidate):
+            failures.append(f"published schema did not reject {name}")
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
     return failures

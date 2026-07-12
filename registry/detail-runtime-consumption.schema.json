@@ -38,7 +38,11 @@
         }
       },
       "required_ref_kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
-    }
+    },
+    "allOf": [
+      {"if": {"properties": {"operation_id": {"const": "xhs_read_note_detail"}}}, "then": {"properties": {"site_slug": {"const": "xiaohongshu"}, "runtime_admission": {"const": {"enabled": true, "status": "current", "recheck_condition": "not_applicable"}}}}},
+      {"if": {"properties": {"operation_id": {"const": "boss_read_job_detail"}}}, "then": {"properties": {"site_slug": {"const": "boss"}, "runtime_admission": {"const": {"enabled": false, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"}}}}}
+    ]
   }, "runtime_admission": {
     "type": "object", "additionalProperties": false,
     "required": ["enabled", "status", "recheck_condition"],

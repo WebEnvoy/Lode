@@ -45,6 +45,13 @@ def output_instance(operation: str) -> dict[str, Any]:
     return load(OUTPUT_FIXTURES[operation])["normalized_fixture"]["data"]
 
 
+def truth_schema_errors(data: dict[str, Any]) -> list[Any]:
+    import jsonschema
+
+    validator = jsonschema.Draft202012Validator(load(SCHEMA), format_checker=jsonschema.FormatChecker())
+    return list(validator.iter_errors(data))
+
+
 def validate(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     try:
@@ -150,7 +157,9 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("sensitive_material_exposed", lambda x: x["result_requirements"].__setitem__("forbidden_inline_material", [])),
         ("missing_evidence", lambda x: x["entries"][0].__setitem__("required_ref_kinds", [])),
         ("XHS disabled", lambda x: x["entries"][0]["runtime_admission"].__setitem__("enabled", False)),
+        ("XHS inverted to BOSS", lambda x: x["entries"][0].__setitem__("runtime_admission", copy.deepcopy(EXPECTED_ADMISSION["boss_read_job_detail"]))),
         ("BOSS enabled", lambda x: x["entries"][1]["runtime_admission"].__setitem__("enabled", True)),
+        ("BOSS inverted to XHS", lambda x: x["entries"][1].__setitem__("runtime_admission", copy.deepcopy(EXPECTED_ADMISSION["xhs_read_note_detail"]))),
         ("BOSS current", lambda x: x["entries"][1]["runtime_admission"].__setitem__("status", "current")),
         ("post_check_failed", lambda x: x["result_requirements"].__setitem__("success_requires_post_check", "failed")),
     ]
@@ -158,6 +167,8 @@ def self_test(data: dict[str, Any]) -> list[str]:
     for name, mutate in mutations:
         candidate = copy.deepcopy(data)
         mutate(candidate)
+        if name in {"XHS disabled", "XHS inverted to BOSS", "BOSS enabled", "BOSS inverted to XHS", "BOSS current"} and not truth_schema_errors(candidate):
+            failures.append(f"published schema did not reject {name}")
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
     failures.extend(output_instance_self_test(data))
