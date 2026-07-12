@@ -159,10 +159,19 @@
       }
     },
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "runtime_admission": {
+      "type": "object", "additionalProperties": false,
+      "required": ["enabled", "status", "recheck_condition"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "status": {"enum": ["current", "deferred_experimental"]},
+        "recheck_condition": {"enum": ["not_applicable", "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"]}
+      }
+    },
     "base_entry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["package_ref", "lock_ref", "lock_version", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle", "allowed_origins", "page_requirement", "resource_requirements", "freshness", "field_sources", "failure_taxonomy", "evidence_and_post_check", "runtime_result_requirements", "safety_boundary", "locked_asset_sha256"],
+      "required": ["package_ref", "lock_ref", "lock_version", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle", "runtime_admission", "allowed_origins", "page_requirement", "resource_requirements", "freshness", "field_sources", "failure_taxonomy", "evidence_and_post_check", "runtime_result_requirements", "safety_boundary", "locked_asset_sha256"],
       "properties": {
       "package_ref": {"type": "string", "pattern": "^lode://site-capability/"},
       "lock_ref": {"type": "string", "pattern": "^lode://lock/site-capability/"},
@@ -173,6 +182,7 @@
       "operation_id": {"enum": ["xhs_publish_note_precheck", "boss_greet_precheck"]},
       "operation_mode": {"const": "validate_only"},
       "lifecycle": {"const": "proposed"},
+      "runtime_admission": {"$ref": "#/$defs/runtime_admission"},
       "allowed_origins": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^https://"}},
       "page_requirement": {"$ref": "#/$defs/page_requirement"},
       "resource_requirements": {"$ref": "#/$defs/resource_requirements"},
@@ -214,7 +224,7 @@
     "fail_closed": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["unknown_operation", "package_lock_or_version_drift", "origin_or_page_drift", "non_validate_only_mode", "write_or_submit_requested", "missing_or_stale_resource_facts", "missing_or_stale_field_source_refs", "missing_evidence_or_post_check_refs", "missing_runtime_result_refs", "submitted_not_false", "challenge_or_risk_control"],
+      "required": ["unknown_operation", "package_lock_or_version_drift", "origin_or_page_drift", "non_validate_only_mode", "write_or_submit_requested", "missing_or_stale_resource_facts", "missing_or_stale_field_source_refs", "missing_evidence_or_post_check_refs", "missing_runtime_result_refs", "submitted_not_false", "challenge_or_risk_control", "disabled_or_deferred_operation"],
       "properties": {
         "unknown_operation": {"const": "reject"},
         "package_lock_or_version_drift": {"const": "reject"},
@@ -226,7 +236,8 @@
         "missing_evidence_or_post_check_refs": {"const": "reject"},
         "missing_runtime_result_refs": {"const": "reject"},
         "submitted_not_false": {"const": "reject"},
-        "challenge_or_risk_control": {"const": "reject"}
+        "challenge_or_risk_control": {"const": "reject"},
+        "disabled_or_deferred_operation": {"const": "reject"}
       }
     }
   }

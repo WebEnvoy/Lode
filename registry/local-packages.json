@@ -584,7 +584,12 @@
         "#253",
         "#254",
         "#255"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": true,
+        "status": "current",
+        "recheck_condition": "not_applicable"
+      }
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
@@ -816,7 +821,12 @@
         "#253",
         "#254",
         "#255"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": true,
+        "status": "current",
+        "recheck_condition": "not_applicable"
+      }
     },
     {
       "package_ref": "lode://site-capability/boss/job-search@0.1.0",
@@ -1034,7 +1044,12 @@
         "#253",
         "#254",
         "#256"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": false,
+        "status": "deferred_experimental",
+        "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"
+      }
     },
     {
       "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
@@ -1253,7 +1268,12 @@
         "#253",
         "#254",
         "#256"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": false,
+        "status": "deferred_experimental",
+        "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"
+      }
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
@@ -1500,7 +1520,12 @@
         "#254",
         "#255",
         "#257"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": true,
+        "status": "current",
+        "recheck_condition": "not_applicable"
+      }
     },
     {
       "package_ref": "lode://site-capability/boss/greet-precheck@0.1.0",
@@ -1737,7 +1762,12 @@
         "#254",
         "#256",
         "#257"
-      ]
+      ],
+      "runtime_admission": {
+        "enabled": false,
+        "status": "deferred_experimental",
+        "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"
+      }
     }
   ],
   "non_goals": [

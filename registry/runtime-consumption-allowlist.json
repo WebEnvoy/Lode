@@ -29,6 +29,7 @@
       "operation_id": "xhs_search_notes",
       "operation_mode": "read",
       "lifecycle": "proposed",
+      "runtime_admission": {"enabled": true, "status": "current", "recheck_condition": "not_applicable"},
       "allowed_origins": [
         "https://www.xiaohongshu.com"
       ],
@@ -95,6 +96,7 @@
       "operation_id": "boss_job_search",
       "operation_mode": "read",
       "lifecycle": "proposed",
+      "runtime_admission": {"enabled": false, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"},
       "allowed_origins": [
         "https://www.zhipin.com"
       ],
@@ -163,7 +165,8 @@
     "non_read_operation_mode": "reject",
     "missing_resource_requirements": "reject",
     "missing_failure_taxonomy": "reject",
-    "missing_refs_only_evidence_or_post_check": "reject"
+    "missing_refs_only_evidence_or_post_check": "reject",
+    "disabled_or_deferred_operation": "reject"
   },
   "non_goals": [
     "No browser, page, profile, session, or runtime execution.",

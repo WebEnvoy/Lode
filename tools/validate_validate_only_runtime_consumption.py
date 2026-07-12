@@ -25,6 +25,10 @@ SCHEMA_PATH = ROOT / "registry/validate-only-runtime-consumption.schema.json"
 FIXTURE_PATH = ROOT / "registry/validate-only-runtime-consumption.fixture.json"
 REGISTRY_PATH = ROOT / "registry/local-packages.json"
 EXPECTED_OPERATIONS = {"xhs_publish_note_precheck", "boss_greet_precheck"}
+EXPECTED_ADMISSION = {
+    "xhs_publish_note_precheck": {"enabled": True, "status": "current", "recheck_condition": "not_applicable"},
+    "boss_greet_precheck": {"enabled": False, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"},
+}
 EXPECTED_CONSUMERS = [
     {"repository": "WebEnvoy/Harbor", "purpose": "provide current page, identity, session, resource, and evidence refs"},
     {"repository": "WebEnvoy/WebEnvoy", "purpose": "admit and record an exact validate-only precheck"},
@@ -34,6 +38,7 @@ EXPECTED_REJECTIONS = {
     "non_validate_only_mode", "write_or_submit_requested", "missing_or_stale_resource_facts",
     "missing_or_stale_field_source_refs", "missing_evidence_or_post_check_refs",
     "missing_runtime_result_refs", "submitted_not_false", "challenge_or_risk_control",
+    "disabled_or_deferred_operation",
 }
 REQUIRED_RUNTIME_REFS = [
     "merged_head_ref", "identity_ref", "session_ref", "run_ref", "result_ref",
@@ -56,6 +61,7 @@ EXPECTED_ENTRY_KEYS = {
     "allowed_origins", "page_requirement", "resource_requirements", "freshness",
     "field_sources", "failure_taxonomy", "evidence_and_post_check",
     "runtime_result_requirements", "safety_boundary", "locked_asset_sha256",
+    "runtime_admission",
 }
 EXPECTED_OPERATION_DETAILS = {
     "xhs_publish_note_precheck": {
@@ -156,6 +162,10 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
             error(errors, f"{path}.{key}", "does not match local registry")
     if operation_id not in EXPECTED_OPERATIONS or entry.get("operation_mode") != "validate_only" or entry.get("lifecycle") != "proposed":
         error(errors, path, "must be an expected proposed validate-only operation")
+    if entry.get("runtime_admission") != EXPECTED_ADMISSION[operation_id]:
+        error(errors, f"{path}.runtime_admission", "does not match the site production admission policy")
+    if registry_entry.get("runtime_admission") != EXPECTED_ADMISSION[operation_id]:
+        error(errors, f"{path}.registry.runtime_admission", "does not match the site production admission policy")
 
     root = ROOT / registry_entry["package_path"]
     manifest = load_json(root / "manifest.json")
@@ -309,6 +319,9 @@ def mutation_cases() -> dict[str, Callable[[dict[str, Any]], None]]:
         "missing_blocked_action": lambda value: value["entries"][0]["safety_boundary"]["blocked_external_actions"].pop(),
         "unknown_source_kind": lambda value: value["entries"][0]["field_sources"]["required_fields"]["title_input"].append("unknown_summary"),
         "unknown_nested_key": lambda value: value["entries"][0]["freshness"].__setitem__("unknown", True),
+        "XHS_disabled": lambda value: value["entries"][0]["runtime_admission"].__setitem__("enabled", False),
+        "BOSS_enabled": lambda value: value["entries"][1]["runtime_admission"].__setitem__("enabled", True),
+        "BOSS_current": lambda value: value["entries"][1]["runtime_admission"].__setitem__("status", "current"),
     }
     for ref in REQUIRED_FRESH_REFS:
         mutations[f"missing_freshness_{ref}"] = lambda value, ref=ref: value["entries"][0]["freshness"]["applies_to"].remove(ref)
@@ -338,7 +351,7 @@ def main() -> int:
     errors = validate(data)
     fixture = load_json(FIXTURE_PATH)
     fixture_keys = {"schema_version", "truth_ref", "accepted_operations", "expected_mode", "expected_submitted", "required_runtime_refs", "rejection_cases"}
-    if not exact_keys(errors, fixture, fixture_keys, "fixture") or fixture.get("schema_version") != "lode.validate-only-runtime-consumption-fixture.v0" or fixture.get("truth_ref") != "registry/validate-only-runtime-consumption.json" or fixture.get("accepted_operations") != sorted(EXPECTED_OPERATIONS) or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS or fixture.get("rejection_cases") != list(mutation_cases()):
+    if not exact_keys(errors, fixture, fixture_keys, "fixture") or fixture.get("schema_version") != "lode.validate-only-runtime-consumption-fixture.v0" or fixture.get("truth_ref") != "registry/validate-only-runtime-consumption.json" or fixture.get("accepted_operations") != ["xhs_publish_note_precheck"] or fixture.get("expected_mode") != "validate_only" or fixture.get("expected_submitted") is not False or fixture.get("required_runtime_refs") != REQUIRED_RUNTIME_REFS or fixture.get("rejection_cases") != list(mutation_cases()):
         errors.append("fixture: acceptance identity drifted")
     if args.self_test and not errors:
         errors.extend(self_test(data, fixture["rejection_cases"]))

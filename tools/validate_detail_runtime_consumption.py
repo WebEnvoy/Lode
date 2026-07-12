@@ -15,6 +15,10 @@ TRUTH = ROOT / "registry/detail-runtime-consumption.json"
 SCHEMA = ROOT / "registry/detail-runtime-consumption.schema.json"
 FIXTURE = ROOT / "registry/detail-runtime-consumption.fixture.json"
 OPERATIONS = {"xhs_read_note_detail", "boss_read_job_detail"}
+EXPECTED_ADMISSION = {
+    "xhs_read_note_detail": {"enabled": True, "status": "current", "recheck_condition": "not_applicable"},
+    "boss_read_job_detail": {"enabled": False, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"},
+}
 REJECTIONS = ["caller_constructed", "raw_url", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "asset_digest_drift", "missing_output_schema", "missing_public_field", "public_security_identifier", "empty_summary", "synthetic_summary", "missing_field_binding", "sensitive_material_exposed", "missing_evidence", "post_check_failed"]
 EXPECTED_PUBLIC_FIELDS = {
     "xhs_read_note_detail": ["canonical_url", "title", "summary", "source_status", "note_id", "author", "body_summary", "interaction_metrics", "source_citation"],
@@ -71,6 +75,10 @@ def validate(data: dict[str, Any]) -> list[str]:
         for key in ("package_ref", "lock_ref", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle"):
             if entry[key] != current.get(key):
                 errors.append(f"{operation}.{key}: registry drift")
+        if entry.get("runtime_admission") != EXPECTED_ADMISSION[operation]:
+            errors.append(f"{operation}.runtime_admission: site production admission policy drift")
+        if current.get("runtime_admission") != EXPECTED_ADMISSION[operation]:
+            errors.append(f"{operation}.registry.runtime_admission: site production admission policy drift")
         for role, (path, expected) in entry["assets"].items():
             actual = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
             if actual != expected:
@@ -141,6 +149,9 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("missing_field_binding", lambda x: x["entries"][0]["output_contract"]["field_binding"].__setitem__("required_bindings", ["source_ref"])),
         ("sensitive_material_exposed", lambda x: x["result_requirements"].__setitem__("forbidden_inline_material", [])),
         ("missing_evidence", lambda x: x["entries"][0].__setitem__("required_ref_kinds", [])),
+        ("XHS disabled", lambda x: x["entries"][0]["runtime_admission"].__setitem__("enabled", False)),
+        ("BOSS enabled", lambda x: x["entries"][1]["runtime_admission"].__setitem__("enabled", True)),
+        ("BOSS current", lambda x: x["entries"][1]["runtime_admission"].__setitem__("status", "current")),
         ("post_check_failed", lambda x: x["result_requirements"].__setitem__("success_requires_post_check", "failed")),
     ]
     failures: list[str] = []
