@@ -35,10 +35,10 @@
         "manifest": ["sites/xiaohongshu/read-note-detail/manifest.json", "d5258429f34ab7e4bd8666676c4060639cfb61d3f2bca0cc002bbdbe75296138"],
         "package_lock": ["sites/xiaohongshu/read-note-detail/package-lock.json", "464dae48cc0d0905f7feeccb047aa417b4288fb8356b6ce6488d7ba230f014d9"],
         "input_schema": ["sites/xiaohongshu/read-note-detail/schemas/input.schema.json", "82c7307d3cca594596c128aed2abb87d319d03818e623aba48e12cde9a48e1e8"],
-        "output_schema": ["sites/xiaohongshu/read-note-detail/schemas/output.schema.json", "e4c40236f16e281ba332b4d4852196a3a255fa65768ea47c6c90c8296bd83295"],
+        "output_schema": ["sites/xiaohongshu/read-note-detail/schemas/output.schema.json", "0a4bb8a7543bd5f3be752ac1c1b26cd6953d09095a0726cc237317de30df57db"],
         "resources": ["sites/xiaohongshu/read-note-detail/resource-requirements.json", "7104d8e5c2703dda12c89b32ee718974bdb86a7d7c8bbd5c303b2d140acf4d11"],
         "failures": ["sites/xiaohongshu/read-note-detail/failure-mapping.json", "ad6b0aff10e036d80840c913a713d7275fa212420665b0f7ab0114fd8f72ae75"],
-        "post_check": ["sites/xiaohongshu/read-note-detail/checks/post-check.json", "efd206716f7ca69119070d2ff8c3a57f5fb61ce142a2d0f49a5fadd343b5c9b4"]
+        "post_check": ["sites/xiaohongshu/read-note-detail/checks/post-check.json", "5e4fa16eef044d4c987bb9a0a821e39e98fe8e1659e89cedd1424ad3510570e9"]
       },
       "output_contract": {
         "required_public_fields": ["canonical_url", "title", "summary", "source_status", "note_id", "author", "body_summary", "interaction_metrics", "source_citation"],
@@ -64,7 +64,7 @@
         "manifest": ["sites/boss/read-job-detail/manifest.json", "0db70c52edd320ae442677ff449d9407dc0e22e75738d3994ea4da78f64bb6f7"],
         "package_lock": ["sites/boss/read-job-detail/package-lock.json", "ce58d88b246148111f0ee2b81071044ed8b94664e0c73c66a4a95e19dd0488ea"],
         "input_schema": ["sites/boss/read-job-detail/schemas/input.schema.json", "a86de209ade7bbe24487b84a44313ec70f12b2d8a296c777bde2322d1d5ff161"],
-        "output_schema": ["sites/boss/read-job-detail/schemas/output.schema.json", "213c0c53a584fb1be96e32e12c72e14a8ca954b16d247420ffe3385d6b6e151c"],
+        "output_schema": ["sites/boss/read-job-detail/schemas/output.schema.json", "d58ccd6432408684298bb47e44ff875941503c43034731a61e186b2f9f07d58f"],
         "resources": ["sites/boss/read-job-detail/resource-requirements.json", "df6996246c07b871815c785d1269f3bd48b4b4543604fa9635a3c87c58cecd58"],
         "failures": ["sites/boss/read-job-detail/failure-mapping.json", "1cbfee1c4dfc30a310cd257a39014936489eea3a8692795bf16fb3860f543bb8"],
         "post_check": ["sites/boss/read-job-detail/checks/post-check.json", "aaf8afd86304cb63fa742a3ab5b7de4b9ddab65d006845550e7beead841ccdd7"]

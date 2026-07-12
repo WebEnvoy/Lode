@@ -74,7 +74,7 @@
     "source_kind": "pinia_store_summary",
     "synthetic": true,
     "summary": {
-      "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+      "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111",
       "title": "Quiet coffee shops for a city walk",
       "public_text_summary": "Redacted note detail summary with author, body excerpt, interaction metrics, and source citation.",
       "available_fields": [
@@ -98,7 +98,7 @@
       "status": "available",
       "classification": "success_result",
       "normalized": {
-        "canonical_url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+        "canonical_url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111",
         "title": "Quiet coffee shops for a city walk",
         "summary": "Redacted note detail summary with author, body excerpt, interaction metrics, and source citation.",
         "source_status": "located",
@@ -124,7 +124,7 @@
         "source_citation": {
           "kind": "xhs_note_detail_ref",
           "note_id": "66aa00000000000001000111",
-          "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=fixture-xsec-1&xsec_source=",
+          "url": "https://www.xiaohongshu.com/explore/66aa00000000000001000111",
           "field_sources": [
             "note.title",
             "note.desc",
@@ -180,6 +180,11 @@
       },
       {
         "field": "normalized.source_status",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.note_id",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },

@@ -61,6 +61,7 @@
         "normalized.title",
         "normalized.summary",
         "normalized.source_status",
+        "normalized.note_id",
         "normalized.author",
         "normalized.body_summary",
         "normalized.interaction_metrics",

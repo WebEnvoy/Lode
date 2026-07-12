@@ -21,10 +21,24 @@ EXPECTED_PUBLIC_FIELDS = {
     "boss_read_job_detail": ["canonical_url", "title", "summary", "source_status", "detail_ref", "job", "company", "recruiter", "source_citation"],
 }
 FORBIDDEN_INLINE = {"raw_dom", "network_response_body", "xsec_token", "securityId", "encryptJobId", "cookie", "token", "profile", "raw_profile"}
+OUTPUT_FIXTURES = {
+    "xhs_read_note_detail": ROOT / "sites/xiaohongshu/read-note-detail/fixtures/read-note-detail.fixture.json",
+    "boss_read_job_detail": ROOT / "sites/boss/read-job-detail/fixtures/read-job-detail.fixture.json",
+}
 
 
 def load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def output_validator(schema: dict[str, Any]):
+    import jsonschema
+
+    return jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+
+
+def output_instance(operation: str) -> dict[str, Any]:
+    return load(OUTPUT_FIXTURES[operation])["normalized_fixture"]["data"]
 
 
 def validate(data: dict[str, Any]) -> list[str]:
@@ -73,6 +87,9 @@ def validate(data: dict[str, Any]) -> list[str]:
             errors.append(f"{operation}: required public fields drifted")
         if schema_fields != expected_fields:
             errors.append(f"{operation}: pinned output schema required fields contradict public output truth")
+        instance_errors = list(output_validator(output_schema).iter_errors(output_instance(operation)))
+        if instance_errors:
+            errors.append(f"{operation}: valid normalized fixture fails pinned output schema: {instance_errors[0].message}")
         summary = contract.get("bounded_summary", {})
         if summary.get("min_length") != 1 or not isinstance(summary.get("max_length"), int) or summary["max_length"] > 2000:
             errors.append(f"{operation}: public summary is not bounded")
@@ -132,6 +149,40 @@ def self_test(data: dict[str, Any]) -> list[str]:
         mutate(candidate)
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
+    failures.extend(output_instance_self_test(data))
+    return failures
+
+
+def output_probes() -> list[tuple[str, str, Callable[[dict[str, Any]], None]]]:
+    probes: list[tuple[str, str, Callable[[dict[str, Any]], None]]] = [
+        ("boss_read_job_detail", "nested_security_id", lambda x: x["normalized"]["job"].__setitem__("securityId", "raw-security")),
+        ("boss_read_job_detail", "nested_encrypt_job_id", lambda x: x["normalized"]["company"].__setitem__("encryptJobId", "raw-job")),
+        ("boss_read_job_detail", "nested_raw_material", lambda x: x["normalized"]["recruiter"].__setitem__("cookie", "raw-cookie")),
+        ("boss_read_job_detail", "canonical_url_query_leak", lambda x: x["normalized"].__setitem__("canonical_url", "https://www.zhipin.com/job_detail/fixture-job-1.html?securityId=raw")),
+        ("boss_read_job_detail", "citation_url_query_leak", lambda x: x["normalized"]["source_citation"].__setitem__("url", "https://www.zhipin.com/job_detail/fixture-job-1.html?encryptJobId=raw")),
+        ("xhs_read_note_detail", "xsec_url_query_leak", lambda x: x["normalized"].__setitem__("canonical_url", "https://www.xiaohongshu.com/explore/66aa00000000000001000111?xsec_token=raw")),
+        ("xhs_read_note_detail", "citation_xsec_url_query_leak", lambda x: x["normalized"]["source_citation"].__setitem__("url", "https://www.xiaohongshu.com/explore/66aa00000000001000111?xsec_token=raw")),
+        ("xhs_read_note_detail", "nested_raw_material", lambda x: x["normalized"]["author"].__setitem__("token", "raw-token")),
+    ]
+    for operation in sorted(OPERATIONS):
+        probes.extend([
+            (operation, "whitespace_summary", lambda x: x["normalized"].__setitem__("summary", "   \t")),
+            (operation, "oversize_summary", lambda x: x["normalized"].__setitem__("summary", "x" * 2001)),
+            (operation, "empty_source_refs", lambda x: x.__setitem__("source_refs", [])),
+            (operation, "empty_evidence_refs", lambda x: x.__setitem__("evidence_refs", [])),
+        ])
+    return probes
+
+
+def output_instance_self_test(data: dict[str, Any]) -> list[str]:
+    entries = {entry["operation_id"]: entry for entry in data["entries"]}
+    failures: list[str] = []
+    for operation, name, mutate in output_probes():
+        schema = load(ROOT / entries[operation]["assets"]["output_schema"][0])
+        candidate = copy.deepcopy(output_instance(operation))
+        mutate(candidate)
+        if output_validator(schema).is_valid(candidate):
+            failures.append(f"output probe did not reject {operation}:{name}")
     return failures
 
 
@@ -143,7 +194,7 @@ def main() -> int:
     errors = validate(data)
     if args.self_test and not errors:
         errors.extend(self_test(data))
-    print(json.dumps({"status": "failed" if errors else "passed", "operations": sorted(OPERATIONS), "errors": errors}, indent=2))
+    print(json.dumps({"status": "failed" if errors else "passed", "operations": sorted(OPERATIONS), "valid_output_instances": len(OPERATIONS), "malicious_output_probes": len(output_probes()), "errors": errors}, indent=2))
     return 1 if errors else 0
 
 

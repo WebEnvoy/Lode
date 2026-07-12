@@ -28,7 +28,7 @@
       "capability_id": "read-job-detail",
       "operation_id": "boss_read_job_detail",
       "operation_mode": "read",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "lifecycle": "proposed"
     }
   },
