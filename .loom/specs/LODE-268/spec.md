@@ -10,6 +10,9 @@
 - Public input contains only a non-constructible opaque `detail_ref`.
 - Unknown, wrong-kind, cross-site, cross-identity, cross-run, expired, reused, or caller-constructed refs reject.
 - Both proposed detail packages bind exact package, lock, version, origin, and critical asset SHA-256 values.
+- Both package output schema paths and SHA-256 values are pinned, and their required normalized fields cover the complete XHS note and BOSS job public detail shapes.
+- Every public field is source/evidence bound; summaries are non-empty, bounded, and non-synthetic.
+- BOSS security identifiers remain Core-internal behind the opaque detail ref; raw DOM, network bodies, xsec tokens, cookies, tokens, and profile material are forbidden.
 - Refs-only evidence and a passed post-check are required; every declared rejection has an executable mutation test.
 - Lode remains static truth and makes no live-success claim.
 
