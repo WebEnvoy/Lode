@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.fixture.v0",
   "fixture_id": "boss.read-job-detail.fixture",
-  "fixture_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "fixture_version": "0.1.1",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "capability_id": "read-job-detail",
   "operation_id": "boss_read_job_detail",
   "operation_mode": "read",
@@ -91,7 +91,7 @@
     }
   },
   "normalized_fixture": {
-    "output_schema": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
+    "output_schema": "lode://schema/site-capability/boss/read-job-detail/output@0.1.1",
     "integrity_hint": "sha256:fixture-placeholder",
     "data": {
       "result_kind": "boss_job_detail",
@@ -102,8 +102,7 @@
         "title": "AI Agent Product Engineer",
         "summary": "Redacted job detail with job description, company information, recruiter summary, and source citation.",
         "source_status": "located",
-        "securityId": "fixture-security-1",
-        "encryptJobId": "fixture-job-1",
+        "detail_ref": "detail_ref_fixture_boss_job_1",
         "job": {
           "title": "AI Agent Product Engineer",
           "salary": "20-35K",
@@ -132,8 +131,7 @@
         },
         "source_citation": {
           "kind": "boss_job_detail_ref",
-          "securityId": "fixture-security-1",
-          "encryptJobId": "fixture-job-1",
+          "detail_ref": "detail_ref_fixture_boss_job_1",
           "url": "https://www.zhipin.com/job_detail/fixture-job-1.html",
           "field_sources": [
             "zpData.jobInfo",
@@ -191,7 +189,7 @@
         "evidence_ref": "fixture-evidence-1"
       },
       {
-        "field": "normalized.securityId",
+        "field": "normalized.detail_ref",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },

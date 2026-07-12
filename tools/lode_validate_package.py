@@ -368,8 +368,9 @@ def validate_lifecycle_rollback(report: Report, rollback: Any, manifest: dict[st
     require_keys(report, rollback, ["previous_known_good", "rollback_candidates"], f"{path}#rollback")
     known_good = rollback.get("previous_known_good") if isinstance(rollback.get("previous_known_good"), dict) else {}
     require_keys(report, known_good, ["package_ref", "package_version", "lock_ref", "status"], f"{path}#rollback.previous_known_good")
-    if known_good.get("package_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good.package_ref", "Previous known good package_ref must match the initial package until another version exists.", "Use package/version refs only; do not inline package or evidence bodies.")
+    expected_package_ref = previous_patch_ref(manifest.get("package_ref"), nested_get(manifest, ["capability", "version"]))
+    if known_good.get("package_ref") != expected_package_ref:
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good.package_ref", "Previous known good package_ref does not match the preceding patch version.", "Use the current ref for an initial version and the preceding patch ref after a relock.")
     candidates = rollback.get("rollback_candidates")
     if not isinstance(candidates, list) or not candidates:
         add_error(report, "invalid_contract", f"{path}#rollback.rollback_candidates", "Rollback must declare at least one candidate.", "Expose rollback candidates as package/version/lock refs.")
@@ -871,10 +872,11 @@ def validate_registry_rollback(report: Report, rollback: Any, entry_path: str, m
         add_error(report, "invalid_contract", f"{entry_path}.rollback", "Registry rollback must be an object.", "Expose previous known good refs for App/Core.")
         return
     require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{entry_path}.rollback")
-    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_ref", "Registry previous known good package ref must match the initial package until another version exists.", "Expose package refs only.")
-    if rollback.get("previous_known_good_lock_ref") != lock_ref:
-        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_lock_ref", "Registry previous known good lock ref must match entry lock_ref.", "Keep rollback lock refs aligned.")
+    version = nested_get(manifest, ["capability", "version"])
+    if rollback.get("previous_known_good_ref") != previous_patch_ref(manifest.get("package_ref"), version):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_ref", "Registry previous known good package ref does not match the preceding patch version.", "Expose the current ref for an initial version or the preceding patch ref after relock.")
+    if rollback.get("previous_known_good_lock_ref") != previous_patch_ref(lock_ref, version):
+        add_error(report, "invalid_contract", f"{entry_path}.rollback.previous_known_good_lock_ref", "Registry previous known good lock ref does not match the preceding patch version.", "Keep rollback lock refs aligned with package version history.")
 
 
 def validate_package_lock(report: Report, lock: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
@@ -954,10 +956,25 @@ def validate_lock_rollback(report: Report, rollback: Any, manifest: dict[str, An
         return
     require_keys(report, rollback, ["previous_known_good_ref", "previous_known_good_lock_ref", "status"], f"{path}#rollback")
     package_lock = refs.get("package_lock") if isinstance(refs.get("package_lock"), dict) else {}
-    if rollback.get("previous_known_good_ref") != manifest.get("package_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_ref", "Rollback package ref must match the initial package until another version exists.", "Expose refs only; do not inline package bodies.")
-    if rollback.get("previous_known_good_lock_ref") != package_lock.get("lock_ref"):
-        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_lock_ref", "Rollback lock ref does not match package lock asset ref.", "Keep rollback lock refs aligned.")
+    version = nested_get(manifest, ["capability", "version"])
+    if rollback.get("previous_known_good_ref") != previous_patch_ref(manifest.get("package_ref"), version):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_ref", "Rollback package ref does not match the preceding patch version.", "Expose the current ref for an initial version or the preceding patch ref after relock.")
+    if rollback.get("previous_known_good_lock_ref") != previous_patch_ref(package_lock.get("lock_ref"), version):
+        add_error(report, "invalid_contract", f"{path}#rollback.previous_known_good_lock_ref", "Rollback lock ref does not match the preceding patch version.", "Keep rollback lock refs aligned with package version history.")
+
+
+def previous_patch_ref(ref: Any, version: Any) -> Any:
+    if not isinstance(ref, str) or not isinstance(version, str):
+        return ref
+    parts = version.split(".")
+    if len(parts) != 3 or not all(part.isdigit() for part in parts):
+        return ref
+    patch = int(parts[2])
+    if patch == 0:
+        return ref
+    previous = f"{parts[0]}.{parts[1]}.{patch - 1}"
+    suffix = f"@{version}"
+    return f"{ref[:-len(suffix)]}@{previous}" if ref.endswith(suffix) else ref
 
 
 def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, dict[str, Any]], path: str) -> None:
@@ -1016,6 +1033,7 @@ def validate_fixture(
     asset: dict[str, Any],
     manifest: dict[str, Any],
     output_schema_asset: dict[str, Any],
+    output_schema: dict[str, Any],
 ) -> None:
     path = str(asset.get("path"))
     require_keys(report, fixture, ["schema_version", "fixture_id", "fixture_version", "package_ref", "normalized_fixture", "binding_requirements"], path)
@@ -1026,11 +1044,11 @@ def validate_fixture(
             add_error(report, "fixture_invalid", path, f"Fixture `{key}` does not match manifest capability.", "Bind fixture to the package capability.")
     if fixture.get("package_ref") != manifest.get("package_ref"):
         add_error(report, "fixture_invalid", path, "Fixture package_ref does not match manifest.", "Bind fixture to the package ref.")
-    validate_fixture_payload(report, fixture, output_schema_asset, path)
+    validate_fixture_payload(report, fixture, output_schema_asset, output_schema, path)
     scan_forbidden_keys(report, fixture, path)
 
 
-def validate_fixture_payload(report: Report, fixture: dict[str, Any], output_schema_asset: dict[str, Any], path: str) -> None:
+def validate_fixture_payload(report: Report, fixture: dict[str, Any], output_schema_asset: dict[str, Any], output_schema: dict[str, Any], path: str) -> None:
     normalized_fixture = fixture.get("normalized_fixture") if isinstance(fixture.get("normalized_fixture"), dict) else {}
     if normalized_fixture.get("output_schema") != output_schema_asset.get("schema_id"):
         add_error(report, "fixture_invalid", path, "Fixture output_schema does not match normalized output schema ref.", "Bind fixture output to the declared output schema.")
@@ -1039,7 +1057,7 @@ def validate_fixture_payload(report: Report, fixture: dict[str, Any], output_sch
     source_ids = ref_ids(fixture.get("source_refs"))
     evidence_ids = ref_ids(fixture.get("evidence_refs"))
     validate_fixture_refs(report, data, source_ids, evidence_ids, path)
-    validate_bindings(report, fixture, data, source_ids, evidence_ids, path)
+    validate_bindings(report, fixture, data, source_ids, evidence_ids, output_schema, path)
 
 
 def validate_normalized_data(report: Report, data: dict[str, Any], path: str) -> None:
@@ -1071,12 +1089,21 @@ def validate_fixture_refs(report: Report, data: dict[str, Any], source_ids: set[
             add_error(report, "fixture_invalid", path, f"Normalized evidence_ref `{ref.get('ref_id')}` is not declared.", "Declare fixture evidence refs before using them.")
 
 
-def validate_bindings(report: Report, fixture: dict[str, Any], data: dict[str, Any], source_ids: set[str], evidence_ids: set[str], path: str) -> None:
+def validate_bindings(report: Report, fixture: dict[str, Any], data: dict[str, Any], source_ids: set[str], evidence_ids: set[str], output_schema: dict[str, Any], path: str) -> None:
     requirements = fixture.get("binding_requirements") if isinstance(fixture.get("binding_requirements"), dict) else {}
     bindings = requirements.get("normalized_field_sources")
     if not isinstance(bindings, list) or not bindings:
         add_error(report, "fixture_invalid", path, "Fixture must bind normalized fields to source/evidence refs.", "Declare normalized_field_sources.")
         return
+    required_public = nested_get(output_schema, ["$defs", "content_detail", "required"])
+    operation_ref = nested_get(output_schema, ["x-lode", "operation_ref"])
+    if operation_ref in {"lode://operation/xhs_read_note_detail", "lode://operation/boss_read_job_detail"} and isinstance(required_public, list):
+        expected_fields = {f"normalized.{field}" for field in required_public}
+        actual_fields = {binding.get("field") for binding in bindings if isinstance(binding, dict)}
+        if actual_fields != expected_fields:
+            missing = sorted(expected_fields - actual_fields)
+            extra = sorted(actual_fields - expected_fields)
+            add_error(report, "fixture_invalid", path, f"Fixture binding coverage must exactly match required public fields: missing={missing}, extra={extra}.", "Bind every required normalized public field exactly once.")
     for binding in bindings:
         if not isinstance(binding, dict):
             continue
@@ -1150,11 +1177,19 @@ def validate_post_check_payload(report: Report, post_check: dict[str, Any], path
     if not isinstance(requirements, list) or not requirements:
         add_error(report, "post_check_failed", path, "Post-check must declare requirements.", "Add declarative post-check requirements.")
     else:
+        declared_binding_fields: set[str] = set()
         for requirement in requirements:
             if isinstance(requirement, dict):
                 require_keys(report, requirement, ["requirement_id", "description", "on_failure", "required_source_refs"], f"{path}#requirements")
                 validate_ref_list(report, requirement.get("required_source_refs"), source_ids, path, "required_source_refs")
                 validate_ref_list(report, requirement.get("required_evidence_refs", []), evidence_ids, path, "required_evidence_refs")
+                fields = requirement.get("required_binding_fields")
+                if isinstance(fields, list):
+                    declared_binding_fields.update(field for field in fields if isinstance(field, str))
+        fixture_bindings = nested_get(fixture, ["binding_requirements", "normalized_field_sources"]) if isinstance(fixture, dict) else None
+        expected_binding_fields = {binding.get("field") for binding in fixture_bindings if isinstance(binding, dict)} if isinstance(fixture_bindings, list) else set()
+        if post_check.get("operation_id") in {"xhs_read_note_detail", "boss_read_job_detail"} and expected_binding_fields and declared_binding_fields != expected_binding_fields:
+            add_error(report, "post_check_failed", path, f"Post-check binding coverage must exactly match fixture public bindings: missing={sorted(expected_binding_fields - declared_binding_fields)}, extra={sorted(declared_binding_fields - expected_binding_fields)}.", "Require every normalized public field in the field-source-binding post-check.")
 
     fixture_output = post_check.get("fixture_post_check_output") if isinstance(post_check.get("fixture_post_check_output"), dict) else {}
     require_keys(report, fixture_output, ["status", "reason", "source_refs", "evidence_refs"], f"{path}#fixture_post_check_output")
@@ -1202,6 +1237,29 @@ def dotted_exists(value: Any, dotted: str) -> bool:
     return True
 
 
+def validate_core_consumption_fixture(report: Report, package_root: Path, fixture: dict[str, Any], manifest: dict[str, Any], refs: dict[str, dict[str, Any]]) -> None:
+    path = str(refs.get("core_consumption_fixture", {}).get("path", "core-consumption.fixture.json"))
+    expected = nested_get(fixture, ["repo_local_resolution", "expected_registry_entry"])
+    if not isinstance(expected, dict):
+        add_error(report, "fixture_invalid", path, "Core-consumption fixture must declare expected_registry_entry.", "Bind the fixture to the current repo-local registry entry.")
+        return
+    repo_root = discover_repo_root(package_root) or package_root
+    registry = load_json(report, repo_root, repo_root / DEFAULT_LOCAL_REGISTRY, "local_registry_index", str(DEFAULT_LOCAL_REGISTRY))
+    entries = registry.get("entries") if isinstance(registry, dict) else None
+    matches = [entry for entry in entries if isinstance(entry, dict) and entry.get("package_ref") == manifest.get("package_ref")] if isinstance(entries, list) else []
+    if len(matches) != 1:
+        add_error(report, "fixture_invalid", path, "Core-consumption fixture package_ref must resolve to exactly one registry entry.", "Relock the fixture and registry together.")
+        return
+    actual = matches[0]
+    required_keys = ["package_ref", "package_type", "site_slug", "capability_id", "operation_id", "operation_mode", "version", "lifecycle"]
+    for key in required_keys:
+        if expected.get(key) != actual.get(key):
+            add_error(report, "fixture_invalid", f"{path}#expected_registry_entry.{key}", f"Expected registry `{key}` does not match current registry truth.", "Refresh the Core-consumption fixture after package relock.")
+    lock_ref = refs.get("package_lock", {}).get("lock_ref")
+    if fixture.get("package_ref") != manifest.get("package_ref") or fixture.get("lock_ref") != lock_ref:
+        add_error(report, "fixture_invalid", path, "Core-consumption fixture package/lock refs do not match manifest truth.", "Bind the fixture to the current package and lock refs.")
+
+
 def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     report = Report(root)
     manifest_path = root / "manifest.json"
@@ -1231,7 +1289,9 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     if isinstance(assets.get("package_lock"), dict):
         validate_package_lock(report, assets["package_lock"], refs["package_lock"], manifest, refs)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:
-        validate_fixture(report, assets["fixture"], refs["fixture"], manifest, refs["normalized_output_schema"])
+        validate_fixture(report, assets["fixture"], refs["fixture"], manifest, refs["normalized_output_schema"], assets["normalized_output_schema"])
+    if isinstance(assets.get("core_consumption_fixture"), dict):
+        validate_core_consumption_fixture(report, root, assets["core_consumption_fixture"], manifest, refs)
     if "post_check" in refs:
         fixture = assets.get("fixture") if isinstance(assets.get("fixture"), dict) else None
         validate_post_check(report, root, refs["post_check"], manifest, fixture)

@@ -13,19 +13,29 @@
     "public_input": {"type": "object"},
     "ref_binding": {"type": "object"},
     "entries": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/entry"}},
-    "result_requirements": {"type": "object"},
+    "result_requirements": {"type": "object", "required": ["required_refs", "inline_raw_material", "success_requires_post_check", "forbidden_inline_material"]},
     "non_goals": {"type": "array", "minItems": 3, "items": {"type": "string"}}
   },
   "$defs": {"entry": {
     "type": "object", "additionalProperties": false,
-    "required": ["site_slug", "capability_id", "operation_id", "operation_mode", "package_ref", "lock_ref", "version", "lifecycle", "detail_ref_kind", "search_operation_id", "allowed_origin", "assets", "required_ref_kinds"],
+    "required": ["site_slug", "capability_id", "operation_id", "operation_mode", "package_ref", "lock_ref", "version", "lifecycle", "detail_ref_kind", "search_operation_id", "allowed_origin", "assets", "output_contract", "required_ref_kinds"],
     "properties": {
       "site_slug": {"enum": ["xiaohongshu", "boss"]}, "capability_id": {"type": "string"},
       "operation_id": {"enum": ["xhs_read_note_detail", "boss_read_job_detail"]}, "operation_mode": {"const": "read"},
-      "package_ref": {"type": "string"}, "lock_ref": {"type": "string"}, "version": {"const": "0.1.0"}, "lifecycle": {"const": "proposed"},
+      "package_ref": {"type": "string"}, "lock_ref": {"type": "string"}, "version": {"enum": ["0.1.0", "0.1.1"]}, "lifecycle": {"const": "proposed"},
       "detail_ref_kind": {"enum": ["xhs_note_detail_ref", "boss_job_detail_ref"]}, "search_operation_id": {"type": "string"},
       "allowed_origin": {"type": "string", "format": "uri"},
-      "assets": {"type": "object", "minProperties": 6, "additionalProperties": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string", "pattern": "^[a-f0-9]{64}$"}], "minItems": 2, "maxItems": 2}},
+      "assets": {"type": "object", "required": ["manifest", "package_lock", "input_schema", "output_schema", "resources", "failures", "post_check"], "additionalProperties": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string", "pattern": "^[a-f0-9]{64}$"}], "minItems": 2, "maxItems": 2}},
+      "output_contract": {
+        "type": "object", "additionalProperties": false,
+        "required": ["required_public_fields", "bounded_summary", "field_binding", "identifier_policy"],
+        "properties": {
+          "required_public_fields": {"type": "array", "minItems": 8, "uniqueItems": true, "items": {"type": "string"}},
+          "bounded_summary": {"type": "object", "additionalProperties": false, "required": ["field", "min_length", "max_length", "reject_whitespace_only", "reject_synthetic_placeholder"], "properties": {"field": {"const": "summary"}, "min_length": {"const": 1}, "max_length": {"type": "integer", "minimum": 1, "maximum": 2000}, "reject_whitespace_only": {"const": true}, "reject_synthetic_placeholder": {"const": true}}},
+          "field_binding": {"type": "object", "additionalProperties": false, "required": ["required_for_every_public_field", "required_bindings"], "properties": {"required_for_every_public_field": {"const": true}, "required_bindings": {"const": ["source_ref", "evidence_ref"]}}},
+          "identifier_policy": {"type": "object"}
+        }
+      },
       "required_ref_kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
     }
   }}

@@ -1,8 +1,10 @@
 # LODE-268 Plan
 
 1. Bind #268 to an isolated origin/main worktree.
-2. Add strict detail-ref truth, schema, fixture, and fail-closed validator.
-3. Validate, review, commit, push, and create a ready PR without merge or closeout.
+2. Correct the merged truth with pinned output schemas, complete normalized public fields, bounded summaries, field-level source/evidence binding, and sensitive-material exclusions.
+3. Extend the schema, fixture, normal all-package validator, and mutation self-tests.
+4. Relock the BOSS detail package and registry projections to `0.1.1`, preserving `0.1.0` rollback refs.
+5. Validate, review, commit, push, and create a ready PR without merge or closeout.
 
 ## Ownership
 

@@ -2,7 +2,7 @@
   "schema_version": "lode.resource-requirements.v0",
   "resource_requirements_id": "boss.read-job-detail.resources",
   "resource_requirements_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "operation_ref": "lode://operation/boss_read_job_detail",
   "operation_mode": "read",
   "lifecycle": "proposed",
@@ -105,7 +105,7 @@
         ]
       },
       "output_binding": {
-        "output_schema": "lode://schema/site-capability/boss/read-job-detail/output@0.1.0",
+        "output_schema": "lode://schema/site-capability/boss/read-job-detail/output@0.1.1",
         "required_available_status_refs": [
           "source_refs"
         ],

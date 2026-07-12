@@ -15,6 +15,7 @@
 | LODE-236 小红书真实只读与写前验证批次 | [Xiaohongshu read capability packages](xiaohongshu-read-capabilities.md)、[Write-precheck capability packages](write-precheck-capabilities.md) |
 | LODE-241 BOSS 真实只读与写前验证批次 | [BOSS Zhipin read capability packages](boss-read-capabilities.md)、[Write-precheck capability packages](write-precheck-capabilities.md) |
 | bb-sites 小红书与 BOSS 吸收冻结 | [bb-sites XHS/BOSS absorption freeze](bb-sites-xhs-boss-absorption-freeze.md) |
+| 双站详情读取 runtime-consumption output truth | [`registry/detail-runtime-consumption.json`](../../registry/detail-runtime-consumption.json)；固定 output schema digest、公开字段、来源绑定和敏感材料边界，Lode 不执行 runtime |
 | implementation-time / external-contract 未决项 | [pending decisions](../adr/pending-decisions.md) |
 
 实现、测试、schema、validator、runtime 或 generated facts 不应引用 `docs/draft/` 作为权威合同。

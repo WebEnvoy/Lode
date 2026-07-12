@@ -2,7 +2,7 @@
   "schema_version": "lode.overlay-fork-metadata.v0",
   "overlay_metadata_id": "boss.read-job-detail.overlay-fork",
   "overlay_metadata_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "capability_id": "read-job-detail",
   "operation_id": "boss_read_job_detail",
   "operation_mode": "read",

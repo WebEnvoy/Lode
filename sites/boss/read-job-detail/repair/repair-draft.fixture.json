@@ -2,7 +2,7 @@
   "schema_version": "lode.repair-draft.v0",
   "repair_draft_id": "boss.read-job-detail.repair-draft",
   "repair_draft_version": "0.1.0",
-  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+  "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
   "capability_id": "read-job-detail",
   "operation_id": "boss_read_job_detail",
   "operation_mode": "read",
@@ -70,7 +70,7 @@
     ],
     "promotion_target": {
       "target_kind": "package_update",
-      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.1",
       "requires_new_version": true
     }
   },
