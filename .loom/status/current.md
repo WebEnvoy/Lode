@@ -2,34 +2,34 @@
 
 ## Derived Fact Chain View
 
-- Item ID: LODE-268
-- Goal: Correct the merged runtime-consumption truth by pinning both output schemas and freezing complete, bounded, source/evidence-bound public detail fields.
-- Scope: Lode registry truth, BOSS detail output schema/package relock, fixtures/post-check, offline validators, README index, and item-specific carriers only.
-- Execution Path: work/lode-268-output-truth-correction
+- Item ID: LODE-273
+- Goal: Preserve BOSS capability assets while making production runtime admission mechanically disabled/deferred and keeping Xiaohongshu enabled/current.
+- Scope: Production package registry, search/detail/validate-only consumption truths, published schemas, validators, fixtures, and LODE-273 carriers.
+- Execution Path: work/lode-273-boss-deferred-admission
 - Workspace Entry: .
-- Recovery Entry: .loom/progress/LODE-268.md
-- Review Entry: .loom/reviews/LODE-268.json
-- Validation Entry: detail self-test, repository validators, Python compile, JSON parse, diff check, and Loom checks.
-- Closing Condition: A ready corrective PR proves complete static output truth only; downstream live evidence remains owned by Core, Harbor, and App.
+- Recovery Entry: .loom/progress/LODE-273.md
+- Review Entry: .loom/reviews/LODE-273.json
+- Validation Entry: registry self-tests, package/runtime-boundary validation, Python compile, JSON parse, diff and Loom checks.
+- Closing Condition: PR #274 merged after current-head code/spec review and hosted gate; close #273 only as static admission truth, not runtime/live evidence.
 - Current Checkpoint: merge
-- Current Stop: Product head `87d5dc90294c4511710551b8445b0d65dc43009f` passed all contract/security validation and independent current-head code/spec review.
-- Next Step: Consume the hosted merge gate and perform controlled merge; close #268 only as static capability truth without claiming runtime/live execution.
+- Current Stop: Head `47e3029f068706eb5651135912959e84d4ca0223` passed all contract/security validation and independent re-review with no findings.
+- Next Step: Commit/push carrier-only convergence, consume hosted gate, and controlled-merge PR #274.
 - Blockers: None recorded.
-- Latest Validation Summary: 2026-07-12T05:21Z: At head `87d5dc90294c4511710551b8445b0d65dc43009f`, two valid output instances passed and 16 malicious instances were rejected; exact required-field bindings, BOSS `0.1.1` registry/fixture readback, all-package validation, validate-only/search regressions, runtime-boundary validation, Python compile, all-JSON parse, and `git diff --check` passed. Independent review confirmed closed schemas, sanitized URLs, bounded summaries, nonempty refs, opaque `detail_ref`, sensitive-material exclusion, and Lode's non-runner boundary. No live runtime or external write occurred.
-- Recovery Boundary: No browser, production page, account, session, runtime execution, write action, merge, or issue closeout.
-- Current Lane: LODE-268 complete static detail output truth correction.
+- Latest Validation Summary: 2026-07-12T10:22Z at head `47e3029f068706eb5651135912959e84d4ca0223`: search, detail, and validate-only self-tests, two valid detail outputs, 16 malicious probes, full package validation, runtime-boundary validation, Python compile, all-JSON parse, and `git diff --check` passed. Independent re-review found no findings: published schemas and validators lock XHS to enabled/current and BOSS to disabled/deferred; capability assets, locks, and digests remain unchanged. No runtime, browser, production page, account, profile, sensitive material, or external write was used.
+- Recovery Boundary: Revert only LODE-273 registry/schema/validator and carrier changes. Do not access runtime, browser, accounts, profiles, sensitive material, or external pages; do not claim BOSS usability.
+- Current Lane: LODE-273 BOSS deferred admission truth.
 
 ## Runtime Evidence
 
 - Run Entry: not_applicable; Lode is not a runtime runner
-- Logs Entry: validator and malicious-instance probe output
-- Diagnostics Entry: registry/detail-runtime-consumption.json; sites/boss/read-job-detail/schemas/output.schema.json; tools/validate_detail_runtime_consumption.py
-- Verification Entry: .loom/specs/LODE-268/evidence-map.md
-- Lane Entry: .loom/specs/LODE-268/plan.md
+- Logs Entry: validator, mutation, malicious-probe and package-validation output
+- Diagnostics Entry: registry/local-packages.json; registry/*runtime-consumption*.json; tools/validate_*runtime_consumption.py
+- Verification Entry: .loom/specs/LODE-273/evidence-map.md
+- Lane Entry: .loom/specs/LODE-273/plan.md
 
 ## Sources
 
-- Static Truth: .loom/work-items/LODE-268.md
-- Dynamic Truth: .loom/progress/LODE-268.md
+- Static Truth: .loom/work-items/LODE-273.md
+- Dynamic Truth: .loom/progress/LODE-273.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: loom fact-chain --target . --json
