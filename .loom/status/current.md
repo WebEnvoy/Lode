@@ -2,34 +2,34 @@
 
 ## Derived Fact Chain View
 
-- Item ID: LODE-266
-- Goal: Freeze lock-bound validate-only runtime-consumption truth for Xiaohongshu publish-note-precheck and BOSS greet-precheck, covering #266 and #267.
-- Scope: Lode registry/schema/fixture, bound package post-checks, offline validator, tests, and LODE-266 carriers only.
-- Execution Path: `work/lode-266-write-precheck-runtime-consumption`
-- Workspace Entry: `.`
-- Recovery Entry: `.loom/progress/LODE-266.md`
-- Review Entry: `.loom/reviews/LODE-266.json`
-- Validation Entry: validate-only self-test, all-package validation, runtime-boundary validation, Python compile, diff check, and Loom suite checks.
-- Closing Condition: A ready PR proves static validate-only consumption truth. It does not prove live runtime success and does not authorize submit/write.
-- Current Checkpoint: implementation_validated
-- Current Stop: Static truth and fail-closed validator implemented; final Loom validation, commit, push, and ready PR remain.
-- Next Step: Complete validation, commit, push, create the ready PR, and read back branch/head/body bindings.
+- Item ID: LODE-268
+- Goal: Freeze strict runtime-consumption truth for Xiaohongshu note detail and BOSS job detail reads.
+- Scope: Lode registry truth, schema, fixture, offline validator, README index, and item-specific carriers only.
+- Execution Path: work/lode-268-detail-runtime-consumption
+- Workspace Entry: .
+- Recovery Entry: .loom/progress/LODE-268.md
+- Review Entry: .loom/reviews/LODE-268.json
+- Validation Entry: detail self-test, repository validators, Python compile, JSON parse, diff check, and Loom checks.
+- Closing Condition: A ready PR proves static capability truth only; downstream live evidence remains owned by Core, Harbor, and App.
+- Current Checkpoint: merge
+- Current Stop: Product head `88bf540` and current semantic reviews passed; PR #270 is ready except for shared carrier convergence.
+- Next Step: Consume hosted merge gate, merge PR #270, and record Lode static-truth closeout without claiming live execution.
 - Blockers: None recorded.
-- Latest Validation Summary: 2026-07-11T16:04Z passed exact nested 0.1.1 lock-ref and digest validation, one-to-one rejection mutation self-tests, strict JSON Schema through the normal all-package path, read allowlist regression, runtime-boundary validation, Python compile, JSON/YAML parse checks, diff check, Loom fact-chain, suite, evidence, and carrier validation.
-- Recovery Boundary: No browser, production page, account, identity material, session, runtime execution, write, submit, merge, or issue closeout.
-- Current Lane: FR #265 batch anchored by #266 and covering #267.
+- Latest Validation Summary: 2026-07-12T01:32+08:00 passed detail self-tests, all-package validation including both runtime-consumption reports, existing read allowlist regression, runtime-boundary validation, Python compile, all-JSON parse, and diff check.
+- Recovery Boundary: No browser, production page, account, session, runtime execution, write action, merge, or issue closeout.
+- Current Lane: LODE-268 dual-site detail runtime-consumption truth.
 
 ## Runtime Evidence
 
-- Run Entry: not_applicable
+- Run Entry: not_applicable; Lode is not a runtime runner
 - Logs Entry: not_applicable
 - Diagnostics Entry: not_applicable
 - Verification Entry: `loom verify --target . --json`
-- Lane Entry: FR #265 batch anchored by #266 and covering #267
+- Lane Entry: LODE-268 static detail truth
 
 ## Sources
 
-- Static Truth: .loom/work-items/LODE-266.md
-- Dynamic Truth: .loom/progress/LODE-266.md
+- Static Truth: .loom/work-items/LODE-268.md
+- Dynamic Truth: .loom/progress/LODE-268.md
 - Locator Truth: .loom/bootstrap/init-result.json
 - Fact Chain CLI: `loom fact-chain --target . --json`

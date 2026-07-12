@@ -1,0 +1,73 @@
+{
+  "$schema": "./detail-runtime-consumption.schema.json",
+  "schema_version": "lode.detail-runtime-consumption.v0",
+  "truth_id": "lode.xhs-boss.detail-read.runtime-consumption",
+  "asset_owner": "Lode",
+  "runtime_execution": "out_of_scope",
+  "public_input": {
+    "required": ["detail_ref"],
+    "additional_properties": false,
+    "caller_may_construct": false,
+    "forbidden_fields": ["url", "note_id", "xsec_token", "securityId", "encryptJobId", "cookie", "token", "profile", "raw_payload"]
+  },
+  "ref_binding": {
+    "producer": "WebEnvoy Core persisted search result",
+    "required_same": ["site_slug", "identity_environment_ref", "search_run_ref", "search_result_ref"],
+    "freshness": "current_and_unexpired",
+    "single_use_per_detail_run": true,
+    "resolved_material_visibility": "Core-to-Harbor internal only",
+    "reject": ["unknown_ref", "wrong_kind", "cross_site", "cross_identity", "cross_run", "expired", "already_consumed", "caller_constructed"]
+  },
+  "entries": [
+    {
+      "site_slug": "xiaohongshu",
+      "capability_id": "read-note-detail",
+      "operation_id": "xhs_read_note_detail",
+      "operation_mode": "read",
+      "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/read-note-detail@0.1.0",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "detail_ref_kind": "xhs_note_detail_ref",
+      "search_operation_id": "xhs_search_notes",
+      "allowed_origin": "https://www.xiaohongshu.com",
+      "assets": {
+        "manifest": ["sites/xiaohongshu/read-note-detail/manifest.json", "d5258429f34ab7e4bd8666676c4060639cfb61d3f2bca0cc002bbdbe75296138"],
+        "package_lock": ["sites/xiaohongshu/read-note-detail/package-lock.json", "464dae48cc0d0905f7feeccb047aa417b4288fb8356b6ce6488d7ba230f014d9"],
+        "input_schema": ["sites/xiaohongshu/read-note-detail/schemas/input.schema.json", "82c7307d3cca594596c128aed2abb87d319d03818e623aba48e12cde9a48e1e8"],
+        "resources": ["sites/xiaohongshu/read-note-detail/resource-requirements.json", "7104d8e5c2703dda12c89b32ee718974bdb86a7d7c8bbd5c303b2d140acf4d11"],
+        "failures": ["sites/xiaohongshu/read-note-detail/failure-mapping.json", "ad6b0aff10e036d80840c913a713d7275fa212420665b0f7ab0114fd8f72ae75"],
+        "post_check": ["sites/xiaohongshu/read-note-detail/checks/post-check.json", "efd206716f7ca69119070d2ff8c3a57f5fb61ce142a2d0f49a5fadd343b5c9b4"]
+      },
+      "required_ref_kinds": ["pinia_store_summary", "network_summary", "dom_snapshot_summary", "snapshot_ref", "post_check_ref"]
+    },
+    {
+      "site_slug": "boss",
+      "capability_id": "read-job-detail",
+      "operation_id": "boss_read_job_detail",
+      "operation_mode": "read",
+      "package_ref": "lode://site-capability/boss/read-job-detail@0.1.0",
+      "lock_ref": "lode://lock/site-capability/boss/read-job-detail@0.1.0",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "detail_ref_kind": "boss_job_detail_ref",
+      "search_operation_id": "boss_job_search",
+      "allowed_origin": "https://www.zhipin.com",
+      "assets": {
+        "manifest": ["sites/boss/read-job-detail/manifest.json", "2df8f467982127c373dcd268af32076000717dd7cd84d3e6e6f67c2eae84d9ed"],
+        "package_lock": ["sites/boss/read-job-detail/package-lock.json", "1ac72d237195388f33420166aa5d7d61f76644311076094edb4d5e38b2f5049d"],
+        "input_schema": ["sites/boss/read-job-detail/schemas/input.schema.json", "684c7a9a47c9b2fc61019e7f953afd53572602f43b400ad28f69e0d82b4d2d66"],
+        "resources": ["sites/boss/read-job-detail/resource-requirements.json", "86c1975bf1bed36628c699be6afb07b927e2e7fe0e605181d506fe4522cac8b8"],
+        "failures": ["sites/boss/read-job-detail/failure-mapping.json", "cd41f039bbfb0b4d6fc337700347980f9cc72fce41a89e3e9e1c3291d9cc3628"],
+        "post_check": ["sites/boss/read-job-detail/checks/post-check.json", "4ecc2fb5bf46a3977cb4018335b8879ac4dfe3ce2fc1000daea169f89c84c937"]
+      },
+      "required_ref_kinds": ["snapshot_ref", "network_summary_ref", "post_check_ref"]
+    }
+  ],
+  "result_requirements": {
+    "required_refs": ["run_ref", "result_ref", "source_ref", "evidence_ref", "post_check_ref"],
+    "inline_raw_material": "forbidden",
+    "success_requires_post_check": "passed"
+  },
+  "non_goals": ["No browser, account, or page access.", "No live-evidence claim.", "No write, publish, send, apply, save, bulk collection, or risk-control bypass."]
+}

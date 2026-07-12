@@ -1248,6 +1248,7 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
     index = load_json(index_report, repo_root, registry_index, "local_registry_index", rel(repo_root, registry_index))
     package_reports: list[dict[str, Any]] = []
     runtime_consumption_report: dict[str, Any] = {"status": "not_checked", "errors": []}
+    detail_consumption_report: dict[str, Any] = {"status": "not_checked", "errors": []}
     if isinstance(index, dict):
         validate_registry_query_fixture(index_report, repo_root, index, rel(repo_root, registry_index))
         entries = index.get("entries")
@@ -1273,7 +1274,15 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
             runtime_consumption_report = {"status": "failed" if consumption_errors else "passed", "errors": consumption_errors}
         except (ImportError, OSError, json.JSONDecodeError) as exc:
             runtime_consumption_report = {"status": "failed", "errors": [f"validate-only runtime-consumption validation unavailable: {exc}"]}
-    status = "failed" if index_report.errors or runtime_consumption_report["status"] == "failed" or any(report.get("status") == "failed" for report in package_reports) else "passed"
+        try:
+            from validate_detail_runtime_consumption import load as load_detail_consumption
+            from validate_detail_runtime_consumption import validate as validate_detail_consumption
+
+            detail_errors = validate_detail_consumption(load_detail_consumption(repo_root / "registry/detail-runtime-consumption.json"))
+            detail_consumption_report = {"status": "failed" if detail_errors else "passed", "errors": detail_errors}
+        except (ImportError, OSError, json.JSONDecodeError) as exc:
+            detail_consumption_report = {"status": "failed", "errors": [f"detail runtime-consumption validation unavailable: {exc}"]}
+    status = "failed" if index_report.errors or runtime_consumption_report["status"] == "failed" or detail_consumption_report["status"] == "failed" or any(report.get("status") == "failed" for report in package_reports) else "passed"
     return {
         "schema_version": "lode-registry-validation-report.v0",
         "status": status,
@@ -1281,6 +1290,7 @@ def validate_registry_packages(registry_index: Path) -> dict[str, Any]:
         "index_report": index_report.to_dict(),
         "package_reports": package_reports,
         "validate_only_runtime_consumption": runtime_consumption_report,
+        "detail_runtime_consumption": detail_consumption_report,
     }
 
 

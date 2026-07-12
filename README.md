@@ -85,7 +85,8 @@ python3 tools/lode_validate_package.py sites/example/read-public-page --registry
 python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
 ```
 
-批量入口会同时执行严格 JSON Schema 和 validate-only runtime-consumption truth 校验；
+批量入口会同时执行严格 JSON Schema、validate-only runtime-consumption truth 和
+两站详情读取的 opaque `detail_ref` runtime-consumption truth 校验；
 缺少 `jsonschema` 依赖时 fail closed。
 
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
