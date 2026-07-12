@@ -15,6 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST_PATH = Path("registry/runtime-consumption-allowlist.json")
 REGISTRY_PATH = Path("registry/local-packages.json")
 EXPECTED_OPERATIONS = {"xhs_search_notes", "boss_job_search"}
+EXPECTED_ADMISSION = {
+    "xhs_search_notes": {"enabled": True, "status": "current", "recheck_condition": "not_applicable"},
+    "boss_job_search": {"enabled": False, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"},
+}
 EXPECTED_CONSUMERS = [
     {
         "repository": "WebEnvoy/Harbor",
@@ -35,6 +39,7 @@ EXPECTED_FAIL_CLOSED_CONDITIONS = {
     "missing_resource_requirements",
     "missing_failure_taxonomy",
     "missing_refs_only_evidence_or_post_check",
+    "disabled_or_deferred_operation",
 }
 REQUIRED_ENTRY_KEYS = {
     "package_ref",
@@ -49,6 +54,7 @@ REQUIRED_ENTRY_KEYS = {
     "resource_requirements",
     "failure_taxonomy",
     "evidence_and_post_check",
+    "runtime_admission",
 }
 
 
@@ -107,6 +113,11 @@ def validate_entry(errors: list[str], entry: Any, registry_entries: dict[str, di
         add_error(errors, f"{path}.operation_mode", "must be read")
     if entry.get("lifecycle") != "proposed":
         add_error(errors, f"{path}.lifecycle", "must remain proposed")
+    expected_admission = EXPECTED_ADMISSION[operation_id]
+    if entry.get("runtime_admission") != expected_admission:
+        add_error(errors, f"{path}.runtime_admission", "does not match the site production admission policy")
+    if registry_entry.get("runtime_admission") != expected_admission:
+        add_error(errors, f"{path}.registry.runtime_admission", "does not match the site production admission policy")
 
     root = package_root(registry_entry)
     manifest = load_json(root / "manifest.json")
@@ -240,6 +251,9 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("empty reject map", lambda value: value.__setitem__("fail_closed", {})),
         ("non-reject failure condition", lambda value: value["fail_closed"].__setitem__("unknown_operation", "allow")),
         ("active lifecycle", lambda value: value["entries"][0].__setitem__("lifecycle", "active")),
+        ("XHS disabled", lambda value: value["entries"][0]["runtime_admission"].__setitem__("enabled", False)),
+        ("BOSS enabled", lambda value: value["entries"][1]["runtime_admission"].__setitem__("enabled", True)),
+        ("BOSS current", lambda value: value["entries"][1]["runtime_admission"].__setitem__("status", "current")),
     ]
     failures: list[str] = []
     for name, mutate in cases:

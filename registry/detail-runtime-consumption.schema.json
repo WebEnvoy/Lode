@@ -18,11 +18,12 @@
   },
   "$defs": {"entry": {
     "type": "object", "additionalProperties": false,
-    "required": ["site_slug", "capability_id", "operation_id", "operation_mode", "package_ref", "lock_ref", "version", "lifecycle", "detail_ref_kind", "search_operation_id", "allowed_origin", "assets", "output_contract", "required_ref_kinds"],
+    "required": ["site_slug", "capability_id", "operation_id", "operation_mode", "package_ref", "lock_ref", "version", "lifecycle", "runtime_admission", "detail_ref_kind", "search_operation_id", "allowed_origin", "assets", "output_contract", "required_ref_kinds"],
     "properties": {
       "site_slug": {"enum": ["xiaohongshu", "boss"]}, "capability_id": {"type": "string"},
       "operation_id": {"enum": ["xhs_read_note_detail", "boss_read_job_detail"]}, "operation_mode": {"const": "read"},
       "package_ref": {"type": "string"}, "lock_ref": {"type": "string"}, "version": {"enum": ["0.1.0", "0.1.1"]}, "lifecycle": {"const": "proposed"},
+      "runtime_admission": {"$ref": "#/$defs/runtime_admission"},
       "detail_ref_kind": {"enum": ["xhs_note_detail_ref", "boss_job_detail_ref"]}, "search_operation_id": {"type": "string"},
       "allowed_origin": {"type": "string", "format": "uri"},
       "assets": {"type": "object", "required": ["manifest", "package_lock", "input_schema", "output_schema", "resources", "failures", "post_check"], "additionalProperties": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string", "pattern": "^[a-f0-9]{64}$"}], "minItems": 2, "maxItems": 2}},
@@ -37,6 +38,18 @@
         }
       },
       "required_ref_kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+    },
+    "allOf": [
+      {"if": {"properties": {"operation_id": {"const": "xhs_read_note_detail"}}}, "then": {"properties": {"site_slug": {"const": "xiaohongshu"}, "runtime_admission": {"const": {"enabled": true, "status": "current", "recheck_condition": "not_applicable"}}}}},
+      {"if": {"properties": {"operation_id": {"const": "boss_read_job_detail"}}}, "then": {"properties": {"site_slug": {"const": "boss"}, "runtime_admission": {"const": {"enabled": false, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"}}}}}
+    ]
+  }, "runtime_admission": {
+    "type": "object", "additionalProperties": false,
+    "required": ["enabled", "status", "recheck_condition"],
+    "properties": {
+      "enabled": {"type": "boolean"},
+      "status": {"enum": ["current", "deferred_experimental"]},
+      "recheck_condition": {"enum": ["not_applicable", "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"]}
     }
   }}
 }
