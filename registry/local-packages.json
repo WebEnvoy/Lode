@@ -1373,7 +1373,7 @@
           "sources/epiral/bb-sites/xiaohongshu/feed.js",
           "sources/epiral/bb-sites/xiaohongshu/me.js"
         ],
-        "consumer_boundary": "Core/App may consume package refs, schemas, fixtures, resource requirements, failure mapping, expected-change/risk/no-submit fields, and post-check plans for write-precheck preview only. This package does not save, upload, publish, schedule, submit, or execute writes.",
+        "consumer_boundary": "Core/App may consume the entrypoint-only partial result, unavailable/not_observed composition fields, refs, failure mapping, submitted=false, and post-check plan. This package does not initialize composition, save, upload, generate, publish, schedule, submit, or execute writes.",
         "covered_issues": [
           "#235",
           "#238",
@@ -1437,8 +1437,8 @@
           "runtime.execution_surface.available",
           "runtime.public_https_navigation.allowed",
           "runtime.site_identity.logged_in",
-          "snapshot.creator_publish_page.available",
-          "refmap.write_target_refs.available",
+          "snapshot.creator_publish_entrypoint.available",
+          "refmap.entrypoint_refs.available",
           "evidence.snapshot_ref.available"
         ]
       },
@@ -1511,6 +1511,7 @@
           "evidence_expired",
           "login_required",
           "permission_insufficient",
+          "composition_not_initialized",
           "target_not_writable",
           "safety_challenge"
         ]

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
   "title": "小红书发布草稿写前验证输入",
-  "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+  "description": "只读确认小红书创作入口，不初始化内容编辑面且不提交。",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -84,7 +84,7 @@
         "source_status"
       ],
       "include_source_refs": true,
-      "proposed_input_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。"
+      "proposed_input_summary": "确认创作入口已加载；不点击、不上传、不生成、不保存、不发布。"
     }
   ],
   "x-lode": {
