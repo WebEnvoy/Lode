@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
   "title": "小红书发布草稿写前验证归一化输出",
-  "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+  "description": "只读确认小红书创作入口，明确 composition 尚未初始化且 submitted=false。",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -178,9 +178,12 @@
         "title",
         "summary",
         "source_status",
-        "expected_change",
-        "expected_change_summary",
-        "risk_hints",
+        "precheck_scope",
+        "composition_state",
+        "entrypoint_observations",
+        "field_states",
+        "submitted",
+        "prohibited_actions_observed",
         "no_submit_guard_status"
       ],
       "properties": {
@@ -209,18 +212,30 @@
             "partially_located"
           ]
         },
-        "expected_change": {
-          "$ref": "#/$defs/expected_change"
+        "precheck_scope": {
+          "const": "entrypoint_only"
         },
-        "expected_change_summary": {
-          "type": "string",
-          "minLength": 1
+        "composition_state": {
+          "const": "composition_not_initialized"
         },
-        "risk_hints": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/$defs/risk_hint"
+        "entrypoint_observations": {
+          "$ref": "#/$defs/entrypoint_observations"
+        },
+        "field_states": {
+          "$ref": "#/$defs/field_states"
+        },
+        "submitted": {
+          "const": false
+        },
+        "prohibited_actions_observed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["upload", "generate", "save", "publish"],
+          "properties": {
+            "upload": {"const": false},
+            "generate": {"const": false},
+            "save": {"const": false},
+            "publish": {"const": false}
           }
         },
         "no_submit_guard_status": {
@@ -228,103 +243,45 @@
         }
       }
     },
-    "expected_change": {
+    "entrypoint_observations": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "change_kind",
-        "target_ref",
-        "summary",
-        "field_effects",
-        "external_submit"
+        "route_loaded",
+        "user_confirmed_identity",
+        "challenge_absent",
+        "publish_vue_container_visible",
+        "upload_image_tab_active",
+        "upload_image_entry_visible",
+        "text_image_entry_visible"
       ],
       "properties": {
-        "change_kind": {
-          "const": "note_draft_preview"
-        },
-        "target_ref": {
-          "type": "string",
-          "minLength": 1
-        },
-        "summary": {
-          "type": "string",
-          "minLength": 1
-        },
-        "field_effects": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "field_ref",
-              "effect",
-              "redaction"
-            ],
-            "properties": {
-              "field_ref": {
-                "type": "string",
-                "minLength": 1
-              },
-              "effect": {
-                "type": "string",
-                "enum": [
-                  "validate_presence",
-                  "preview_local_value",
-                  "check_publish_page_requirement"
-                ]
-              },
-              "redaction": {
-                "const": "summary_only"
-              }
-            }
-          }
-        },
-        "external_submit": {
-          "const": false
-        }
+        "route_loaded": {"const": true},
+        "user_confirmed_identity": {"const": true},
+        "challenge_absent": {"const": true},
+        "publish_vue_container_visible": {"const": true},
+        "upload_image_tab_active": {"const": true},
+        "upload_image_entry_visible": {"const": true},
+        "text_image_entry_visible": {"const": true}
       }
     },
-    "risk_hint": {
+    "field_states": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "risk_hint",
-        "severity",
-        "owner",
-        "mitigation"
-      ],
+      "required": ["title_input", "content_editor", "publish_control"],
       "properties": {
-        "risk_hint": {
-          "type": "string",
-          "enum": [
-            "requires_user_review",
-            "target_may_change",
-            "evidence_may_stale",
-            "no_submit_guard_required"
-          ]
-        },
-        "severity": {
-          "type": "string",
-          "enum": [
-            "info",
-            "warning",
-            "blocked"
-          ]
-        },
-        "owner": {
-          "type": "string",
-          "enum": [
-            "lode",
-            "core",
-            "harbor",
-            "app"
-          ]
-        },
-        "mitigation": {
-          "type": "string",
-          "minLength": 1
-        }
+        "title_input": {"$ref": "#/$defs/not_observed_field"},
+        "content_editor": {"$ref": "#/$defs/not_observed_field"},
+        "publish_control": {"$ref": "#/$defs/not_observed_field"}
+      }
+    },
+    "not_observed_field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["availability", "observation"],
+      "properties": {
+        "availability": {"const": "unavailable"},
+        "observation": {"const": "not_observed"}
       }
     },
     "source_ref": {
@@ -418,57 +375,31 @@
     {
       "result_kind": "xhs_publish_note_precheck",
       "status": "available",
-      "classification": "success_result",
+      "classification": "partial_result",
       "normalized": {
         "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
         "target_ref": "writable-target:xiaohongshu/creator-publish-note",
         "title": "小红书发布草稿写前验证",
-        "summary": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+        "summary": "创作入口已确认；未初始化内容编辑面，未执行任何外部动作。",
         "source_status": "located",
-        "expected_change": {
-          "change_kind": "note_draft_preview",
-          "target_ref": "writable-target:xiaohongshu/creator-publish-note",
-          "summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
-          "field_effects": [
-            {
-              "field_ref": "note.title",
-              "effect": "preview_local_value",
-              "redaction": "summary_only"
-            },
-            {
-              "field_ref": "note.body",
-              "effect": "preview_local_value",
-              "redaction": "summary_only"
-            },
-            {
-              "field_ref": "note.visibility",
-              "effect": "check_publish_page_requirement",
-              "redaction": "summary_only"
-            }
-          ],
-          "external_submit": false
+        "precheck_scope": "entrypoint_only",
+        "composition_state": "composition_not_initialized",
+        "entrypoint_observations": {
+          "route_loaded": true,
+          "user_confirmed_identity": true,
+          "challenge_absent": true,
+          "publish_vue_container_visible": true,
+          "upload_image_tab_active": true,
+          "upload_image_entry_visible": true,
+          "text_image_entry_visible": true
         },
-        "expected_change_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
-        "risk_hints": [
-          {
-            "risk_hint": "requires_user_review",
-            "severity": "warning",
-            "owner": "app",
-            "mitigation": "展示标题、正文和可见性预览后再进入任何后续人工确认。"
-          },
-          {
-            "risk_hint": "target_may_change",
-            "severity": "warning",
-            "owner": "core",
-            "mitigation": "若创作中心页面或编辑器焦点变化，要求刷新写前验证。"
-          },
-          {
-            "risk_hint": "no_submit_guard_required",
-            "severity": "blocked",
-            "owner": "core",
-            "mitigation": "拒绝保存、上传、发布、定时发布或任何外部提交步骤。"
-          }
-        ],
+        "field_states": {
+          "title_input": {"availability": "unavailable", "observation": "not_observed"},
+          "content_editor": {"availability": "unavailable", "observation": "not_observed"},
+          "publish_control": {"availability": "unavailable", "observation": "not_observed"}
+        },
+        "submitted": false,
+        "prohibited_actions_observed": {"upload": false, "generate": false, "save": false, "publish": false},
         "no_submit_guard_status": "active"
       },
       "source_refs": [
@@ -524,6 +455,7 @@
       "mapping_incomplete": "mapping_incomplete",
       "login_required": "login_required",
       "permission_insufficient": "permission_insufficient",
+      "composition_not_initialized": "partial_result",
       "target_not_writable": "target_not_writable",
       "safety_challenge": "safety_challenge"
     },

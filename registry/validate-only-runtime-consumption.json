@@ -35,12 +35,11 @@
         "https://creator.xiaohongshu.com"
       ],
       "page_requirement": {
-        "target_kind": "creator_publish_page",
-        "required_page_fact": "snapshot.creator_publish_page.available",
+        "target_kind": "creator_publish_entrypoint",
+        "required_page_fact": "snapshot.creator_publish_entrypoint.available",
         "required_visible_fields": [
-          "title_input",
-          "content_editor",
-          "publish_control"
+          "upload_image_entry",
+          "text_image_entry"
         ],
         "challenge_fact": "safety.challenge.absent",
         "page_change_policy": "reject"
@@ -53,8 +52,8 @@
           "runtime.execution_surface.available",
           "runtime.public_https_navigation.allowed",
           "runtime.site_identity.logged_in",
-          "snapshot.creator_publish_page.available",
-          "refmap.write_target_refs.available",
+          "snapshot.creator_publish_entrypoint.available",
+          "refmap.entrypoint_refs.available",
           "evidence.snapshot_ref.available"
         ]
       },
@@ -78,15 +77,11 @@
       "field_sources": {
         "source_ref_policy": "summary_refs_only",
         "required_fields": {
-          "title_input": [
+          "upload_image_entry": [
             "creator_publish_page_summary",
             "dom_snapshot_summary"
           ],
-          "content_editor": [
-            "creator_publish_page_summary",
-            "dom_snapshot_summary"
-          ],
-          "publish_control": [
+          "text_image_entry": [
             "creator_publish_page_summary",
             "dom_snapshot_summary"
           ]
@@ -109,6 +104,7 @@
           "evidence_expired",
           "login_required",
           "permission_insufficient",
+          "composition_not_initialized",
           "target_not_writable",
           "safety_challenge"
         ]
@@ -159,16 +155,16 @@
       },
       "lock_version": "0.1.1",
       "locked_asset_sha256": {
-        "input_schema": "dd5d0656f848b7efa924b5e9157eec0cfeb69a23efe28d243a28eb1ebd79d9ea",
-        "normalized_output_schema": "bf87d9593f1fff4fa63fcc7b86976860c0a887221c4b444e0d888cc58fdb231a",
-        "resource_requirements": "2be72023adbaec07223d09111444f0f51416569dffb36358a10b77a0be99e1fe",
+        "input_schema": "0bc840bb909128fa8243ddf4d56aa087a043b46fdfc780436b2c15a86a4d4e46",
+        "normalized_output_schema": "335f2723efcedd83f22469bfd107d57e79ed9aebb6421e7438698cfbac405fff",
+        "resource_requirements": "5e58e8acc3666e3c7924889543bb5212bd98243340e0e4ee3ab25c34314e7caf",
         "version_lifecycle_metadata": "cdf082890a76a7d5ed56c50511ef52713cd00951816add2c7e2d780f1a0fe53c",
         "write_deferred_guardrail": "dc1d901d9763557adcfca8d1fbd03b2a1a86bd151fe979e2f68e8dc7a1d17f77",
-        "fixture": "2c26f717241f91869d669664baa99404ad05372db7ebb987a415cb0fabb1ff44",
-        "core_consumption_fixture": "12c19836fd6c4183d498fb74915246e02aa13fc7cf3e6250e2fe08566541352c",
-        "post_check": "4b0361089c4ba02680c4cfa8c7b199ad0006a378382e87a6dbb64c1f3b6e0f42",
-        "failure_mapping": "f9d81218d65efdb60a40dd10badc7e33b057e9da4f03d0494ec84c2489bdd054",
-        "catalog_metadata": "42d28fa8799df461b18d02aa0b841db31e7fed06da60ccfa462e3b0252e55d68",
+        "fixture": "1adfb60f27f974010d1f994db0e7f23d0c6daa940b3ecfb15c27cf81b6a56432",
+        "core_consumption_fixture": "f33183ae30da0d784a6a4baff5951b09db79d4c8e20506c7fcdeaf6f4beff8f3",
+        "post_check": "57aa3d23a6b76a4ae0c212977536666cdafbbf1331afca3f9fda7db60dbac183",
+        "failure_mapping": "b423fb9195c70021d374f37e794352c0b4f7c872008e346bcb5505415d9333c4",
+        "catalog_metadata": "0e830484211d86bea525534deacdfea1a855e5f6e483d2f92a25c81b56e5bade",
         "repair_draft": "fb0423334add3e1556f844b2d56c171a3992cb1aa97a956a925b3ccfa2a2ab02",
         "overlay_fork_metadata": "660214d6f2d1359fc7acad75f65c68ccd4b3e8fa922b32309712ac36c44639bc"
       }

@@ -19,8 +19,8 @@
     "allowed_material": [
       "declared target URL",
       "public-safe target summary",
-      "expected change summary",
-      "risk hint summary",
+        "entrypoint observation summary",
+        "not-observed composition field states",
       "placeholder source and evidence refs"
     ],
     "forbidden_raw_source_fields": [
@@ -82,7 +82,7 @@
       "url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
       "http_status": 200,
       "title": "小红书发布草稿写前验证",
-      "public_text_summary": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+      "public_text_summary": "创作入口已加载；内容编辑面未初始化，未执行上传、生成、保存或发布。",
       "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
       "available_fields": [
         "title",
@@ -90,7 +90,11 @@
         "canonical_url",
         "source_status",
         "target_ref",
-        "expected_change_summary",
+        "precheck_scope",
+        "composition_state",
+        "entrypoint_observations",
+        "field_states",
+        "submitted",
         "no_submit_guard_status"
       ]
     },
@@ -117,57 +121,31 @@
     "data": {
       "result_kind": "xhs_publish_note_precheck",
       "status": "available",
-      "classification": "success_result",
+      "classification": "partial_result",
       "normalized": {
         "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
         "target_ref": "writable-target:xiaohongshu/creator-publish-note",
         "title": "小红书发布草稿写前验证",
-        "summary": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+        "summary": "创作入口已确认；未初始化内容编辑面，未执行任何外部动作。",
         "source_status": "located",
-        "expected_change": {
-          "change_kind": "note_draft_preview",
-          "target_ref": "writable-target:xiaohongshu/creator-publish-note",
-          "summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
-          "field_effects": [
-            {
-              "field_ref": "note.title",
-              "effect": "preview_local_value",
-              "redaction": "summary_only"
-            },
-            {
-              "field_ref": "note.body",
-              "effect": "preview_local_value",
-              "redaction": "summary_only"
-            },
-            {
-              "field_ref": "note.visibility",
-              "effect": "check_publish_page_requirement",
-              "redaction": "summary_only"
-            }
-          ],
-          "external_submit": false
+        "precheck_scope": "entrypoint_only",
+        "composition_state": "composition_not_initialized",
+        "entrypoint_observations": {
+          "route_loaded": true,
+          "user_confirmed_identity": true,
+          "challenge_absent": true,
+          "publish_vue_container_visible": true,
+          "upload_image_tab_active": true,
+          "upload_image_entry_visible": true,
+          "text_image_entry_visible": true
         },
-        "expected_change_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。",
-        "risk_hints": [
-          {
-            "risk_hint": "requires_user_review",
-            "severity": "warning",
-            "owner": "app",
-            "mitigation": "展示标题、正文和可见性预览后再进入任何后续人工确认。"
-          },
-          {
-            "risk_hint": "target_may_change",
-            "severity": "warning",
-            "owner": "core",
-            "mitigation": "若创作中心页面或编辑器焦点变化，要求刷新写前验证。"
-          },
-          {
-            "risk_hint": "no_submit_guard_required",
-            "severity": "blocked",
-            "owner": "core",
-            "mitigation": "拒绝保存、上传、发布、定时发布或任何外部提交步骤。"
-          }
-        ],
+        "field_states": {
+          "title_input": {"availability": "unavailable", "observation": "not_observed"},
+          "content_editor": {"availability": "unavailable", "observation": "not_observed"},
+          "publish_control": {"availability": "unavailable", "observation": "not_observed"}
+        },
+        "submitted": false,
+        "prohibited_actions_observed": {"upload": false, "generate": false, "save": false, "publish": false},
         "no_submit_guard_status": "active"
       },
       "source_refs": [
@@ -224,17 +202,32 @@
         "evidence_ref": "fixture-evidence-1"
       },
       {
-        "field": "normalized.expected_change",
+        "field": "normalized.precheck_scope",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },
       {
-        "field": "normalized.expected_change_summary",
+        "field": "normalized.composition_state",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },
       {
-        "field": "normalized.risk_hints",
+        "field": "normalized.entrypoint_observations",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.field_states",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.submitted",
+        "source_ref": "fixture-source-1",
+        "evidence_ref": "fixture-evidence-1"
+      },
+      {
+        "field": "normalized.prohibited_actions_observed",
         "source_ref": "fixture-source-1",
         "evidence_ref": "fixture-evidence-1"
       },
@@ -249,7 +242,7 @@
   },
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_by_GH-96_validator",
-    "post_check_scope": "write-precheck post-check requires expected change, risk hints, and no-submit guard facts.",
+    "post_check_scope": "entrypoint-only post-check requires current refs, unavailable/not_observed field states, and submitted=false.",
     "failure_mapping_scope": "Failure classification includes page change, login, permission, target-not-writable, safety challenge, and user cancellation.",
     "stable_gate_note": "This fixture alone does not make the package stable."
   },

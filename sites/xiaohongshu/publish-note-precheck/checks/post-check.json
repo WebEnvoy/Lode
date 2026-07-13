@@ -27,7 +27,7 @@
       "submitted"
     ],
     "status_meaning": {
-      "passed": "Required public fields are present and bound to declared source/evidence refs.",
+      "passed": "The creator entrypoint-only observations are current, refs-bound, and submitted is false.",
       "failed": "One or more required public fields or bindings are missing or inconsistent.",
       "skipped": "The check did not run because an upstream admission or runtime condition was not met."
     },
@@ -39,13 +39,16 @@
   "requirements": [
     {
       "requirement_id": "target-located",
-      "description": "The normalized result identifies the 小红书 write-precheck target as located.",
+      "description": "The normalized result identifies the current 小红书 creator entrypoint as loaded.",
       "required_status": "available",
       "required_normalized_fields": [
         "canonical_url",
         "title",
         "summary",
-        "source_status"
+        "source_status",
+        "precheck_scope",
+        "composition_state",
+        "entrypoint_observations"
       ],
       "required_source_refs": [
         "fixture-source-1"
@@ -56,13 +59,13 @@
       "on_failure": "post_check_failed"
     },
     {
-      "requirement_id": "expected-change-declared",
-      "description": "The normalized result declares expected change, risk hints, and confirms no external submission.",
+      "requirement_id": "composition-not-initialized",
+      "description": "Composition fields remain unavailable/not_observed and all prohibited actions remain unperformed.",
       "required_status": "available",
       "required_normalized_fields": [
-        "expected_change",
-        "expected_change_summary",
-        "risk_hints",
+        "field_states",
+        "submitted",
+        "prohibited_actions_observed",
         "no_submit_guard_status"
       ],
       "required_source_refs": [
@@ -71,7 +74,7 @@
       "required_evidence_refs": [
         "fixture-evidence-1"
       ],
-      "on_failure": "preview_unavailable"
+      "on_failure": "post_check_failed"
     },
     {
       "requirement_id": "field-source-binding",
@@ -81,8 +84,12 @@
         "normalized.title",
         "normalized.summary",
         "normalized.source_status",
-        "normalized.expected_change",
-        "normalized.risk_hints",
+        "normalized.precheck_scope",
+        "normalized.composition_state",
+        "normalized.entrypoint_observations",
+        "normalized.field_states",
+        "normalized.submitted",
+        "normalized.prohibited_actions_observed",
         "normalized.no_submit_guard_status"
       ],
       "required_source_refs": [
@@ -97,7 +104,7 @@
   ],
   "fixture_post_check_output": {
     "status": "passed",
-    "reason": "The redacted fixture contains required write-precheck fields and binds them to declared source and evidence refs.",
+    "reason": "The redacted fixture confirms the creator entrypoint only, binds current refs, and records submitted=false without observing composition fields.",
     "source_refs": [
       {
         "ref_id": "fixture-source-1",
@@ -117,7 +124,8 @@
     "submitted": false
   },
   "failure_boundary": {
-    "preview_unavailable": "Expected change, risk hint, or no-submit guard fields are absent or inconsistent.",
+    "composition_not_initialized": "The creator entrypoint is available, but title, content and publish controls were not initialized or observed.",
+    "preview_unavailable": "The entrypoint-only observation or no-submit facts are absent or inconsistent.",
     "page_changed": "Harbor/Core report that target refs no longer match the preview source.",
     "user_cancelled": "The user cancels the preview or later approval before any external submit.",
     "post_check_failed": "Required public result fields or ref bindings are absent or inconsistent.",
@@ -125,7 +133,7 @@
     "evidence_unavailable": "Required evidence refs are absent, expired, or not retained by the runtime owner.",
     "login_required": "The current runtime identity is not sufficient to locate the write-precheck target.",
     "permission_insufficient": "The current identity cannot use the target page or communication/editor surface.",
-    "target_not_writable": "The target page or entry point is unavailable for precheck preview.",
+    "target_not_writable": "The creator entrypoint itself is unavailable; composition fields being not observed is composition_not_initialized instead.",
     "safety_challenge": "The site presents a safety challenge that requires human handling."
   },
   "non_goals": [
@@ -157,9 +165,10 @@
     ]
   },
   "post_check_plan": [
-    "target_ref is still bound to the current creator publish page summary",
-    "expected_change.external_submit remains false",
-    "risk_hints include no_submit_guard_required",
+    "target_ref is still bound to the current creator publish entrypoint summary",
+    "precheck_scope is entrypoint_only and composition_state is composition_not_initialized",
+    "title_input, content_editor and publish_control remain unavailable/not_observed",
+    "upload, generate, save and publish observations remain false",
     "no_submit_guard_status is active",
     "source_refs and evidence_refs are refs-only"
   ]

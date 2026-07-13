@@ -293,7 +293,7 @@
       "Logged-in identity, publish page, editor target, source refs, and evidence refs as Harbor/Core facts.",
       "Expected-change preview for note title/body/visibility with external_submit=false.",
       "Risk hints for user review, target changes, evidence freshness, and no-submit enforcement.",
-      "Post-check plan that verifies expected_change, risk_hints, no_submit_guard_status, source refs, and evidence refs.",
+      "Post-check plan that verifies entrypoint-only observations, unavailable/not_observed field states, submitted=false, source refs, and evidence refs.",
       "Failure categories for login, permission, page change, target not writable, safety challenge, preview unavailable, user cancellation, and stale evidence."
     ],
     "not_absorbed": [

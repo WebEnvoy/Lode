@@ -190,8 +190,24 @@
       "recovery_hint": "让用户检查身份、页面权限或目标可用性。"
     },
     {
+      "lode_failure_class": "composition_not_initialized",
+      "trigger": "创作入口可用，但在禁止上传、生成、保存和发布的边界内，标题、正文和发布控件尚未出现。",
+      "owner": "Lode package contract consumed by WebEnvoy Core",
+      "core_mapping": {
+        "category": "partial_result",
+        "outcome_hint": "partial",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "entrypoint_confirmed_composition_not_initialized",
+        "severity": "info"
+      },
+      "recovery_hint": "展示入口级 no-submit 结果；不得声称标题、正文或发布控件已验证。"
+    },
+    {
       "lode_failure_class": "target_not_writable",
-      "trigger": "发布页、标题输入、正文编辑区或草稿目标不可定位，不能生成写前预览。",
+      "trigger": "创作入口本身不可定位；标题、正文或发布控件未出现应分类为 composition_not_initialized。",
       "owner": "Lode package contract consumed by WebEnvoy Core",
       "core_mapping": {
         "category": "target_not_writable",

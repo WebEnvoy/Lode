@@ -91,7 +91,7 @@
         "source_status"
       ],
       "include_source_refs": true,
-      "proposed_input_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。"
+      "proposed_input_summary": "确认创作入口已加载；不点击、不上传、不生成、不保存、不发布。"
     },
     "expected_admission_checks": [
       "registry_entry_resolves",
@@ -103,8 +103,8 @@
       "normalized_fixture_matches_output_schema",
       "post_check_fixture_output_is_passed",
       "failure_mapping_declares_core_hints",
-      "expected_change_schema_is_structured",
-      "risk_hint_taxonomy_is_declared",
+      "entrypoint_only_scope_is_declared",
+      "composition_not_initialized_is_declared",
       "preview_failure_classes_are_declared",
       "no_submit_guard_is_active",
       "true_write_execution_is_blocked"
@@ -113,7 +113,7 @@
   "write_pre_candidate_fixture": {
     "candidate_id": "xiaohongshu.publish-note-precheck.write-pre-candidate",
     "candidate_status": "selected_real_site_write_precheck_fixture",
-    "selection_reason": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+    "selection_reason": "只读确认小红书创作入口，保持内容编辑字段 unavailable/not_observed。",
     "supported_stage6_modes": [
       "validate_only",
       "draft",
@@ -121,8 +121,8 @@
     ],
     "draft_preview_fixture": {
       "fixture_path": "sites/xiaohongshu/publish-note-precheck/fixtures/publish-note-precheck.fixture.json",
-      "expected_change_pointer": "/normalized_fixture/data/normalized/expected_change",
-      "risk_hints_pointer": "/normalized_fixture/data/normalized/risk_hints",
+      "entrypoint_observations_pointer": "/normalized_fixture/data/normalized/entrypoint_observations",
+      "field_states_pointer": "/normalized_fixture/data/normalized/field_states",
       "post_check_path": "sites/xiaohongshu/publish-note-precheck/checks/post-check.json",
       "failure_mapping_path": "sites/xiaohongshu/publish-note-precheck/failure-mapping.json"
     },
@@ -148,7 +148,7 @@
           "source_status"
         ],
         "include_source_refs": true,
-        "proposed_input_summary": "校验创作中心发布页和内容编辑目标，生成草稿预览，不保存、不上传、不发布。"
+        "proposed_input_summary": "确认创作入口已加载；不点击、不上传、不生成、不保存、不发布。"
       },
       "expected_result": "valid"
     },
@@ -187,6 +187,7 @@
       "user_cancelled",
       "login_required",
       "permission_insufficient",
+      "composition_not_initialized",
       "target_not_writable",
       "safety_challenge"
     ],
@@ -203,8 +204,9 @@
     "package_lock": "readable",
     "input_schema_validation": "valid",
     "normalized_output_schema_validation": "valid",
-    "expected_change_schema": "structured",
-    "risk_hint_taxonomy": "declared",
+    "precheck_scope": "entrypoint_only",
+    "composition_state": "composition_not_initialized",
+    "field_states": "unavailable_not_observed",
     "post_check_fixture_output": "passed",
     "failure_mapping": "write_precheck_classes_readable",
     "stable_admission_claimed": false,

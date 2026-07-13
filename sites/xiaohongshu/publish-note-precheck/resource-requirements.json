@@ -27,7 +27,7 @@
   "resource_requirement_profiles": [
     {
       "requirement_profile_id": "xhs-creator-publish-page-precheck",
-      "description": "识别小红书创作中心发布页和内容编辑目标，生成预期变更、风险提示和不发布边界。",
+      "description": "只读确认小红书创作中心图文发布入口已加载，并证明未上传、生成、保存或发布。",
       "operation_boundary": "validate_only",
       "required_harbor_facts": [
         {
@@ -52,18 +52,18 @@
           "purpose": "Harbor/Core 可确认当前页面具备用户已登录事实引用；Lode 不保存账号状态。"
         },
         {
-          "fact_key": "snapshot.creator_publish_page.available",
+          "fact_key": "snapshot.creator_publish_entrypoint.available",
           "owner": "Harbor",
           "required": true,
           "freshness": "current_execution_window",
-          "purpose": "页面摘要能定位发布页、标题输入、正文编辑区和可见的不发布边界。"
+          "purpose": "页面摘要证明 creator 路由、publish-vue-container、active 上传图文 tab、上传图片和文字配图入口可见；只观察，不点击。"
         },
         {
-          "fact_key": "refmap.write_target_refs.available",
+          "fact_key": "refmap.entrypoint_refs.available",
           "owner": "Harbor",
           "required": true,
           "freshness": "current_execution_window",
-          "purpose": "Core 可把预览字段绑定到 Harbor 拥有的目标引用。"
+          "purpose": "Core 可把入口级观察绑定到 Harbor 拥有的页面和入口引用。"
         },
         {
           "fact_key": "evidence.snapshot_ref.available",
@@ -131,7 +131,8 @@
     "invalid_contract": "The package resource declaration violates the Lode/Harbor/Core ownership boundary.",
     "login_required": "当前站点身份事实不足，无法定位写前目标。",
     "permission_insufficient": "当前身份权限不足，不能生成该目标的写前预览。",
-    "target_not_writable": "目标页面或沟通/编辑入口不可写。",
+    "composition_not_initialized": "创作入口可用，但禁止副作用边界内没有初始化内容编辑面。",
+    "target_not_writable": "创作入口本身不可定位；不得用于表示标题、正文或发布控件尚未出现。",
     "safety_challenge": "站点安全或风控挑战需要人工处理。"
   },
   "forbidden_fields": [
