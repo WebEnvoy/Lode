@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened, edited]
 
 permissions:
+  actions: read
   contents: read
   pull-requests: read
 
@@ -53,6 +54,7 @@ jobs:
     needs: host-facts
     uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@122ac2e1ae9787bda92e9ac42132e8742c386622
     permissions:
+      actions: read
       contents: read
       pull-requests: read
     with:
