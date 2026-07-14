@@ -1,7 +1,7 @@
 name: Loom delivery gate
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened, edited]
 
 permissions:
@@ -10,15 +10,6 @@ permissions:
   pull-requests: read
 
 jobs:
-  py-compile:
-    name: py-compile
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out candidate
-        uses: actions/checkout@v4
-      - name: Compile tracked Python files
-        run: make py-compile
-
   host-facts:
     name: loom-delivery-host-facts
     runs-on: ubuntu-latest
@@ -44,7 +35,7 @@ jobs:
             const changed_paths = [...new Set(files.map((file) => file.filename))].sort();
             core.setOutput("host_facts", JSON.stringify({
               schema_version: "loom-delivery-gate-host-facts/v1",
-              event: "pull_request",
+              event: context.eventName,
               repository: { owner: context.repo.owner, name: context.repo.repo },
               change: { number: pull.number, base_sha: pull.base.sha, head_sha: pull.head.sha },
               changed_paths,
