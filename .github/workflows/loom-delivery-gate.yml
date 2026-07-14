@@ -9,6 +9,15 @@ permissions:
   pull-requests: read
 
 jobs:
+  py-compile:
+    name: py-compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+      - name: Compile tracked Python files
+        run: make py-compile
+
   host-facts:
     name: loom-delivery-host-facts
     runs-on: ubuntu-latest
@@ -42,13 +51,13 @@ jobs:
 
   loom-delivery-gate:
     needs: host-facts
-    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
+    uses: MC-and-his-Agents/Loom/.github/workflows/loom-delivery-gate.yml@122ac2e1ae9787bda92e9ac42132e8742c386622
     permissions:
       contents: read
       pull-requests: read
     with:
       host_facts: ${{ needs.host-facts.outputs.host_facts }}
       profile: light
-      validation_command: python3 -m pip install --requirement requirements-validator.txt && python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
-      loom_ref: edb1fc24b3c8b0560b6c1853785cfa1ee02d182b
+      validation_command: py-compile
+      loom_ref: 122ac2e1ae9787bda92e9ac42132e8742c386622
       enforcement: enforce

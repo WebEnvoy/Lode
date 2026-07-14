@@ -1,9 +1,0 @@
-{
-  "result": "pass",
-  "source_files": [
-    ".loom/reviews/LODE-197.json"
-  ],
-  "source_sha256": {
-    ".loom/reviews/LODE-197.json": "036c026c2d33cad06128fe0bf2f13d3df224bf20f82c7abb63fa095b67440afd"
-  }
-}
