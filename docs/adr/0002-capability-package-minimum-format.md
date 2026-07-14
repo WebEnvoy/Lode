@@ -4,6 +4,9 @@
 
 Accepted for Stage 2 package minimum format v0, 2026-06-30.
 
+`operation_mode` 继续描述能力产品形态；动作类别和授权消费边界由
+[ADR 0007](0007-capability-action-declaration.md) 扩展，2026-07-14。
+
 ## Context
 
 Lode 是网站能力资产真相源，不是执行这些资产的 runtime。现有 draft 已经把
@@ -63,7 +66,7 @@ registry 代码。
 | `capability_id` | Lode | Core admission; App Library | package 内稳定、小写短横线、站点内唯一；重命名视为新 capability identity。 | `invalid_contract` | 不承诺跨站全局唯一。 |
 | `operation_id` | Lode owns declaration; Core owns execution semantics | Core admission / routing | 表示公共可调用操作，如 `content_detail_by_url`；语义破坏需要新 version 或 deprecation path。 | `invalid_contract`; `deprecated` | 不定义 Core API surface。 |
 | `capability_family` | Lode | App filtering; Core policy grouping | v0 使用小集合：`content_detail`、`content_search`、`content_list`、`comment_collection`、`creator_profile`、`media_asset_fetch`、`media_upload`、`content_publish`；不在集合内先标 experimental。 | `invalid_contract` | 不把 Syvert 全量 taxonomy 一次迁入。 |
-| `operation_mode` | Lode declares; Core enforces | Core admission; App risk copy | v0 候选：`read`、`validate_only`、`draft`、`preview`、`write`。稳定写入仍受 PD-0003 阻塞。 | `invalid_contract`; `deprecated` | 不用 `readOnly` 布尔值替代风险语义。 |
+| `operation_mode` | Lode declares; Core enforces | Core admission; App product copy | v0 候选：`read`、`validate_only`、`draft`、`preview`、`write`。它只描述产品形态；动作与授权语义由 ADR 0007 的 action declaration 决定。PD-0003 已解决。 | `invalid_contract`; `deprecated` | 不用 `readOnly` 布尔值替代动作声明。 |
 | `tags` | Lode | App Library search/filter | 标签只用于展示和过滤，例如 site, target type, risk hint, source shape；不得改变 admission 结果。 | `invalid_contract` when used as policy | 不把 tag 当权限、资源或 runtime policy。 |
 
 #### Lifecycle, Version, Deprecation, Invalidation
@@ -88,7 +91,7 @@ registry 代码。
 | locator | 判断 | 机制吸收 / 裁剪 / 拒绝理由 | 落点 |
 |---|---|---|---|
 | `Lode/ROADMAP.md` | 吸收 | 阶段二要求 Core 可准入、可校验、可版本引用的最小能力包合同；本 ADR 只冻结 package v0，不提前做 registry、marketplace 或 runtime。 | Stage 2 v0 Contract |
-| `docs/adr/pending-decisions.md` | 吸收 | 采用已接受的 capability metadata、schema/fixture/post-check、version/invalidation 归属；PD-0003/PD-0005/PD-0010 等仍保留为后续阻塞，不在本轮伪定。 | Stage 2 v0 Contract; Open Questions |
+| `docs/adr/pending-decisions.md` | 吸收 | 采用已接受的 capability metadata、schema/fixture/post-check、version/invalidation 归属；PD-0003 已由 ADR 0007 解决，PD-0005/PD-0010 等仍保留为后续阻塞。 | Stage 2 v0 Contract; Open Questions |
 | `research/synthesis.md` | 吸收 | 吸收“版本化 package + input/output schema + fixtures/post-check”和 runtime facts 与 task policy 拆分；拒绝把 hosted platform、crawler queue、benchmark task 或 browser agent loop 当前置合同。 | Package Minimum Format; Non-goals |
 | `research/absorability/README.md` | 只参考 | 该文定义 research 分层和“机制吸收 / 源码复用分开记录”的方法，不直接提供包字段。 | Research Absorption Record |
 | `research/absorability/themes/site-knowledge-and-capability-assets.md` | 裁剪复用 | 裁剪吸收 OpenCLI manifest、Syvert taxonomy/lifecycle、旧 WebEnvoy XHS contract、MediaCrawler 字段组织；拒绝 `readOnly` 布尔值、直接迁入站点 adapter、把 columns 当 output schema。 | Identity/Operation/Family/Tags; Package Minimum Format |
@@ -134,9 +137,9 @@ registry 代码。
 
 ## Open Questions
 
-- [PD-0003](pending-decisions.md#pd-0003)：第一版稳定 action risk enum 尚未冻结；
-  `read`、`write`、`submit`、
-  `destructive` 是当前最小候选集合。
+- [PD-0003](pending-decisions.md#pd-0003) 已由
+  [ADR 0007](0007-capability-action-declaration.md) 解决；旧 action risk 候选不再是
+  blocker。
 - [PD-0004](pending-decisions.md#pd-0004)：search-to-detail flow 的 follow-up
   references 需要稳定字段形态。
 - [PD-0005](pending-decisions.md#pd-0005)：`source_trace`、`raw_payload_ref`、

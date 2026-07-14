@@ -8,6 +8,7 @@
 | input/output/source schema、fixture、post-check、validator 报告边界 | [ADR 0003](../adr/0003-schema-fixtures-and-post-check.md) |
 | asset taxonomy、workflow package、registry / version / invalidation 边界 | [ADR 0004](../adr/0004-asset-types-and-registry.md) |
 | Lode 技术栈、资产文件责任、JSON Schema 权威、tooling 最小边界、deferred / rejected 禁线 | [ADR 0005](../adr/0005-lode-technical-architecture-baseline.md) |
+| Capability 动作类别、目标范围和授权消费边界 | [ADR 0007](../adr/0007-capability-action-declaration.md) |
 | 小红书真实只读能力包 | [Xiaohongshu read capability packages](xiaohongshu-read-capabilities.md) |
 | BOSS 直聘真实只读能力包 | [BOSS Zhipin read capability packages](boss-read-capabilities.md) |
 | 小红书与 BOSS 真实页面写前验证能力包 | [Write-precheck capability packages](write-precheck-capabilities.md) |
