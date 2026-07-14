@@ -4,15 +4,12 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened, edited]
 
-permissions:
-  actions: read
-  contents: read
-  pull-requests: read
-
 jobs:
   host-facts:
     name: loom-delivery-host-facts
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     outputs:
       host_facts: ${{ steps.collect.outputs.host_facts }}
     steps:
