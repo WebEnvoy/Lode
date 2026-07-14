@@ -15,5 +15,7 @@ jobs:
     steps:
       - name: Check out candidate
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Compile tracked Python files
         run: make py-compile
