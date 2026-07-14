@@ -1,8 +1,0 @@
-# Evidence Map
-
-| Evidence id | Type | Source locator | Consumes | Binding | Freshness | Consumer boundary | Remediation direction |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| EV-001 | behavior_evidence | docs/contracts/boss-read-capabilities.md | Lode #199 stories #18/#19/#20, Work Items #209/#210/#211/#212, and package manifests under sites/boss | LODE-209 / BOSS read package behavior contract | present | Review and PR readiness may consume package scope, runtime boundary, source absorption, and pending live-validation statement. | Refresh if package IDs, stories, source absorption, runtime boundary, or failure classes change. |
-| EV-002 | test_evidence | .loom/progress/LODE-209.md | package validators, registry check, py_compile, diff check, Loom verify, Loom fact-chain, and suite checks | LODE-209 / local validation checks | present | Review and PR readiness may consume the latest validation summary only after commands are rerun for the current head. | Rerun validation and update progress summary after any asset, registry, doc, or carrier edit. |
-| EV-003 | fresh_verification_input | .loom/progress/LODE-209.md | EV-001 EV-002 | LODE-209 / latest validation summary | present | Review and PR readiness may consume this as the current local verification input; live BOSS page validation remains pending human runtime. | Refresh after every push or if PR head changes. |
-| EV-004 | build_evidence | .loom/specs/LODE-209/build-evidence.json | ownership contract, integration evidence, delegation evidence, and suite path consumption | LODE-209 build readiness input | present | Review and PR readiness may consume bounded ownership, validation, and no-live-evidence boundary. | Refresh after ownership, validation, PR head, or carrier changes. |

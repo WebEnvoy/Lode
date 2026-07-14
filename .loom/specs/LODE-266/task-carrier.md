@@ -1,7 +1,0 @@
-# Task Carrier
-
-| carrier_type | carrier_locator | source_value | normalized_status | relationship | work_item_locator | breakdown_unit_locator | spec_scenario_locator | plan_phase_locator | validation_strategy_locator | provenance | freshness_rule |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/266 | Freeze Xiaohongshu publish-note-precheck validate-only truth | in_progress | primary | .loom/work-items/LODE-266.md | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/spec.md#Acceptance | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/evidence-map.md | GitHub #266 read 2026-07-11 UTC. | Recheck after issue or implementation changes. |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/267 | Freeze BOSS greet-precheck validate-only truth | in_progress | mirror | .loom/work-items/LODE-266.md | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/spec.md#Acceptance | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/evidence-map.md | GitHub #267 read 2026-07-11 UTC. | Recheck after issue or implementation changes. |
-| github_issue | https://github.com/WebEnvoy/Lode/issues/265 | Freeze dual-site real write-precheck consumption boundary | in_progress | mirror | .loom/work-items/LODE-266.md | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/spec.md#Story-Readiness | .loom/specs/LODE-266/plan.md#L3 | .loom/specs/LODE-266/evidence-map.md | Parent FR #265 read 2026-07-11 UTC. | Recheck after parent scope changes. |

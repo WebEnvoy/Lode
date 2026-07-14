@@ -23,13 +23,13 @@
 - packer 只打包已通过本地校验的资产；local registry tooling 只做本地索引和引用验证。hosted registry、marketplace、team sync 和 public contribution review 不得提前塞进 v0 tooling。
 - manifest 描述身份、版本、生命周期、资源需求和引用；schema 描述 input/output/source/fixture/post-check shape；fixture/post-check 用于验证，不是 live evidence store。
 - 任何能力包、fixture、post-check、normalizer 或 registry 文件不得包含 Cookie、Token、profile state、runtime session、live tab、raw evidence body、完整 DOM/HAR/screenshot、生产 payload 或用户业务数据。
-- 修改技术基线时只改当前 Work Item 直接需要的 docs / contracts / AGENTS / item-specific Loom carrier；不要顺带重排路线图、创建代码骨架或扩大到其他仓。
+- 修改技术基线时只改当前 Work Item 直接需要的 docs / contracts / AGENTS 与宿主 PR 元数据；不要顺带重排路线图、创建代码骨架或扩大到其他仓。
 
 ## 测试指南
 
 测试应覆盖 schema validation、package validation、fixture validation、capability dry-run tests 和 Markdown link check。测试样例必须可脱敏复现，不依赖真实账号、真实会话或私有业务数据。新增站点能力至少提供最小 fixture、输入输出示例、前置检查和后置验证说明。
 
-docs-only 基线 PR 的最小验证是 `git diff --check`、Markdown/JSON 可读性检查、Loom fact-chain / suite carrier 检查以及 PR body/head readback；只有引入真实 code/schema/runtime/fixture/tooling 行为时才升级到对应测试命令。
+docs-only 基线 PR 的最小验证是 `git diff --check`、Markdown/JSON 可读性检查以及 PR body/head readback；只有引入真实 code/schema/runtime/fixture/tooling 行为时才升级到对应测试命令。
 
 ## 提交与 Pull Request 规范
 
@@ -60,25 +60,25 @@ Lode 只维护资产定义、测试样例、版本和失效标记，不负责运
 不要提交真实凭据、会话状态、未脱敏执行现场、用户私有任务参数或真实业务客户数据。站点能力不应包含账号投放、内容排期、客户运营或广告决策等业务策略；这些属于上游系统。
 
 <!-- LOOM_BOOTSTRAP_START -->
-## Loom Bootstrap
+## Loom Execution
 
-本仓库采用 Loom execution-control 承接正式执行事实链，并默认按 strong-governance 评估正式 Work Item。开始实现、review、merge-ready 或 closeout 前，先运行 `loom doctor --target . --json`、`loom verify --target . --json` 和 `loom fact-chain --target . --json`。
+本仓库使用 Loom 编排 Work Item、build、review、merge-ready 与 host closeout。Loom
+消费 GitHub 与工作现场事实，不用 repo current、progress、review、shadow 或 closeout
+carrier 替代宿主真相。
 
-默认策略：中高风险、跨仓、API/Schema、数据、安全、权限、运行时身份、发布、生产写入或 merge gate 相关事项按 `strong-governance` 执行；只有明确低风险事项才可在 PR metadata 中降为 `standard`。
+开始改文件前：
 
-执行事实链固定为 `.loom/work-items/**`、`.loom/progress/**`、`.loom/status/current.md`、`.loom/reviews/**` 和 `.loom/specs/**`。GitHub issue / PR 是宿主控制面，不替代仓内事实链。
+1. 用 `loom route --target . --issue <issue> --json` 判断规划或执行入口。
+2. 实现必须显式绑定 Work Item 与 issue-scoped branch；PR 创建前可直接运行
+   `loom build --target . --issue <work-item> --branch <branch> --json`。
+3. 一次只推进一个有界目标；不要创建空提交、空 PR 或治理载体来满足 admission。
+4. PR 存在后再运行 `loom pre-review`、`loom review`、`loom merge-ready` 或 `loom ship`；
+   这些入口从 GitHub readback 取得 branch、head、review、checks 与 merge 状态。
+5. 验证证据记录命令、结果、时间或 head/run id；变更代码或 PR review 输入后重新确认
+   current-head attestation 与 gate freshness。
+6. merge 不等于产品完成；用 `loom attestation closeout` 消费宿主 closeout，用
+   `loom release readback` 消费发布事实，不创建 closeout/current-retire PR。
 
-宿主强制条件由 GitHub branch protection / repository ruleset 承接：`py-compile`、`demo-bootstrap`、`repo-local-cli`、`loom-check` 和 `loom-pr-merge-gate` 必须作为 required checks 通过。单人开发不启用 GitHub 原生 required PR review；semantic approval 必须来自绑定当前 head 的 Loom authored review record。
-
-Loom CLI、Codex plugin 和 skills 由用户级全局安装提供；不要把 repo-local Loom runtime、plugin payload、skills payload 或 runtime/cache 写入仓库。运行态只应留在 `.loom/runtime/`、`.loom/tmp/`、`.loom/cache/`、`.loom/local/` 等忽略路径。
+环境或 provider 问题由 `loom doctor --target . --json` 分类；退役命令返回
+`unsupported_command_surface`，不得通过 compatibility flag 恢复。
 <!-- LOOM_BOOTSTRAP_END -->
-
-## Loom / PR / closeout 约束
-
-- `INIT-0001` 只用于 Loom bootstrap 或 gate repair；产品、规划、边界和实现 PR 必须绑定真实 GitHub Work Item，并使用对应的 item-specific Loom carrier。
-- PR body、`.loom/work-items/**`、`.loom/progress/**` 和 `.loom/reviews/**` 必须指向同一 Work Item、branch 和 head 链路；每次 push 后回读 `Loom Work Item`、`Branch`、`Head SHA` 和 review artifact 的 `reviewed_head`。
-- 如果 Loom workflow 或 gate 本身有问题，先用独立 repair PR 合入 `main`，再更新产品 PR 到新 base；不要在旧 gate 上反复重跑产品 PR。
-- 本地 gate 验证必须匹配 hosted workflow 的真实入口；当前 workflow 直接调用 packaged `loom_flow.py`，不要改回会清理执行上下文的外层 `loom` wrapper。
-- `suite not_applicable` 只适用于真实 docs-only 或 workflow-only PR，并必须写清原因、覆盖 head、consumer boundary 和重新要求 suite 的条件。
-- 不并行改同一个共享 Loom carrier；同一 PR 默认只维护自己的 item-specific carrier。确需修改 `.loom/status/current.md` 时，必须由当前 PR 串行更新，并确认默认 `loom fact-chain` 不产生 active item 漂移。
-- issue closeout 不等于 PR merge；关闭 issue 前必须写 post-merge 证据：PR、merge commit、head、hosted run、仓内事实载体和范围限制。
