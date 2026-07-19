@@ -50,9 +50,18 @@ class ActionDeclarationTests(unittest.TestCase):
                 action["external_effects"] = effects
                 self.assertEqual([], self.errors("publish-note-precheck", manifest))
 
+    def test_multiple_actions_may_share_a_category(self) -> None:
+        manifest = self.manifest("search-notes")
+        second = copy.deepcopy(manifest["action_declaration"]["actions"][0])
+        second["action_id"] = "xhs_search_notes.read_next_page"
+        manifest["action_declaration"]["actions"].append(second)
+        self.assertEqual([], self.errors("search-notes", manifest))
+
     def test_fail_closed_mutations(self) -> None:
         mutations: dict[str, Callable[[dict[str, Any]], None]] = {
             "missing_declaration": lambda value: value.pop("action_declaration"),
+            "missing_action_id": lambda value: value["action_declaration"]["actions"][0].pop("action_id"),
+            "action_namespace_drift": lambda value: value["action_declaration"]["actions"][0].__setitem__("action_id", "other_operation"),
             "environment_category": lambda value: value["action_declaration"]["actions"][0].__setitem__("category", "environment"),
             "unknown_field": lambda value: value["action_declaration"].__setitem__("policy", "auto"),
             "prepare_upload": lambda value: value["action_declaration"]["actions"][0].__setitem__("external_effects", ["upload"]),
@@ -61,7 +70,7 @@ class ActionDeclarationTests(unittest.TestCase):
             "target_drift": lambda value: value["action_declaration"]["actions"][0]["target_scope"].__setitem__("target_types", ["other_page"]),
             "resource_drift": lambda value: value["action_declaration"]["actions"][0]["resource_requirements"].__setitem__("id", "other.resources"),
             "unknown_profile": lambda value: value["action_declaration"]["actions"][0]["resource_requirements"].__setitem__("profile_ids", ["unknown-profile"]),
-            "duplicate_category": lambda value: value["action_declaration"]["actions"].append(copy.deepcopy(value["action_declaration"]["actions"][0])),
+            "duplicate_action_id": lambda value: value["action_declaration"]["actions"].append({**copy.deepcopy(value["action_declaration"]["actions"][0]), "category": "read"}),
         }
         base = self.manifest("publish-note-precheck")
         for name, mutate in mutations.items():

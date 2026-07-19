@@ -30,6 +30,7 @@
     "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
     "actions": [
       {
+        "action_id": "xhs_search_notes",
         "category": "read",
         "target_scope": {
           "site_slug": "xiaohongshu",

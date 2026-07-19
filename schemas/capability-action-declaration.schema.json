@@ -19,7 +19,6 @@
     "actions": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 4,
       "uniqueItems": true,
       "items": {
         "$ref": "#/$defs/action"
@@ -31,12 +30,17 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "action_id",
         "category",
         "target_scope",
         "resource_requirements",
         "external_effects"
       ],
       "properties": {
+        "action_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+        },
         "category": {
           "enum": [
             "read",

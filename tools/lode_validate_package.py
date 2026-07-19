@@ -331,19 +331,22 @@ def validate_action_declaration(report: Report, root: Path, manifest: dict[str, 
     if errors:
         return
 
-    categories = [action["category"] for action in declaration["actions"]]
-    if len(categories) != len(set(categories)):
-        add_error(report, "invalid_contract", "manifest.json#action_declaration.actions", "Each action category may appear only once.", "Merge target scopes for duplicate categories.")
+    action_ids = [action["action_id"] for action in declaration["actions"]]
+    if len(action_ids) != len(set(action_ids)):
+        add_error(report, "invalid_contract", "manifest.json#action_declaration.actions", "Action ids must be unique within a capability.", "Give every concrete business action a stable action_id.")
 
     resource_ref = asset_index(manifest).get("resource_requirements", {})
     profiles = resource.get("resource_requirement_profiles", []) if isinstance(resource, dict) else []
     known_profile_ids = {profile.get("requirement_profile_id") for profile in profiles if isinstance(profile, dict)}
     manifest_origins = set(nested_get(manifest, ["site", "supported_origins"]) or [])
     manifest_target = nested_get(manifest, ["capability", "target_type"])
+    operation_id = nested_get(manifest, ["capability", "operation_id"])
     for index, action in enumerate(declaration["actions"]):
         path = f"manifest.json#action_declaration.actions[{index}]"
         target = action["target_scope"]
         requirements = action["resource_requirements"]
+        if action["action_id"] != operation_id and not action["action_id"].startswith(f"{operation_id}."):
+            add_error(report, "invalid_contract", f"{path}.action_id", "Action id is outside the capability operation namespace.", "Use the operation_id or a stable operation_id suffix.")
         if target["site_slug"] != site_slug:
             add_error(report, "invalid_contract", f"{path}.target_scope.site_slug", "Target site does not match the package site.", "Bind the action to the manifest site slug.")
         if manifest_target not in target["target_types"]:
