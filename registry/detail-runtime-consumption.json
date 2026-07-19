@@ -33,7 +33,7 @@
       "search_operation_id": "xhs_search_notes",
       "allowed_origin": "https://www.xiaohongshu.com",
       "assets": {
-        "manifest": ["sites/xiaohongshu/read-note-detail/manifest.json", "d5258429f34ab7e4bd8666676c4060639cfb61d3f2bca0cc002bbdbe75296138"],
+        "manifest": ["sites/xiaohongshu/read-note-detail/manifest.json", "b903a84b8f823ffc460cf51bf62090347ed6038a76750b27f79b70d43c283e42"],
         "package_lock": ["sites/xiaohongshu/read-note-detail/package-lock.json", "464dae48cc0d0905f7feeccb047aa417b4288fb8356b6ce6488d7ba230f014d9"],
         "input_schema": ["sites/xiaohongshu/read-note-detail/schemas/input.schema.json", "82c7307d3cca594596c128aed2abb87d319d03818e623aba48e12cde9a48e1e8"],
         "output_schema": ["sites/xiaohongshu/read-note-detail/schemas/output.schema.json", "0a4bb8a7543bd5f3be752ac1c1b26cd6953d09095a0726cc237317de30df57db"],

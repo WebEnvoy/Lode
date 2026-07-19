@@ -89,6 +89,15 @@ python3 tools/lode_validate_package.py --registry-index registry/local-packages.
 两站详情读取的 opaque `detail_ref` runtime-consumption truth 校验，包括 pinned output schema、必需公开字段、bounded summary、字段级 source/evidence binding 和敏感材料排除；
 缺少 `jsonschema` 依赖时 fail closed。
 
+当前小红书能力 manifest 还声明 `read`、`prepare`、`commit`、`destructive`
+四类业务动作中的适用类别、目标范围、资源需求引用和外部影响。共享合同位于
+`schemas/capability-action-declaration.schema.json`；未知类别、目标或资源引用漂移、
+以及 read/prepare 声明外部影响都会校验失败。聚焦测试命令：
+
+```bash
+python3 -m unittest tools.test_action_declarations
+```
+
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
 版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
 安装/更新、托管登记表、Core 运行记录或运行环境执行已经实现。
