@@ -15,6 +15,8 @@ SUPPORTED_LOCAL_REGISTRY_VERSION = "lode.local-package-index.v0"
 SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
+ACTION_DECLARATION_SCHEMA = Path("schemas/capability-action-declaration.schema.json")
+ACTION_DECLARATION_REQUIRED_SITES = {"xiaohongshu"}  # ponytail: expand when another site's packages migrate.
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
 SUPPORTED_LIFECYCLE_STATES = {"proposed", "active", "suspected_broken", "broken", "deprecated"}
 POST_CHECK_STATUSES = {"passed", "failed", "skipped"}
@@ -294,6 +296,67 @@ def validate_resource_requirements(report: Report, resource: dict[str, Any], ass
     if not isinstance(profiles, list) or not profiles:
         add_error(report, "invalid_contract", path, "Resource requirements must declare at least one profile.", "Declare one offline-checkable resource requirement profile.")
     scan_forbidden_keys(report, resource, path)
+
+
+def validate_action_declaration(report: Report, root: Path, manifest: dict[str, Any], resource: Any) -> None:
+    declaration = manifest.get("action_declaration")
+    site_slug = nested_get(manifest, ["site", "slug"])
+    if not isinstance(declaration, dict):
+        if site_slug in ACTION_DECLARATION_REQUIRED_SITES:
+            add_error(report, "invalid_contract", "manifest.json#action_declaration", "Action declaration is required for this site package.", "Declare read, prepare, commit, or destructive actions explicitly.")
+        return
+
+    repo_root = discover_repo_root(root)
+    if repo_root is None:
+        add_error(report, "invalid_contract", "manifest.json#action_declaration", "Repository root is unavailable for action declaration validation.", "Validate the package from a Lode repository checkout.")
+        return
+    schema = load_json(report, repo_root, repo_root / ACTION_DECLARATION_SCHEMA, "action_declaration_schema", str(ACTION_DECLARATION_SCHEMA))
+    if not isinstance(schema, dict):
+        return
+    try:
+        import jsonschema
+    except ImportError as exc:
+        add_error(report, "invalid_contract", str(ACTION_DECLARATION_SCHEMA), f"Action declaration schema validation is unavailable: {exc}", "Install requirements-validator.txt.")
+        return
+    try:
+        jsonschema.Draft202012Validator.check_schema(schema)
+        errors = sorted(jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).iter_errors(declaration), key=lambda item: list(item.absolute_path))
+    except jsonschema.SchemaError as exc:
+        add_error(report, "invalid_contract", str(ACTION_DECLARATION_SCHEMA), f"Action declaration schema validation is unavailable: {exc}", "Install requirements-validator.txt and fix the shared schema.")
+        return
+    for error in errors:
+        pointer = ".".join(str(part) for part in error.absolute_path)
+        path = "manifest.json#action_declaration" + (f".{pointer}" if pointer else "")
+        add_error(report, "invalid_contract", path, error.message, "Conform to the shared capability action declaration schema.")
+    if errors:
+        return
+
+    action_ids = [action["action_id"] for action in declaration["actions"]]
+    if len(action_ids) != len(set(action_ids)):
+        add_error(report, "invalid_contract", "manifest.json#action_declaration.actions", "Action ids must be unique within a capability.", "Give every concrete business action a stable action_id.")
+
+    resource_ref = asset_index(manifest).get("resource_requirements", {})
+    profiles = resource.get("resource_requirement_profiles", []) if isinstance(resource, dict) else []
+    known_profile_ids = {profile.get("requirement_profile_id") for profile in profiles if isinstance(profile, dict)}
+    manifest_origins = set(nested_get(manifest, ["site", "supported_origins"]) or [])
+    manifest_target = nested_get(manifest, ["capability", "target_type"])
+    operation_id = nested_get(manifest, ["capability", "operation_id"])
+    for index, action in enumerate(declaration["actions"]):
+        path = f"manifest.json#action_declaration.actions[{index}]"
+        target = action["target_scope"]
+        requirements = action["resource_requirements"]
+        if action["action_id"] != operation_id and not action["action_id"].startswith(f"{operation_id}."):
+            add_error(report, "invalid_contract", f"{path}.action_id", "Action id is outside the capability operation namespace.", "Use the operation_id or a stable operation_id suffix.")
+        if target["site_slug"] != site_slug:
+            add_error(report, "invalid_contract", f"{path}.target_scope.site_slug", "Target site does not match the package site.", "Bind the action to the manifest site slug.")
+        if manifest_target not in target["target_types"]:
+            add_error(report, "invalid_contract", f"{path}.target_scope.target_types", "Target scope does not include the package target type.", "Include the manifest capability target_type.")
+        if not set(target["supported_origins"]).issubset(manifest_origins):
+            add_error(report, "invalid_contract", f"{path}.target_scope.supported_origins", "Target scope widens the package supported origins.", "Use only origins declared by the manifest.")
+        if requirements["path"] != resource_ref.get("path") or requirements["id"] != resource_ref.get("resource_requirements_id"):
+            add_error(report, "invalid_contract", f"{path}.resource_requirements", "Action resource requirements do not match the package asset reference.", "Bind the action to the manifest resource_requirements asset.")
+        if not set(requirements["profile_ids"]).issubset(known_profile_ids):
+            add_error(report, "invalid_contract", f"{path}.resource_requirements.profile_ids", "Action references an unknown resource requirement profile.", "Use profile ids declared by resource-requirements.json.")
 
 
 def validate_lifecycle(report: Report, lifecycle: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:
@@ -1269,6 +1332,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     refs = validate_manifest(report, root, manifest)
     assets = load_present_assets(report, root, refs)
 
+    validate_action_declaration(report, root, manifest, assets.get("resource_requirements"))
     for role in ["input_schema", "normalized_output_schema"]:
         if isinstance(assets.get(role), dict):
             validate_schema(report, role, assets[role], refs[role], manifest)

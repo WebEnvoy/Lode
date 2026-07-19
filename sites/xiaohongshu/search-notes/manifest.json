@@ -25,6 +25,33 @@
       "risk:read"
     ]
   },
+  "action_declaration": {
+    "schema_version": "lode.capability-action-declaration.v0",
+    "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
+    "actions": [
+      {
+        "action_id": "xhs_search_notes",
+        "category": "read",
+        "target_scope": {
+          "site_slug": "xiaohongshu",
+          "target_types": [
+            "search_results_page"
+          ],
+          "supported_origins": [
+            "https://www.xiaohongshu.com"
+          ]
+        },
+        "resource_requirements": {
+          "path": "resource-requirements.json",
+          "id": "xiaohongshu.search-notes.resources",
+          "profile_ids": [
+            "search-notes-logged-in-ready-page"
+          ]
+        },
+        "external_effects": []
+      }
+    ]
+  },
   "entrypoint": {
     "kind": "declarative-normalizer",
     "ref": "lode://site-capability/xiaohongshu/search-notes/entrypoint"

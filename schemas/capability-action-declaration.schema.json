@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/capability-action-declaration@0.1.0",
+  "title": "Lode capability action declaration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "schema_ref",
+    "actions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "lode.capability-action-declaration.v0"
+    },
+    "schema_ref": {
+      "const": "lode://schema/capability-action-declaration@0.1.0"
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/action"
+      }
+    }
+  },
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_id",
+        "category",
+        "target_scope",
+        "resource_requirements",
+        "external_effects"
+      ],
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+        },
+        "category": {
+          "enum": [
+            "read",
+            "prepare",
+            "commit",
+            "destructive"
+          ]
+        },
+        "target_scope": {
+          "$ref": "#/$defs/target_scope"
+        },
+        "resource_requirements": {
+          "$ref": "#/$defs/resource_requirements"
+        },
+        "external_effects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "upload",
+              "publish",
+              "send",
+              "submit",
+              "create",
+              "modify",
+              "external_transmission",
+              "delete",
+              "revoke",
+              "irreversible_change"
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "enum": [
+                  "read",
+                  "prepare"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "external_effects": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "commit"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "external_effects": {
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "upload",
+                    "publish",
+                    "send",
+                    "submit",
+                    "create",
+                    "modify",
+                    "external_transmission"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "destructive"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "external_effects": {
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "delete",
+                    "revoke",
+                    "irreversible_change"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "target_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "site_slug",
+        "target_types",
+        "supported_origins"
+      ],
+      "properties": {
+        "site_slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "target_types": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+          }
+        },
+        "supported_origins": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        }
+      }
+    },
+    "resource_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "id",
+        "profile_ids"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]+\\.json$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      }
+    }
+  }
+}
