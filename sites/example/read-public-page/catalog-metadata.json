@@ -104,5 +104,9 @@
     "post_check_id": "example.read-public-page.post-check",
     "lifecycle": "proposed",
     "operation_mode": "read"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
   }
 }

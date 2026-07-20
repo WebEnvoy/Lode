@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -16,6 +17,7 @@ SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
 ACTION_DECLARATION_SCHEMA = Path("schemas/capability-action-declaration.schema.json")
+RESULT_VIEW_DECLARATION_SCHEMA = Path("schemas/result-view-declaration.schema.json")
 ACTION_DECLARATION_REQUIRED_SITES = {"xiaohongshu"}  # ponytail: expand when another site's packages migrate.
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
 SUPPORTED_LIFECYCLE_STATES = {"proposed", "active", "suspected_broken", "broken", "deprecated"}
@@ -60,6 +62,8 @@ FORBIDDEN_KEYS = {
     "production_payload",
     "user_business_data",
 }
+MAX_FORBIDDEN_SCAN_DEPTH = 256
+MAX_FORBIDDEN_SCAN_NODES = 10_000
 
 
 class Report:
@@ -118,6 +122,14 @@ def rel(root: Path, path: Path) -> str:
         return str(path)
 
 
+def reject_non_finite_json_constant(value: str) -> None:
+    raise ValueError(f"Non-finite JSON constant `{value}` is not allowed.")
+
+
+def parse_json_document(value: str | bytes) -> Any:
+    return json.loads(value, parse_constant=reject_non_finite_json_constant)
+
+
 def load_json(report: Report, root: Path, path: Path, role: str, display_path: str | None = None) -> Any | None:
     display_path = display_path or rel(root, path)
     if not path.exists():
@@ -126,8 +138,8 @@ def load_json(report: Report, root: Path, path: Path, role: str, display_path: s
         return None
     report.ref(role, display_path, "present")
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        return parse_json_document(path.read_text(encoding="utf-8"))
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         report.issue("error", "invalid_contract", display_path, f"Invalid JSON: {exc}", "Fix JSON syntax before package validation.")
         return None
 
@@ -147,28 +159,64 @@ def require_keys(report: Report, obj: dict[str, Any], keys: list[str], path: str
 
 
 def scan_forbidden_keys(report: Report, value: Any, path: str, pointer: str = "$") -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            child_pointer = f"{pointer}.{key}"
-            if key in FORBIDDEN_KEYS:
-                add_error(
-                    report,
-                    "forbidden_field",
-                    path,
-                    f"Forbidden field key `{key}` appears at `{child_pointer}`.",
-                    "Keep runtime identity, credentials, raw evidence, and production data out of Lode packages.",
-                )
-            scan_forbidden_keys(report, child, path, child_pointer)
-    elif isinstance(value, list):
-        for index, child in enumerate(value):
-            scan_forbidden_keys(report, child, path, f"{pointer}[{index}]")
+    stack: list[tuple[Any, str, int]] = [(value, pointer, 0)]
+    visited_nodes = 0
+    while stack:
+        current, current_pointer, depth = stack.pop()
+        visited_nodes += 1
+        if depth > MAX_FORBIDDEN_SCAN_DEPTH:
+            add_error(
+                report,
+                "invalid_contract",
+                path,
+                f"Forbidden-key scan exceeds the maximum depth of {MAX_FORBIDDEN_SCAN_DEPTH} at `{current_pointer}`.",
+                "Reduce JSON nesting before package validation.",
+            )
+            return
+        child_count = len(current) if isinstance(current, (dict, list)) else 0
+        if visited_nodes + len(stack) + child_count > MAX_FORBIDDEN_SCAN_NODES:
+            add_error(
+                report,
+                "invalid_contract",
+                path,
+                f"Forbidden-key scan exceeds the {MAX_FORBIDDEN_SCAN_NODES}-node budget.",
+                "Reduce the JSON document size before package validation.",
+            )
+            return
+        if isinstance(current, dict):
+            items = list(current.items())
+            for key, _child in items:
+                child_pointer = f"{current_pointer}.{key}"
+                if key in FORBIDDEN_KEYS:
+                    add_error(
+                        report,
+                        "forbidden_field",
+                        path,
+                        f"Forbidden field key `{key}` appears at `{child_pointer}`.",
+                        "Keep runtime identity, credentials, raw evidence, and production data out of Lode packages.",
+                    )
+            for key, child in reversed(items):
+                stack.append((child, f"{current_pointer}.{key}", depth + 1))
+        elif isinstance(current, list):
+            for index in range(len(current) - 1, -1, -1):
+                stack.append((current[index], f"{current_pointer}[{index}]", depth + 1))
 
 
-def asset_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    refs = manifest.get("asset_refs", [])
-    if not isinstance(refs, list):
+def index_unique_roles(report: Report, entries: Any, path: str) -> dict[str, dict[str, Any]]:
+    if not isinstance(entries, list):
         return {}
-    return {ref.get("role"): ref for ref in refs if isinstance(ref, dict) and ref.get("role")}
+    entries_by_role: dict[str, list[dict[str, Any]]] = {}
+    for entry in entries:
+        if isinstance(entry, dict) and isinstance(entry.get("role"), str) and entry["role"]:
+            entries_by_role.setdefault(entry["role"], []).append(entry)
+    for role, role_entries in sorted(entries_by_role.items()):
+        if len(role_entries) > 1:
+            add_error(report, "invalid_contract", path, f"Duplicate role `{role}` appears {len(role_entries)} times.", "Declare each asset role exactly once.")
+    return {role: role_entries[0] for role, role_entries in entries_by_role.items() if len(role_entries) == 1}
+
+
+def asset_index(report: Report, manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return index_unique_roles(report, manifest.get("asset_refs"), "manifest.json#asset_refs")
 
 
 def discover_repo_root(path: Path) -> Path | None:
@@ -201,7 +249,7 @@ def validate_manifest(report: Report, root: Path, manifest: dict[str, Any]) -> d
     if capability.get("operation_mode") not in SUPPORTED_OPERATION_MODES:
         add_error(report, "invalid_contract", "manifest.json#capability.operation_mode", "Unknown operation mode.", "Use an accepted v0 operation mode.")
 
-    refs = asset_index(manifest)
+    refs = asset_index(report, manifest)
     missing_roles = sorted(REQUIRED_ASSET_ROLES - set(refs))
     for role in missing_roles:
         add_error(report, "asset_missing", "manifest.json#asset_refs", f"Missing asset ref role `{role}`.", "Add the required asset reference.")
@@ -298,7 +346,13 @@ def validate_resource_requirements(report: Report, resource: dict[str, Any], ass
     scan_forbidden_keys(report, resource, path)
 
 
-def validate_action_declaration(report: Report, root: Path, manifest: dict[str, Any], resource: Any) -> None:
+def validate_action_declaration(
+    report: Report,
+    root: Path,
+    manifest: dict[str, Any],
+    resource: Any,
+    refs: dict[str, dict[str, Any]] | None = None,
+) -> None:
     declaration = manifest.get("action_declaration")
     site_slug = nested_get(manifest, ["site", "slug"])
     if not isinstance(declaration, dict):
@@ -335,7 +389,7 @@ def validate_action_declaration(report: Report, root: Path, manifest: dict[str, 
     if len(action_ids) != len(set(action_ids)):
         add_error(report, "invalid_contract", "manifest.json#action_declaration.actions", "Action ids must be unique within a capability.", "Give every concrete business action a stable action_id.")
 
-    resource_ref = asset_index(manifest).get("resource_requirements", {})
+    resource_ref = (refs if refs is not None else asset_index(report, manifest)).get("resource_requirements", {})
     profiles = resource.get("resource_requirement_profiles", []) if isinstance(resource, dict) else []
     known_profile_ids = {profile.get("requirement_profile_id") for profile in profiles if isinstance(profile, dict)}
     manifest_origins = set(nested_get(manifest, ["site", "supported_origins"]) or [])
@@ -744,6 +798,165 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
     scan_forbidden_keys(report, catalog, path)
 
 
+def validate_result_view_schema(report: Report, root: Path, declaration: Any, path: str) -> bool:
+    repo_root = discover_repo_root(root)
+    if repo_root is None:
+        add_error(report, "invalid_contract", path, "Repository root is unavailable for result-view declaration validation.", "Validate the package from a Lode repository checkout.")
+        return False
+    schema = load_json(report, repo_root, repo_root / RESULT_VIEW_DECLARATION_SCHEMA, "result_view_declaration_schema", str(RESULT_VIEW_DECLARATION_SCHEMA))
+    if not isinstance(schema, dict):
+        return False
+    try:
+        import jsonschema
+    except ImportError as exc:
+        add_error(report, "invalid_contract", str(RESULT_VIEW_DECLARATION_SCHEMA), f"Result-view schema validation is unavailable: {exc}", "Install requirements-validator.txt.")
+        return False
+    try:
+        jsonschema.Draft202012Validator.check_schema(schema)
+        errors = sorted(jsonschema.Draft202012Validator(schema).iter_errors(declaration), key=lambda item: list(item.absolute_path))
+    except jsonschema.SchemaError as exc:
+        add_error(report, "invalid_contract", str(RESULT_VIEW_DECLARATION_SCHEMA), f"Result-view schema validation is unavailable: {exc}", "Install requirements-validator.txt and fix the shared schema.")
+        return False
+    for error in errors:
+        pointer = ".".join(str(part) for part in error.absolute_path)
+        error_path = path + (f".{pointer}" if pointer else "")
+        add_error(report, "invalid_contract", error_path, error.message, "Conform to the shared result-view declaration schema.")
+    return not errors
+
+
+def package_local_path(report: Report, root: Path, value: Any, path: str) -> Path | None:
+    if not isinstance(value, str) or not value:
+        add_error(report, "invalid_contract", path, "Result-view resource_path must be package-relative.", "Use a relative path within the capability package.")
+        return None
+    try:
+        candidate = Path(value)
+        if candidate.is_absolute():
+            add_error(report, "invalid_contract", path, "Result-view resource_path must be package-relative.", "Use a relative path within the capability package.")
+            return None
+        root_resolved = root.resolve()
+        resolved = (root / candidate).resolve()
+    except (ValueError, OSError) as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource_path is invalid: {exc}", "Use a valid package-relative resource path.")
+        return None
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError:
+        add_error(report, "invalid_contract", path, "Result-view resource resolves outside the capability package.", "Keep result-view resources inside the package root.")
+        return None
+    return resolved
+
+
+def validate_result_view_resource(report: Report, resource_path: Path, path: str) -> str | None:
+    try:
+        resource_body = resource_path.read_bytes()
+    except OSError as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource cannot be read: {exc}", "Make the package-local resource readable.")
+        return None
+    digest = hashlib.sha256(resource_body).hexdigest()
+    try:
+        resource = parse_json_document(resource_body)
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource is not valid JSON: {exc}", "Provide a static JSON object for declaration version 0.1.0.")
+        return digest
+    if not isinstance(resource, dict):
+        add_error(report, "invalid_contract", path, "Result-view resource must be a JSON object.", "Provide a static JSON object for declaration version 0.1.0.")
+        return digest
+    scan_forbidden_keys(report, resource, path)
+    return digest
+
+
+def validate_result_view_lock(
+    report: Report,
+    declaration: dict[str, Any],
+    resource_asset: dict[str, Any],
+    package_lock: Any,
+    package_lock_ref: Any,
+    actual_digest: str | None,
+    path: str,
+) -> None:
+    if not isinstance(package_lock, dict) or declaration.get("lock_ref") != package_lock_ref or package_lock.get("lock_ref") != package_lock_ref:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view declaration is not bound to the current package lock.", "Bind the declaration to the manifest package_lock ref.")
+        return
+    locked_assets = package_lock.get("locked_assets")
+    locked = index_unique_roles(report, locked_assets, "package-lock.json#locked_assets").get("result_view_resource")
+    expected_ref, expected_version = asset_ref_identity(resource_asset)
+    if not isinstance(locked, dict) or locked.get("path") != resource_asset.get("path") or locked.get("ref") != expected_ref or locked.get("version") != expected_version:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view resource is missing from or drifts from package locked_assets.", "Relock the exact result-view resource path, ref, and version.")
+        return
+    locked_digest = locked.get("sha256")
+    declaration_digest = nested_get(declaration, ["integrity", "digest"])
+    if not isinstance(locked_digest, str):
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource must include sha256.", "Lock the exact SHA-256 declared for the result-view resource.")
+        return
+    if locked_digest != declaration_digest:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource SHA-256 does not match the declaration.", "Keep the package lock and declaration digest identical.")
+    if actual_digest is not None and locked_digest != actual_digest:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource SHA-256 does not match the resource file.", "Relock the digest computed from the package-local resource.")
+
+
+def validate_result_view_compatibility(
+    report: Report,
+    declaration: dict[str, Any],
+    output_asset: Any,
+    output_schema: Any,
+    path: str,
+) -> None:
+    compatible = declaration.get("compatible_outputs") if isinstance(declaration.get("compatible_outputs"), dict) else {}
+    if not isinstance(output_asset, dict) or not isinstance(output_schema, dict):
+        add_error(report, "invalid_contract", path, "Result-view compatibility requires the package normalized output schema.", "Bind the declaration to a valid package output schema or result kind.")
+        return
+    schemas = compatible.get("schemas")
+    if isinstance(schemas, list) and not any(item.get("schema_ref") == output_asset.get("schema_id") and item.get("schema_version") == output_asset.get("schema_version") for item in schemas if isinstance(item, dict)):
+        add_error(report, "unsupported_version", f"{path}.compatible_outputs.schemas", "Result-view declaration does not include the current output schema ref and version.", "Declare the exact current normalized output schema compatibility.")
+    result_kinds = compatible.get("result_kinds")
+    result_kind = nested_get(output_schema, ["properties", "result_kind", "const"])
+    if isinstance(result_kinds, list) and result_kind not in result_kinds:
+        add_error(report, "unsupported_version", f"{path}.compatible_outputs.result_kinds", "Result-view declaration does not include the current output result kind.", "Declare the current normalized result_kind compatibility.")
+
+
+def validate_result_view_declaration(
+    report: Report,
+    root: Path,
+    catalog: dict[str, Any],
+    manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
+    assets: dict[str, Any],
+) -> None:
+    path = f"{refs.get('catalog_metadata', {}).get('path', 'catalog-metadata.json')}#result_view"
+    declaration = catalog.get("result_view")
+    resource_asset = refs.get("result_view_resource")
+    if declaration is None:
+        report.ref("result_view_declaration", path, "absent")
+        if resource_asset is not None:
+            add_error(report, "invalid_contract", path, "A result_view_resource asset requires a result-view declaration.", "Declare a locked compatible view or remove the resource asset.")
+        return
+    if not validate_result_view_schema(report, root, declaration, path):
+        return
+    if declaration["status"] == "absent":
+        if resource_asset is not None:
+            add_error(report, "invalid_contract", path, "Absent result-view declaration cannot retain a result_view_resource asset.", "Remove the resource asset or declare a locked compatible view.")
+        return
+    if not isinstance(resource_asset, dict) or resource_asset.get("status") != "present":
+        add_error(report, "asset_missing", path, "Present result-view declaration requires a present result_view_resource asset.", "Add and lock the package-local result-view resource.")
+        return
+    expected_ref = f"lode://result-view/{nested_get(manifest, ['site', 'slug'])}/{nested_get(manifest, ['capability', 'capability_id'])}/{declaration['view_id']}@{declaration['view_version']}"
+    if declaration.get("resource_ref") != expected_ref or declaration.get("resource_ref") != resource_asset.get("resource_ref") or declaration.get("view_version") != resource_asset.get("resource_version"):
+        add_error(report, "invalid_contract", f"{path}.resource_ref", "Result-view resource identity does not match package, view id, version, and manifest asset ref.", "Use the immutable package-scoped result-view resource ref.")
+    if declaration.get("resource_path") != resource_asset.get("path"):
+        add_error(report, "invalid_contract", f"{path}.resource_path", "Result-view resource_path does not match the manifest asset ref.", "Keep catalog and manifest resource paths identical.")
+    resource_path = package_local_path(report, root, declaration.get("resource_path"), f"{path}.resource_path")
+    actual_digest = None
+    if resource_path is not None:
+        if not resource_path.is_file():
+            add_error(report, "asset_missing", f"{path}.resource_path", "Result-view resource file is missing.", "Add the declared package-local resource.")
+        else:
+            actual_digest = validate_result_view_resource(report, resource_path, f"{path}.resource_path")
+            if actual_digest is not None and actual_digest != nested_get(declaration, ["integrity", "digest"]):
+                add_error(report, "invalid_contract", f"{path}.integrity.digest", "Result-view resource SHA-256 does not match the declaration.", "Refresh the digest and relock the package resource.")
+    validate_result_view_lock(report, declaration, resource_asset, assets.get("package_lock"), refs.get("package_lock", {}).get("lock_ref"), actual_digest, path)
+    validate_result_view_compatibility(report, declaration, refs.get("normalized_output_schema"), assets.get("normalized_output_schema"), path)
+
+
 def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: str) -> None:
     if not isinstance(mapping, dict):
         add_error(report, "invalid_contract", f"{path}#{field}", "Failure mapping consumer entry must be an object.", "Declare consumer mapping details.")
@@ -752,7 +965,13 @@ def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: st
     require_keys(report, mapping, required, f"{path}#{field}")
 
 
-def validate_local_registry_index(report: Report, package_root: Path, registry_path: Path, manifest: dict[str, Any]) -> None:
+def validate_local_registry_index(
+    report: Report,
+    package_root: Path,
+    registry_path: Path,
+    manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
+) -> None:
     registry_path = registry_path.resolve()
     repo_root = discover_repo_root(registry_path.parent) or registry_path.parent
     display_path = rel(repo_root, registry_path)
@@ -777,7 +996,7 @@ def validate_local_registry_index(report: Report, package_root: Path, registry_p
         add_error(report, "registry_unavailable", display_path, "Local registry index must contain exactly one entry for the package_ref.", "Add one repo-local package entry for this manifest.")
     else:
         idx, entry = matches[0]
-        validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest)
+        validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest, refs)
     scan_forbidden_keys(report, index, display_path)
 
 
@@ -841,6 +1060,7 @@ def validate_registry_entry(
     index: int,
     entry: dict[str, Any],
     manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
 ) -> None:
     entry_path = f"{index_path}#entries[{index}]"
     require_keys(
@@ -900,7 +1120,7 @@ def validate_registry_entry(
     elif package_path and manifest_path != f"{package_path}/manifest.json":
         add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point to the package manifest.", "Point manifest_path at the package manifest.")
 
-    package_lock = asset_index(manifest).get("package_lock")
+    package_lock = refs.get("package_lock")
     if isinstance(package_lock, dict):
         expected_lock_ref = package_lock.get("lock_ref")
         expected_lock_path = f"{package_path}/{package_lock.get('path')}" if isinstance(package_path, str) and isinstance(package_lock.get("path"), str) else None
@@ -910,7 +1130,7 @@ def validate_registry_entry(
             add_error(report, "invalid_contract", f"{entry_path}.lock_path", "Registry lock_path must point to the package lock file.", "Point lock_path at the package lock file.")
 
     roles = entry.get("asset_roles")
-    manifest_roles = set(asset_index(manifest))
+    manifest_roles = set(refs)
     if not isinstance(roles, list) or set(roles) != manifest_roles:
         add_error(report, "invalid_contract", f"{entry_path}.asset_roles", "Registry asset_roles must match manifest asset_refs roles.", "Keep local index discoverability aligned with the manifest.")
 
@@ -1044,7 +1264,7 @@ def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, d
     if not isinstance(locked_assets, list) or not locked_assets:
         add_error(report, "invalid_contract", f"{path}#locked_assets", "Package lock must declare locked assets.", "Lock the package asset refs consumed by Core admission.")
         return
-    locked_by_role = {item.get("role"): item for item in locked_assets if isinstance(item, dict) and item.get("role")}
+    locked_by_role = index_unique_roles(report, locked_assets, f"{path}#locked_assets")
     expected_roles = set(refs) - {"package_lock"}
     missing = sorted(expected_roles - set(locked_by_role))
     extra = sorted(set(locked_by_role) - expected_roles)
@@ -1070,6 +1290,7 @@ def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
         ("post_check_id", "post_check_version"),
         ("failure_mapping_id", "failure_mapping_version"),
         ("catalog_metadata_id", "catalog_metadata_version"),
+        ("resource_ref", "resource_version"),
         ("repair_draft_id", "repair_draft_version"),
         ("overlay_metadata_id", "overlay_metadata_version"),
         ("lock_ref", "lock_version"),
@@ -1332,7 +1553,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     refs = validate_manifest(report, root, manifest)
     assets = load_present_assets(report, root, refs)
 
-    validate_action_declaration(report, root, manifest, assets.get("resource_requirements"))
+    validate_action_declaration(report, root, manifest, assets.get("resource_requirements"), refs)
     for role in ["input_schema", "normalized_output_schema"]:
         if isinstance(assets.get(role), dict):
             validate_schema(report, role, assets[role], refs[role], manifest)
@@ -1350,6 +1571,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_overlay_fork_metadata(report, assets["overlay_fork_metadata"], refs["overlay_fork_metadata"], manifest)
     if isinstance(assets.get("catalog_metadata"), dict):
         validate_catalog_metadata(report, assets["catalog_metadata"], refs["catalog_metadata"], manifest, refs)
+        validate_result_view_declaration(report, root, assets["catalog_metadata"], manifest, refs, assets)
     if isinstance(assets.get("package_lock"), dict):
         validate_package_lock(report, assets["package_lock"], refs["package_lock"], manifest, refs)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:
@@ -1361,7 +1583,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_post_check(report, root, refs["post_check"], manifest, fixture)
     registry_path = registry_index or discover_local_registry(root)
     if registry_path is not None:
-        validate_local_registry_index(report, root, registry_path, manifest)
+        validate_local_registry_index(report, root, registry_path, manifest, refs)
     return report
 
 
