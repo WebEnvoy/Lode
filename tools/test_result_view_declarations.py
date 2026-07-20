@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 from typing import Any, Callable
 
-from tools.lode_validate_package import Report, asset_index, validate_result_view_declaration
+from tools.lode_validate_package import Report, asset_index, validate_manifest, validate_result_view_declaration
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,12 +25,12 @@ def load(path: Path) -> dict[str, Any]:
 class ResultViewDeclarationTests(unittest.TestCase):
     def current_errors(self, package_root: Path) -> list[dict[str, Any]]:
         manifest = load(package_root / "manifest.json")
-        refs = asset_index(manifest)
+        report = Report(package_root)
+        refs = asset_index(report, manifest)
         assets = {
             "normalized_output_schema": load(package_root / refs["normalized_output_schema"]["path"]),
             "package_lock": load(package_root / refs["package_lock"]["path"]),
         }
-        report = Report(package_root)
         validate_result_view_declaration(report, package_root, load(package_root / "catalog-metadata.json"), manifest, refs, assets)
         return report.errors
 
@@ -44,11 +44,12 @@ class ResultViewDeclarationTests(unittest.TestCase):
         catalog = load(PRESENT_ROOT / "catalog-metadata.json")
         package_lock = load(PRESENT_ROOT / "package-lock.json")
         output_schema = load(PRESENT_ROOT / "schemas/output.schema.json")
-        refs = asset_index(manifest)
         resource_ref = "lode://result-view/xiaohongshu/search-notes/search-summary@0.1.0"
         resource_digest = hashlib.sha256(resource_body).hexdigest()
         with tempfile.TemporaryDirectory(prefix=".result-view-test-", dir=ROOT) as directory:
             package_root = Path(directory)
+            report = Report(package_root)
+            refs = asset_index(report, manifest)
             resource_path = package_root / "views" / "search-summary.json"
             resource_path.parent.mkdir()
             resource_path.write_bytes(resource_body)
@@ -90,7 +91,6 @@ class ResultViewDeclarationTests(unittest.TestCase):
             }
             if mutate:
                 mutate(catalog, refs, package_lock)
-            report = Report(package_root)
             assets = {"normalized_output_schema": output_schema, "package_lock": package_lock}
             validate_result_view_declaration(report, package_root, catalog, manifest, refs, assets)
             return report.errors
@@ -108,14 +108,14 @@ class ResultViewDeclarationTests(unittest.TestCase):
     def test_missing_declaration_is_valid_standard_renderer_only(self) -> None:
         package_root = PRESENT_ROOT
         manifest = load(package_root / "manifest.json")
-        refs = asset_index(manifest)
+        report = Report(package_root)
+        refs = asset_index(report, manifest)
         catalog = load(package_root / "catalog-metadata.json")
         catalog.pop("result_view")
         assets = {
             "normalized_output_schema": load(package_root / refs["normalized_output_schema"]["path"]),
             "package_lock": load(package_root / refs["package_lock"]["path"]),
         }
-        report = Report(package_root)
         validate_result_view_declaration(report, package_root, catalog, manifest, refs, assets)
         self.assertEqual([], report.errors)
 
@@ -190,12 +190,59 @@ class ResultViewDeclarationTests(unittest.TestCase):
         errors = self.present_errors(resource_body=b'["inert"]\n')
         self.assertTrue(any("must be a JSON object" in error["message"] for error in errors))
 
+    def test_non_finite_json_constants_fail_closed(self) -> None:
+        for constant in ["NaN", "Infinity", "-Infinity"]:
+            with self.subTest(constant=constant):
+                errors = self.present_errors(resource_body=f'{{"value":{constant}}}\n'.encode())
+                self.assertTrue(any(error["code"] == "invalid_contract" and f"`{constant}`" in error["message"] for error in errors))
+
     def test_forbidden_resource_fields_fail_closed(self) -> None:
         for key in ["token", "runtime_session", "raw_evidence_body"]:
             with self.subTest(key=key):
                 resource_body = json.dumps({"fixture": {key: "forbidden"}}).encode()
                 errors = self.present_errors(resource_body=resource_body)
                 self.assertTrue(any(error["code"] == "forbidden_field" and f"`{key}`" in error["message"] for error in errors))
+
+    def test_invalid_resource_path_fails_closed_without_traceback(self) -> None:
+        def mutate(catalog: dict[str, Any], refs: dict[str, Any], _lock: dict[str, Any]) -> None:
+            invalid_path = "views/invalid\x00resource.json"
+            catalog["result_view"]["resource_path"] = invalid_path
+            refs["result_view_resource"]["path"] = invalid_path
+
+        errors = self.present_errors(mutate)
+        self.assertTrue(any(error["code"] == "invalid_contract" and "resource_path is invalid" in error["message"] for error in errors))
+
+    def test_duplicate_manifest_resource_roles_fail_closed_in_either_order(self) -> None:
+        valid = {
+            "role": "result_view_resource",
+            "path": "catalog-metadata.json",
+            "status": "present",
+            "resource_ref": "lode://result-view/xiaohongshu/search-notes/search-summary@0.1.0",
+            "resource_version": "0.1.0",
+        }
+        conflict = {**valid, "path": "package-lock.json"}
+        for order, duplicates in [("valid_first", [valid, conflict]), ("conflict_first", [conflict, valid])]:
+            with self.subTest(order=order):
+                manifest = load(PRESENT_ROOT / "manifest.json")
+                manifest["asset_refs"].extend(duplicates)
+                report = Report(PRESENT_ROOT)
+                refs = validate_manifest(report, PRESENT_ROOT, manifest)
+                self.assertNotIn("result_view_resource", refs)
+                self.assertTrue(any("Duplicate role `result_view_resource`" in error["message"] for error in report.errors))
+
+    def test_duplicate_locked_resource_roles_fail_closed_in_either_order(self) -> None:
+        for conflict_first in [False, True]:
+            with self.subTest(conflict_first=conflict_first):
+                def mutate(_catalog: dict[str, Any], _refs: dict[str, Any], package_lock: dict[str, Any]) -> None:
+                    valid = package_lock["locked_assets"][-1]
+                    conflict = {**valid, "path": "views/conflicting.json"}
+                    if conflict_first:
+                        package_lock["locked_assets"].insert(0, conflict)
+                    else:
+                        package_lock["locked_assets"].append(conflict)
+
+                errors = self.present_errors(mutate)
+                self.assertTrue(any("Duplicate role `result_view_resource`" in error["message"] for error in errors))
 
     def test_resource_ref_is_package_scoped_and_immutable(self) -> None:
         def mutate(catalog: dict[str, Any], refs: dict[str, Any], package_lock: dict[str, Any]) -> None:

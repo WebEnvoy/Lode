@@ -26,13 +26,15 @@ package output.
 - Lode owns the declaration, resource identity, compatibility metadata, and package lock.
 - Core may record the declaration and lock refs selected when a result is generated.
 - App may display compatibility and fall back to its standard renderer.
-- A present `0.1.0` resource is a static JSON object. Invalid JSON, non-object JSON, and forbidden
-  sensitive/runtime keys at any nesting depth fail closed.
+- A present `0.1.0` resource is a strict static JSON object. Invalid JSON, non-object JSON,
+  non-finite constants (`NaN`, `Infinity`, and `-Infinity`), and forbidden sensitive/runtime keys
+  at any nesting depth fail closed.
 - A present resource must resolve inside the capability package and appear as
-  `result_view_resource` in both manifest `asset_refs` and package `locked_assets`. Its lock entry
-  must include a SHA-256 equal to both the declaration digest and the actual file digest.
+  `result_view_resource` exactly once in both manifest `asset_refs` and package `locked_assets`.
+  Duplicate roles fail closed without selecting a first or last entry. Its lock entry must include
+  a SHA-256 equal to both the declaration digest and the actual file digest.
 - Malformed declarations, output mismatches, out-of-root paths, missing files, integrity drift,
-  unsupported declaration versions, or declaration/lock/file drift are
+  invalid/unresolvable paths, unsupported declaration versions, or declaration/lock/file drift are
   `invalid_contract`/`unsupported_version` failures and must not activate the optional view.
 
 This contract does not define HTML/Component execution, binary or resource loading protocols,

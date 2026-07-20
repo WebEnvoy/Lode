@@ -120,6 +120,14 @@ def rel(root: Path, path: Path) -> str:
         return str(path)
 
 
+def reject_non_finite_json_constant(value: str) -> None:
+    raise ValueError(f"Non-finite JSON constant `{value}` is not allowed.")
+
+
+def parse_json_document(value: str | bytes) -> Any:
+    return json.loads(value, parse_constant=reject_non_finite_json_constant)
+
+
 def load_json(report: Report, root: Path, path: Path, role: str, display_path: str | None = None) -> Any | None:
     display_path = display_path or rel(root, path)
     if not path.exists():
@@ -128,8 +136,8 @@ def load_json(report: Report, root: Path, path: Path, role: str, display_path: s
         return None
     report.ref(role, display_path, "present")
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        return parse_json_document(path.read_text(encoding="utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:
         report.issue("error", "invalid_contract", display_path, f"Invalid JSON: {exc}", "Fix JSON syntax before package validation.")
         return None
 
@@ -166,11 +174,21 @@ def scan_forbidden_keys(report: Report, value: Any, path: str, pointer: str = "$
             scan_forbidden_keys(report, child, path, f"{pointer}[{index}]")
 
 
-def asset_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    refs = manifest.get("asset_refs", [])
-    if not isinstance(refs, list):
+def index_unique_roles(report: Report, entries: Any, path: str) -> dict[str, dict[str, Any]]:
+    if not isinstance(entries, list):
         return {}
-    return {ref.get("role"): ref for ref in refs if isinstance(ref, dict) and ref.get("role")}
+    entries_by_role: dict[str, list[dict[str, Any]]] = {}
+    for entry in entries:
+        if isinstance(entry, dict) and isinstance(entry.get("role"), str) and entry["role"]:
+            entries_by_role.setdefault(entry["role"], []).append(entry)
+    for role, role_entries in sorted(entries_by_role.items()):
+        if len(role_entries) > 1:
+            add_error(report, "invalid_contract", path, f"Duplicate role `{role}` appears {len(role_entries)} times.", "Declare each asset role exactly once.")
+    return {role: role_entries[0] for role, role_entries in entries_by_role.items() if len(role_entries) == 1}
+
+
+def asset_index(report: Report, manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return index_unique_roles(report, manifest.get("asset_refs"), "manifest.json#asset_refs")
 
 
 def discover_repo_root(path: Path) -> Path | None:
@@ -203,7 +221,7 @@ def validate_manifest(report: Report, root: Path, manifest: dict[str, Any]) -> d
     if capability.get("operation_mode") not in SUPPORTED_OPERATION_MODES:
         add_error(report, "invalid_contract", "manifest.json#capability.operation_mode", "Unknown operation mode.", "Use an accepted v0 operation mode.")
 
-    refs = asset_index(manifest)
+    refs = asset_index(report, manifest)
     missing_roles = sorted(REQUIRED_ASSET_ROLES - set(refs))
     for role in missing_roles:
         add_error(report, "asset_missing", "manifest.json#asset_refs", f"Missing asset ref role `{role}`.", "Add the required asset reference.")
@@ -300,7 +318,13 @@ def validate_resource_requirements(report: Report, resource: dict[str, Any], ass
     scan_forbidden_keys(report, resource, path)
 
 
-def validate_action_declaration(report: Report, root: Path, manifest: dict[str, Any], resource: Any) -> None:
+def validate_action_declaration(
+    report: Report,
+    root: Path,
+    manifest: dict[str, Any],
+    resource: Any,
+    refs: dict[str, dict[str, Any]] | None = None,
+) -> None:
     declaration = manifest.get("action_declaration")
     site_slug = nested_get(manifest, ["site", "slug"])
     if not isinstance(declaration, dict):
@@ -337,7 +361,7 @@ def validate_action_declaration(report: Report, root: Path, manifest: dict[str, 
     if len(action_ids) != len(set(action_ids)):
         add_error(report, "invalid_contract", "manifest.json#action_declaration.actions", "Action ids must be unique within a capability.", "Give every concrete business action a stable action_id.")
 
-    resource_ref = asset_index(manifest).get("resource_requirements", {})
+    resource_ref = (refs if refs is not None else asset_index(report, manifest)).get("resource_requirements", {})
     profiles = resource.get("resource_requirement_profiles", []) if isinstance(resource, dict) else []
     known_profile_ids = {profile.get("requirement_profile_id") for profile in profiles if isinstance(profile, dict)}
     manifest_origins = set(nested_get(manifest, ["site", "supported_origins"]) or [])
@@ -773,12 +797,21 @@ def validate_result_view_schema(report: Report, root: Path, declaration: Any, pa
 
 
 def package_local_path(report: Report, root: Path, value: Any, path: str) -> Path | None:
-    if not isinstance(value, str) or not value or Path(value).is_absolute():
+    if not isinstance(value, str) or not value:
         add_error(report, "invalid_contract", path, "Result-view resource_path must be package-relative.", "Use a relative path within the capability package.")
         return None
-    resolved = (root / value).resolve()
     try:
-        resolved.relative_to(root.resolve())
+        candidate = Path(value)
+        if candidate.is_absolute():
+            add_error(report, "invalid_contract", path, "Result-view resource_path must be package-relative.", "Use a relative path within the capability package.")
+            return None
+        root_resolved = root.resolve()
+        resolved = (root / candidate).resolve()
+    except (ValueError, OSError) as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource_path is invalid: {exc}", "Use a valid package-relative resource path.")
+        return None
+    try:
+        resolved.relative_to(root_resolved)
     except ValueError:
         add_error(report, "invalid_contract", path, "Result-view resource resolves outside the capability package.", "Keep result-view resources inside the package root.")
         return None
@@ -793,8 +826,8 @@ def validate_result_view_resource(report: Report, resource_path: Path, path: str
         return None
     digest = hashlib.sha256(resource_body).hexdigest()
     try:
-        resource = json.loads(resource_body)
-    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        resource = parse_json_document(resource_body)
+    except (ValueError, UnicodeDecodeError) as exc:
         add_error(report, "invalid_contract", path, f"Result-view resource is not valid JSON: {exc}", "Provide a static JSON object for declaration version 0.1.0.")
         return digest
     if not isinstance(resource, dict):
@@ -816,8 +849,8 @@ def validate_result_view_lock(
     if not isinstance(package_lock, dict) or declaration.get("lock_ref") != package_lock_ref or package_lock.get("lock_ref") != package_lock_ref:
         add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view declaration is not bound to the current package lock.", "Bind the declaration to the manifest package_lock ref.")
         return
-    locked_assets = package_lock.get("locked_assets") if isinstance(package_lock.get("locked_assets"), list) else []
-    locked = next((item for item in locked_assets if isinstance(item, dict) and item.get("role") == "result_view_resource"), None)
+    locked_assets = package_lock.get("locked_assets")
+    locked = index_unique_roles(report, locked_assets, "package-lock.json#locked_assets").get("result_view_resource")
     expected_ref, expected_version = asset_ref_identity(resource_asset)
     if not isinstance(locked, dict) or locked.get("path") != resource_asset.get("path") or locked.get("ref") != expected_ref or locked.get("version") != expected_version:
         add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view resource is missing from or drifts from package locked_assets.", "Relock the exact result-view resource path, ref, and version.")
@@ -904,7 +937,13 @@ def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: st
     require_keys(report, mapping, required, f"{path}#{field}")
 
 
-def validate_local_registry_index(report: Report, package_root: Path, registry_path: Path, manifest: dict[str, Any]) -> None:
+def validate_local_registry_index(
+    report: Report,
+    package_root: Path,
+    registry_path: Path,
+    manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
+) -> None:
     registry_path = registry_path.resolve()
     repo_root = discover_repo_root(registry_path.parent) or registry_path.parent
     display_path = rel(repo_root, registry_path)
@@ -929,7 +968,7 @@ def validate_local_registry_index(report: Report, package_root: Path, registry_p
         add_error(report, "registry_unavailable", display_path, "Local registry index must contain exactly one entry for the package_ref.", "Add one repo-local package entry for this manifest.")
     else:
         idx, entry = matches[0]
-        validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest)
+        validate_registry_entry(report, repo_root, package_root, display_path, idx, entry, manifest, refs)
     scan_forbidden_keys(report, index, display_path)
 
 
@@ -993,6 +1032,7 @@ def validate_registry_entry(
     index: int,
     entry: dict[str, Any],
     manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
 ) -> None:
     entry_path = f"{index_path}#entries[{index}]"
     require_keys(
@@ -1052,7 +1092,7 @@ def validate_registry_entry(
     elif package_path and manifest_path != f"{package_path}/manifest.json":
         add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point to the package manifest.", "Point manifest_path at the package manifest.")
 
-    package_lock = asset_index(manifest).get("package_lock")
+    package_lock = refs.get("package_lock")
     if isinstance(package_lock, dict):
         expected_lock_ref = package_lock.get("lock_ref")
         expected_lock_path = f"{package_path}/{package_lock.get('path')}" if isinstance(package_path, str) and isinstance(package_lock.get("path"), str) else None
@@ -1062,7 +1102,7 @@ def validate_registry_entry(
             add_error(report, "invalid_contract", f"{entry_path}.lock_path", "Registry lock_path must point to the package lock file.", "Point lock_path at the package lock file.")
 
     roles = entry.get("asset_roles")
-    manifest_roles = set(asset_index(manifest))
+    manifest_roles = set(refs)
     if not isinstance(roles, list) or set(roles) != manifest_roles:
         add_error(report, "invalid_contract", f"{entry_path}.asset_roles", "Registry asset_roles must match manifest asset_refs roles.", "Keep local index discoverability aligned with the manifest.")
 
@@ -1196,7 +1236,7 @@ def validate_locked_assets(report: Report, locked_assets: Any, refs: dict[str, d
     if not isinstance(locked_assets, list) or not locked_assets:
         add_error(report, "invalid_contract", f"{path}#locked_assets", "Package lock must declare locked assets.", "Lock the package asset refs consumed by Core admission.")
         return
-    locked_by_role = {item.get("role"): item for item in locked_assets if isinstance(item, dict) and item.get("role")}
+    locked_by_role = index_unique_roles(report, locked_assets, f"{path}#locked_assets")
     expected_roles = set(refs) - {"package_lock"}
     missing = sorted(expected_roles - set(locked_by_role))
     extra = sorted(set(locked_by_role) - expected_roles)
@@ -1485,7 +1525,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     refs = validate_manifest(report, root, manifest)
     assets = load_present_assets(report, root, refs)
 
-    validate_action_declaration(report, root, manifest, assets.get("resource_requirements"))
+    validate_action_declaration(report, root, manifest, assets.get("resource_requirements"), refs)
     for role in ["input_schema", "normalized_output_schema"]:
         if isinstance(assets.get(role), dict):
             validate_schema(report, role, assets[role], refs[role], manifest)
@@ -1515,7 +1555,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_post_check(report, root, refs["post_check"], manifest, fixture)
     registry_path = registry_index or discover_local_registry(root)
     if registry_path is not None:
-        validate_local_registry_index(report, root, registry_path, manifest)
+        validate_local_registry_index(report, root, registry_path, manifest, refs)
     return report
 
 
