@@ -62,6 +62,8 @@ FORBIDDEN_KEYS = {
     "production_payload",
     "user_business_data",
 }
+MAX_FORBIDDEN_SCAN_DEPTH = 256
+MAX_FORBIDDEN_SCAN_NODES = 10_000
 
 
 class Report:
@@ -137,7 +139,7 @@ def load_json(report: Report, root: Path, path: Path, role: str, display_path: s
     report.ref(role, display_path, "present")
     try:
         return parse_json_document(path.read_text(encoding="utf-8"))
-    except (ValueError, UnicodeDecodeError) as exc:
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         report.issue("error", "invalid_contract", display_path, f"Invalid JSON: {exc}", "Fix JSON syntax before package validation.")
         return None
 
@@ -157,21 +159,47 @@ def require_keys(report: Report, obj: dict[str, Any], keys: list[str], path: str
 
 
 def scan_forbidden_keys(report: Report, value: Any, path: str, pointer: str = "$") -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            child_pointer = f"{pointer}.{key}"
-            if key in FORBIDDEN_KEYS:
-                add_error(
-                    report,
-                    "forbidden_field",
-                    path,
-                    f"Forbidden field key `{key}` appears at `{child_pointer}`.",
-                    "Keep runtime identity, credentials, raw evidence, and production data out of Lode packages.",
-                )
-            scan_forbidden_keys(report, child, path, child_pointer)
-    elif isinstance(value, list):
-        for index, child in enumerate(value):
-            scan_forbidden_keys(report, child, path, f"{pointer}[{index}]")
+    stack: list[tuple[Any, str, int]] = [(value, pointer, 0)]
+    visited_nodes = 0
+    while stack:
+        current, current_pointer, depth = stack.pop()
+        visited_nodes += 1
+        if depth > MAX_FORBIDDEN_SCAN_DEPTH:
+            add_error(
+                report,
+                "invalid_contract",
+                path,
+                f"Forbidden-key scan exceeds the maximum depth of {MAX_FORBIDDEN_SCAN_DEPTH} at `{current_pointer}`.",
+                "Reduce JSON nesting before package validation.",
+            )
+            return
+        child_count = len(current) if isinstance(current, (dict, list)) else 0
+        if visited_nodes + len(stack) + child_count > MAX_FORBIDDEN_SCAN_NODES:
+            add_error(
+                report,
+                "invalid_contract",
+                path,
+                f"Forbidden-key scan exceeds the {MAX_FORBIDDEN_SCAN_NODES}-node budget.",
+                "Reduce the JSON document size before package validation.",
+            )
+            return
+        if isinstance(current, dict):
+            items = list(current.items())
+            for key, _child in items:
+                child_pointer = f"{current_pointer}.{key}"
+                if key in FORBIDDEN_KEYS:
+                    add_error(
+                        report,
+                        "forbidden_field",
+                        path,
+                        f"Forbidden field key `{key}` appears at `{child_pointer}`.",
+                        "Keep runtime identity, credentials, raw evidence, and production data out of Lode packages.",
+                    )
+            for key, child in reversed(items):
+                stack.append((child, f"{current_pointer}.{key}", depth + 1))
+        elif isinstance(current, list):
+            for index in range(len(current) - 1, -1, -1):
+                stack.append((current[index], f"{current_pointer}[{index}]", depth + 1))
 
 
 def index_unique_roles(report: Report, entries: Any, path: str) -> dict[str, dict[str, Any]]:
@@ -827,7 +855,7 @@ def validate_result_view_resource(report: Report, resource_path: Path, path: str
     digest = hashlib.sha256(resource_body).hexdigest()
     try:
         resource = parse_json_document(resource_body)
-    except (ValueError, UnicodeDecodeError) as exc:
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         add_error(report, "invalid_contract", path, f"Result-view resource is not valid JSON: {exc}", "Provide a static JSON object for declaration version 0.1.0.")
         return digest
     if not isinstance(resource, dict):

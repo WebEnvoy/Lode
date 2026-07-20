@@ -28,7 +28,8 @@ package output.
 - App may display compatibility and fall back to its standard renderer.
 - A present `0.1.0` resource is a strict static JSON object. Invalid JSON, non-object JSON,
   non-finite constants (`NaN`, `Infinity`, and `-Infinity`), and forbidden sensitive/runtime keys
-  at any nesting depth fail closed.
+  fail closed. Forbidden-key scanning is iterative and bounded to 256 levels and 10,000 visited
+  nodes; exceeding either budget is an `invalid_contract` failure.
 - A present resource must resolve inside the capability package and appear as
   `result_view_resource` exactly once in both manifest `asset_refs` and package `locked_assets`.
   Duplicate roles fail closed without selecting a first or last entry. Its lock entry must include

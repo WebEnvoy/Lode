@@ -10,7 +10,14 @@ import unittest
 from pathlib import Path
 from typing import Any, Callable
 
-from tools.lode_validate_package import Report, asset_index, validate_manifest, validate_result_view_declaration
+from tools.lode_validate_package import (
+    MAX_FORBIDDEN_SCAN_NODES,
+    Report,
+    asset_index,
+    scan_forbidden_keys,
+    validate_manifest,
+    validate_result_view_declaration,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -202,6 +209,31 @@ class ResultViewDeclarationTests(unittest.TestCase):
                 resource_body = json.dumps({"fixture": {key: "forbidden"}}).encode()
                 errors = self.present_errors(resource_body=resource_body)
                 self.assertTrue(any(error["code"] == "forbidden_field" and f"`{key}`" in error["message"] for error in errors))
+
+    def test_deep_objects_fail_closed_without_recursion(self) -> None:
+        for depth in [1200, 2000]:
+            with self.subTest(depth=depth):
+                root: dict[str, Any] = {}
+                cursor = root
+                for _index in range(depth):
+                    child: dict[str, Any] = {}
+                    cursor["nested"] = child
+                    cursor = child
+                report = Report(PRESENT_ROOT)
+                scan_forbidden_keys(report, root, "result-view-resource.json")
+                self.assertTrue(any(error["code"] == "invalid_contract" and "maximum depth" in error["message"] for error in report.errors))
+
+    def test_oversized_object_graph_fails_closed_at_node_budget(self) -> None:
+        report = Report(PRESENT_ROOT)
+        scan_forbidden_keys(report, [None] * (MAX_FORBIDDEN_SCAN_NODES + 1), "result-view-resource.json")
+        self.assertTrue(any(error["code"] == "invalid_contract" and "node budget" in error["message"] for error in report.errors))
+
+    def test_shallow_forbidden_key_retains_precise_pointer(self) -> None:
+        report = Report(PRESENT_ROOT)
+        scan_forbidden_keys(report, {"fixture": {"token": "forbidden"}}, "result-view-resource.json")
+        self.assertEqual(1, len(report.errors))
+        self.assertEqual("forbidden_field", report.errors[0]["code"])
+        self.assertIn("`$.fixture.token`", report.errors[0]["message"])
 
     def test_invalid_resource_path_fails_closed_without_traceback(self) -> None:
         def mutate(catalog: dict[str, Any], refs: dict[str, Any], _lock: dict[str, Any]) -> None:
