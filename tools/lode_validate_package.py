@@ -785,12 +785,32 @@ def package_local_path(report: Report, root: Path, value: Any, path: str) -> Pat
     return resolved
 
 
+def validate_result_view_resource(report: Report, resource_path: Path, path: str) -> str | None:
+    try:
+        resource_body = resource_path.read_bytes()
+    except OSError as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource cannot be read: {exc}", "Make the package-local resource readable.")
+        return None
+    digest = hashlib.sha256(resource_body).hexdigest()
+    try:
+        resource = json.loads(resource_body)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        add_error(report, "invalid_contract", path, f"Result-view resource is not valid JSON: {exc}", "Provide a static JSON object for declaration version 0.1.0.")
+        return digest
+    if not isinstance(resource, dict):
+        add_error(report, "invalid_contract", path, "Result-view resource must be a JSON object.", "Provide a static JSON object for declaration version 0.1.0.")
+        return digest
+    scan_forbidden_keys(report, resource, path)
+    return digest
+
+
 def validate_result_view_lock(
     report: Report,
     declaration: dict[str, Any],
     resource_asset: dict[str, Any],
     package_lock: Any,
     package_lock_ref: Any,
+    actual_digest: str | None,
     path: str,
 ) -> None:
     if not isinstance(package_lock, dict) or declaration.get("lock_ref") != package_lock_ref or package_lock.get("lock_ref") != package_lock_ref:
@@ -801,6 +821,16 @@ def validate_result_view_lock(
     expected_ref, expected_version = asset_ref_identity(resource_asset)
     if not isinstance(locked, dict) or locked.get("path") != resource_asset.get("path") or locked.get("ref") != expected_ref or locked.get("version") != expected_version:
         add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view resource is missing from or drifts from package locked_assets.", "Relock the exact result-view resource path, ref, and version.")
+        return
+    locked_digest = locked.get("sha256")
+    declaration_digest = nested_get(declaration, ["integrity", "digest"])
+    if not isinstance(locked_digest, str):
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource must include sha256.", "Lock the exact SHA-256 declared for the result-view resource.")
+        return
+    if locked_digest != declaration_digest:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource SHA-256 does not match the declaration.", "Keep the package lock and declaration digest identical.")
+    if actual_digest is not None and locked_digest != actual_digest:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Locked result-view resource SHA-256 does not match the resource file.", "Relock the digest computed from the package-local resource.")
 
 
 def validate_result_view_compatibility(
@@ -854,14 +884,15 @@ def validate_result_view_declaration(
     if declaration.get("resource_path") != resource_asset.get("path"):
         add_error(report, "invalid_contract", f"{path}.resource_path", "Result-view resource_path does not match the manifest asset ref.", "Keep catalog and manifest resource paths identical.")
     resource_path = package_local_path(report, root, declaration.get("resource_path"), f"{path}.resource_path")
+    actual_digest = None
     if resource_path is not None:
         if not resource_path.is_file():
             add_error(report, "asset_missing", f"{path}.resource_path", "Result-view resource file is missing.", "Add the declared package-local resource.")
         else:
-            digest = hashlib.sha256(resource_path.read_bytes()).hexdigest()
-            if digest != nested_get(declaration, ["integrity", "digest"]):
+            actual_digest = validate_result_view_resource(report, resource_path, f"{path}.resource_path")
+            if actual_digest is not None and actual_digest != nested_get(declaration, ["integrity", "digest"]):
                 add_error(report, "invalid_contract", f"{path}.integrity.digest", "Result-view resource SHA-256 does not match the declaration.", "Refresh the digest and relock the package resource.")
-    validate_result_view_lock(report, declaration, resource_asset, assets.get("package_lock"), refs.get("package_lock", {}).get("lock_ref"), path)
+    validate_result_view_lock(report, declaration, resource_asset, assets.get("package_lock"), refs.get("package_lock", {}).get("lock_ref"), actual_digest, path)
     validate_result_view_compatibility(report, declaration, refs.get("normalized_output_schema"), assets.get("normalized_output_schema"), path)
 
 

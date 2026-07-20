@@ -38,6 +38,7 @@ class ResultViewDeclarationTests(unittest.TestCase):
         self,
         mutate: Callable[[dict[str, Any], dict[str, Any], dict[str, Any]], None] | None = None,
         compatibility: dict[str, Any] | None = None,
+        resource_body: bytes = b'{"fixture":"inert result-view resource"}\n',
     ) -> list[dict[str, Any]]:
         manifest = load(PRESENT_ROOT / "manifest.json")
         catalog = load(PRESENT_ROOT / "catalog-metadata.json")
@@ -45,7 +46,7 @@ class ResultViewDeclarationTests(unittest.TestCase):
         output_schema = load(PRESENT_ROOT / "schemas/output.schema.json")
         refs = asset_index(manifest)
         resource_ref = "lode://result-view/xiaohongshu/search-notes/search-summary@0.1.0"
-        resource_body = b'{"fixture":"inert result-view resource"}\n'
+        resource_digest = hashlib.sha256(resource_body).hexdigest()
         with tempfile.TemporaryDirectory(prefix=".result-view-test-", dir=ROOT) as directory:
             package_root = Path(directory)
             resource_path = package_root / "views" / "search-summary.json"
@@ -65,6 +66,7 @@ class ResultViewDeclarationTests(unittest.TestCase):
                 "path": resource_asset["path"],
                 "ref": resource_ref,
                 "version": "0.1.0",
+                "sha256": resource_digest,
             })
             catalog["result_view"] = {
                 "status": "present",
@@ -81,7 +83,7 @@ class ResultViewDeclarationTests(unittest.TestCase):
                 },
                 "integrity": {
                     "algorithm": "sha256",
-                    "digest": hashlib.sha256(resource_body).hexdigest(),
+                    "digest": resource_digest,
                 },
                 "lock_ref": refs["package_lock"]["lock_ref"],
                 "fallback": "standard_renderer",
@@ -124,6 +126,12 @@ class ResultViewDeclarationTests(unittest.TestCase):
         errors = self.present_errors(lambda catalog, _refs, _lock: catalog["result_view"].pop("view_version"))
         self.assertTrue(any(error["code"] == "invalid_contract" for error in errors))
 
+    def test_unsupported_declaration_version_fails_closed(self) -> None:
+        def mutate(catalog: dict[str, Any], _refs: dict[str, Any], _lock: dict[str, Any]) -> None:
+            catalog["result_view"]["declaration_version"] = "9.9.9"
+
+        self.assertTrue(any(error["code"] == "invalid_contract" for error in self.present_errors(mutate)))
+
     def test_output_schema_mismatch_fails_closed(self) -> None:
         def mutate(catalog: dict[str, Any], _refs: dict[str, Any], _lock: dict[str, Any]) -> None:
             catalog["result_view"]["compatible_outputs"]["schemas"][0]["schema_version"] = "9.9.9"
@@ -151,6 +159,43 @@ class ResultViewDeclarationTests(unittest.TestCase):
 
         errors = self.present_errors(mutate)
         self.assertTrue(any("SHA-256" in error["message"] for error in errors))
+
+    def test_missing_locked_resource_digest_fails_closed(self) -> None:
+        def mutate(_catalog: dict[str, Any], _refs: dict[str, Any], package_lock: dict[str, Any]) -> None:
+            package_lock["locked_assets"][-1].pop("sha256")
+
+        errors = self.present_errors(mutate)
+        self.assertTrue(any("must include sha256" in error["message"] for error in errors))
+
+    def test_wrong_locked_resource_digest_fails_closed(self) -> None:
+        def mutate(_catalog: dict[str, Any], _refs: dict[str, Any], package_lock: dict[str, Any]) -> None:
+            package_lock["locked_assets"][-1]["sha256"] = "0" * 64
+
+        errors = self.present_errors(mutate)
+        self.assertTrue(any("does not match the declaration" in error["message"] for error in errors))
+
+    def test_coordinated_declaration_and_lock_digest_drift_fails_closed(self) -> None:
+        def mutate(catalog: dict[str, Any], _refs: dict[str, Any], package_lock: dict[str, Any]) -> None:
+            catalog["result_view"]["integrity"]["digest"] = "0" * 64
+            package_lock["locked_assets"][-1]["sha256"] = "0" * 64
+
+        errors = self.present_errors(mutate)
+        self.assertTrue(any("does not match the resource file" in error["message"] for error in errors))
+
+    def test_invalid_json_resource_fails_closed(self) -> None:
+        errors = self.present_errors(resource_body=b'{"fixture":')
+        self.assertTrue(any("not valid JSON" in error["message"] for error in errors))
+
+    def test_non_object_json_resource_fails_closed(self) -> None:
+        errors = self.present_errors(resource_body=b'["inert"]\n')
+        self.assertTrue(any("must be a JSON object" in error["message"] for error in errors))
+
+    def test_forbidden_resource_fields_fail_closed(self) -> None:
+        for key in ["token", "runtime_session", "raw_evidence_body"]:
+            with self.subTest(key=key):
+                resource_body = json.dumps({"fixture": {key: "forbidden"}}).encode()
+                errors = self.present_errors(resource_body=resource_body)
+                self.assertTrue(any(error["code"] == "forbidden_field" and f"`{key}`" in error["message"] for error in errors))
 
     def test_resource_ref_is_package_scoped_and_immutable(self) -> None:
         def mutate(catalog: dict[str, Any], refs: dict[str, Any], package_lock: dict[str, Any]) -> None:

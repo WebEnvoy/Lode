@@ -40,8 +40,7 @@
           "const": "present"
         },
         "declaration_version": {
-          "type": "string",
-          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          "const": "0.1.0"
         },
         "view_id": {
           "type": "string",
