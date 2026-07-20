@@ -91,5 +91,9 @@
     "network body",
     "production payload",
     "user business data"
-  ]
+  ],
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
+  }
 }

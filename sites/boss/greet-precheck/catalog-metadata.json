@@ -103,5 +103,9 @@
     "post_check_id": "boss.greet-precheck.post-check",
     "lifecycle": "proposed",
     "operation_mode": "validate_only"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
   }
 }

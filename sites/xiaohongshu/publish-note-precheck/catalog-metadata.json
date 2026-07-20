@@ -111,5 +111,9 @@
     "#238",
     "#239"
   ],
-  "anchor_work_item": "LODE-236"
+  "anchor_work_item": "LODE-236",
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
+  }
 }

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/result-view-declaration@0.1.0",
+  "title": "Lode Result View Declaration",
+  "description": "Optional package-owned compatibility metadata for a non-authoritative result view. This schema does not define a host or executable resource protocol.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "fallback"
+      ],
+      "properties": {
+        "status": {
+          "const": "absent"
+        },
+        "fallback": {
+          "const": "standard_renderer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "declaration_version",
+        "view_id",
+        "view_version",
+        "resource_ref",
+        "resource_path",
+        "compatible_outputs",
+        "integrity",
+        "lock_ref",
+        "fallback"
+      ],
+      "properties": {
+        "status": {
+          "const": "present"
+        },
+        "declaration_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "view_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+        },
+        "view_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "resource_ref": {
+          "type": "string",
+          "pattern": "^lode://result-view/[a-z0-9][a-z0-9._/-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "resource_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compatible_outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "schema_ref",
+                  "schema_version"
+                ],
+                "properties": {
+                  "schema_ref": {
+                    "type": "string",
+                    "pattern": "^lode://schema/site-capability/[a-z0-9][a-z0-9._/-]*/output@[0-9]+\\.[0-9]+\\.[0-9]+$"
+                  },
+                  "schema_version": {
+                    "type": "string",
+                    "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+                  }
+                }
+              }
+            },
+            "result_kinds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "schemas"
+              ]
+            },
+            {
+              "required": [
+                "result_kinds"
+              ]
+            }
+          ]
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm",
+            "digest"
+          ],
+          "properties": {
+            "algorithm": {
+              "const": "sha256"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "lock_ref": {
+          "type": "string",
+          "pattern": "^lode://lock/site-capability/[a-z0-9][a-z0-9._/-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "fallback": {
+          "const": "standard_renderer"
+        }
+      }
+    }
+  ]
+}

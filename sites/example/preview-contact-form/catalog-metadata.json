@@ -104,5 +104,9 @@
     "post_check_id": "example.preview-contact-form.post-check",
     "lifecycle": "proposed",
     "operation_mode": "validate_only"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
   }
 }

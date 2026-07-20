@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -16,6 +17,7 @@ SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
 DEFAULT_LOCAL_REGISTRY = Path("registry/local-packages.json")
 ACTION_DECLARATION_SCHEMA = Path("schemas/capability-action-declaration.schema.json")
+RESULT_VIEW_DECLARATION_SCHEMA = Path("schemas/result-view-declaration.schema.json")
 ACTION_DECLARATION_REQUIRED_SITES = {"xiaohongshu"}  # ponytail: expand when another site's packages migrate.
 SUPPORTED_OPERATION_MODES = {"read", "validate_only", "draft", "preview", "write"}
 SUPPORTED_LIFECYCLE_STATES = {"proposed", "active", "suspected_broken", "broken", "deprecated"}
@@ -744,6 +746,125 @@ def validate_catalog_metadata(report: Report, catalog: dict[str, Any], asset: di
     scan_forbidden_keys(report, catalog, path)
 
 
+def validate_result_view_schema(report: Report, root: Path, declaration: Any, path: str) -> bool:
+    repo_root = discover_repo_root(root)
+    if repo_root is None:
+        add_error(report, "invalid_contract", path, "Repository root is unavailable for result-view declaration validation.", "Validate the package from a Lode repository checkout.")
+        return False
+    schema = load_json(report, repo_root, repo_root / RESULT_VIEW_DECLARATION_SCHEMA, "result_view_declaration_schema", str(RESULT_VIEW_DECLARATION_SCHEMA))
+    if not isinstance(schema, dict):
+        return False
+    try:
+        import jsonschema
+    except ImportError as exc:
+        add_error(report, "invalid_contract", str(RESULT_VIEW_DECLARATION_SCHEMA), f"Result-view schema validation is unavailable: {exc}", "Install requirements-validator.txt.")
+        return False
+    try:
+        jsonschema.Draft202012Validator.check_schema(schema)
+        errors = sorted(jsonschema.Draft202012Validator(schema).iter_errors(declaration), key=lambda item: list(item.absolute_path))
+    except jsonschema.SchemaError as exc:
+        add_error(report, "invalid_contract", str(RESULT_VIEW_DECLARATION_SCHEMA), f"Result-view schema validation is unavailable: {exc}", "Install requirements-validator.txt and fix the shared schema.")
+        return False
+    for error in errors:
+        pointer = ".".join(str(part) for part in error.absolute_path)
+        error_path = path + (f".{pointer}" if pointer else "")
+        add_error(report, "invalid_contract", error_path, error.message, "Conform to the shared result-view declaration schema.")
+    return not errors
+
+
+def package_local_path(report: Report, root: Path, value: Any, path: str) -> Path | None:
+    if not isinstance(value, str) or not value or Path(value).is_absolute():
+        add_error(report, "invalid_contract", path, "Result-view resource_path must be package-relative.", "Use a relative path within the capability package.")
+        return None
+    resolved = (root / value).resolve()
+    try:
+        resolved.relative_to(root.resolve())
+    except ValueError:
+        add_error(report, "invalid_contract", path, "Result-view resource resolves outside the capability package.", "Keep result-view resources inside the package root.")
+        return None
+    return resolved
+
+
+def validate_result_view_lock(
+    report: Report,
+    declaration: dict[str, Any],
+    resource_asset: dict[str, Any],
+    package_lock: Any,
+    package_lock_ref: Any,
+    path: str,
+) -> None:
+    if not isinstance(package_lock, dict) or declaration.get("lock_ref") != package_lock_ref or package_lock.get("lock_ref") != package_lock_ref:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view declaration is not bound to the current package lock.", "Bind the declaration to the manifest package_lock ref.")
+        return
+    locked_assets = package_lock.get("locked_assets") if isinstance(package_lock.get("locked_assets"), list) else []
+    locked = next((item for item in locked_assets if isinstance(item, dict) and item.get("role") == "result_view_resource"), None)
+    expected_ref, expected_version = asset_ref_identity(resource_asset)
+    if not isinstance(locked, dict) or locked.get("path") != resource_asset.get("path") or locked.get("ref") != expected_ref or locked.get("version") != expected_version:
+        add_error(report, "invalid_contract", f"{path}.lock_ref", "Result-view resource is missing from or drifts from package locked_assets.", "Relock the exact result-view resource path, ref, and version.")
+
+
+def validate_result_view_compatibility(
+    report: Report,
+    declaration: dict[str, Any],
+    output_asset: Any,
+    output_schema: Any,
+    path: str,
+) -> None:
+    compatible = declaration.get("compatible_outputs") if isinstance(declaration.get("compatible_outputs"), dict) else {}
+    if not isinstance(output_asset, dict) or not isinstance(output_schema, dict):
+        add_error(report, "invalid_contract", path, "Result-view compatibility requires the package normalized output schema.", "Bind the declaration to a valid package output schema or result kind.")
+        return
+    schemas = compatible.get("schemas")
+    if isinstance(schemas, list) and not any(item.get("schema_ref") == output_asset.get("schema_id") and item.get("schema_version") == output_asset.get("schema_version") for item in schemas if isinstance(item, dict)):
+        add_error(report, "unsupported_version", f"{path}.compatible_outputs.schemas", "Result-view declaration does not include the current output schema ref and version.", "Declare the exact current normalized output schema compatibility.")
+    result_kinds = compatible.get("result_kinds")
+    result_kind = nested_get(output_schema, ["properties", "result_kind", "const"])
+    if isinstance(result_kinds, list) and result_kind not in result_kinds:
+        add_error(report, "unsupported_version", f"{path}.compatible_outputs.result_kinds", "Result-view declaration does not include the current output result kind.", "Declare the current normalized result_kind compatibility.")
+
+
+def validate_result_view_declaration(
+    report: Report,
+    root: Path,
+    catalog: dict[str, Any],
+    manifest: dict[str, Any],
+    refs: dict[str, dict[str, Any]],
+    assets: dict[str, Any],
+) -> None:
+    path = f"{refs.get('catalog_metadata', {}).get('path', 'catalog-metadata.json')}#result_view"
+    declaration = catalog.get("result_view")
+    resource_asset = refs.get("result_view_resource")
+    if declaration is None:
+        report.ref("result_view_declaration", path, "absent")
+        if resource_asset is not None:
+            add_error(report, "invalid_contract", path, "A result_view_resource asset requires a result-view declaration.", "Declare a locked compatible view or remove the resource asset.")
+        return
+    if not validate_result_view_schema(report, root, declaration, path):
+        return
+    if declaration["status"] == "absent":
+        if resource_asset is not None:
+            add_error(report, "invalid_contract", path, "Absent result-view declaration cannot retain a result_view_resource asset.", "Remove the resource asset or declare a locked compatible view.")
+        return
+    if not isinstance(resource_asset, dict) or resource_asset.get("status") != "present":
+        add_error(report, "asset_missing", path, "Present result-view declaration requires a present result_view_resource asset.", "Add and lock the package-local result-view resource.")
+        return
+    expected_ref = f"lode://result-view/{nested_get(manifest, ['site', 'slug'])}/{nested_get(manifest, ['capability', 'capability_id'])}/{declaration['view_id']}@{declaration['view_version']}"
+    if declaration.get("resource_ref") != expected_ref or declaration.get("resource_ref") != resource_asset.get("resource_ref") or declaration.get("view_version") != resource_asset.get("resource_version"):
+        add_error(report, "invalid_contract", f"{path}.resource_ref", "Result-view resource identity does not match package, view id, version, and manifest asset ref.", "Use the immutable package-scoped result-view resource ref.")
+    if declaration.get("resource_path") != resource_asset.get("path"):
+        add_error(report, "invalid_contract", f"{path}.resource_path", "Result-view resource_path does not match the manifest asset ref.", "Keep catalog and manifest resource paths identical.")
+    resource_path = package_local_path(report, root, declaration.get("resource_path"), f"{path}.resource_path")
+    if resource_path is not None:
+        if not resource_path.is_file():
+            add_error(report, "asset_missing", f"{path}.resource_path", "Result-view resource file is missing.", "Add the declared package-local resource.")
+        else:
+            digest = hashlib.sha256(resource_path.read_bytes()).hexdigest()
+            if digest != nested_get(declaration, ["integrity", "digest"]):
+                add_error(report, "invalid_contract", f"{path}.integrity.digest", "Result-view resource SHA-256 does not match the declaration.", "Refresh the digest and relock the package resource.")
+    validate_result_view_lock(report, declaration, resource_asset, assets.get("package_lock"), refs.get("package_lock", {}).get("lock_ref"), path)
+    validate_result_view_compatibility(report, declaration, refs.get("normalized_output_schema"), assets.get("normalized_output_schema"), path)
+
+
 def validate_mapping_consumer(report: Report, mapping: Any, path: str, field: str) -> None:
     if not isinstance(mapping, dict):
         add_error(report, "invalid_contract", f"{path}#{field}", "Failure mapping consumer entry must be an object.", "Declare consumer mapping details.")
@@ -1070,6 +1191,7 @@ def asset_ref_identity(asset: dict[str, Any]) -> tuple[Any, Any]:
         ("post_check_id", "post_check_version"),
         ("failure_mapping_id", "failure_mapping_version"),
         ("catalog_metadata_id", "catalog_metadata_version"),
+        ("resource_ref", "resource_version"),
         ("repair_draft_id", "repair_draft_version"),
         ("overlay_metadata_id", "overlay_metadata_version"),
         ("lock_ref", "lock_version"),
@@ -1350,6 +1472,7 @@ def validate_package(root: Path, registry_index: Path | None = None) -> Report:
         validate_overlay_fork_metadata(report, assets["overlay_fork_metadata"], refs["overlay_fork_metadata"], manifest)
     if isinstance(assets.get("catalog_metadata"), dict):
         validate_catalog_metadata(report, assets["catalog_metadata"], refs["catalog_metadata"], manifest, refs)
+        validate_result_view_declaration(report, root, assets["catalog_metadata"], manifest, refs, assets)
     if isinstance(assets.get("package_lock"), dict):
         validate_package_lock(report, assets["package_lock"], refs["package_lock"], manifest, refs)
     if isinstance(assets.get("fixture"), dict) and "normalized_output_schema" in refs:

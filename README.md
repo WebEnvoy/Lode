@@ -98,6 +98,17 @@ python3 tools/lode_validate_package.py --registry-index registry/local-packages.
 python3 -m unittest tools.test_action_declarations
 ```
 
+Capability catalog 还会显式声明可选结果视图状态。`absent` 是合法的标准 renderer-only
+状态；`present` 必须绑定当前 output schema 或 `result_kind`、包内不可变 resource ref、
+SHA-256 与 package lock。共享合同位于
+`schemas/result-view-declaration.schema.json`，聚焦测试命令：
+
+```bash
+python3 -m unittest tools.test_result_view_declarations
+```
+
+该合同只提供兼容元数据，不定义或执行 HTML/Component host、sandbox、资源协议或远程脚本。
+
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
 版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
 安装/更新、托管登记表、Core 运行记录或运行环境执行已经实现。
