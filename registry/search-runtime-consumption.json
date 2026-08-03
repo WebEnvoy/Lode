@@ -1,0 +1,33 @@
+{
+  "$schema": "./search-runtime-consumption.schema.json",
+  "schema_version": "lode.search-runtime-consumption.v0",
+  "truth_id": "lode.xiaohongshu.search.runtime-consumption",
+  "asset_owner": "Lode",
+  "runtime_execution": "out_of_scope",
+  "entries": [{
+    "site_slug": "xiaohongshu",
+    "capability_id": "search-notes",
+    "operation_id": "xhs_search_notes",
+    "operation_mode": "read",
+    "package_ref": "lode://site-capability/xiaohongshu/search-notes@0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "runtime_admission": {"enabled": true, "status": "current", "recheck_condition": "not_applicable"},
+    "allowed_origins": ["https://www.xiaohongshu.com"],
+    "assets": {
+      "manifest": ["sites/xiaohongshu/search-notes/manifest.json", "7c8106c381ccab1729e470798c8fcb687eb3d56a7da1cbdab59bfefd7216b78f"],
+      "package_lock": ["sites/xiaohongshu/search-notes/package-lock.json", "2968bdcacb24f8320bec07130b6a9a7ec63b315e1eca029ede1c034e0f8415b9"],
+      "input_schema": ["sites/xiaohongshu/search-notes/schemas/input.schema.json", "66c5701f80c4ee38a618b46167686a56d647ad7b5d282d55d01fe84764b16a96"],
+      "output_schema": ["sites/xiaohongshu/search-notes/schemas/output.schema.json", "8e48238b077be429d3ffe3bb2faa7371da8be0e0c641706da53dd3834e9280a0"],
+      "resource_requirements": ["sites/xiaohongshu/search-notes/resource-requirements.json", "7f6b64309f0eeb7eeacb4f422f17b35ed9afe91486df10d4d6acb337383dfc7b"],
+      "failure_mapping": ["sites/xiaohongshu/search-notes/failure-mapping.json", "661c4920342ec7f32849fa1521efd1af404be8fff3d3434de108e9ec9c9a8453"],
+      "post_check": ["sites/xiaohongshu/search-notes/checks/post-check.json", "d502c8bfe20812e5e1bd43b8cd5ab71e559f8500603f391dcaa21008a9abc07a"],
+      "runtime_consumption_allowlist": ["registry/runtime-consumption-allowlist.json", "418d0682e64adf499206a67a1202e0f03aa23fefb867be2f503f809e10192b1a"]
+    },
+    "input_contract": {"required": ["url", "keyword"], "caller_may_construct": true},
+    "output_contract": {"required_public_fields": ["canonical_url", "title", "summary", "source_status", "keyword", "result_count", "notes"]},
+    "required_ref_kinds": ["pinia_store_summary", "network_summary", "dom_snapshot_summary", "snapshot_ref", "post_check_ref"]
+  }],
+  "non_goals": ["No browser or account access.", "No live-evidence claim.", "No write or safety-control bypass."]
+}

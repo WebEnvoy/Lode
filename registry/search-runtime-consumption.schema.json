@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/registry/search-runtime-consumption@0.1.0",
+  "title": "Lode Xiaohongshu search runtime consumption truth",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "truth_id", "asset_owner", "runtime_execution", "entries", "non_goals"],
+  "properties": {
+    "$schema": {"const": "./search-runtime-consumption.schema.json"},
+    "schema_version": {"const": "lode.search-runtime-consumption.v0"},
+    "truth_id": {"const": "lode.xiaohongshu.search.runtime-consumption"},
+    "asset_owner": {"const": "Lode"},
+    "runtime_execution": {"const": "out_of_scope"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "non_goals": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "asset": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "string", "minLength": 1},
+        {"$ref": "#/$defs/sha256"}
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "runtime_admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "status", "recheck_condition"],
+      "properties": {
+        "enabled": {"const": true},
+        "status": {"const": "current"},
+        "recheck_condition": {"const": "not_applicable"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "site_slug", "capability_id", "operation_id", "operation_mode",
+        "package_ref", "lock_ref", "version", "lifecycle", "runtime_admission",
+        "allowed_origins", "assets", "input_contract", "output_contract", "required_ref_kinds"
+      ],
+      "properties": {
+        "site_slug": {"const": "xiaohongshu"},
+        "capability_id": {"const": "search-notes"},
+        "operation_id": {"const": "xhs_search_notes"},
+        "operation_mode": {"const": "read"},
+        "package_ref": {"const": "lode://site-capability/xiaohongshu/search-notes@0.1.0"},
+        "lock_ref": {"const": "lode://lock/site-capability/xiaohongshu/search-notes@0.1.0"},
+        "version": {"const": "0.1.0"},
+        "lifecycle": {"const": "proposed"},
+        "runtime_admission": {"$ref": "#/$defs/runtime_admission"},
+        "allowed_origins": {"const": ["https://www.xiaohongshu.com"]},
+        "assets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["manifest", "package_lock", "input_schema", "output_schema", "resource_requirements", "failure_mapping", "post_check", "runtime_consumption_allowlist"],
+          "properties": {
+            "manifest": {"$ref": "#/$defs/asset"},
+            "package_lock": {"$ref": "#/$defs/asset"},
+            "input_schema": {"$ref": "#/$defs/asset"},
+            "output_schema": {"$ref": "#/$defs/asset"},
+            "resource_requirements": {"$ref": "#/$defs/asset"},
+            "failure_mapping": {"$ref": "#/$defs/asset"},
+            "post_check": {"$ref": "#/$defs/asset"},
+            "runtime_consumption_allowlist": {"$ref": "#/$defs/asset"}
+          }
+        },
+        "input_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required", "caller_may_construct"],
+          "properties": {
+            "required": {"const": ["url", "keyword"]},
+            "caller_may_construct": {"const": true}
+          }
+        },
+        "output_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_public_fields"],
+          "properties": {
+            "required_public_fields": {"const": ["canonical_url", "title", "summary", "source_status", "keyword", "result_count", "notes"]}
+          }
+        },
+        "required_ref_kinds": {
+          "const": ["pinia_store_summary", "network_summary", "dom_snapshot_summary", "snapshot_ref", "post_check_ref"]
+        }
+      }
+    }
+  }
+}

@@ -589,7 +589,8 @@
         "enabled": true,
         "status": "current",
         "recheck_condition": "not_applicable"
-      }
+      },
+      "runtime_consumption_ref": "registry/search-runtime-consumption.json"
     },
     {
       "package_ref": "lode://site-capability/xiaohongshu/read-note-detail@0.1.0",
