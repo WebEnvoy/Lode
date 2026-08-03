@@ -69,9 +69,9 @@ def forbidden_keys(value: Any, path: str = "$") -> list[str]:
     return errors
 
 
-def registry_entry() -> dict[str, Any] | None:
-    registry = load_json(REGISTRY_PATH)
-    return next((entry for entry in registry.get("entries", []) if isinstance(entry, dict) and entry.get("operation_id") == OPERATION), None)
+def registry_entries(registry: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    registry = registry if registry is not None else load_json(REGISTRY_PATH)
+    return [entry for entry in registry.get("entries", []) if isinstance(entry, dict) and entry.get("operation_id") == OPERATION]
 
 
 def validate_assets(errors: list[str], entry: dict[str, Any]) -> None:
@@ -101,11 +101,16 @@ def validate_assets(errors: list[str], entry: dict[str, Any]) -> None:
             add(errors, f"entries[0].assets.{role}[1]", "content SHA-256 drifted")
 
 
-def validate_package_identity(errors: list[str], entry: dict[str, Any]) -> None:
-    current = registry_entry()
-    if current is None:
-        add(errors, "registry", "xhs_search_notes is missing from local registry")
+def validate_package_identity(errors: list[str], entry: dict[str, Any], registry: dict[str, Any] | None = None) -> None:
+    try:
+        matches = registry_entries(registry)
+    except (OSError, json.JSONDecodeError) as exc:
+        add(errors, "registry", f"local registry unavailable: {exc}")
         return
+    if len(matches) != 1:
+        add(errors, "registry", f"xhs_search_notes must have exactly one local registry entry (found {len(matches)})")
+        return
+    current = matches[0]
     for key in ("package_ref", "lock_ref", "version", "site_slug", "capability_id", "operation_id", "operation_mode", "lifecycle"):
         if entry.get(key) != current.get(key):
             add(errors, f"entries[0].{key}", "does not match local registry")
@@ -203,6 +208,17 @@ def self_test(data: dict[str, Any]) -> list[str]:
         mutate(candidate)
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
+    try:
+        registry = load_json(REGISTRY_PATH)
+        matches = registry_entries(registry)
+        if matches:
+            registry["entries"].append(copy.deepcopy(matches[0]))
+            duplicate_errors: list[str] = []
+            validate_package_identity(duplicate_errors, data["entries"][0], registry)
+            if not any("exactly one local registry entry" in error for error in duplicate_errors):
+                failures.append("self-test did not reject duplicate local registry entry")
+    except (OSError, json.JSONDecodeError) as exc:
+        failures.append(f"self-test registry fixture unavailable: {exc}")
     return failures
 
 
