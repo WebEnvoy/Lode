@@ -71,11 +71,16 @@ def forbidden_keys(value: Any, path: str = "$") -> list[str]:
 
 def registry_entries(registry: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     registry = registry if registry is not None else load_json(REGISTRY_PATH)
+    if not isinstance(registry, dict):
+        return []
     return [entry for entry in registry.get("entries", []) if isinstance(entry, dict) and entry.get("operation_id") == OPERATION]
 
 
 def validate_assets(errors: list[str], entry: dict[str, Any]) -> None:
     assets = entry.get("assets", {})
+    if not isinstance(assets, dict):
+        add(errors, "entries[0].assets", "must be an object")
+        return
     if set(assets) != set(EXPECTED_ASSET_PATHS):
         add(errors, "entries[0].assets", "must pin exactly the Core asset roles")
         return
@@ -128,6 +133,9 @@ def validate_assets_content(errors: list[str], entry: dict[str, Any]) -> None:
     except (OSError, json.JSONDecodeError) as exc:
         add(errors, "package", f"manifest/lock unavailable: {exc}")
         return
+    if not isinstance(manifest, dict) or not isinstance(lock, dict):
+        add(errors, "package", "manifest and lock must be JSON objects")
+        return
     expected = {
         "package_ref": manifest.get("package_ref"),
         "lock_ref": lock.get("lock_ref"),
@@ -141,7 +149,10 @@ def validate_assets_content(errors: list[str], entry: dict[str, Any]) -> None:
             add(errors, f"entries[0].{key}", "does not match package manifest/lock")
     if lock.get("package_ref") != manifest.get("package_ref") or lock.get("package_version") != manifest.get("capability", {}).get("version"):
         add(errors, "package-lock.json", "package identity is inconsistent")
-    refs = {item.get("role"): item for item in manifest.get("asset_refs", []) if isinstance(item, dict)}
+    refs_value = manifest.get("asset_refs", [])
+    refs = {item.get("role"): item for item in refs_value if isinstance(item, dict)} if isinstance(refs_value, list) else {}
+    if not isinstance(refs_value, list):
+        add(errors, "manifest.asset_refs", "must be an array")
     package_roles = {"input_schema": "schemas/input.schema.json", "normalized_output_schema": "schemas/output.schema.json", "resource_requirements": "resource-requirements.json", "failure_mapping": "failure-mapping.json", "post_check": "checks/post-check.json", "package_lock": "package-lock.json"}
     for role, path in package_roles.items():
         ref = refs.get(role)
@@ -157,24 +168,36 @@ def validate_assets_content(errors: list[str], entry: dict[str, Any]) -> None:
     except (OSError, json.JSONDecodeError) as exc:
         add(errors, "assets", f"pinned JSON unavailable: {exc}")
         return
-    if input_schema.get("required") != ["url", "keyword"]:
+    if not isinstance(input_schema, dict) or input_schema.get("required") != ["url", "keyword"]:
         add(errors, "input_schema.required", "must bind url and keyword")
-    if output_schema.get("$defs", {}).get("content_detail", {}).get("required") != EXPECTED_FIELDS:
+    output_defs = output_schema.get("$defs", {}) if isinstance(output_schema, dict) else {}
+    content_detail = output_defs.get("content_detail", {}) if isinstance(output_defs, dict) else {}
+    if not isinstance(content_detail, dict) or content_detail.get("required") != EXPECTED_FIELDS:
         add(errors, "output_schema.content_detail.required", "public fields drifted")
-    profile_facts = [fact.get("fact_key") for profile in resource.get("resource_requirement_profiles", []) for fact in profile.get("required_harbor_facts", []) if isinstance(fact, dict)]
+    profiles = resource.get("resource_requirement_profiles", []) if isinstance(resource, dict) else []
+    profile_facts: list[Any] = []
+    if isinstance(profiles, list):
+        for profile in profiles:
+            if not isinstance(profile, dict) or not isinstance(profile.get("required_harbor_facts"), list):
+                continue
+            profile_facts.extend(fact.get("fact_key") for fact in profile["required_harbor_facts"] if isinstance(fact, dict))
     if not profile_facts:
         add(errors, "resource_requirements", "must declare Harbor fact requirements")
-    if [item.get("lode_failure_class") for item in failures.get("classes", []) if isinstance(item, dict)] != ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "not_logged_in", "login_expired", "page_not_ready", "signed_ref_missing", "safety_challenge", "field_missing", "network_resource_unavailable"]:
+    classes = failures.get("classes", []) if isinstance(failures, dict) else []
+    if [item.get("lode_failure_class") for item in classes if isinstance(item, dict)] != ["invalid_contract", "resource_unavailable", "site_changed", "empty_result", "not_logged_in", "login_expired", "page_not_ready", "signed_ref_missing", "safety_challenge", "field_missing", "network_resource_unavailable"]:
         add(errors, "failure_mapping.classes", "failure taxonomy drifted")
-    if post_check.get("result_contract", {}).get("required_fields") != ["status", "reason", "source_refs", "evidence_refs"]:
+    result_contract = post_check.get("result_contract", {}) if isinstance(post_check, dict) else {}
+    if not isinstance(result_contract, dict) or result_contract.get("required_fields") != ["status", "reason", "source_refs", "evidence_refs"]:
         add(errors, "post_check.result_contract.required_fields", "post-check fields drifted")
-    allowlisted = [item for item in allowlist.get("entries", []) if isinstance(item, dict) and item.get("operation_id") == OPERATION]
+    allowlist_entries = allowlist.get("entries", []) if isinstance(allowlist, dict) else []
+    allowlisted = [item for item in allowlist_entries if isinstance(item, dict) and item.get("operation_id") == OPERATION] if isinstance(allowlist_entries, list) else []
     if len(allowlisted) != 1:
         add(errors, "runtime-consumption-allowlist", "must contain exactly one xhs_search_notes entry")
     elif entry.get("required_ref_kinds") != allowlisted[0].get("evidence_and_post_check", {}).get("required_ref_kinds"):
         add(errors, "entries[0].required_ref_kinds", "does not match existing allowlist evidence requirements")
     for asset_path in EXPECTED_ASSET_PATHS:
-        path = entry.get("assets", {}).get(asset_path, [None])[0]
+        assets = entry.get("assets", {})
+        path = assets.get(asset_path, [None])[0] if isinstance(assets, dict) else None
         if isinstance(path, str) and path.endswith(".json"):
             try:
                 errors.extend(forbidden_keys(load_json(ROOT / path), path))
@@ -201,6 +224,7 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("asset_path_drift", lambda candidate: candidate["entries"][0]["assets"]["manifest"].__setitem__(0, "sites/xiaohongshu/search-notes/fixtures/search-notes.fixture.json")),
         ("lock_drift", lambda candidate: candidate["entries"][0].__setitem__("lock_ref", "lode://lock/drift")),
         ("extra_fixture_pin", lambda candidate: candidate["entries"][0]["assets"].__setitem__("fixture", ["sites/xiaohongshu/search-notes/fixtures/search-notes.fixture.json", "0" * 64])),
+        ("malformed_assets", lambda candidate: candidate["entries"][0].__setitem__("assets", [])),
     ]
     failures: list[str] = []
     for name, mutate in mutations:
