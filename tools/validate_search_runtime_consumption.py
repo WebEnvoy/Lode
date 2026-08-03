@@ -45,10 +45,15 @@ def sha256(path: Path) -> str:
 def schema_errors(data: Any) -> list[str]:
     try:
         import jsonschema
-        validator = jsonschema.Draft202012Validator(load_json(SCHEMA_PATH), format_checker=jsonschema.FormatChecker())
+        schema = load_json(SCHEMA_PATH)
+        if not isinstance(schema, dict):
+            return ["schema unavailable: schema root must be a JSON object"]
+        validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
         return [error.message for error in validator.iter_errors(data)]
     except ImportError:
         return ["jsonschema dependency is unavailable"]
+    except (jsonschema.SchemaError, TypeError) as exc:
+        return [f"schema unavailable: {exc}"]
     except (OSError, json.JSONDecodeError) as exc:
         return [f"schema unavailable: {exc}"]
 
@@ -214,9 +219,16 @@ def validate(data: dict[str, Any]) -> list[str]:
         add(errors, "entries", "must contain exactly one search entry")
         return errors
     entry = entries[0]
-    validate_package_identity(errors, entry)
-    validate_assets(errors, entry)
-    validate_assets_content(errors, entry)
+    phases: list[tuple[str, Callable[[], None]]] = [
+        ("registry", lambda: validate_package_identity(errors, entry)),
+        ("assets", lambda: validate_assets(errors, entry)),
+        ("assets_content", lambda: validate_assets_content(errors, entry)),
+    ]
+    for phase, check in phases:
+        try:
+            check()
+        except (AttributeError, TypeError, KeyError, IndexError) as exc:
+            add(errors, phase, f"malformed JSON shape: {type(exc).__name__}: {exc}")
     return errors
 
 
@@ -246,18 +258,32 @@ def self_test(data: dict[str, Any]) -> list[str]:
                 failures.append("self-test did not reject duplicate local registry entry")
     except (OSError, json.JSONDecodeError) as exc:
         failures.append(f"self-test registry fixture unavailable: {exc}")
-    for malformed_manifest in ([], None):
-        original_load_json = load_json
+    original_load_json = load_json
+    manifest = original_load_json(PACKAGE_ROOT / "manifest.json")
+    if isinstance(manifest, dict):
+        malformed_manifest = copy.deepcopy(manifest)
+        malformed_manifest["capability"] = None
 
-        def load_malformed_manifest(path: Path, value: Any = malformed_manifest) -> Any:
+        def load_malformed_manifest(path: Path) -> Any:
             if path == PACKAGE_ROOT / "manifest.json":
-                return value
+                return malformed_manifest
             return original_load_json(path)
 
         with patch(__name__ + ".load_json", side_effect=load_malformed_manifest):
             malformed_errors = validate(data)
         if not malformed_errors:
-            failures.append(f"self-test did not reject manifest={malformed_manifest!r}")
+            failures.append("self-test did not reject manifest.capability=null")
+    for malformed_schema in ([], None):
+
+        def load_malformed_schema(path: Path, value: Any = malformed_schema) -> Any:
+            if path == SCHEMA_PATH:
+                return value
+            return original_load_json(path)
+
+        with patch(__name__ + ".load_json", side_effect=load_malformed_schema):
+            malformed_schema_errors = schema_errors(data)
+        if not malformed_schema_errors:
+            failures.append(f"self-test did not reject schema root {malformed_schema!r}")
     return failures
 
 
