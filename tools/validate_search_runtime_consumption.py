@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any, Callable
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 TRUTH_PATH = ROOT / "registry/search-runtime-consumption.json"
@@ -197,7 +198,8 @@ def validate_assets_content(errors: list[str], entry: dict[str, Any]) -> None:
         add(errors, "entries[0].required_ref_kinds", "does not match existing allowlist evidence requirements")
     for asset_path in EXPECTED_ASSET_PATHS:
         assets = entry.get("assets", {})
-        path = assets.get(asset_path, [None])[0] if isinstance(assets, dict) else None
+        value = assets.get(asset_path) if isinstance(assets, dict) else None
+        path = value[0] if isinstance(value, list) and value else None
         if isinstance(path, str) and path.endswith(".json"):
             try:
                 errors.extend(forbidden_keys(load_json(ROOT / path), path))
@@ -225,6 +227,7 @@ def self_test(data: dict[str, Any]) -> list[str]:
         ("lock_drift", lambda candidate: candidate["entries"][0].__setitem__("lock_ref", "lode://lock/drift")),
         ("extra_fixture_pin", lambda candidate: candidate["entries"][0]["assets"].__setitem__("fixture", ["sites/xiaohongshu/search-notes/fixtures/search-notes.fixture.json", "0" * 64])),
         ("malformed_assets", lambda candidate: candidate["entries"][0].__setitem__("assets", [])),
+        ("malformed_asset_tuple", lambda candidate: candidate["entries"][0]["assets"].__setitem__("manifest", None)),
     ]
     failures: list[str] = []
     for name, mutate in mutations:
@@ -243,6 +246,18 @@ def self_test(data: dict[str, Any]) -> list[str]:
                 failures.append("self-test did not reject duplicate local registry entry")
     except (OSError, json.JSONDecodeError) as exc:
         failures.append(f"self-test registry fixture unavailable: {exc}")
+    for malformed_manifest in ([], None):
+        original_load_json = load_json
+
+        def load_malformed_manifest(path: Path, value: Any = malformed_manifest) -> Any:
+            if path == PACKAGE_ROOT / "manifest.json":
+                return value
+            return original_load_json(path)
+
+        with patch(__name__ + ".load_json", side_effect=load_malformed_manifest):
+            malformed_errors = validate(data)
+        if not malformed_errors:
+            failures.append(f"self-test did not reject manifest={malformed_manifest!r}")
     return failures
 
 
