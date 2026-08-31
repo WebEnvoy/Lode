@@ -393,6 +393,13 @@ def composition_catalog_self_test() -> list[str]:
         "wrong_top_level_kind": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video").__setitem__("top_level_kind", "image_text"), False),
         "wrong_composition_observed": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "image_text_generate")["composition_initialization"].__setitem__("status", "observed"), False),
         "fake_media_control": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video")["media_actions"]["controls"].append({"id": "fake_media", "status": "unobserved", "value": "unknown"}), False),
+        "required_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["requirement"].__setitem__("required", True), False),
+        "optional_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["conditional"].__setitem__("optional", True), False),
+        "availability_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["limits"].__setitem__("availability", "available"), False),
+        "available_extra_key": (lambda catalog, _asset: catalog["paths"][0]["save_draft"].__setitem__("available", True), False),
+        "claimed_extra_key": (lambda catalog, _asset: catalog["paths"][0]["validation"].__setitem__("claimed", True), False),
+        "controls_extra_key": (lambda catalog, _asset: catalog["paths"][0]["media_actions"].__setitem__("controls_extra", []), False),
+        "observed_at_extra_key": (lambda catalog, _asset: catalog["evidence_binding"].__setitem__("observed_at", "2026-08-31T11:33:07.716Z"), False),
         "account_state": (lambda catalog, _asset: catalog.__setitem__("account_state", "unknown"), False),
         "selector": (lambda catalog, _asset: catalog.__setitem__("selector", "fake"), False),
     }

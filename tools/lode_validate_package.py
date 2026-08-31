@@ -874,7 +874,9 @@ def validate_composition_catalog(
             add_error(report, "invalid_contract", path, f"Composition catalog `{key}` does not match manifest.", "Bind composition catalog facts to the package capability.")
 
     evidence = catalog.get("evidence_binding") if isinstance(catalog.get("evidence_binding"), dict) else {}
-    require_keys(report, evidence, ["source", "comment_url", "observed_on", "web_envoy_main", "lode_contract_pin", "capture_mode", "non_read_requests", "external_effects"], f"{path}#evidence_binding")
+    evidence_keys = {"source", "comment_url", "observed_on", "web_envoy_main", "lode_contract_pin", "capture_mode", "non_read_requests", "external_effects"}
+    reject_extra_keys(report, evidence, evidence_keys, f"{path}#evidence_binding")
+    require_keys(report, evidence, sorted(evidence_keys), f"{path}#evidence_binding")
     expected_evidence = {
         "source": "WebEnvoy/WebEnvoy#404",
         "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5477722179",
@@ -890,6 +892,7 @@ def validate_composition_catalog(
             add_error(report, "invalid_contract", f"{path}#evidence_binding.{key}", "Composition catalog evidence binding does not match the #404 read-only evidence.", "Bind only the fixed #404 evidence comment and observed timestamp.")
 
     vocabulary = catalog.get("status_vocabulary") if isinstance(catalog.get("status_vocabulary"), dict) else {}
+    reject_extra_keys(report, vocabulary, {"allowed", "definitions"}, f"{path}#status_vocabulary")
     require_keys(report, vocabulary, ["allowed", "definitions"], f"{path}#status_vocabulary")
     allowed_statuses = vocabulary.get("allowed")
     if not isinstance(allowed_statuses, list) or len(allowed_statuses) != len(COMPOSITION_CATALOG_STATUSES) or set(allowed_statuses) != COMPOSITION_CATALOG_STATUSES:
@@ -900,6 +903,7 @@ def validate_composition_catalog(
             add_error(report, "invalid_contract", f"{path}#status_vocabulary.definitions", f"Missing definition for `{status}`.", "Define every composition catalog status.")
 
     unknown_policy = catalog.get("unknown_policy") if isinstance(catalog.get("unknown_policy"), dict) else {}
+    reject_extra_keys(report, unknown_policy, {"status_for_unknown", "value_for_unknown", "not_applicable_requires_direct_evidence", "current_catalog_has_not_applicable", "forbidden_inference"}, f"{path}#unknown_policy")
     require_keys(report, unknown_policy, ["status_for_unknown", "value_for_unknown", "not_applicable_requires_direct_evidence", "current_catalog_has_not_applicable", "forbidden_inference"], f"{path}#unknown_policy")
     if unknown_policy.get("status_for_unknown") != "unobserved" or unknown_policy.get("value_for_unknown") != "unknown":
         add_error(report, "invalid_contract", f"{path}#unknown_policy", "Unknown composition facts must use unobserved/unknown.", "Keep absent evidence explicit instead of inferring a value.")
@@ -934,19 +938,27 @@ def validate_composition_catalog(
             for field in ["entrypoint", "composition_initialization", "validation"]:
                 validate_composition_status(report, item.get(field), f"{item_path}.{field}")
             entrypoint = item.get("entrypoint") if isinstance(item.get("entrypoint"), dict) else {}
+            reject_extra_keys(report, entrypoint, {"status", "observation"}, f"{item_path}.entrypoint")
             if entrypoint.get("status") != "observed":
                 add_error(report, "invalid_contract", f"{item_path}.entrypoint.status", "Every supported composition path entrypoint must be observed.", "Keep only the five #404 observed entrypoints in this catalog.")
             initialization = item.get("composition_initialization") if isinstance(item.get("composition_initialization"), dict) else {}
+            initialization_keys = {"status", "state", "observation"} if initialization.get("status") == "observed" else {"status", "value", "observation"}
+            reject_extra_keys(report, initialization, initialization_keys, f"{item_path}.composition_initialization")
             if path_id == "image_text_upload":
                 if initialization.get("status") != "observed" or initialization.get("state") != "not_initialized":
                     add_error(report, "invalid_contract", f"{item_path}.composition_initialization", "Only image_text_upload may claim observed not_initialized composition state.", "Bind the upload path to the observed default composition state.")
             elif initialization.get("status") != "unobserved" or initialization.get("value") != "unknown":
                 add_error(report, "invalid_contract", f"{item_path}.composition_initialization", "Composition initialization is unobserved/unknown for every path except image_text_upload.", "Do not infer initialization from an entrypoint click or incomplete subpath conversion.")
+            validation = item.get("validation") if isinstance(item.get("validation"), dict) else {}
+            reject_extra_keys(report, validation, {"status", "value"}, f"{item_path}.validation")
             fields = item.get("fields") if isinstance(item.get("fields"), dict) else {}
+            reject_extra_keys(report, fields, {"requirement", "conditional", "limits"}, f"{item_path}.fields")
             require_keys(report, fields, ["requirement", "conditional", "limits"], f"{item_path}.fields")
             for field in ["requirement", "conditional", "limits"]:
                 field_value = fields.get(field)
                 validate_composition_status(report, field_value, f"{item_path}.fields.{field}")
+                if isinstance(field_value, dict):
+                    reject_extra_keys(report, field_value, {"status", "value", "observation"} if "observation" in field_value else {"status", "value"}, f"{item_path}.fields.{field}")
                 if isinstance(field_value, dict) and field_value.get("status") != "unobserved":
                     add_error(report, "invalid_contract", f"{item_path}.fields.{field}.status", "Field requirement/conditional/limits status must remain unobserved for this evidence window.", "Do not claim an unverified field contract.")
                 if isinstance(field_value, dict) and field_value.get("value") != "unknown":
@@ -954,6 +966,12 @@ def validate_composition_catalog(
 
             media = item.get("media_actions") if isinstance(item.get("media_actions"), dict) else {}
             validate_composition_status(report, media, f"{item_path}.media_actions")
+            media_keys = {"status", "controls"}
+            if media.get("status") == "unobserved":
+                media_keys.add("value")
+            elif media.get("status") == "observed":
+                media_keys.add("observation")
+            reject_extra_keys(report, media, media_keys, f"{item_path}.media_actions")
             controls = media.get("controls") if isinstance(media.get("controls"), list) else []
             if not controls:
                 add_error(report, "invalid_contract", f"{item_path}.media_actions.controls", "Composition catalog media_actions must declare controls and their evidence status.", "Declare observed or unobserved media actions without inferring limits.")
@@ -965,6 +983,10 @@ def validate_composition_catalog(
                     continue
                 require_keys(report, control, ["id", "status"], control_path)
                 validate_composition_status(report, control, control_path)
+                control_keys = {"id", "status", "observation"}
+                if control.get("status") == "unobserved":
+                    control_keys.add("value")
+                reject_extra_keys(report, control, control_keys, control_path)
                 if control.get("id") in actual_controls:
                     add_error(report, "invalid_contract", control_path, "Composition catalog media control ids must be unique.", "Declare each media action exactly once per path.")
                 actual_controls[control.get("id")] = control.get("status")
@@ -982,6 +1004,7 @@ def validate_composition_catalog(
                 validate_composition_status(report, action_value, f"{item_path}.{action}")
                 if not isinstance(action_value, dict):
                     continue
+                reject_extra_keys(report, action_value, {"status", "availability"}, f"{item_path}.{action}")
                 if action_value.get("status") == "observed" or action_value.get("availability") == "available":
                     add_error(report, "invalid_contract", f"{item_path}.{action}", "Save-draft and publish availability must not be observed or available.", "Keep write actions unknown until independently authorized and verified.")
                 if action_value.get("status") != "unobserved" or action_value.get("availability") != "unknown":
@@ -989,6 +1012,14 @@ def validate_composition_catalog(
 
     scan_forbidden_keys(report, catalog, path)
     scan_composition_forbidden_keys(report, catalog, path)
+
+
+def reject_extra_keys(report: Report, value: Any, allowed: set[str], path: str) -> None:
+    if not isinstance(value, dict):
+        return
+    extra = set(value) - allowed
+    if extra:
+        add_error(report, "invalid_contract", path, f"Composition catalog object contains unexpected keys: {sorted(extra)}.", "Keep only the keys allowed for this composition catalog node.")
 
 
 def validate_composition_status(report: Report, value: Any, path: str) -> None:
