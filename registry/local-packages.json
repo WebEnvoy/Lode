@@ -1574,7 +1574,6 @@
         "post_check",
         "failure_mapping",
         "catalog_metadata",
-        "composition_catalog",
         "repair_draft",
         "overlay_fork_metadata",
         "package_lock"
@@ -1606,6 +1605,13 @@
         "submitted": false,
         "true_write_execution": "blocked",
         "runtime_consumption": "out_of_scope",
+        "canonical_fact_source": {
+          "source_path": "sites/xiaohongshu/publish-note-precheck/composition-catalog.json",
+          "catalog_version": "0.1.1",
+          "owner_package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+          "reference_mode": "reference_only",
+          "path_state_copy": false
+        },
         "manifest_path": "sites/xiaohongshu/publish-note-path-prepare/manifest.json",
         "input_schema_path": "sites/xiaohongshu/publish-note-path-prepare/schemas/input.schema.json",
         "output_schema_path": "sites/xiaohongshu/publish-note-path-prepare/schemas/output.schema.json",
@@ -1625,7 +1631,6 @@
           "bypass"
         ]
       },
-      "composition_catalog_path": "sites/xiaohongshu/publish-note-path-prepare/composition-catalog.json",
       "runtime_execution": "out_of_scope",
       "task_kind": "real_site_path_prepare",
       "core_admission_fields": {
@@ -1662,7 +1667,6 @@
         "session_kind": "user_authorized_managed_browser",
         "site_display": "Xiaohongshu",
         "site_origins": [
-          "https://www.xiaohongshu.com",
           "https://creator.xiaohongshu.com"
         ],
         "required_fact_keys": [

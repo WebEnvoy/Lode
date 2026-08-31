@@ -104,7 +104,6 @@
       "input_binding": {
         "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/input@0.1.0",
         "allowed_origins": [
-          "https://www.xiaohongshu.com",
           "https://creator.xiaohongshu.com"
         ],
         "required_input_fields": [

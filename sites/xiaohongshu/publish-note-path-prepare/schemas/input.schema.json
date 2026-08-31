@@ -15,7 +15,7 @@
     "url": {
       "type": "string",
       "format": "uri",
-      "pattern": "^https://(www\\.)?xiaohongshu\\.com(?:/.*)?$|^https://creator\\.xiaohongshu\\.com(?:/.*)?$",
+      "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$",
       "description": "受管小红书创作页目标 URL；不携带凭据或生产 payload。",
       "examples": [
         "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image"

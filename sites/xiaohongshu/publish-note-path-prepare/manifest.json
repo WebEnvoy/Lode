@@ -78,7 +78,14 @@
       "retry",
       "bypass"
     ],
-    "unknown_policy": "path_or_entry_visibility_never_proves_composition_initialized"
+    "unknown_policy": "path_or_entry_visibility_never_proves_composition_initialized",
+    "canonical_fact_source": {
+      "source_path": "sites/xiaohongshu/publish-note-precheck/composition-catalog.json",
+      "catalog_version": "0.1.1",
+      "owner_package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+      "reference_mode": "reference_only",
+      "path_state_copy": false
+    }
   },
   "entrypoint": {
     "kind": "declarative-normalizer",
@@ -168,15 +175,6 @@
       "catalog_metadata_version": "0.1.0",
       "consumer": "WebEnvoy App Library",
       "work_item": "LODE-302"
-    },
-    {
-      "role": "composition_catalog",
-      "path": "composition-catalog.json",
-      "status": "present",
-      "composition_catalog_id": "xiaohongshu.publish-note-path-prepare.composition-catalog",
-      "composition_catalog_version": "0.1.1",
-      "consumer": "WebEnvoy Core/App composition facts for path preparation",
-      "work_item": "LODE-294"
     },
     {
       "role": "repair_draft",

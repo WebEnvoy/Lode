@@ -179,8 +179,6 @@
       "post_check_version",
       "failure_mapping_id",
       "failure_mapping_version",
-      "composition_catalog_id",
-      "composition_catalog_version",
       "package_lock_ref",
       "package_lock_version"
     ],
@@ -224,11 +222,6 @@
         "role": "failure_mapping",
         "ref": "xiaohongshu.publish-note-path-prepare.failure-mapping",
         "version": "0.1.0"
-      },
-      {
-        "role": "composition_catalog",
-        "ref": "xiaohongshu.publish-note-path-prepare.composition-catalog",
-        "version": "0.1.1"
       },
       {
         "role": "package_lock",

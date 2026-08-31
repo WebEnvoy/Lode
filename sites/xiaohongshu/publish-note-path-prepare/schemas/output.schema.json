@@ -181,7 +181,7 @@
         "canonical_url": {
           "type": "string",
           "format": "uri",
-          "pattern": "^https://(www\\.)?xiaohongshu\\.com(?:/.*)?$|^https://creator\\.xiaohongshu\\.com(?:/.*)?$"
+          "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$"
         },
         "target_ref": {
           "type": "string",
