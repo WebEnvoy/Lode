@@ -22,7 +22,7 @@
   "entries": [
     {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
       "version": "0.1.0",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-precheck",
@@ -153,18 +153,19 @@
           "schedule"
         ]
       },
-      "lock_version": "0.1.1",
+      "lock_version": "0.1.2",
       "locked_asset_sha256": {
         "input_schema": "0bc840bb909128fa8243ddf4d56aa087a043b46fdfc780436b2c15a86a4d4e46",
         "normalized_output_schema": "335f2723efcedd83f22469bfd107d57e79ed9aebb6421e7438698cfbac405fff",
-        "resource_requirements": "5e58e8acc3666e3c7924889543bb5212bd98243340e0e4ee3ab25c34314e7caf",
-        "version_lifecycle_metadata": "cdf082890a76a7d5ed56c50511ef52713cd00951816add2c7e2d780f1a0fe53c",
+        "resource_requirements": "cbfe930c1a271221a1a9a51da80912a4f5c8fca19b7b0efa1d03ffee624db365",
+        "version_lifecycle_metadata": "84c234770e15cffb5ceed0fb8a08c764307c5d294a012482e3d1200268ba0365",
         "write_deferred_guardrail": "dc1d901d9763557adcfca8d1fbd03b2a1a86bd151fe979e2f68e8dc7a1d17f77",
         "fixture": "1adfb60f27f974010d1f994db0e7f23d0c6daa940b3ecfb15c27cf81b6a56432",
-        "core_consumption_fixture": "f33183ae30da0d784a6a4baff5951b09db79d4c8e20506c7fcdeaf6f4beff8f3",
+        "core_consumption_fixture": "26af6d1fcd60fbc07c6ee619937a48f04737e402038a134c04a473dddfd49870",
         "post_check": "57aa3d23a6b76a4ae0c212977536666cdafbbf1331afca3f9fda7db60dbac183",
         "failure_mapping": "b423fb9195c70021d374f37e794352c0b4f7c872008e346bcb5505415d9333c4",
-        "catalog_metadata": "02d35e7bc6594a23c58540c2c02f4da15a30922e56a7343299eca1caf3d0bce6",
+        "catalog_metadata": "94dc35bacdf839af130ee124131f9507bce01646e95a1b7559a12db9caa2c720",
+        "composition_catalog": "b5a9d67b48efe63e6a09216a232ce697346c14a275a56f4f43d9df1fdda13b22",
         "repair_draft": "fb0423334add3e1556f844b2d56c171a3992cb1aa97a956a925b3ccfa2a2ab02",
         "overlay_fork_metadata": "660214d6f2d1359fc7acad75f65c68ccd4b3e8fa922b32309712ac36c44639bc"
       }

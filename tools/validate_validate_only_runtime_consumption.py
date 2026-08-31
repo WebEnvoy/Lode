@@ -49,11 +49,19 @@ REQUIRED_FRESH_REFS = [
     "result_ref", "resource_refs", "field_source_refs", "evidence_refs",
     "post_check_ref", "submitted_result_ref",
 ]
-EXPECTED_LOCK_ROLES = {
+COMMON_EXPECTED_LOCK_ROLES = {
     "input_schema", "normalized_output_schema", "resource_requirements",
     "version_lifecycle_metadata", "write_deferred_guardrail", "fixture",
     "core_consumption_fixture", "post_check", "failure_mapping",
     "catalog_metadata", "repair_draft", "overlay_fork_metadata",
+}
+EXPECTED_LOCK_ROLES = {
+    "xhs_publish_note_precheck": COMMON_EXPECTED_LOCK_ROLES | {"composition_catalog"},
+    "boss_greet_precheck": COMMON_EXPECTED_LOCK_ROLES,
+}
+EXPECTED_LOCK_VERSIONS = {
+    "xhs_publish_note_precheck": "0.1.2",
+    "boss_greet_precheck": "0.1.1",
 }
 EXPECTED_ENTRY_KEYS = {
     "package_ref", "lock_ref", "lock_version", "version", "site_slug",
@@ -190,7 +198,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     for key, value in expected.items():
         if entry.get(key) != value or lock_values.get(key) != value:
             error(errors, f"{path}.{key}", "does not match pinned manifest and lock")
-    if entry.get("lock_version") != lock.get("lock_version") or lock.get("lock_version") != "0.1.1":
+    if entry.get("lock_version") != lock.get("lock_version") or lock.get("lock_version") != EXPECTED_LOCK_VERSIONS[operation_id]:
         error(errors, f"{path}.lock_version", "must bind the current relock version")
     manifest_lock = asset_ref(manifest, "package_lock") or {}
     if manifest_lock.get("lock_ref") != lock.get("lock_ref") or manifest_lock.get("lock_version") != lock.get("lock_version"):
@@ -200,7 +208,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     validate_nested_lock_refs(errors, registry_entry, lock_prefix, expected_lock_ref, f"{path}.registry")
     validate_nested_lock_refs(errors, manifest, lock_prefix, expected_lock_ref, f"{path}.manifest")
     locked_assets = lock.get("locked_assets")
-    if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES:
+    if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES[operation_id]:
         error(errors, f"{path}.locked_asset_sha256", "package lock must contain the exact critical asset roles")
     else:
         lock_hashes = {}

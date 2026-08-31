@@ -154,6 +154,7 @@
         "post_check": {"$ref": "#/$defs/sha256"},
         "failure_mapping": {"$ref": "#/$defs/sha256"},
         "catalog_metadata": {"$ref": "#/$defs/sha256"},
+        "composition_catalog": {"$ref": "#/$defs/sha256"},
         "repair_draft": {"$ref": "#/$defs/sha256"},
         "overlay_fork_metadata": {"$ref": "#/$defs/sha256"}
       }
@@ -175,7 +176,7 @@
       "properties": {
       "package_ref": {"type": "string", "pattern": "^lode://site-capability/"},
       "lock_ref": {"type": "string", "pattern": "^lode://lock/site-capability/"},
-      "lock_version": {"const": "0.1.1"},
+      "lock_version": {"enum": ["0.1.1", "0.1.2"]},
       "version": {"const": "0.1.0"},
       "site_slug": {"enum": ["xiaohongshu", "boss"]},
       "capability_id": {"enum": ["publish-note-precheck", "greet-precheck"]},
@@ -201,7 +202,9 @@
         "capability_id": {"const": "publish-note-precheck"},
         "operation_id": {"const": "xhs_publish_note_precheck"},
         "package_ref": {"const": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0"},
-        "lock_ref": {"const": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1"},
+        "lock_ref": {"const": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2"},
+        "lock_version": {"const": "0.1.2"},
+        "locked_asset_sha256": {"required": ["composition_catalog"]},
         "runtime_admission": {"const": {"enabled": true, "status": "current", "recheck_condition": "not_applicable"}},
         "allowed_origins": {"const": ["https://www.xiaohongshu.com", "https://creator.xiaohongshu.com"]},
         "page_requirement": {"allOf": [{"$ref": "#/$defs/page_requirement"}, {"properties": {"target_kind": {"const": "creator_publish_entrypoint"}, "required_page_fact": {"const": "snapshot.creator_publish_entrypoint.available"}, "required_visible_fields": {"const": ["upload_image_entry", "text_image_entry"]}}}]},
@@ -216,6 +219,7 @@
         "operation_id": {"const": "boss_greet_precheck"},
         "package_ref": {"const": "lode://site-capability/boss/greet-precheck@0.1.0"},
         "lock_ref": {"const": "lode://lock/site-capability/boss/greet-precheck@0.1.1"},
+        "lock_version": {"const": "0.1.1"},
         "runtime_admission": {"const": {"enabled": false, "status": "deferred_experimental", "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"}},
         "allowed_origins": {"const": ["https://www.zhipin.com"]},
         "page_requirement": {"allOf": [{"$ref": "#/$defs/page_requirement"}, {"properties": {"target_kind": {"const": "job_or_recruiter_communication_target"}, "required_page_fact": {"const": "snapshot.job_or_recruiter_target.available"}, "required_visible_fields": {"const": ["job_target", "recruiter_target", "greet_editor", "send_control"]}}}]},

@@ -143,6 +143,15 @@
       "work_item": "LODE-236"
     },
     {
+      "role": "composition_catalog",
+      "path": "composition-catalog.json",
+      "status": "present",
+      "composition_catalog_id": "xiaohongshu.publish-note-precheck.composition-catalog",
+      "composition_catalog_version": "0.1.0",
+      "consumer": "WebEnvoy Core/App read-only composition discovery",
+      "work_item": "LODE-294"
+    },
+    {
       "role": "repair_draft",
       "path": "repair/repair-draft.fixture.json",
       "status": "present",
@@ -165,9 +174,9 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "xiaohongshu.publish-note-precheck.lock",
-      "lock_version": "0.1.1",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
-      "work_item": "LODE-266"
+      "lock_version": "0.1.2",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
+      "work_item": "LODE-294"
     }
   ],
   "lifecycle_metadata": {
@@ -185,7 +194,7 @@
     ],
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-    "rollback_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+    "rollback_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
     "deprecation_status": "not_deprecated",
     "invalidation_status": "not_invalidated",
     "lock_input_ref": "lode://site-capability/xiaohongshu/publish-note-precheck/lifecycle@0.1.0#lock-input"
@@ -261,13 +270,13 @@
     ],
     "not_yet_claimed": [
       "runtime execution",
-      "live site validation",
+      "full live composition and form validation",
       "true write execution"
     ]
   },
   "known_limitations": [
     "Package lifecycle remains proposed until parent FR closeout consumes all Work Items.",
-    "Live site validation requires a human-owned logged-in browser session and is not claimed by this asset.",
+    "#404 provides only entrypoint-level read-only evidence; composition fields, media follow-up, save-draft, and publish remain unobserved.",
     "The package declares write-precheck preview semantics only; it does not save, publish, apply, greet, or send."
   ],
   "forbidden_contents": [

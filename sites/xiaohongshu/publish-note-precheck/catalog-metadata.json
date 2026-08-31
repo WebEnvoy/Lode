@@ -3,7 +3,7 @@
   "catalog_metadata_id": "xiaohongshu.publish-note-precheck.catalog-metadata",
   "catalog_metadata_version": "0.1.0",
   "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
   "capability_id": "publish-note-precheck",
   "operation_id": "xhs_publish_note_precheck",
   "operation_mode": "validate_only",
@@ -15,7 +15,7 @@
   },
   "display": {
     "name": "小红书发布草稿写前验证",
-    "summary": "只读确认小红书创作入口；内容编辑面未初始化，所有字段保持未观察且不提交。",
+    "summary": "只读确认小红书四种顶层创作形态及图文两子路径入口；仅播客媒体入口被观察，内部字段与写动作保持未观察且不提交。",
     "site_name": "小红书",
     "category": "write-precheck"
   },
@@ -34,12 +34,12 @@
     "compatibility_range": ">=0.1.0 <0.2.0",
     "previous_known_good": {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1"
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2"
     },
     "rollback_candidates": [
       {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
         "status": "self_for_initial_version"
       }
     ]
@@ -47,8 +47,8 @@
   "status": {
     "catalog_state": "available",
     "installability": "intent_only",
-    "source_health": "real_site_contract_ready_live_validation_not_attempted",
-    "updated_at": "2026-07-06T16:20:00Z"
+    "source_health": "entrypoint_read_only_evidence_only",
+    "updated_at": "2026-08-31T11:33:07.716Z"
   },
   "risk": {
     "level": "medium",
@@ -65,7 +65,7 @@
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present",
     "post_check_fixture_status": "passed",
-    "runtime_execution": "not_attempted_real_account_access_forbidden"
+    "runtime_execution": "entrypoint_read_only_evidence_only"
   },
   "repair_summary": {
     "status": "repair_draft_fixture_present",
@@ -95,7 +95,7 @@
   "core_admission_fields": {
     "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
     "version": "0.1.0",
-    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
     "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
     "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
     "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
