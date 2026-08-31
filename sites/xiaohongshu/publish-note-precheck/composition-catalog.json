@@ -9,7 +9,7 @@
   "evidence_binding": {
     "source": "WebEnvoy/WebEnvoy#404",
     "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5477722179",
-    "observed_at": "2026-08-31T11:33:07.716Z",
+    "observed_on": "2026-08-31",
     "web_envoy_main": "89d3dd2e78ea1a7503e553007ae4c07bb5aef49b",
     "lode_contract_pin": "6bff1afd059a30571f8ed219d1dcd25e6fb20c6b",
     "capture_mode": "read_only",
@@ -88,9 +88,9 @@
         "observation": "文字配图入口存在；本轮未完成子路径转换。"
       },
       "composition_initialization": {
-        "status": "observed",
-        "state": "not_initialized",
-        "observation": "受只读网络守卫约束，文字配图 composition 未完成初始化。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮受守卫约束未完成文字配图子路径转换，composition 初始化未核验。"
       },
       "fields": {
         "requirement": {
@@ -261,6 +261,7 @@
       },
       "media_actions": {
         "status": "observed",
+        "observation": "上传音频与添加 RSS 订阅控件可见；后续状态未核验。",
         "controls": [
           {
             "id": "upload_audio",

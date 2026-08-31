@@ -12,6 +12,11 @@ from typing import Any, Callable
 from urllib.parse import urlparse
 
 try:
+    from tools.lode_validate_package import Report, asset_index, validate_asset_ref, validate_composition_catalog
+except ModuleNotFoundError:
+    from lode_validate_package import Report, asset_index, validate_asset_ref, validate_composition_catalog
+
+try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import SchemaError
 except ImportError:  # Reported as a validation failure below.
@@ -24,6 +29,7 @@ TRUTH_PATH = ROOT / "registry/validate-only-runtime-consumption.json"
 SCHEMA_PATH = ROOT / "registry/validate-only-runtime-consumption.schema.json"
 FIXTURE_PATH = ROOT / "registry/validate-only-runtime-consumption.fixture.json"
 REGISTRY_PATH = ROOT / "registry/local-packages.json"
+COMPOSITION_PACKAGE_ROOT = ROOT / "sites/xiaohongshu/publish-note-precheck"
 EXPECTED_OPERATIONS = {"xhs_publish_note_precheck", "boss_greet_precheck"}
 EXPECTED_ADMISSION = {
     "xhs_publish_note_precheck": {"enabled": True, "status": "current", "recheck_condition": "not_applicable"},
@@ -358,6 +364,42 @@ def self_test(data: dict[str, Any], declared_cases: list[str]) -> list[str]:
             failures.append(f"published schema did not reject {name}")
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
+    failures.extend(composition_catalog_self_test())
+    return failures
+
+
+def composition_catalog_self_test() -> list[str]:
+    manifest = load_json(COMPOSITION_PACKAGE_ROOT / "manifest.json")
+    catalog = load_json(COMPOSITION_PACKAGE_ROOT / "composition-catalog.json")
+    bootstrap_report = Report(COMPOSITION_PACKAGE_ROOT)
+    refs = asset_index(bootstrap_report, manifest)
+    asset = refs.get("composition_catalog")
+    if not isinstance(manifest, dict) or not isinstance(catalog, dict) or not isinstance(asset, dict):
+        return ["composition catalog self-test could not load the package contract"]
+
+    def run(mutate: Callable[[dict[str, Any], dict[str, Any]], None], planned: bool = False) -> list[dict[str, Any]]:
+        candidate = copy.deepcopy(catalog)
+        candidate_asset = copy.deepcopy(asset)
+        mutate(candidate, candidate_asset)
+        report = Report(COMPOSITION_PACKAGE_ROOT)
+        if planned:
+            validate_asset_ref(report, COMPOSITION_PACKAGE_ROOT, "composition_catalog", candidate_asset, manifest.get("capability", {}).get("lifecycle"))
+        else:
+            validate_composition_catalog(report, candidate, candidate_asset, manifest)
+        return report.errors
+
+    mutations: dict[str, tuple[Callable[[dict[str, Any], dict[str, Any]], None], bool]] = {
+        "planned_catalog": (lambda _catalog, asset: asset.__setitem__("status", "planned"), True),
+        "wrong_top_level_kind": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video").__setitem__("top_level_kind", "image_text"), False),
+        "wrong_composition_observed": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "image_text_generate")["composition_initialization"].__setitem__("status", "observed"), False),
+        "fake_media_control": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video")["media_actions"]["controls"].append({"id": "fake_media", "status": "unobserved", "value": "unknown"}), False),
+        "account_state": (lambda catalog, _asset: catalog.__setitem__("account_state", "unknown"), False),
+        "selector": (lambda catalog, _asset: catalog.__setitem__("selector", "fake"), False),
+    }
+    failures: list[str] = []
+    for name, (mutate, planned) in mutations.items():
+        if not run(mutate, planned):
+            failures.append(f"composition catalog self-test did not reject {name}")
     return failures
 
 

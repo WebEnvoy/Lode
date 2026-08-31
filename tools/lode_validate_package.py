@@ -42,7 +42,25 @@ REPAIR_DRAFT_STATES = {"candidate", "validated", "promoted", "rejected"}
 OVERLAY_ASSET_KINDS = {"user_overlay", "fork", "repair_draft"}
 COMPOSITION_CATALOG_STATUSES = {"observed", "unobserved", "not_applicable"}
 COMPOSITION_CATALOG_PATHS = {"image_text_upload", "image_text_generate", "video", "long_article", "podcast"}
-COMPOSITION_CATALOG_PODCAST_MEDIA_CONTROLS = {"upload_audio", "add_rss_subscription"}
+COMPOSITION_CATALOG_TOP_LEVEL_KINDS = {
+    "image_text_upload": "image_text",
+    "image_text_generate": "image_text",
+    "video": "video",
+    "long_article": "long_article",
+    "podcast": "podcast",
+}
+COMPOSITION_CATALOG_MEDIA_CONTROLS = {
+    "image_text_upload": {"upload_image": "unobserved"},
+    "image_text_generate": {"generate_image": "unobserved"},
+    "video": {"upload_video": "unobserved"},
+    "long_article": {"add_media": "unobserved"},
+    "podcast": {
+        "upload_audio": "observed",
+        "add_rss_subscription": "observed",
+        "audio_upload_follow_up": "unobserved",
+        "rss_subscription_follow_up": "unobserved",
+    },
+}
 FORBIDDEN_KEYS = {
     "cookie",
     "cookies",
@@ -273,7 +291,7 @@ def validate_asset_ref(report: Report, root: Path, role: str, asset: dict[str, A
     elif status == "planned":
         if role == "post_check":
             return
-        severity = "error" if lifecycle == "stable" else "warning"
+        severity = "error" if lifecycle == "stable" or role == "composition_catalog" else "warning"
         report.issue(severity, "asset_missing", path or f"manifest.json#asset_refs.{role}", f"Asset ref `{role}` is planned, not present.", "Present this asset before stable admission.")
     else:
         add_error(report, "invalid_contract", f"manifest.json#asset_refs.{role}", "Asset ref must declare status `present` or `planned`.", "Declare a valid asset status.")
@@ -810,6 +828,22 @@ def validate_composition_catalog(
     manifest: dict[str, Any],
 ) -> None:
     path = str(asset.get("path"))
+    if set(catalog) != {
+        "schema_version",
+        "composition_catalog_id",
+        "composition_catalog_version",
+        "package_ref",
+        "capability_id",
+        "operation_id",
+        "operation_mode",
+        "evidence_binding",
+        "status_vocabulary",
+        "paths",
+        "consumer_boundary",
+        "unknown_policy",
+        "forbidden_contents",
+    }:
+        add_error(report, "invalid_contract", path, "Composition catalog top-level keys must be exact.", "Keep only the versioned evidence, path matrix, boundary, and unknown policy keys.")
     require_keys(
         report,
         catalog,
@@ -840,11 +874,11 @@ def validate_composition_catalog(
             add_error(report, "invalid_contract", path, f"Composition catalog `{key}` does not match manifest.", "Bind composition catalog facts to the package capability.")
 
     evidence = catalog.get("evidence_binding") if isinstance(catalog.get("evidence_binding"), dict) else {}
-    require_keys(report, evidence, ["source", "comment_url", "observed_at", "web_envoy_main", "lode_contract_pin", "capture_mode", "non_read_requests", "external_effects"], f"{path}#evidence_binding")
+    require_keys(report, evidence, ["source", "comment_url", "observed_on", "web_envoy_main", "lode_contract_pin", "capture_mode", "non_read_requests", "external_effects"], f"{path}#evidence_binding")
     expected_evidence = {
         "source": "WebEnvoy/WebEnvoy#404",
         "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5477722179",
-        "observed_at": "2026-08-31T11:33:07.716Z",
+        "observed_on": "2026-08-31",
         "web_envoy_main": "89d3dd2e78ea1a7503e553007ae4c07bb5aef49b",
         "lode_contract_pin": "6bff1afd059a30571f8ed219d1dcd25e6fb20c6b",
         "capture_mode": "read_only",
@@ -882,9 +916,32 @@ def validate_composition_catalog(
                 add_error(report, "invalid_contract", item_path, "Composition catalog path must be an object.", "Use one structured object per supported path.")
                 continue
             path_id = item.get("path_id")
+            if set(item) != {
+                "path_id",
+                "top_level_kind",
+                "entrypoint",
+                "composition_initialization",
+                "fields",
+                "media_actions",
+                "validation",
+                "save_draft",
+                "publish",
+            }:
+                add_error(report, "invalid_contract", item_path, "Composition catalog path object keys must be exact.", "Keep only the path matrix fields declared by the catalog contract.")
             require_keys(report, item, ["path_id", "top_level_kind", "entrypoint", "composition_initialization", "fields", "media_actions", "validation", "save_draft", "publish"], item_path)
+            if item.get("top_level_kind") != COMPOSITION_CATALOG_TOP_LEVEL_KINDS.get(path_id):
+                add_error(report, "invalid_contract", f"{item_path}.top_level_kind", "Composition catalog path top_level_kind does not match the fixed path fact table.", "Keep image_text for both image paths and exact kinds for video, long_article, and podcast.")
             for field in ["entrypoint", "composition_initialization", "validation"]:
                 validate_composition_status(report, item.get(field), f"{item_path}.{field}")
+            entrypoint = item.get("entrypoint") if isinstance(item.get("entrypoint"), dict) else {}
+            if entrypoint.get("status") != "observed":
+                add_error(report, "invalid_contract", f"{item_path}.entrypoint.status", "Every supported composition path entrypoint must be observed.", "Keep only the five #404 observed entrypoints in this catalog.")
+            initialization = item.get("composition_initialization") if isinstance(item.get("composition_initialization"), dict) else {}
+            if path_id == "image_text_upload":
+                if initialization.get("status") != "observed" or initialization.get("state") != "not_initialized":
+                    add_error(report, "invalid_contract", f"{item_path}.composition_initialization", "Only image_text_upload may claim observed not_initialized composition state.", "Bind the upload path to the observed default composition state.")
+            elif initialization.get("status") != "unobserved" or initialization.get("value") != "unknown":
+                add_error(report, "invalid_contract", f"{item_path}.composition_initialization", "Composition initialization is unobserved/unknown for every path except image_text_upload.", "Do not infer initialization from an entrypoint click or incomplete subpath conversion.")
             fields = item.get("fields") if isinstance(item.get("fields"), dict) else {}
             require_keys(report, fields, ["requirement", "conditional", "limits"], f"{item_path}.fields")
             for field in ["requirement", "conditional", "limits"]:
@@ -900,7 +957,7 @@ def validate_composition_catalog(
             controls = media.get("controls") if isinstance(media.get("controls"), list) else []
             if not controls:
                 add_error(report, "invalid_contract", f"{item_path}.media_actions.controls", "Composition catalog media_actions must declare controls and their evidence status.", "Declare observed or unobserved media actions without inferring limits.")
-            observed_controls: set[str] = set()
+            actual_controls: dict[Any, Any] = {}
             for control_index, control in enumerate(controls):
                 control_path = f"{item_path}.media_actions.controls[{control_index}]"
                 if not isinstance(control, dict):
@@ -908,15 +965,17 @@ def validate_composition_catalog(
                     continue
                 require_keys(report, control, ["id", "status"], control_path)
                 validate_composition_status(report, control, control_path)
-                if control.get("status") == "observed":
-                    observed_controls.add(control.get("id"))
-                elif control.get("value") != "unknown":
+                if control.get("id") in actual_controls:
+                    add_error(report, "invalid_contract", control_path, "Composition catalog media control ids must be unique.", "Declare each media action exactly once per path.")
+                actual_controls[control.get("id")] = control.get("status")
+                if control.get("status") != "observed" and control.get("value") != "unknown":
                     add_error(report, "invalid_contract", f"{control_path}.value", "Unobserved media controls must use value unknown.", "Keep unperformed media actions explicitly unknown.")
-            if path_id == "podcast":
-                if media.get("status") != "observed" or observed_controls != COMPOSITION_CATALOG_PODCAST_MEDIA_CONTROLS:
-                    add_error(report, "invalid_contract", f"{item_path}.media_actions", "Only podcast upload_audio and add_rss_subscription controls are observed.", "Bind the two observed podcast controls and keep follow-up states unobserved.")
-            elif media.get("status") != "unobserved" or observed_controls:
-                add_error(report, "invalid_contract", f"{item_path}.media_actions", "Non-podcast media actions must remain unobserved.", "Do not infer media controls from an entrypoint click.")
+            expected_controls = COMPOSITION_CATALOG_MEDIA_CONTROLS.get(path_id, {})
+            if actual_controls != expected_controls:
+                add_error(report, "invalid_contract", f"{item_path}.media_actions.controls", "Composition catalog media controls do not match the fixed path fact table.", "Keep only the observed podcast controls and the explicitly unobserved controls for each path.")
+            expected_media_status = "observed" if path_id == "podcast" else "unobserved"
+            if media.get("status") != expected_media_status:
+                add_error(report, "invalid_contract", f"{item_path}.media_actions.status", "Composition media action status does not match the fixed path fact table.", "Only podcast media actions have observed controls in #404 evidence.")
 
             for action in ["save_draft", "publish"]:
                 action_value = item.get(action)
@@ -941,6 +1000,8 @@ def validate_composition_status(report: Report, value: Any, path: str) -> None:
         add_error(report, "invalid_contract", f"{path}.status", "Composition catalog status is outside the allowed vocabulary.", "Use observed, unobserved, or not_applicable.")
     elif status == "not_applicable":
         add_error(report, "invalid_contract", f"{path}.status", "Current #404 evidence does not support not_applicable.", "Keep unsupported facts unobserved/unknown.")
+    elif status == "observed" and (not isinstance(value.get("observation"), str) or not value["observation"].strip()):
+        add_error(report, "invalid_contract", f"{path}.observation", "Observed composition facts must include a non-empty observation.", "Record the direct #404 observation supporting each observed node.")
     elif status == "unobserved":
         unknown_value = value.get("value") if "value" in value else value.get("availability")
         if unknown_value != "unknown":
@@ -953,7 +1014,7 @@ def scan_composition_forbidden_keys(report: Report, value: Any, path: str, point
         current, current_pointer = stack.pop()
         if isinstance(current, dict):
             for key, child in current.items():
-                if isinstance(key, str) and key.lower() in {"selector", "selectors"}:
+                if isinstance(key, str) and key.lower() in {"selector", "selectors", "account_state", "identity_state", "login_state", "profile_state", "runtime_session"}:
                     add_error(report, "forbidden_field", path, f"Composition catalog locator key `{key}` appears at `{current_pointer}.{key}`.", "Do not store selectors or guessed locators in the evidence catalog.")
                 stack.append((child, f"{current_pointer}.{key}"))
         elif isinstance(current, list):
@@ -1202,6 +1263,19 @@ def validate_registry_query_lock_refs(report: Report, queries: list[Any], entrie
             entry_admission = entry.get("core_admission_fields")
             if isinstance(admission, dict) and isinstance(entry_admission, dict) and admission.get("lock_ref") != entry_admission.get("lock_ref"):
                 add_error(report, "invalid_contract", f"{result_path}.core_admission_fields.lock_ref", "Registry query admission lock_ref does not match its package entry.", "Regenerate the query admission fields from the current local registry entry.")
+            if isinstance(entry.get("composition_catalog_path"), str):
+                if result.get("composition_catalog_path") != entry.get("composition_catalog_path"):
+                    add_error(report, "invalid_contract", f"{result_path}.composition_catalog_path", "Registry query composition catalog path does not match its package entry.", "Regenerate the query result from the current local registry entry.")
+                expected_runtime = entry.get("runtime_boundary") if isinstance(entry.get("runtime_boundary"), dict) else {}
+                actual_runtime = result.get("runtime_boundary") if isinstance(result.get("runtime_boundary"), dict) else {}
+                if actual_runtime.get("live_validation") != expected_runtime.get("live_validation"):
+                    add_error(report, "invalid_contract", f"{result_path}.runtime_boundary.live_validation", "Registry query runtime live-validation status does not match its package entry.", "Regenerate the query runtime boundary from the current local registry entry.")
+                expected_evidence = entry.get("evidence_requirements") if isinstance(entry.get("evidence_requirements"), dict) else {}
+                actual_evidence = result.get("evidence_requirements") if isinstance(result.get("evidence_requirements"), dict) else {}
+                if actual_evidence.get("live_evidence_status") != expected_evidence.get("live_evidence_status"):
+                    add_error(report, "invalid_contract", f"{result_path}.evidence_requirements.live_evidence_status", "Registry query live-evidence status does not match its package entry.", "Regenerate the query evidence requirements from the current local registry entry.")
+                if "live_validation" in result and result.get("live_validation") != expected_runtime.get("live_validation"):
+                    add_error(report, "invalid_contract", f"{result_path}.live_validation", "Registry query live-validation status does not match its package entry.", "Regenerate the query result from the current local registry entry.")
 
 
 def validate_write_pre_registry_query(report: Report, queries: list[Any], path: str) -> None:

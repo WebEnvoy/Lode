@@ -724,6 +724,7 @@
           "lifecycle": "proposed",
           "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
           "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
+          "composition_catalog_path": "sites/xiaohongshu/publish-note-precheck/composition-catalog.json",
           "no_submit_guard": "active",
           "true_write_execution": "blocked",
           "write_pre_candidate": {
@@ -763,7 +764,7 @@
             "#238",
             "#239"
           ],
-          "live_validation": "not_attempted_real_account_access_forbidden",
+          "live_validation": "entrypoint_read_only_evidence_only",
           "evidence_policy": "refs_only_no_raw_bodies",
           "runtime_execution": "out_of_scope",
           "task_kind": "real_site_write_precheck",
@@ -772,7 +773,7 @@
             "runner_owner": "WebEnvoy Core",
             "browser_session_owner": "Harbor",
             "asset_owner": "Lode",
-            "live_validation": "not_attempted_real_account_access_forbidden",
+            "live_validation": "entrypoint_read_only_evidence_only",
             "must_fail_closed_without": [
               "required_browser_session",
               "identity_profile_requirements",
@@ -829,7 +830,7 @@
               "production payload",
               "user business data"
             ],
-            "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+            "live_evidence_status": "entrypoint_read_only_evidence_only",
             "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
             "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
           },
@@ -1334,6 +1335,7 @@
           "operation_mode": "validate_only",
           "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
           "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
+          "composition_catalog_path": "sites/xiaohongshu/publish-note-precheck/composition-catalog.json",
           "status": "real_site_write_precheck_contract_ready",
           "no_submit_guard": "active",
           "true_write_execution": "blocked",
@@ -1379,7 +1381,7 @@
             "runner_owner": "WebEnvoy Core",
             "browser_session_owner": "Harbor",
             "asset_owner": "Lode",
-            "live_validation": "not_attempted_real_account_access_forbidden",
+            "live_validation": "entrypoint_read_only_evidence_only",
             "must_fail_closed_without": [
               "required_browser_session",
               "identity_profile_requirements",
@@ -1436,7 +1438,7 @@
               "production payload",
               "user business data"
             ],
-            "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+            "live_evidence_status": "entrypoint_read_only_evidence_only",
             "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
             "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
           },
