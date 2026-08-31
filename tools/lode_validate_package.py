@@ -1013,8 +1013,32 @@ def validate_registry_query_fixture(report: Report, repo_root: Path, index: dict
     if not isinstance(queries, list) or not queries:
         add_error(report, "invalid_contract", f"{query_path}#queries", "Registry query fixture must include at least one query.", "Expose one App/Core-readable local query example.")
     else:
+        validate_registry_query_lock_refs(report, queries, index.get("entries"), query_path)
         validate_write_pre_registry_query(report, queries, query_path)
     scan_forbidden_keys(report, fixture, query_path)
+
+
+def validate_registry_query_lock_refs(report: Report, queries: list[Any], entries: Any, path: str) -> None:
+    registry_entries = {
+        entry.get("package_ref"): entry
+        for entry in entries if isinstance(entry, dict) and isinstance(entry.get("package_ref"), str)
+    } if isinstance(entries, list) else {}
+    for query_index, query in enumerate(queries):
+        if not isinstance(query, dict):
+            continue
+        for result_index, result in enumerate(query.get("results", [])):
+            if not isinstance(result, dict):
+                continue
+            entry = registry_entries.get(result.get("package_ref"))
+            if not isinstance(entry, dict):
+                continue
+            result_path = f"{path}#queries[{query_index}].results[{result_index}]"
+            if result.get("lock_ref") != entry.get("lock_ref"):
+                add_error(report, "invalid_contract", f"{result_path}.lock_ref", "Registry query lock_ref does not match its package entry.", "Regenerate the query result from the current local registry entry.")
+            admission = result.get("core_admission_fields")
+            entry_admission = entry.get("core_admission_fields")
+            if isinstance(admission, dict) and isinstance(entry_admission, dict) and admission.get("lock_ref") != entry_admission.get("lock_ref"):
+                add_error(report, "invalid_contract", f"{result_path}.core_admission_fields.lock_ref", "Registry query admission lock_ref does not match its package entry.", "Regenerate the query admission fields from the current local registry entry.")
 
 
 def validate_write_pre_registry_query(report: Report, queries: list[Any], path: str) -> None:
