@@ -1,0 +1,57 @@
+name: Lode CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  lode-ci:
+    name: lode-ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install validator dependency
+        run: python3 -m pip install --requirement requirements-validator.txt
+      - name: Validate package, schema, lock, and hash contracts
+        run: |
+          python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
+          python3 tools/validate_runtime_consumption_allowlist.py --self-test
+          python3 tools/validate_validate_only_runtime_consumption.py --self-test
+          python3 tools/validate_detail_runtime_consumption.py --self-test
+          python3 tools/validate_search_runtime_consumption.py --self-test
+      - name: Validate runtime boundary
+        run: python3 tools/validate_runtime_boundary_contract.py
+      - name: Run unit tests
+        run: python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations
+      - name: Check JSON, YAML, and Markdown files
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import subprocess
+
+          paths = subprocess.check_output(["git", "ls-files", "-z", "--", "*.json"], text=False).split(b"\0")
+          for raw_path in paths:
+              if not raw_path:
+                  continue
+              path = raw_path.decode()
+              with open(path, encoding="utf-8") as handle:
+                  json.load(handle)
+
+          markdown = subprocess.check_output(["git", "ls-files", "-z", "--", "*.md"], text=False).split(b"\0")
+          for raw_path in markdown:
+              if not raw_path:
+                  continue
+              path = raw_path.decode()
+              text = open(path, encoding="utf-8").read()
+              if not text.strip() or not text.endswith("\n"):
+                  raise SystemExit(f"invalid Markdown file: {path}")
+          PY
+          ruby -e 'require "yaml"; ARGV.each { |path| YAML.load_file(path) }' $(git ls-files '*.yml' '*.yaml')
