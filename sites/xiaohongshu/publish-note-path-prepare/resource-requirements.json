@@ -1,0 +1,254 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "xiaohongshu.publish-note-path-prepare.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "operation_ref": "lode://operation/xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "notes": [
+      "Lode declares abstract facts and never selects a profile, provider, or session.",
+      "Core matches the request against current Harbor facts and records the result.",
+      "Harbor owns the managed browser, identity, page, control-owner, and evidence facts."
+    ]
+  },
+  "matching_semantics": {
+    "profile_match_rule": "one_profile_must_match",
+    "profile_order": "not_priority",
+    "matched_meaning": "Current Harbor facts satisfy the bounded path-prepare prerequisites.",
+    "unmatched_meaning": "Facts are insufficient; return unavailable or unknown and do not claim preparation success.",
+    "invalid_contract_meaning": "The declaration uses forbidden material or contradicts the prepare/no-submit boundary.",
+    "offline_validator_scope": "contract_shape_and_forbidden_field_checks_only_no_live_harbor_matching"
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "xhs-creator-publish-page-path-prepare",
+      "description": "在受管小红书创作页选择一个明确图文子路径，并回读路径与 composition 业务状态。",
+      "operation_boundary": "validate_only",
+      "required_harbor_facts": [
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "提供当前受管浏览器运行面引用；Lode 不保存运行现场。"
+        },
+        {
+          "fact_key": "runtime.public_https_navigation.allowed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "确认目标 URL 位于声明的小红书来源。"
+        },
+        {
+          "fact_key": "runtime.site_identity.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "确认页面由受管 identity/control owner 提供；不把 identity 状态写入 Lode。"
+        },
+        {
+          "fact_key": "snapshot.creator_publish_entrypoint.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "确认 creator publish route 可定位。"
+        },
+        {
+          "fact_key": "snapshot.requested_path_control.visible",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "确认请求对应的 exact visible 上传图片或文字配图控件。"
+        },
+        {
+          "fact_key": "control_owner.xiaohongshu.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "确认动作仅作用于受管页面控件，不接受未知控制权。"
+        },
+        {
+          "fact_key": "business_state.path_readback.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "回读 requested_path 与 observed_path；不从 URL 或入口猜测。"
+        },
+        {
+          "fact_key": "business_state.composition_readback.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "仅业务状态回读可证明 initialized；否则保留 not_initialized/unknown。"
+        },
+        {
+          "fact_key": "evidence.snapshot_ref.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "为路径和前后状态绑定脱敏 evidence ref。"
+        },
+        {
+          "fact_key": "safety.challenge.absent",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window",
+          "purpose": "挑战或风控存在时 fail closed，不绕过。"
+        }
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/input@0.1.0",
+        "allowed_origins": [
+          "https://creator.xiaohongshu.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "target_ref",
+          "no_submit_guard",
+          "requested_path"
+        ],
+        "requested_path_enum": [
+          "image_text_upload",
+          "image_text_generate"
+        ]
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+        "required_available_status_refs": [
+          "source_refs",
+          "evidence_refs"
+        ],
+        "required_normalized_fields": [
+          "requested_path",
+          "observed_path",
+          "composition_state",
+          "business_state_before",
+          "business_state_after",
+          "submitted",
+          "no_submit_guard_status"
+        ],
+        "supported_source_kinds": [
+          "creator_publish_page_summary",
+          "dom_snapshot_summary",
+          "business_state_summary"
+        ],
+        "supported_evidence_kinds": [
+          "snapshot_ref",
+          "post_check_ref"
+        ]
+      }
+    }
+  ],
+  "admission_states": {
+    "matched": {
+      "owner": "WebEnvoy Core",
+      "meaning": "The current Harbor facts satisfy the profile; Core may request the bounded selection and readback.",
+      "does_not_prove": [
+        "observed_path",
+        "composition_state",
+        "successful interaction",
+        "any media or field mutation"
+      ]
+    },
+    "unmatched": {
+      "owner": "WebEnvoy Core",
+      "lode_failure_class": "resource_unavailable",
+      "meaning": "Required runtime, page, control-owner, readback, or evidence facts are unavailable."
+    },
+    "invalid_contract": {
+      "owner": "Lode validator or Core admission",
+      "lode_failure_class": "invalid_contract",
+      "meaning": "The resource declaration is malformed, contains forbidden runtime material, or widens the action boundary."
+    }
+  },
+  "failure_class_mapping": {
+    "resource_unavailable": "Required Harbor facts are missing, stale, or unavailable.",
+    "requires_user_action": "Core may ask the user to restore the managed page or identity.",
+    "evidence_unavailable": "Required source/evidence refs are missing or expired.",
+    "invalid_contract": "The package or request violates its declared input/action boundary.",
+    "login_required": "Managed identity cannot be confirmed.",
+    "permission_insufficient": "The current identity cannot control the requested path.",
+    "page_changed": "Route or visible path control differs from the declared target.",
+    "path_mismatch": "The observed path differs from requested_path; do not claim success.",
+    "composition_not_initialized": "Path selection/readback did not prove initialized composition.",
+    "composition_unknown": "Composition state could not be read safely.",
+    "target_not_writable": "The target/control owner is not confirmed; do not infer from missing editor fields.",
+    "action_result_unknown": "The selection result or business-state readback is unclear.",
+    "safety_challenge": "A site challenge or risk control requires human handling."
+  },
+  "forbidden_fields": [
+    "selector",
+    "selectors",
+    "dom",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "provider_key",
+    "harbor_profile_id",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "network_response_body",
+    "production_payload",
+    "user_business_data",
+    "media",
+    "content"
+  ],
+  "real_site_entrypoints": [
+    {
+      "entrypoint_id": "xhs-creator-publish-page-path-prepare",
+      "origin": "https://creator.xiaohongshu.com",
+      "route_patterns": [
+        "/publish/publish*"
+      ],
+      "mode": "validate_only",
+      "required_no_submit_guard": "active"
+    }
+  ],
+  "evidence_requirements": {
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "required_ref_kinds": [
+      "creator_publish_page_summary",
+      "dom_snapshot_summary",
+      "business_state_summary",
+      "snapshot_ref",
+      "post_check_ref"
+    ],
+    "forbidden_evidence_material": [
+      "raw DOM",
+      "HAR",
+      "network response body",
+      "screenshot body",
+      "cookie",
+      "token",
+      "profile state",
+      "runtime session",
+      "production payload",
+      "user business data"
+    ],
+    "live_evidence_status": "required_from_WebEnvoy_405"
+  },
+  "non_goals": [
+    "No profile/provider/session selection or live matching in Lode.",
+    "No file chooser, file selection, media upload, generation, field fill, save draft, publish, submit, retry, or bypass.",
+    "No runtime admission record; WebEnvoy #405 owns formal live consumption."
+  ],
+  "covered_issues": [
+    "#302",
+    "#405"
+  ],
+  "anchor_work_item": "LODE-302"
+}

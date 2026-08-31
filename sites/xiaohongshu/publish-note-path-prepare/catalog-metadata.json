@@ -1,0 +1,122 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "xiaohongshu.publish-note-path-prepare.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "capability_id": "publish-note-path-prepare",
+  "operation_id": "xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "小红书",
+    "manifest_path": "sites/xiaohongshu/publish-note-path-prepare/manifest.json"
+  },
+  "display": {
+    "name": "小红书图文子路径准备",
+    "summary": "用户明确选择上传图片或文字配图后，仅选择 exact visible path control 并回读业务状态；不上传、不生成、不填写、不保存、不发布。",
+    "site_name": "小红书",
+    "category": "prepare"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+        "status": "self_for_initial_version"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "static_contract_only",
+    "updated_at": "2026-09-01T00:00:00Z"
+  },
+  "risk": {
+    "level": "medium",
+    "operation": "write-precheck",
+    "reason": "The package may select an in-page path control but has no external effects and blocks all write actions."
+  },
+  "facets": [
+    "site:xiaohongshu",
+    "path-prepare",
+    "validate-only",
+    "no-submit",
+    "requested-path:image_text_upload",
+    "requested-path:image_text_generate"
+  ],
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present",
+    "post_check_fixture_status": "skipped",
+    "runtime_execution": "out_of_scope_formal_consumer_WebEnvoy_405"
+  },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "latest_repair_draft_ref": "lode://repair-draft/site-capability/xiaohongshu/publish-note-path-prepare/site-change@0.1.1-draft",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "path_mismatch",
+      "composition_unknown",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "overlay_fork_metadata_path": "sites/xiaohongshu/publish-note-path-prepare/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may display refs-only recovery status; Lode remains the package truth owner."
+  },
+  "consumer_boundary": "The first consumer is WebEnvoy #405. Core/Harbor/App own live path selection, business-state readback, and evidence; Lode does not admit runtime consumption here.",
+  "forbidden_contents": [
+    "selector",
+    "selectors",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_dom",
+    "har",
+    "screenshot_body",
+    "network_response_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+    "manifest_path": "sites/xiaohongshu/publish-note-path-prepare/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+    "resource_requirements_id": "xiaohongshu.publish-note-path-prepare.resources",
+    "post_check_id": "xiaohongshu.publish-note-path-prepare.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "validate_only"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
+  },
+  "covered_issues": [
+    "#302",
+    "#405"
+  ],
+  "anchor_work_item": "LODE-302"
+}

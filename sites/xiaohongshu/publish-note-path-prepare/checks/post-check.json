@@ -1,0 +1,172 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "post_check_id": "xiaohongshu.publish-note-path-prepare.post-check",
+  "post_check_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "capability_id": "publish-note-path-prepare",
+  "operation_id": "xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "execution_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "summary": "Lode declares checks only; Core runs them against current facts and Harbor owns live refs."
+  },
+  "result_contract": {
+    "schema_version": "lode.post-check-result.v0",
+    "status_values": [
+      "passed",
+      "failed",
+      "skipped"
+    ],
+    "required_fields": [
+      "status",
+      "reason",
+      "source_refs",
+      "evidence_refs",
+      "submitted",
+      "requested_path",
+      "observed_path",
+      "composition_state",
+      "business_state_before",
+      "business_state_after",
+      "no_submit_guard_status"
+    ],
+    "status_meaning": {
+      "passed": "Requested path and after-state are read back with refs-only evidence and no prohibited action.",
+      "failed": "A required fact, state, ref, or no-submit invariant is missing or mismatched.",
+      "skipped": "Core could not safely perform the check; skipped is not a success claim."
+    },
+    "reason_policy": "Explain the observed/unknown/mismatch path and composition state without guessing.",
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "submitted_policy": "submitted must be false; no-submit guard must remain active."
+  },
+  "requirements": [
+    {
+      "requirement_id": "target-and-requested-path",
+      "description": "Reconfirm target URL/ref, exact creator route, and the requested path control before and after selection.",
+      "required_status": "observed_or_unknown",
+      "required_normalized_fields": [
+        "normalized.canonical_url",
+        "normalized.target_ref",
+        "normalized.requested_path",
+        "normalized.observed_path"
+      ],
+      "required_source_refs": [
+        "fixture-source-page",
+        "fixture-source-state"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-snapshot",
+        "fixture-evidence-post-check"
+      ],
+      "on_failure": "Return unavailable or path_mismatch; never upgrade unknown to observed."
+    },
+    {
+      "requirement_id": "business-state-readback",
+      "description": "Read back business_state_before and business_state_after and keep composition initialized only when business state proves it.",
+      "required_status": "observed_or_unknown",
+      "required_normalized_fields": [
+        "normalized.business_state_before",
+        "normalized.business_state_after",
+        "normalized.composition_state",
+        "normalized.composition_state_proof"
+      ],
+      "required_source_refs": [
+        "fixture-source-state"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-snapshot",
+        "fixture-evidence-post-check"
+      ],
+      "on_failure": "Return composition unknown or action_result_unknown; path/entry visibility alone is insufficient."
+    },
+    {
+      "requirement_id": "no-submit-and-side-effect-guard",
+      "description": "Confirm no file chooser, file selection, upload, generation, field fill, save, publish, submit, retry, or bypass occurred.",
+      "required_status": "passed",
+      "required_normalized_fields": [
+        "normalized.submitted",
+        "normalized.no_submit_guard_status",
+        "normalized.prohibited_actions_observed"
+      ],
+      "required_source_refs": [
+        "fixture-source-state"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-post-check"
+      ],
+      "on_failure": "Fail closed with safety_challenge or action_result_unknown and preserve submitted=false."
+    }
+  ],
+  "fixture_post_check_output": {
+    "status": "skipped",
+    "reason": "Static fixture does not execute live path selection or business-state readback; skipped is not a success claim.",
+    "source_refs": [
+      "fixture-source-page",
+      "fixture-source-state"
+    ],
+    "evidence_refs": [
+      "fixture-evidence-snapshot",
+      "fixture-evidence-post-check"
+    ],
+    "submitted": false,
+    "requested_path": "image_text_upload",
+    "observed_path": "unknown",
+    "composition_state": "unknown",
+    "business_state_before": "refs-only",
+    "business_state_after": "refs-only",
+    "no_submit_guard_status": "active"
+  },
+  "failure_boundary": {
+    "login_required": "No managed identity fact; return unavailable.",
+    "permission_insufficient": "Control owner is not confirmed; do not select a path.",
+    "page_changed": "Route or exact visible control drifted; return mismatch or unavailable.",
+    "path_mismatch": "Observed path differs from requested_path; never claim success.",
+    "composition_not_initialized": "Business readback says not_initialized; do not infer initialized from entry visibility.",
+    "composition_unknown": "Business readback is absent or ambiguous; retain unknown.",
+    "action_result_unknown": "Selection or post-selection state is unclear; no retry.",
+    "safety_challenge": "Challenge or risk control requires user action.",
+    "post_check_failed": "Required state or refs failed; Core owns the run outcome.",
+    "evidence_unavailable": "Refs are missing or expired; no inline evidence is accepted."
+  },
+  "real_page_validation": {
+    "status": "deferred_to_WebEnvoy_405",
+    "reason": "Lode fixture is not live evidence and cannot promote lifecycle.",
+    "required_later_runtime": [
+      "current WebEnvoy main",
+      "pinned Lode revision",
+      "managed profile",
+      "Harbor/Core/App refs-only live evidence"
+    ],
+    "forbidden_later_evidence": [
+      "cookies",
+      "tokens",
+      "profile state",
+      "runtime session",
+      "raw DOM",
+      "HAR",
+      "screenshot body",
+      "user content"
+    ]
+  },
+  "post_check_plan": [
+    "Check target URL/ref and exact route are still bound to the requested package.",
+    "Check requested_path is one of the two declared paths and observed_path is observed, unknown, or mismatch.",
+    "Check business_state_before and business_state_after are present and refs-only.",
+    "Check composition initialized is accepted only with business-state proof.",
+    "Check submitted remains false and no-submit guard remains active.",
+    "Check no prohibited interaction was performed and no automatic retry or bypass occurred."
+  ],
+  "non_goals": [
+    "No browser execution or live post-check runner in Lode.",
+    "No file chooser, file selection, upload, generate, field fill, save, publish, submit, retry, or bypass.",
+    "No lifecycle promotion from fixtures or static refs."
+  ],
+  "covered_issues": [
+    "#302",
+    "#405"
+  ],
+  "anchor_work_item": "LODE-302"
+}

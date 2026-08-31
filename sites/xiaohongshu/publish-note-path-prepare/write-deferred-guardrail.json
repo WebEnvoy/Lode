@@ -1,0 +1,113 @@
+{
+  "schema_version": "lode.write-deferred-guardrail.v0",
+  "guardrail_id": "xiaohongshu.publish-note-path-prepare.write-deferred-guardrail",
+  "guardrail_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "capability_id": "publish-note-path-prepare",
+  "operation_id": "xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "work_item": "LODE-302",
+  "guardrail": {
+    "status": "active",
+    "applies_to_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "current_package_allowed_modes": [
+      "validate_only"
+    ],
+    "blocked_claims": [
+      "file_chooser",
+      "file_select",
+      "upload",
+      "generate",
+      "field_fill",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass",
+      "external_effect"
+    ]
+  },
+  "validate_only_boundary": {
+    "status": "active",
+    "allowed_now": [
+      "exact_visible_path_control_selection",
+      "business_state_readback",
+      "refs_only_result"
+    ],
+    "blocked_now": [
+      "file_chooser",
+      "file_select",
+      "upload",
+      "generate",
+      "field_fill",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ],
+    "requires_before_admission": [
+      "no_submit_guard_active",
+      "submitted_false",
+      "exact_visible_control_owner",
+      "business_state_readback"
+    ]
+  },
+  "draft_preview_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "none_in_this_package"
+    ],
+    "blocked_now": [
+      "draft",
+      "preview",
+      "save_draft",
+      "upload",
+      "generate"
+    ],
+    "requires_before_admission": [
+      "separate_contract",
+      "explicit_user_authorization",
+      "new_version"
+    ]
+  },
+  "true_write_boundary": {
+    "execution_status": "deferred",
+    "entry_condition_only": true,
+    "deferred_until": "WebEnvoy #405 live consumer and later independently authorized write contracts"
+  },
+  "admission_guardrail": {
+    "write_execution": "blocked",
+    "no_submit_guard": "active",
+    "must_reject_if": [
+      "no_submit_guard is not active",
+      "input contains fields outside URL/ref/requested_path",
+      "requested_path is unknown",
+      "observed_path is mismatch or unknown when success is claimed",
+      "composition state is upgraded without business-state readback",
+      "target identity or control owner is unknown",
+      "challenge or risk control is present",
+      "any forbidden action is requested or observed",
+      "submitted is not false"
+    ],
+    "allowed_now": [
+      "validate_only"
+    ]
+  },
+  "consumer_boundary": "Lode declares the guardrail; Core enforces admission and Harbor owns live execution. This package never uploads, generates, fills, saves, publishes, submits, retries, or bypasses.",
+  "source_decisions": [
+    "#302 requires an active no-submit guard and submitted=false.",
+    "#405 owns the formal runtime/live consumer.",
+    "#295/#412 own later save-draft and publish contracts."
+  ],
+  "non_goals": [
+    "No runtime admission or browser execution.",
+    "No file chooser, file selection, upload, generation, field fill, save draft, publish, submit, retry, or bypass.",
+    "No credential or private runtime material."
+  ]
+}

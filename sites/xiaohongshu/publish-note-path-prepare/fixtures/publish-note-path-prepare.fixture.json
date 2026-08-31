@@ -1,0 +1,272 @@
+{
+  "schema_version": "lode.fixture.v0",
+  "fixture_id": "xiaohongshu.publish-note-path-prepare.fixture",
+  "fixture_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "capability_id": "publish-note-path-prepare",
+  "operation_id": "xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "fixture_kind": "redacted_path_prepare",
+  "source_shape": {
+    "source_shape_id": "xiaohongshu.publish-note-path-prepare.source.creator_publish_page_summary",
+    "source_shape_version": "0.1.0",
+    "source_kind": "creator_publish_page_summary",
+    "schema_hint": "xiaohongshu-publish-note-path-prepare-source@0.1.0"
+  },
+  "redaction_policy": {
+    "status": "redacted",
+    "basis": "Synthetic fixture only; no production page, account, runtime, or user material is represented.",
+    "allowed_material": [
+      "target URL and opaque target reference",
+      "requested and observed path states",
+      "business-state summary",
+      "placeholder source and evidence refs"
+    ],
+    "forbidden_raw_source_fields": [
+      "selector",
+      "DOM",
+      "cookies",
+      "tokens",
+      "profile state",
+      "runtime session",
+      "raw evidence body",
+      "production payload",
+      "user business data"
+    ]
+  },
+  "source_refs": [
+    {
+      "ref_id": "fixture-source-page",
+      "source_kind": "creator_publish_page_summary",
+      "producer": "fixture",
+      "captured_at": "2026-09-01T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xiaohongshu-publish-note-path-prepare-source@0.1.0"
+    },
+    {
+      "ref_id": "fixture-source-state",
+      "source_kind": "business_state_summary",
+      "producer": "fixture",
+      "captured_at": "2026-09-01T00:00:00Z",
+      "redaction": "summary_only",
+      "retention": "fixture_only",
+      "schema_hint": "xiaohongshu-publish-note-path-prepare-business-state@0.1.0"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "ref_id": "fixture-evidence-snapshot",
+      "evidence_kind": "snapshot_ref",
+      "producer": "fixture",
+      "captured_at": "2026-09-01T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only"
+    },
+    {
+      "ref_id": "fixture-evidence-post-check",
+      "evidence_kind": "post_check_ref",
+      "producer": "fixture",
+      "captured_at": "2026-09-01T00:00:00Z",
+      "redaction": "placeholder_only",
+      "retention": "fixture_only"
+    }
+  ],
+  "redacted_source_fixture": {
+    "fixture_source_id": "fixture-source-page",
+    "source_kind": "creator_publish_page_summary",
+    "synthetic": true,
+    "summary": {
+      "url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+      "title": "小红书图文子路径准备",
+      "public_text_summary": "requested_path 已明确；未能安全回读 observed_path 或 composition 状态。",
+      "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+      "requested_path": "image_text_upload",
+      "observed_path": "unknown",
+      "composition_state": "unknown",
+      "submitted": false
+    },
+    "omitted_raw_material": [
+      "raw HTML body",
+      "full DOM",
+      "HAR",
+      "screenshot body",
+      "network response body",
+      "runtime session",
+      "profile state"
+    ],
+    "source_refs_used": [
+      "fixture-source-page",
+      "fixture-source-state"
+    ],
+    "evidence_refs_used": [
+      "fixture-evidence-snapshot",
+      "fixture-evidence-post-check"
+    ]
+  },
+  "normalized_fixture": {
+    "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+    "integrity_hint": "fixture-only",
+    "data": {
+      "result_kind": "xhs_publish_note_path_prepare",
+      "status": "available",
+      "classification": "partial_result",
+      "normalized": {
+        "canonical_url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+        "target_ref": "target-ref:xiaohongshu/creator-publish-page",
+        "title": "小红书图文子路径准备",
+        "summary": "仅保留 requested_path；observed_path 和 composition_state 未知，不声称准备成功。",
+        "source_status": "partially_located",
+        "requested_path": "image_text_upload",
+        "observed_path": "unknown",
+        "composition_state": "unknown",
+        "business_state_before": {
+          "route_state": "observed",
+          "control_owner_state": "unknown",
+          "observed_path": "unknown",
+          "composition_state": "unknown",
+          "submitted": false
+        },
+        "business_state_after": {
+          "route_state": "observed",
+          "control_owner_state": "unknown",
+          "observed_path": "unknown",
+          "composition_state": "unknown",
+          "submitted": false
+        },
+        "interaction": {
+          "allowed_action": "exact_visible_path_control_selection",
+          "requested_control": "upload_image",
+          "selection_status": "not_performed",
+          "readback_status": "unknown"
+        },
+        "composition_state_proof": {
+          "basis": "unknown",
+          "path_entry_alone_proves_initialized": false
+        },
+        "submitted": false,
+        "prohibited_actions_observed": {
+          "file_chooser": false,
+          "file_select": false,
+          "upload": false,
+          "generate": false,
+          "field_fill": false,
+          "save_draft": false,
+          "publish": false,
+          "submit": false,
+          "retry": false,
+          "bypass": false
+        },
+        "no_submit_guard_status": "active"
+      },
+      "source_refs": [
+        {
+          "ref_id": "fixture-source-page",
+          "source_kind": "creator_publish_page_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xiaohongshu-publish-note-path-prepare-source@0.1.0"
+        },
+        {
+          "ref_id": "fixture-source-state",
+          "source_kind": "business_state_summary",
+          "producer": "fixture",
+          "redaction": "summary_only",
+          "schema_hint": "xiaohongshu-publish-note-path-prepare-business-state@0.1.0"
+        }
+      ],
+      "evidence_refs": [
+        {
+          "ref_id": "fixture-evidence-snapshot",
+          "evidence_kind": "snapshot_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        },
+        {
+          "ref_id": "fixture-evidence-post-check",
+          "evidence_kind": "post_check_ref",
+          "producer": "fixture",
+          "redaction": "placeholder_only"
+        }
+      ]
+    }
+  },
+  "binding_requirements": {
+    "normalized_field_sources": [
+      {
+        "field": "normalized.canonical_url",
+        "source_ref": "fixture-source-page",
+        "evidence_ref": "fixture-evidence-snapshot"
+      },
+      {
+        "field": "normalized.target_ref",
+        "source_ref": "fixture-source-page",
+        "evidence_ref": "fixture-evidence-snapshot"
+      },
+      {
+        "field": "normalized.requested_path",
+        "source_ref": "fixture-source-page",
+        "evidence_ref": "fixture-evidence-snapshot"
+      },
+      {
+        "field": "normalized.observed_path",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.composition_state",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.business_state_before",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-snapshot"
+      },
+      {
+        "field": "normalized.business_state_after",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.interaction",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.composition_state_proof",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.submitted",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.prohibited_actions_observed",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      },
+      {
+        "field": "normalized.no_submit_guard_status",
+        "source_ref": "fixture-source-state",
+        "evidence_ref": "fixture-evidence-post-check"
+      }
+    ],
+    "source_refs_required": true,
+    "evidence_refs_required_for_post_check": "placeholder_refs_declared_only"
+  },
+  "validation_expectation": {
+    "offline_validator_scope": "shape_and_forbidden_field_checks_only",
+    "path_status_rule": "Unknown or mismatch is never upgraded to observed or supported.",
+    "composition_rule": "Path or entry visibility alone never proves initialized; only business-state readback may do so.",
+    "no_submit_rule": "submitted=false and no-submit guard active; all prohibited action flags remain false.",
+    "stable_gate_note": "This fixture does not promote lifecycle or prove live behavior."
+  },
+  "non_goals": [
+    "No live runtime session, profile, credentials, DOM, HAR, screenshot, payload, or user content.",
+    "No file chooser, file selection, upload, generation, field fill, save draft, publish, submit, retry, or bypass.",
+    "No Core, Harbor, App, or formal runtime-consumption behavior."
+  ]
+}

@@ -1,0 +1,755 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+  "title": "小红书图文子路径准备归一化输出",
+  "description": "严格回读请求子路径、观察子路径和 composition 业务状态；路径入口可见不等于 composition 已初始化。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "xhs_publish_note_path_prepare"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "$ref": "#/$defs/xhs_publish_note_path_prepare"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string",
+      "enum": [
+        "target_not_found",
+        "path_not_observed",
+        "target_not_writable"
+      ]
+    },
+    "unavailable_reason": {
+      "type": "string",
+      "enum": [
+        "source_unavailable",
+        "evidence_unavailable",
+        "login_required",
+        "permission_insufficient",
+        "safety_challenge",
+        "page_changed",
+        "action_result_unknown",
+        "not_normalizable",
+        "resource_unavailable"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mapping_incomplete",
+          "source_refs_partial",
+          "evidence_refs_partial",
+          "composition_state_unknown",
+          "observed_path_mismatch"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_refs",
+          "evidence_refs"
+        ],
+        "properties": {
+          "classification": {
+            "enum": [
+              "success_result",
+              "partial_result"
+            ]
+          },
+          "source_refs": {
+            "type": "array",
+            "minItems": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "empty_result"
+          }
+        },
+        "required": [
+          "empty_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "not_normalizable"
+          }
+        },
+        "required": [
+          "unavailable_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "success_result"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "observed_path",
+              "interaction",
+              "business_state_after"
+            ],
+            "properties": {
+              "observed_path": {
+                "const": "observed"
+              },
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "selection_status",
+                  "readback_status"
+                ],
+                "properties": {
+                  "selection_status": {
+                    "const": "selected"
+                  },
+                  "readback_status": {
+                    "const": "read"
+                  }
+                }
+              },
+              "business_state_after": {
+                "type": "object",
+                "required": [
+                  "route_state",
+                  "control_owner_state",
+                  "observed_path"
+                ],
+                "properties": {
+                  "route_state": {
+                    "const": "observed"
+                  },
+                  "control_owner_state": {
+                    "const": "observed"
+                  },
+                  "observed_path": {
+                    "const": "observed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "composition_state": {
+                "const": "initialized"
+              }
+            },
+            "required": [
+              "composition_state"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "composition_state_proof",
+              "interaction",
+              "business_state_after"
+            ],
+            "properties": {
+              "composition_state_proof": {
+                "type": "object",
+                "required": [
+                  "basis",
+                  "path_entry_alone_proves_initialized"
+                ],
+                "properties": {
+                  "basis": {
+                    "const": "business_state_readback"
+                  },
+                  "path_entry_alone_proves_initialized": {
+                    "const": false
+                  }
+                }
+              },
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "readback_status"
+                ],
+                "properties": {
+                  "readback_status": {
+                    "const": "read"
+                  }
+                }
+              },
+              "business_state_after": {
+                "type": "object",
+                "required": [
+                  "composition_state"
+                ],
+                "properties": {
+                  "composition_state": {
+                    "const": "initialized"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "requested_path": {
+                "const": "image_text_upload"
+              }
+            },
+            "required": [
+              "requested_path"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "interaction"
+            ],
+            "properties": {
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "requested_control"
+                ],
+                "properties": {
+                  "requested_control": {
+                    "const": "upload_image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "requested_path": {
+                "const": "image_text_generate"
+              }
+            },
+            "required": [
+              "requested_path"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "interaction"
+            ],
+            "properties": {
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "requested_control"
+                ],
+                "properties": {
+                  "requested_control": {
+                    "const": "generate_image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "xhs_publish_note_path_prepare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_url",
+        "target_ref",
+        "title",
+        "summary",
+        "source_status",
+        "requested_path",
+        "observed_path",
+        "composition_state",
+        "business_state_before",
+        "business_state_after",
+        "interaction",
+        "composition_state_proof",
+        "submitted",
+        "prohibited_actions_observed",
+        "no_submit_guard_status"
+      ],
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located",
+            "unknown"
+          ]
+        },
+        "requested_path": {
+          "type": "string",
+          "enum": [
+            "image_text_upload",
+            "image_text_generate"
+          ]
+        },
+        "observed_path": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        },
+        "composition_state": {
+          "type": "string",
+          "enum": [
+            "initialized",
+            "not_initialized",
+            "unknown"
+          ]
+        },
+        "business_state_before": {
+          "$ref": "#/$defs/business_state"
+        },
+        "business_state_after": {
+          "$ref": "#/$defs/business_state"
+        },
+        "interaction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allowed_action",
+            "requested_control",
+            "selection_status",
+            "readback_status"
+          ],
+          "properties": {
+            "allowed_action": {
+              "const": "exact_visible_path_control_selection"
+            },
+            "requested_control": {
+              "type": "string",
+              "enum": [
+                "upload_image",
+                "generate_image"
+              ]
+            },
+            "selection_status": {
+              "type": "string",
+              "enum": [
+                "selected",
+                "not_performed",
+                "blocked",
+                "unknown"
+              ]
+            },
+            "readback_status": {
+              "type": "string",
+              "enum": [
+                "read",
+                "not_read",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "composition_state_proof": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "path_entry_alone_proves_initialized"
+          ],
+          "properties": {
+            "basis": {
+              "type": "string",
+              "enum": [
+                "business_state_readback",
+                "unknown"
+              ]
+            },
+            "path_entry_alone_proves_initialized": {
+              "const": false
+            }
+          }
+        },
+        "submitted": {
+          "const": false
+        },
+        "prohibited_actions_observed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file_chooser",
+            "file_select",
+            "upload",
+            "generate",
+            "field_fill",
+            "save_draft",
+            "publish",
+            "submit",
+            "retry",
+            "bypass"
+          ],
+          "properties": {
+            "file_chooser": {
+              "const": false
+            },
+            "file_select": {
+              "const": false
+            },
+            "upload": {
+              "const": false
+            },
+            "generate": {
+              "const": false
+            },
+            "field_fill": {
+              "const": false
+            },
+            "save_draft": {
+              "const": false
+            },
+            "publish": {
+              "const": false
+            },
+            "submit": {
+              "const": false
+            },
+            "retry": {
+              "const": false
+            },
+            "bypass": {
+              "const": false
+            }
+          }
+        },
+        "no_submit_guard_status": {
+          "const": "active"
+        }
+      }
+    },
+    "business_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_state",
+        "control_owner_state",
+        "observed_path",
+        "composition_state",
+        "submitted"
+      ],
+      "properties": {
+        "route_state": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        },
+        "control_owner_state": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        },
+        "observed_path": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        },
+        "composition_state": {
+          "type": "string",
+          "enum": [
+            "initialized",
+            "not_initialized",
+            "unknown"
+          ]
+        },
+        "submitted": {
+          "const": false
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "creator_publish_page_summary",
+            "dom_snapshot_summary",
+            "business_state_summary"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        },
+        "schema_hint": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "evidence_kind": {
+          "type": "string",
+          "enum": [
+            "snapshot_ref",
+            "post_check_ref"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        }
+      }
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-path-prepare.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_path_prepare",
+    "result_kind": "xhs_publish_note_path_prepare",
+    "core_envelope_owner": "WebEnvoy Core",
+    "required_normalized_fields": [
+      "requested_path",
+      "observed_path",
+      "composition_state",
+      "business_state_before",
+      "business_state_after",
+      "submitted",
+      "no_submit_guard_status"
+    ],
+    "path_status_vocabulary": [
+      "observed",
+      "unknown",
+      "mismatch"
+    ],
+    "composition_state_vocabulary": [
+      "initialized",
+      "not_initialized",
+      "unknown"
+    ],
+    "forbidden_inline_fields": [
+      "selector",
+      "selectors",
+      "dom",
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "media",
+      "content",
+      "raw_evidence_body",
+      "production_payload",
+      "user_business_data"
+    ],
+    "no_submit_guard": "active",
+    "true_write_execution": "blocked",
+    "composition_initialization_rule": "path_or_entry_visibility_alone_never_proves_initialized"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/input@0.1.0",
+  "title": "小红书图文子路径准备输入",
+  "description": "请求一次明确的图文子路径选择和随后业务状态回读；不上传、不生成、不填写、不保存、不发布。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "target_ref",
+    "no_submit_guard",
+    "requested_path"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$",
+      "description": "受管小红书创作页目标 URL；不携带凭据或生产 payload。",
+      "examples": [
+        "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image"
+      ]
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "description": "Harbor/Core 拥有的目标引用；Lode 只接受引用，不保存页面或身份状态。"
+    },
+    "no_submit_guard": {
+      "const": "active",
+      "description": "必须启用 no-submit guard；本能力永远不产生外部提交。"
+    },
+    "requested_path": {
+      "type": "string",
+      "enum": [
+        "image_text_upload",
+        "image_text_generate"
+      ],
+      "description": "用户明确请求的图文子路径，不得由 URL、标题或页面猜测。"
+    }
+  },
+  "examples": [
+    {
+      "url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+      "target_ref": "target-ref:xiaohongshu/creator-publish-page",
+      "no_submit_guard": "active",
+      "requested_path": "image_text_upload"
+    },
+    {
+      "url": "https://creator.xiaohongshu.com/publish/publish?from=menu_left&target=image",
+      "target_ref": "target-ref:xiaohongshu/creator-publish-page",
+      "no_submit_guard": "active",
+      "requested_path": "image_text_generate"
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-path-prepare.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_path_prepare",
+    "operation_mode": "validate_only",
+    "allowed_fields": [
+      "url",
+      "target_ref",
+      "no_submit_guard",
+      "requested_path"
+    ],
+    "requested_path_enum": [
+      "image_text_upload",
+      "image_text_generate"
+    ],
+    "forbidden_fields": [
+      "selector",
+      "selectors",
+      "dom",
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "media",
+      "content",
+      "production_payload",
+      "user_business_data"
+    ],
+    "invalid_input_classes": [
+      {
+        "code": "input_missing_target",
+        "fields": [
+          "url",
+          "target_ref"
+        ],
+        "lode_failure_class": "input_invalid",
+        "trigger": "url or target_ref is absent",
+        "recovery_hint": "Provide a supported Xiaohongshu target URL and an opaque target reference."
+      },
+      {
+        "code": "input_requested_path_unknown",
+        "field": "requested_path",
+        "lode_failure_class": "input_invalid",
+        "trigger": "requested_path is outside the two declared image-text paths",
+        "recovery_hint": "Request image_text_upload or image_text_generate explicitly."
+      },
+      {
+        "code": "input_no_submit_guard_inactive",
+        "field": "no_submit_guard",
+        "lode_failure_class": "safety_challenge",
+        "trigger": "no_submit_guard is not active",
+        "recovery_hint": "Set no_submit_guard to active before requesting path preparation."
+      },
+      {
+        "code": "input_forbidden_material",
+        "field": "*",
+        "lode_failure_class": "invalid_contract",
+        "trigger": "input includes selector/DOM, credential, runtime, media, content, or production data",
+        "recovery_hint": "Keep only URL/ref, requested_path, and the active guard in package input."
+      }
+    ]
+  }
+}
