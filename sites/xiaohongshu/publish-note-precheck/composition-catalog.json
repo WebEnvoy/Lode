@@ -1,16 +1,16 @@
 {
   "schema_version": "lode.composition-catalog.v0",
   "composition_catalog_id": "xiaohongshu.publish-note-precheck.composition-catalog",
-  "composition_catalog_version": "0.1.0",
+  "composition_catalog_version": "0.1.1",
   "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
   "capability_id": "publish-note-precheck",
   "operation_id": "xhs_publish_note_precheck",
   "operation_mode": "validate_only",
   "evidence_binding": {
     "source": "WebEnvoy/WebEnvoy#404",
-    "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5477722179",
+    "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5480282009",
     "observed_on": "2026-08-31",
-    "web_envoy_main": "89d3dd2e78ea1a7503e553007ae4c07bb5aef49b",
+    "web_envoy_main": "f138fdf2c64035c2a5d2840a2672e6cb77901aa4",
     "lode_contract_pin": "6bff1afd059a30571f8ed219d1dcd25e6fb20c6b",
     "capture_mode": "read_only",
     "non_read_requests": "intercepted",
@@ -31,15 +31,17 @@
   "paths": [
     {
       "path_id": "image_text_upload",
+      "path_observed": "unknown",
       "top_level_kind": "image_text",
       "entrypoint": {
-        "status": "observed",
-        "observation": "真实创作入口与上传图片子路径存在。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮未观察到上传图文 path entry。"
       },
       "composition_initialization": {
-        "status": "observed",
-        "state": "not_initialized",
-        "observation": "默认 composition 未完成初始化。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮未观察到上传图文 composition。"
       },
       "fields": {
         "requirement": {
@@ -82,15 +84,17 @@
     },
     {
       "path_id": "image_text_generate",
+      "path_observed": "unknown",
       "top_level_kind": "image_text",
       "entrypoint": {
-        "status": "observed",
-        "observation": "文字配图入口存在；本轮未完成子路径转换。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮未观察到文字配图 path entry。"
       },
       "composition_initialization": {
         "status": "unobserved",
         "value": "unknown",
-        "observation": "本轮受守卫约束未完成文字配图子路径转换，composition 初始化未核验。"
+        "observation": "本轮未观察到文字配图 composition。"
       },
       "fields": {
         "requirement": {
@@ -133,15 +137,16 @@
     },
     {
       "path_id": "video",
+      "path_observed": "unobserved",
       "top_level_kind": "video",
       "entrypoint": {
         "status": "observed",
-        "observation": "视频入口可定位且点击被页面接收。"
+        "observation": "视频 entry visible；requested path 未观察到。"
       },
       "composition_initialization": {
         "status": "unobserved",
         "value": "unknown",
-        "observation": "点击后未出现可核验的 video composition 字段。"
+        "observation": "本轮未观察到视频 composition。"
       },
       "fields": {
         "requirement": {
@@ -158,14 +163,13 @@
         }
       },
       "media_actions": {
-        "status": "unobserved",
-        "value": "unknown",
+        "status": "observed",
+        "observation": "视频 upload_video media control 可见；未选择或上传视频。",
         "controls": [
           {
             "id": "upload_video",
-            "status": "unobserved",
-            "value": "unknown",
-            "observation": "未选择或上传视频。"
+            "status": "observed",
+            "observation": "upload_video media control 可见。"
           }
         ]
       },
@@ -184,15 +188,17 @@
     },
     {
       "path_id": "long_article",
+      "path_observed": "unknown",
       "top_level_kind": "long_article",
       "entrypoint": {
-        "status": "observed",
-        "observation": "长文入口可定位且点击被页面接收。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮未观察到长文 path entry。"
       },
       "composition_initialization": {
         "status": "unobserved",
         "value": "unknown",
-        "observation": "编辑器、字段、校验及提交控件均未初始化。"
+        "observation": "本轮未观察到长文 composition。"
       },
       "fields": {
         "requirement": {
@@ -209,14 +215,13 @@
         }
       },
       "media_actions": {
-        "status": "unobserved",
-        "value": "unknown",
+        "status": "observed",
+        "observation": "长文 add_media media control 可见；未添加媒体。",
         "controls": [
           {
             "id": "add_media",
-            "status": "unobserved",
-            "value": "unknown",
-            "observation": "未添加媒体。"
+            "status": "observed",
+            "observation": "add_media media control 可见。"
           }
         ]
       },
@@ -235,15 +240,17 @@
     },
     {
       "path_id": "podcast",
+      "path_observed": "unknown",
       "top_level_kind": "podcast",
       "entrypoint": {
-        "status": "observed",
-        "observation": "播客入口可定位且点击后出现上传音频、添加 RSS 订阅。"
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮未观察到播客 path entry。"
       },
       "composition_initialization": {
         "status": "unobserved",
         "value": "unknown",
-        "observation": "上传或 RSS 后续 composition 状态未核验。"
+        "observation": "本轮未观察到播客 composition。"
       },
       "fields": {
         "requirement": {
@@ -260,18 +267,20 @@
         }
       },
       "media_actions": {
-        "status": "observed",
-        "observation": "上传音频与添加 RSS 订阅控件可见；后续状态未核验。",
+        "status": "unobserved",
+        "value": "unknown",
         "controls": [
           {
             "id": "upload_audio",
-            "status": "observed",
-            "observation": "上传音频控件可见。"
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "本轮未观察到上传音频 media control。"
           },
           {
             "id": "add_rss_subscription",
-            "status": "observed",
-            "observation": "添加 RSS 订阅控件可见。"
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "本轮未观察到 RSS media control。"
           },
           {
             "id": "audio_upload_follow_up",

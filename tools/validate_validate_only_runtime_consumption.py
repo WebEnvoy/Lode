@@ -391,8 +391,9 @@ def composition_catalog_self_test() -> list[str]:
     mutations: dict[str, tuple[Callable[[dict[str, Any], dict[str, Any]], None], bool]] = {
         "planned_catalog": (lambda _catalog, asset: asset.__setitem__("status", "planned"), True),
         "wrong_top_level_kind": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video").__setitem__("top_level_kind", "image_text"), False),
-        "wrong_composition_observed": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "image_text_generate")["composition_initialization"].__setitem__("status", "observed"), False),
-        "fake_media_control": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video")["media_actions"]["controls"].append({"id": "fake_media", "status": "unobserved", "value": "unknown"}), False),
+        "unknown_upgrade": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "image_text_generate")["composition_initialization"].__setitem__("status", "observed"), False),
+        "extra_media_control": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video")["media_actions"]["controls"].append({"id": "fake_media", "status": "unobserved", "value": "unknown"}), False),
+        "invalid_path_observed": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video").__setitem__("path_observed", "available"), False),
         "required_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["requirement"].__setitem__("required", True), False),
         "optional_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["conditional"].__setitem__("optional", True), False),
         "availability_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["limits"].__setitem__("availability", "available"), False),
