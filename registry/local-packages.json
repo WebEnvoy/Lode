@@ -1281,7 +1281,7 @@
       "package_type": "site-capability",
       "package_path": "sites/xiaohongshu/publish-note-precheck",
       "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
       "lock_path": "sites/xiaohongshu/publish-note-precheck/package-lock.json",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-precheck",
@@ -1296,7 +1296,7 @@
         "broken",
         "deprecated"
       ],
-      "updated_at": "2026-07-06T16:20:00Z",
+      "updated_at": "2026-08-31T11:33:07.716Z",
       "version_status": {
         "current": "0.1.0",
         "latest": "0.1.0",
@@ -1305,7 +1305,7 @@
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
-        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
         "status": "self_for_initial_version"
       },
       "asset_roles": [
@@ -1319,10 +1319,12 @@
         "post_check",
         "failure_mapping",
         "catalog_metadata",
+        "composition_catalog",
         "repair_draft",
         "overlay_fork_metadata",
         "package_lock"
       ],
+      "composition_catalog_path": "sites/xiaohongshu/publish-note-precheck/composition-catalog.json",
       "resolution": {
         "strategy": "repo_relative_manifest",
         "freshness_rule": "Revalidate if package_ref, package_path, manifest_path, lock_path, capability identity, version, lifecycle, or declared asset roles change.",
@@ -1334,7 +1336,7 @@
         ]
       },
       "work_item": "LODE-236",
-      "lock_work_item": "LODE-266",
+      "lock_work_item": "LODE-294",
       "write_precheck_package": {
         "status": "selected_real_site_write_precheck_contract_ready",
         "work_item": "LODE-236",
@@ -1395,7 +1397,7 @@
       "core_admission_fields": {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
         "version": "0.1.0",
-        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.1",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-precheck@0.1.2",
         "manifest_path": "sites/xiaohongshu/publish-note-precheck/manifest.json",
         "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/input@0.1.0",
         "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-precheck/output@0.1.0",
@@ -1416,7 +1418,7 @@
         "runner_owner": "WebEnvoy Core",
         "browser_session_owner": "Harbor",
         "asset_owner": "Lode",
-        "live_validation": "not_attempted_real_account_access_forbidden",
+        "live_validation": "entrypoint_read_only_evidence_only",
         "must_fail_closed_without": [
           "required_browser_session",
           "identity_profile_requirements",
@@ -1473,7 +1475,7 @@
           "production payload",
           "user business data"
         ],
-        "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution",
+        "live_evidence_status": "entrypoint_read_only_evidence_only",
         "formal_runtime_evidence_owner": "WebEnvoy Core plus Harbor",
         "lode_closeout_evidence_only": "registry_schema_fixture_post_check_contracts"
       },

@@ -1,0 +1,324 @@
+{
+  "schema_version": "lode.composition-catalog.v0",
+  "composition_catalog_id": "xiaohongshu.publish-note-precheck.composition-catalog",
+  "composition_catalog_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-precheck@0.1.0",
+  "capability_id": "publish-note-precheck",
+  "operation_id": "xhs_publish_note_precheck",
+  "operation_mode": "validate_only",
+  "evidence_binding": {
+    "source": "WebEnvoy/WebEnvoy#404",
+    "comment_url": "https://github.com/WebEnvoy/WebEnvoy/issues/404#issuecomment-5477722179",
+    "observed_on": "2026-08-31",
+    "web_envoy_main": "89d3dd2e78ea1a7503e553007ae4c07bb5aef49b",
+    "lode_contract_pin": "6bff1afd059a30571f8ed219d1dcd25e6fb20c6b",
+    "capture_mode": "read_only",
+    "non_read_requests": "intercepted",
+    "external_effects": "none"
+  },
+  "status_vocabulary": {
+    "allowed": [
+      "observed",
+      "unobserved",
+      "not_applicable"
+    ],
+    "definitions": {
+      "observed": "直接由本次只读生产页面观察支持。",
+      "unobserved": "本次未完成或未核验；不得据此推断字段、约束或动作可用。",
+      "not_applicable": "只有直接证据表明该项不适用时才能使用；本目录没有此状态。"
+    }
+  },
+  "paths": [
+    {
+      "path_id": "image_text_upload",
+      "top_level_kind": "image_text",
+      "entrypoint": {
+        "status": "observed",
+        "observation": "真实创作入口与上传图片子路径存在。"
+      },
+      "composition_initialization": {
+        "status": "observed",
+        "state": "not_initialized",
+        "observation": "默认 composition 未完成初始化。"
+      },
+      "fields": {
+        "requirement": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "conditional": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "limits": {
+          "status": "unobserved",
+          "value": "unknown"
+        }
+      },
+      "media_actions": {
+        "status": "unobserved",
+        "value": "unknown",
+        "controls": [
+          {
+            "id": "upload_image",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "未选择或上传图片。"
+          }
+        ]
+      },
+      "validation": {
+        "status": "unobserved",
+        "value": "unknown"
+      },
+      "save_draft": {
+        "status": "unobserved",
+        "availability": "unknown"
+      },
+      "publish": {
+        "status": "unobserved",
+        "availability": "unknown"
+      }
+    },
+    {
+      "path_id": "image_text_generate",
+      "top_level_kind": "image_text",
+      "entrypoint": {
+        "status": "observed",
+        "observation": "文字配图入口存在；本轮未完成子路径转换。"
+      },
+      "composition_initialization": {
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "本轮受守卫约束未完成文字配图子路径转换，composition 初始化未核验。"
+      },
+      "fields": {
+        "requirement": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "conditional": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "limits": {
+          "status": "unobserved",
+          "value": "unknown"
+        }
+      },
+      "media_actions": {
+        "status": "unobserved",
+        "value": "unknown",
+        "controls": [
+          {
+            "id": "generate_image",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "未点击生成且未生成配图。"
+          }
+        ]
+      },
+      "validation": {
+        "status": "unobserved",
+        "value": "unknown"
+      },
+      "save_draft": {
+        "status": "unobserved",
+        "availability": "unknown"
+      },
+      "publish": {
+        "status": "unobserved",
+        "availability": "unknown"
+      }
+    },
+    {
+      "path_id": "video",
+      "top_level_kind": "video",
+      "entrypoint": {
+        "status": "observed",
+        "observation": "视频入口可定位且点击被页面接收。"
+      },
+      "composition_initialization": {
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "点击后未出现可核验的 video composition 字段。"
+      },
+      "fields": {
+        "requirement": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "conditional": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "limits": {
+          "status": "unobserved",
+          "value": "unknown"
+        }
+      },
+      "media_actions": {
+        "status": "unobserved",
+        "value": "unknown",
+        "controls": [
+          {
+            "id": "upload_video",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "未选择或上传视频。"
+          }
+        ]
+      },
+      "validation": {
+        "status": "unobserved",
+        "value": "unknown"
+      },
+      "save_draft": {
+        "status": "unobserved",
+        "availability": "unknown"
+      },
+      "publish": {
+        "status": "unobserved",
+        "availability": "unknown"
+      }
+    },
+    {
+      "path_id": "long_article",
+      "top_level_kind": "long_article",
+      "entrypoint": {
+        "status": "observed",
+        "observation": "长文入口可定位且点击被页面接收。"
+      },
+      "composition_initialization": {
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "编辑器、字段、校验及提交控件均未初始化。"
+      },
+      "fields": {
+        "requirement": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "conditional": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "limits": {
+          "status": "unobserved",
+          "value": "unknown"
+        }
+      },
+      "media_actions": {
+        "status": "unobserved",
+        "value": "unknown",
+        "controls": [
+          {
+            "id": "add_media",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "未添加媒体。"
+          }
+        ]
+      },
+      "validation": {
+        "status": "unobserved",
+        "value": "unknown"
+      },
+      "save_draft": {
+        "status": "unobserved",
+        "availability": "unknown"
+      },
+      "publish": {
+        "status": "unobserved",
+        "availability": "unknown"
+      }
+    },
+    {
+      "path_id": "podcast",
+      "top_level_kind": "podcast",
+      "entrypoint": {
+        "status": "observed",
+        "observation": "播客入口可定位且点击后出现上传音频、添加 RSS 订阅。"
+      },
+      "composition_initialization": {
+        "status": "unobserved",
+        "value": "unknown",
+        "observation": "上传或 RSS 后续 composition 状态未核验。"
+      },
+      "fields": {
+        "requirement": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "conditional": {
+          "status": "unobserved",
+          "value": "unknown"
+        },
+        "limits": {
+          "status": "unobserved",
+          "value": "unknown"
+        }
+      },
+      "media_actions": {
+        "status": "observed",
+        "observation": "上传音频与添加 RSS 订阅控件可见；后续状态未核验。",
+        "controls": [
+          {
+            "id": "upload_audio",
+            "status": "observed",
+            "observation": "上传音频控件可见。"
+          },
+          {
+            "id": "add_rss_subscription",
+            "status": "observed",
+            "observation": "添加 RSS 订阅控件可见。"
+          },
+          {
+            "id": "audio_upload_follow_up",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "上传音频后的后续状态未核验。"
+          },
+          {
+            "id": "rss_subscription_follow_up",
+            "status": "unobserved",
+            "value": "unknown",
+            "observation": "添加 RSS 订阅后的后续状态未核验。"
+          }
+        ]
+      },
+      "validation": {
+        "status": "unobserved",
+        "value": "unknown"
+      },
+      "save_draft": {
+        "status": "unobserved",
+        "availability": "unknown"
+      },
+      "publish": {
+        "status": "unobserved",
+        "availability": "unknown"
+      }
+    }
+  ],
+  "consumer_boundary": "WebEnvoy Core/App may consume this static, entrypoint-level read-only catalog for discovery and precheck display; it does not authorize composition writes, media upload, generation, draft save, or publish.",
+  "unknown_policy": {
+    "status_for_unknown": "unobserved",
+    "value_for_unknown": "unknown",
+    "not_applicable_requires_direct_evidence": true,
+    "current_catalog_has_not_applicable": false,
+    "forbidden_inference": "入口存在或点击被页面接收不等于内部字段、媒体后续状态、保存或发布可用。"
+  },
+  "forbidden_contents": [
+    "credentials",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "raw_dom",
+    "har",
+    "network_response_body",
+    "production_payload",
+    "user_business_data"
+  ]
+}

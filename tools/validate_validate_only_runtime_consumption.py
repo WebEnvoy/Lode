@@ -12,6 +12,11 @@ from typing import Any, Callable
 from urllib.parse import urlparse
 
 try:
+    from tools.lode_validate_package import Report, asset_index, validate_asset_ref, validate_composition_catalog
+except ModuleNotFoundError:
+    from lode_validate_package import Report, asset_index, validate_asset_ref, validate_composition_catalog
+
+try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import SchemaError
 except ImportError:  # Reported as a validation failure below.
@@ -24,6 +29,7 @@ TRUTH_PATH = ROOT / "registry/validate-only-runtime-consumption.json"
 SCHEMA_PATH = ROOT / "registry/validate-only-runtime-consumption.schema.json"
 FIXTURE_PATH = ROOT / "registry/validate-only-runtime-consumption.fixture.json"
 REGISTRY_PATH = ROOT / "registry/local-packages.json"
+COMPOSITION_PACKAGE_ROOT = ROOT / "sites/xiaohongshu/publish-note-precheck"
 EXPECTED_OPERATIONS = {"xhs_publish_note_precheck", "boss_greet_precheck"}
 EXPECTED_ADMISSION = {
     "xhs_publish_note_precheck": {"enabled": True, "status": "current", "recheck_condition": "not_applicable"},
@@ -49,11 +55,19 @@ REQUIRED_FRESH_REFS = [
     "result_ref", "resource_refs", "field_source_refs", "evidence_refs",
     "post_check_ref", "submitted_result_ref",
 ]
-EXPECTED_LOCK_ROLES = {
+COMMON_EXPECTED_LOCK_ROLES = {
     "input_schema", "normalized_output_schema", "resource_requirements",
     "version_lifecycle_metadata", "write_deferred_guardrail", "fixture",
     "core_consumption_fixture", "post_check", "failure_mapping",
     "catalog_metadata", "repair_draft", "overlay_fork_metadata",
+}
+EXPECTED_LOCK_ROLES = {
+    "xhs_publish_note_precheck": COMMON_EXPECTED_LOCK_ROLES | {"composition_catalog"},
+    "boss_greet_precheck": COMMON_EXPECTED_LOCK_ROLES,
+}
+EXPECTED_LOCK_VERSIONS = {
+    "xhs_publish_note_precheck": "0.1.2",
+    "boss_greet_precheck": "0.1.1",
 }
 EXPECTED_ENTRY_KEYS = {
     "package_ref", "lock_ref", "lock_version", "version", "site_slug",
@@ -190,7 +204,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     for key, value in expected.items():
         if entry.get(key) != value or lock_values.get(key) != value:
             error(errors, f"{path}.{key}", "does not match pinned manifest and lock")
-    if entry.get("lock_version") != lock.get("lock_version") or lock.get("lock_version") != "0.1.1":
+    if entry.get("lock_version") != lock.get("lock_version") or lock.get("lock_version") != EXPECTED_LOCK_VERSIONS[operation_id]:
         error(errors, f"{path}.lock_version", "must bind the current relock version")
     manifest_lock = asset_ref(manifest, "package_lock") or {}
     if manifest_lock.get("lock_ref") != lock.get("lock_ref") or manifest_lock.get("lock_version") != lock.get("lock_version"):
@@ -200,7 +214,7 @@ def validate_entry(errors: list[str], entry: dict[str, Any], registry_entry: dic
     validate_nested_lock_refs(errors, registry_entry, lock_prefix, expected_lock_ref, f"{path}.registry")
     validate_nested_lock_refs(errors, manifest, lock_prefix, expected_lock_ref, f"{path}.manifest")
     locked_assets = lock.get("locked_assets")
-    if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES:
+    if not isinstance(locked_assets, list) or {item.get("role") for item in locked_assets if isinstance(item, dict)} != EXPECTED_LOCK_ROLES[operation_id]:
         error(errors, f"{path}.locked_asset_sha256", "package lock must contain the exact critical asset roles")
     else:
         lock_hashes = {}
@@ -350,6 +364,49 @@ def self_test(data: dict[str, Any], declared_cases: list[str]) -> list[str]:
             failures.append(f"published schema did not reject {name}")
         if not validate(candidate):
             failures.append(f"self-test did not reject {name}")
+    failures.extend(composition_catalog_self_test())
+    return failures
+
+
+def composition_catalog_self_test() -> list[str]:
+    manifest = load_json(COMPOSITION_PACKAGE_ROOT / "manifest.json")
+    catalog = load_json(COMPOSITION_PACKAGE_ROOT / "composition-catalog.json")
+    bootstrap_report = Report(COMPOSITION_PACKAGE_ROOT)
+    refs = asset_index(bootstrap_report, manifest)
+    asset = refs.get("composition_catalog")
+    if not isinstance(manifest, dict) or not isinstance(catalog, dict) or not isinstance(asset, dict):
+        return ["composition catalog self-test could not load the package contract"]
+
+    def run(mutate: Callable[[dict[str, Any], dict[str, Any]], None], planned: bool = False) -> list[dict[str, Any]]:
+        candidate = copy.deepcopy(catalog)
+        candidate_asset = copy.deepcopy(asset)
+        mutate(candidate, candidate_asset)
+        report = Report(COMPOSITION_PACKAGE_ROOT)
+        if planned:
+            validate_asset_ref(report, COMPOSITION_PACKAGE_ROOT, "composition_catalog", candidate_asset, manifest.get("capability", {}).get("lifecycle"))
+        else:
+            validate_composition_catalog(report, candidate, candidate_asset, manifest)
+        return report.errors
+
+    mutations: dict[str, tuple[Callable[[dict[str, Any], dict[str, Any]], None], bool]] = {
+        "planned_catalog": (lambda _catalog, asset: asset.__setitem__("status", "planned"), True),
+        "wrong_top_level_kind": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video").__setitem__("top_level_kind", "image_text"), False),
+        "wrong_composition_observed": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "image_text_generate")["composition_initialization"].__setitem__("status", "observed"), False),
+        "fake_media_control": (lambda catalog, _asset: next(item for item in catalog["paths"] if item["path_id"] == "video")["media_actions"]["controls"].append({"id": "fake_media", "status": "unobserved", "value": "unknown"}), False),
+        "required_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["requirement"].__setitem__("required", True), False),
+        "optional_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["conditional"].__setitem__("optional", True), False),
+        "availability_extra_key": (lambda catalog, _asset: catalog["paths"][0]["fields"]["limits"].__setitem__("availability", "available"), False),
+        "available_extra_key": (lambda catalog, _asset: catalog["paths"][0]["save_draft"].__setitem__("available", True), False),
+        "claimed_extra_key": (lambda catalog, _asset: catalog["paths"][0]["validation"].__setitem__("claimed", True), False),
+        "controls_extra_key": (lambda catalog, _asset: catalog["paths"][0]["media_actions"].__setitem__("controls_extra", []), False),
+        "observed_at_extra_key": (lambda catalog, _asset: catalog["evidence_binding"].__setitem__("observed_at", "2026-08-31T11:33:07.716Z"), False),
+        "account_state": (lambda catalog, _asset: catalog.__setitem__("account_state", "unknown"), False),
+        "selector": (lambda catalog, _asset: catalog.__setitem__("selector", "fake"), False),
+    }
+    failures: list[str] = []
+    for name, (mutate, planned) in mutations.items():
+        if not run(mutate, planned):
+            failures.append(f"composition catalog self-test did not reject {name}")
     return failures
 
 

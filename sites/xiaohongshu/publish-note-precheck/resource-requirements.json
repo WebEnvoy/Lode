@@ -212,6 +212,6 @@
       "production payload",
       "user business data"
     ],
-    "live_evidence_status": "not_attempted_real_account_access_forbidden_by_LODE-236_execution"
+    "live_evidence_status": "entrypoint_read_only_evidence_only"
   }
 }
