@@ -65,8 +65,7 @@ Any Lode closeout for these Work Items must include:
 - Work Item and covered issue list;
 - PR URL, head SHA, and target branch;
 - validation commands and conclusions;
-- changed Lode locators in `docs/`, `registry/`, `sites/`, `tools/`, or
-  `.loom/`;
+- changed Lode locators in `docs/`, `registry/`, `sites/`, or `tools/`;
 - explicit statement that fixture/demo/contract evidence is not live runtime
   evidence and does not prove user-visible availability;
 - explicit non-goals: no runtime server, no production page access, no real
