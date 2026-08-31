@@ -101,12 +101,24 @@
         ]
       },
       "then": {
+        "required": [
+          "source_refs",
+          "evidence_refs"
+        ],
         "properties": {
           "classification": {
             "enum": [
               "success_result",
               "partial_result"
             ]
+          },
+          "source_refs": {
+            "type": "array",
+            "minItems": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1
           }
         }
       }
