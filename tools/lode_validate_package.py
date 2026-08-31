@@ -465,6 +465,7 @@ def validate_lifecycle(report: Report, lifecycle: dict[str, Any], asset: dict[st
     validate_lifecycle_vocabulary(report, lifecycle, path)
     validate_version_identity(report, lifecycle.get("version_identity"), manifest, path)
     validate_lifecycle_rollback(report, lifecycle.get("rollback"), manifest, path)
+    validate_lifecycle_composition_catalog_version(report, lifecycle.get("lock_input"), manifest, path)
     scan_forbidden_keys(report, lifecycle, path)
 
 
@@ -514,6 +515,34 @@ def validate_lifecycle_rollback(report: Report, rollback: Any, manifest: dict[st
     candidates = rollback.get("rollback_candidates")
     if not isinstance(candidates, list) or not candidates:
         add_error(report, "invalid_contract", f"{path}#rollback.rollback_candidates", "Rollback must declare at least one candidate.", "Expose rollback candidates as package/version/lock refs.")
+
+
+def validate_lifecycle_composition_catalog_version(report: Report, lock_input: Any, manifest: dict[str, Any], path: str) -> None:
+    if not isinstance(lock_input, dict):
+        return
+    asset_versions = lock_input.get("asset_versions")
+    if not isinstance(asset_versions, list):
+        return
+    catalog_entries = [
+        (index, item)
+        for index, item in enumerate(asset_versions)
+        if isinstance(item, dict) and item.get("role") == "composition_catalog"
+    ]
+    if not catalog_entries:
+        return
+    manifest_assets = asset_index(report, manifest)
+    if len(catalog_entries) > 1:
+        for index, _item in catalog_entries[1:]:
+            add_error(report, "invalid_contract", f"{path}#lock_input.asset_versions[{index}].role", "Lifecycle composition_catalog role is duplicated.", "Declare the composition catalog asset once.")
+    for index, item in catalog_entries[:1]:
+        item_path = f"{path}#lock_input.asset_versions[{index}]"
+        manifest_asset = manifest_assets.get("composition_catalog")
+        if manifest_asset is None:
+            add_error(report, "invalid_contract", f"{item_path}.role", "Lifecycle composition_catalog role is not declared by manifest asset_refs.", "Bind the lifecycle catalog identity to the manifest asset ref.")
+            continue
+        expected_ref, expected_version = asset_ref_identity(manifest_asset)
+        if item.get("ref") != expected_ref or item.get("version") != expected_version:
+            add_error(report, "invalid_contract", item_path, "Lifecycle asset ref/version does not match the manifest asset ref.", "Keep lifecycle lock_input identities aligned with manifest asset_refs.")
 
 
 def validate_failure_mapping(report: Report, failure_mapping: dict[str, Any], asset: dict[str, Any], manifest: dict[str, Any]) -> None:

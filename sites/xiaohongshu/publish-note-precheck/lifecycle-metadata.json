@@ -228,7 +228,7 @@
       {
         "role": "composition_catalog",
         "ref": "xiaohongshu.publish-note-precheck.composition-catalog",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "package_lock",
