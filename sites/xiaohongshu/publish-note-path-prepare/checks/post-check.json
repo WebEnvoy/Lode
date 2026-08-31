@@ -101,8 +101,8 @@
     }
   ],
   "fixture_post_check_output": {
-    "status": "passed",
-    "reason": "Synthetic refs-only fixture confirms requested_path is explicit, observed_path remains unknown when not read, composition_state remains unknown, and no prohibited action occurred.",
+    "status": "skipped",
+    "reason": "Static fixture does not execute live path selection or business-state readback; skipped is not a success claim.",
     "source_refs": [
       "fixture-source-page",
       "fixture-source-state"

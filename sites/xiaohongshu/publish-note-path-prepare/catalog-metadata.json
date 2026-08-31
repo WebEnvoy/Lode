@@ -66,7 +66,7 @@
   "test_summary": {
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present",
-    "post_check_fixture_status": "passed",
+    "post_check_fixture_status": "skipped",
     "runtime_execution": "out_of_scope_formal_consumer_WebEnvoy_405"
   },
   "repair_summary": {

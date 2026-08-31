@@ -141,7 +141,7 @@
       "package_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
       "status": "self_for_initial_version",
-      "validated_at": "2026-07-05T00:00:00Z",
+      "validated_at": "2026-09-01T00:00:00Z",
       "validation_source": "tools/lode_validate_package.py sites/xiaohongshu/publish-note-path-prepare --registry-index registry/local-packages.json --json"
     },
     "rollback_candidates": [

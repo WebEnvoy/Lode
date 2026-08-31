@@ -109,10 +109,10 @@
     }
   ],
   "post_check_fixture_case": {
-    "case_id": "post-check-output-passed",
+    "case_id": "post-check-output-skipped",
     "post_check_path": "sites/xiaohongshu/publish-note-path-prepare/checks/post-check.json",
     "json_pointer": "/fixture_post_check_output",
-    "expected_status": "passed",
+    "expected_status": "skipped",
     "required_source_ref_ids": [
       "fixture-source-page",
       "fixture-source-state"

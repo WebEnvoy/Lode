@@ -154,6 +154,223 @@
           "unavailable_reason"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "success_result"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "observed_path",
+              "interaction",
+              "business_state_after"
+            ],
+            "properties": {
+              "observed_path": {
+                "const": "observed"
+              },
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "selection_status",
+                  "readback_status"
+                ],
+                "properties": {
+                  "selection_status": {
+                    "const": "selected"
+                  },
+                  "readback_status": {
+                    "const": "read"
+                  }
+                }
+              },
+              "business_state_after": {
+                "type": "object",
+                "required": [
+                  "route_state",
+                  "control_owner_state",
+                  "observed_path"
+                ],
+                "properties": {
+                  "route_state": {
+                    "const": "observed"
+                  },
+                  "control_owner_state": {
+                    "const": "observed"
+                  },
+                  "observed_path": {
+                    "const": "observed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "composition_state": {
+                "const": "initialized"
+              }
+            },
+            "required": [
+              "composition_state"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "composition_state_proof",
+              "interaction",
+              "business_state_after"
+            ],
+            "properties": {
+              "composition_state_proof": {
+                "type": "object",
+                "required": [
+                  "basis",
+                  "path_entry_alone_proves_initialized"
+                ],
+                "properties": {
+                  "basis": {
+                    "const": "business_state_readback"
+                  },
+                  "path_entry_alone_proves_initialized": {
+                    "const": false
+                  }
+                }
+              },
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "readback_status"
+                ],
+                "properties": {
+                  "readback_status": {
+                    "const": "read"
+                  }
+                }
+              },
+              "business_state_after": {
+                "type": "object",
+                "required": [
+                  "composition_state"
+                ],
+                "properties": {
+                  "composition_state": {
+                    "const": "initialized"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "requested_path": {
+                "const": "image_text_upload"
+              }
+            },
+            "required": [
+              "requested_path"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "interaction"
+            ],
+            "properties": {
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "requested_control"
+                ],
+                "properties": {
+                  "requested_control": {
+                    "const": "upload_image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "requested_path": {
+                "const": "image_text_generate"
+              }
+            },
+            "required": [
+              "requested_path"
+            ]
+          }
+        },
+        "required": [
+          "normalized"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "type": "object",
+            "required": [
+              "interaction"
+            ],
+            "properties": {
+              "interaction": {
+                "type": "object",
+                "required": [
+                  "requested_control"
+                ],
+                "properties": {
+                  "requested_control": {
+                    "const": "generate_image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
