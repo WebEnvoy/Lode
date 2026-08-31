@@ -147,7 +147,7 @@
       "path": "composition-catalog.json",
       "status": "present",
       "composition_catalog_id": "xiaohongshu.publish-note-precheck.composition-catalog",
-      "composition_catalog_version": "0.1.0",
+      "composition_catalog_version": "0.1.1",
       "consumer": "WebEnvoy Core/App read-only composition discovery",
       "work_item": "LODE-294"
     },

@@ -158,14 +158,14 @@
         "input_schema": "0bc840bb909128fa8243ddf4d56aa087a043b46fdfc780436b2c15a86a4d4e46",
         "normalized_output_schema": "335f2723efcedd83f22469bfd107d57e79ed9aebb6421e7438698cfbac405fff",
         "resource_requirements": "cbfe930c1a271221a1a9a51da80912a4f5c8fca19b7b0efa1d03ffee624db365",
-        "version_lifecycle_metadata": "84c234770e15cffb5ceed0fb8a08c764307c5d294a012482e3d1200268ba0365",
+        "version_lifecycle_metadata": "87337f9d93d69eb8924eca9c3084edcb68756a2f3a73a8402fd48f30a8ec0d00",
         "write_deferred_guardrail": "dc1d901d9763557adcfca8d1fbd03b2a1a86bd151fe979e2f68e8dc7a1d17f77",
         "fixture": "1adfb60f27f974010d1f994db0e7f23d0c6daa940b3ecfb15c27cf81b6a56432",
         "core_consumption_fixture": "26af6d1fcd60fbc07c6ee619937a48f04737e402038a134c04a473dddfd49870",
         "post_check": "57aa3d23a6b76a4ae0c212977536666cdafbbf1331afca3f9fda7db60dbac183",
         "failure_mapping": "b423fb9195c70021d374f37e794352c0b4f7c872008e346bcb5505415d9333c4",
         "catalog_metadata": "94dc35bacdf839af130ee124131f9507bce01646e95a1b7559a12db9caa2c720",
-        "composition_catalog": "5338c2bcb092c42ebc3d24f72eebe172428aa304a9b709aa8fbbbb83119f2fe8",
+        "composition_catalog": "e360c1de46ed32cae9839a771dd4f3c3d51cb42936066b71405f352c939f62ec",
         "repair_draft": "fb0423334add3e1556f844b2d56c171a3992cb1aa97a956a925b3ccfa2a2ab02",
         "overlay_fork_metadata": "660214d6f2d1359fc7acad75f65c68ccd4b3e8fa922b32309712ac36c44639bc"
       }
