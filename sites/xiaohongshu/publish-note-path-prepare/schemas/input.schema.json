@@ -60,6 +60,12 @@
     "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
     "operation_ref": "lode://operation/xhs_publish_note_path_prepare",
     "operation_mode": "validate_only",
+    "sensitivity": {
+      "url": "public",
+      "target_ref": "harbor_ref",
+      "no_submit_guard": "public",
+      "requested_path": "public"
+    },
     "allowed_fields": [
       "url",
       "target_ref",
