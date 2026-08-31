@@ -1,0 +1,294 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "xiaohongshu.publish-note-path-prepare.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "capability_id": "publish-note-path-prepare",
+  "operation_id": "xhs_publish_note_path_prepare",
+  "operation_mode": "validate_only",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode maps bounded failure classes; Core owns the run outcome and Harbor owns live evidence."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Package or input contains a forbidden field or unsupported value.",
+      "owner": "Lode validator",
+      "core_mapping": {
+        "category": "invalid_contract",
+        "outcome_hint": "reject",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "请求合同无效；请移除额外字段。"
+      },
+      "recovery_hint": "Keep only the declared URL/ref, requested_path, and active no-submit guard."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Required managed browser, page, control-owner, readback, or refs are unavailable.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "当前受管页面资源不可用。"
+      },
+      "recovery_hint": "Restore the managed page and current evidence refs."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "Declared route or control semantics drift from the current page.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "页面结构已变化，未完成子路径准备。"
+      },
+      "recovery_hint": "Stop and collect a new reviewed contract; do not retry automatically."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "Target exists but no requested path or business state can be read.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "未观察到请求的图文子路径。"
+      },
+      "recovery_hint": "Keep observed_path unknown rather than inferring support."
+    },
+    {
+      "lode_failure_class": "preview_unavailable",
+      "trigger": "The bounded path selection preview cannot be formed.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "unavailable",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "无法安全准备图文子路径。"
+      },
+      "recovery_hint": "Return unavailable with submitted=false."
+    },
+    {
+      "lode_failure_class": "page_changed",
+      "trigger": "The exact target route or visible control no longer matches.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "mismatch",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "目标页面已漂移。"
+      },
+      "recovery_hint": "Require a fresh target and reviewed evidence."
+    },
+    {
+      "lode_failure_class": "user_cancelled",
+      "trigger": "The user did not confirm the requested visible path selection.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "cancelled",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "用户取消了路径准备。"
+      },
+      "recovery_hint": "Wait for a new explicit user request; do not retry."
+    },
+    {
+      "lode_failure_class": "login_required",
+      "trigger": "Managed identity is missing or expired.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "需要恢复小红书受管登录。"
+      },
+      "recovery_hint": "Restore identity through Harbor; Lode stores no credentials."
+    },
+    {
+      "lode_failure_class": "permission_insufficient",
+      "trigger": "The managed identity or control owner cannot select the requested path.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "当前身份没有路径控制权限。"
+      },
+      "recovery_hint": "Use a user-authorized managed target; never bypass control ownership."
+    },
+    {
+      "lode_failure_class": "path_mismatch",
+      "trigger": "observed_path is mismatch or differs from requested_path.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "mismatch",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "请求路径与页面回读不一致。"
+      },
+      "recovery_hint": "Report mismatch and stop without retrying."
+    },
+    {
+      "lode_failure_class": "composition_not_initialized",
+      "trigger": "Business-state readback says composition is not_initialized.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "partial_result",
+        "outcome_hint": "not_initialized",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "子路径已定位，但 composition 尚未初始化。"
+      },
+      "recovery_hint": "Do not infer initialized from path or entry visibility."
+    },
+    {
+      "lode_failure_class": "composition_unknown",
+      "trigger": "Composition business state cannot be safely read.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "unknown",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "composition 状态未知。"
+      },
+      "recovery_hint": "Return unknown and preserve no-submit."
+    },
+    {
+      "lode_failure_class": "target_not_writable",
+      "trigger": "Target or managed control owner is not confirmed.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "目标控制权未确认。"
+      },
+      "recovery_hint": "Do not use missing editor fields as proof of this failure."
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "A login challenge, risk control, or captcha is present.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "站点风控挑战阻断了路径准备。"
+      },
+      "recovery_hint": "Ask the user to resolve the challenge; never bypass it."
+    },
+    {
+      "lode_failure_class": "action_result_unknown",
+      "trigger": "Selection result or after-state is ambiguous.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "unknown",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "路径动作结果未知，未声称准备成功。"
+      },
+      "recovery_hint": "Stop and preserve submitted=false; do not retry automatically."
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "A required post-check field, state, or reference is missing or invalid.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "post_check_failed",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "路径准备后置检查未通过。"
+      },
+      "recovery_hint": "Use the failure refs to repair the contract; no automatic retry."
+    },
+    {
+      "lode_failure_class": "evidence_expired",
+      "trigger": "Source or evidence refs are stale or expired.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "evidence_unavailable",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "证据已过期，未确认路径状态。"
+      },
+      "recovery_hint": "Collect fresh refs in the formal #405 consumer."
+    }
+  ],
+  "aliases": [
+    {
+      "source": "unknown",
+      "maps_to": "composition_unknown",
+      "source_owner": "Core"
+    },
+    {
+      "source": "mismatch",
+      "maps_to": "path_mismatch",
+      "source_owner": "Core"
+    }
+  ],
+  "consumer_boundary": {
+    "core": "Core owns result envelope, unknown handling, and no-retry behavior.",
+    "app": "App may display structured path/composition failure and recovery guidance.",
+    "lode": "Lode owns only these static mappings and refs-only fixtures."
+  },
+  "non_goals": [
+    "No browser automation or live error execution.",
+    "No credential, runtime state, raw evidence, or user content storage.",
+    "No upload, generation, save, publish, submit, retry, or bypass behavior."
+  ]
+}

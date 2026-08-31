@@ -1,0 +1,272 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "xiaohongshu",
+    "display_name": "小红书",
+    "supported_origins": [
+      "https://www.xiaohongshu.com",
+      "https://creator.xiaohongshu.com"
+    ]
+  },
+  "capability": {
+    "capability_id": "publish-note-path-prepare",
+    "operation_id": "xhs_publish_note_path_prepare",
+    "operation_ref": "lode://operation/xhs_publish_note_path_prepare",
+    "capability_family": "xiaohongshu_publish_note_path",
+    "operation_mode": "validate_only",
+    "target_type": "creator_publish_page",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": [
+      "site:xiaohongshu",
+      "path-prepare",
+      "validate-only",
+      "risk:no-submit"
+    ]
+  },
+  "action_declaration": {
+    "schema_version": "lode.capability-action-declaration.v0",
+    "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
+    "actions": [
+      {
+        "action_id": "xhs_publish_note_path_prepare",
+        "category": "prepare",
+        "target_scope": {
+          "site_slug": "xiaohongshu",
+          "target_types": [
+            "creator_publish_page"
+          ],
+          "supported_origins": [
+            "https://creator.xiaohongshu.com"
+          ]
+        },
+        "resource_requirements": {
+          "path": "resource-requirements.json",
+          "id": "xiaohongshu.publish-note-path-prepare.resources",
+          "profile_ids": [
+            "xhs-creator-publish-page-path-prepare"
+          ]
+        },
+        "external_effects": []
+      }
+    ]
+  },
+  "action_boundary": {
+    "allowed": [
+      "exact_visible_path_control_selection",
+      "business_state_readback"
+    ],
+    "requested_paths": [
+      "image_text_upload",
+      "image_text_generate"
+    ],
+    "control_labels": {
+      "image_text_upload": "上传图片",
+      "image_text_generate": "文字配图"
+    },
+    "forbidden": [
+      "file_chooser",
+      "file_select",
+      "upload",
+      "generate",
+      "field_fill",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ],
+    "unknown_policy": "path_or_entry_visibility_never_proves_composition_initialized"
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/input@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "present",
+      "resource_requirements_id": "xiaohongshu.publish-note-path-prepare.resources",
+      "resource_requirements_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "lifecycle_metadata_id": "xiaohongshu.publish-note-path-prepare.lifecycle",
+      "lifecycle_metadata_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "guardrail_id": "xiaohongshu.publish-note-path-prepare.write-deferred-guardrail",
+      "guardrail_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/publish-note-path-prepare.fixture.json",
+      "status": "present",
+      "fixture_id": "xiaohongshu.publish-note-path-prepare.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "xiaohongshu.publish-note-path-prepare.source.creator_publish_page_summary@0.1.0",
+      "redaction": "summary_only",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "fixture_id": "xiaohongshu.publish-note-path-prepare.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "present",
+      "post_check_id": "xiaohongshu.publish-note-path-prepare.post-check",
+      "post_check_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "failure_mapping",
+      "path": "failure-mapping.json",
+      "status": "present",
+      "failure_mapping_id": "xiaohongshu.publish-note-path-prepare.failure-mapping",
+      "failure_mapping_version": "0.1.0",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "catalog_metadata_id": "xiaohongshu.publish-note-path-prepare.catalog-metadata",
+      "catalog_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App Library",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "composition_catalog",
+      "path": "composition-catalog.json",
+      "status": "present",
+      "composition_catalog_id": "xiaohongshu.publish-note-path-prepare.composition-catalog",
+      "composition_catalog_version": "0.1.1",
+      "consumer": "WebEnvoy Core/App composition facts for path preparation",
+      "work_item": "LODE-294"
+    },
+    {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "repair_draft_id": "xiaohongshu.publish-note-path-prepare.repair-draft",
+      "repair_draft_version": "0.1.0",
+      "consumer": "WebEnvoy App repair display and Core failure attribution",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "overlay_metadata_id": "xiaohongshu.publish-note-path-prepare.overlay-fork",
+      "overlay_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App refs-only repair status",
+      "work_item": "LODE-302"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "lock_id": "xiaohongshu.publish-note-path-prepare.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+      "work_item": "LODE-302"
+    }
+  ],
+  "lifecycle_metadata": {
+    "path": "lifecycle-metadata.json",
+    "lifecycle_metadata_id": "xiaohongshu.publish-note-path-prepare.lifecycle",
+    "lifecycle_metadata_version": "0.1.0",
+    "package_version": "0.1.0",
+    "lifecycle": "proposed",
+    "compatibility_range": ">=0.1.0 <0.2.0"
+  },
+  "fixture_metadata": {
+    "path": "fixtures/publish-note-path-prepare.fixture.json",
+    "fixture_id": "xiaohongshu.publish-note-path-prepare.fixture",
+    "fixture_version": "0.1.0",
+    "normalized_output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-path-prepare/output@0.1.0",
+    "redaction": "summary_only",
+    "source_ref_policy": "placeholder_refs_only",
+    "evidence_ref_policy": "placeholder_refs_only"
+  },
+  "core_consumption_fixture_metadata": {
+    "path": "fixtures/core-consumption.fixture.json",
+    "fixture_id": "xiaohongshu.publish-note-path-prepare.core-consumption-fixture",
+    "fixture_version": "0.1.0",
+    "consumer": "WebEnvoy Core",
+    "purpose": "Repo-local admission and schema validation only",
+    "runtime_execution": "out_of_scope"
+  },
+  "write_deferred_guardrail_metadata": {
+    "path": "write-deferred-guardrail.json",
+    "guardrail_id": "xiaohongshu.publish-note-path-prepare.write-deferred-guardrail",
+    "guardrail_version": "0.1.0",
+    "status": "active",
+    "current_package_allowed_modes": [
+      "validate_only"
+    ],
+    "runtime_execution": "out_of_scope",
+    "write_execution": "blocked"
+  },
+  "known_limitations": [
+    "Lifecycle remains proposed until WebEnvoy #405 supplies current-main live evidence.",
+    "Path controls and composition status are returned only when exact visible selection and business-state readback are both evidenced.",
+    "This package does not upload, generate, fill, save, publish, submit, retry, or bypass site controls."
+  ],
+  "forbidden_contents": [
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "live_tab_state",
+    "selector",
+    "dom",
+    "raw_evidence_body",
+    "production_payload",
+    "user_business_data"
+  ],
+  "covered_issues": [
+    "#302",
+    "#405"
+  ],
+  "anchor_work_item": "LODE-302",
+  "non_goals": [
+    "No browser, Harbor, Core, App, runtime or live evidence execution in Lode.",
+    "No file chooser, file selection, media upload, image generation, field fill, save draft, publish, submit, retry or bypass.",
+    "No credentials, profile/runtime state, raw DOM/HAR, screenshots, production payload or user content."
+  ]
+}
