@@ -707,6 +707,30 @@
       "evidence_policy": "refs_only_no_raw_bodies"
     },
     {
+      "query_id": "xiaohongshu-publish-note-path-prepare",
+      "purpose": "Expose the bounded Xiaohongshu image-text path preparation package to the WebEnvoy App catalog.",
+      "filters": {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0"
+      },
+      "covered_issues": [
+        "#302",
+        "#405"
+      ],
+      "results": [
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+          "capability_id": "publish-note-path-prepare",
+          "operation_id": "xhs_publish_note_path_prepare",
+          "operation_mode": "validate_only",
+          "manifest_path": "sites/xiaohongshu/publish-note-path-prepare/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-path-prepare@0.1.0",
+          "status": "static_contract_ready_for_WebEnvoy_405",
+          "no_submit_guard": "active",
+          "true_write_execution": "blocked"
+        }
+      ]
+    },
+    {
       "query_id": "real-page-write-precheck-packages",
       "purpose": "Expose Xiaohongshu and BOSS real-page write-precheck packages for Core/App local registry lookup.",
       "filters": {
