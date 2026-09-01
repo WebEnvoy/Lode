@@ -1976,9 +1976,9 @@
         "#409"
       ],
       "runtime_admission": {
-        "enabled": false,
-        "status": "deferred_proposed",
-        "recheck_condition": "WebEnvoy_409_both_action_paths_formal_Harbor_Core_App_evidence_with_post_check_and_reconciliation"
+        "enabled": true,
+        "status": "controlled_evidence",
+        "recheck_condition": "formal_live_evidence_required"
       }
     }
   ],
