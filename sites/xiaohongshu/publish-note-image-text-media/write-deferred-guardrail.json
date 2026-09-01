@@ -1,0 +1,102 @@
+{
+  "schema_version": "lode.write-deferred-guardrail.v0",
+  "guardrail_id": "xiaohongshu.publish-note-image-text-media.write-deferred-guardrail",
+  "guardrail_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "work_item": "LODE-307",
+  "guardrail": {
+    "status": "active",
+    "applies_to_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "current_package_allowed_modes": [],
+    "blocked_claims": [
+      "unverified_external_effect",
+      "unverified_operation_result",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ]
+  },
+  "validate_only_boundary": {
+    "status": "active",
+    "allowed_now": [
+      "contract_validation",
+      "refs_only_fixture_validation",
+      "operation_ref_shape_validation"
+    ],
+    "blocked_now": [
+      "live_action_execution",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ],
+    "requires_before_admission": [
+      "exact_declared_action_id",
+      "Core_single_action_authorization_binding",
+      "Core_idempotency_binding",
+      "current_Harbor_resource_match",
+      "live_operation_and_post_check_refs"
+    ]
+  },
+  "draft_preview_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "none_in_this_package"
+    ],
+    "blocked_now": [
+      "draft",
+      "preview",
+      "save_draft",
+      "publish"
+    ],
+    "requires_before_admission": [
+      "separate_contract",
+      "explicit_user_authorization",
+      "new_version"
+    ]
+  },
+  "true_write_boundary": {
+    "execution_status": "deferred",
+    "entry_condition_only": true,
+    "deferred_until": "WebEnvoy #409 current-main packaged live evidence for both action identities and later independent authorization checks"
+  },
+  "admission_guardrail": {
+    "write_execution": "blocked",
+    "must_reject_if": [
+      "action_id is missing, unknown, or does not match requested_path",
+      "Core cannot bind one single-action authorization decision to the exact action and target",
+      "Core cannot bind one TaskTurnRecord idempotency key to the exact action and target",
+      "required Harbor page/control/identity fact is absent, stale, or mismatched",
+      "operation result or external effect is unknown and a success claim is requested",
+      "post-check or reconciliation ref is absent",
+      "save_draft, publish, submit, retry, or bypass is requested",
+      "the action would store media bytes, user content, or private runtime material"
+    ],
+    "allowed_now": [
+      "contract_validation",
+      "refs_only_fixtures"
+    ]
+  },
+  "consumer_boundary": "Lode declares the proposed action contract and blocks package admission. Core owns authorization, idempotency, operation lifecycle and result envelope; Harbor owns live execution/evidence; App renders refs-only state.",
+  "source_decisions": [
+    "#307 requires upload and text-to-image generation to remain separate actions with separate external-effect declarations.",
+    "#409 supplies the first formal packaged live consumer and must prove both paths before lifecycle promotion.",
+    "#412/#295 own later field writing, save-draft and publish contracts independently."
+  ],
+  "non_goals": [
+    "No browser execution or live admission from this static guardrail.",
+    "No save draft, publish, submit, retry, or bypass behavior.",
+    "No copied Core run lifecycle, authorization record, idempotency key, or raw evidence."
+  ]
+}

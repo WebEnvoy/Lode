@@ -1,0 +1,87 @@
+{
+  "schema_version": "lode.overlay-fork-metadata.v0",
+  "overlay_metadata_id": "xiaohongshu.publish-note-image-text-media.overlay-fork",
+  "overlay_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "asset_boundary": {
+    "allowed_asset_kinds": [
+      "user_overlay",
+      "fork",
+      "repair_draft"
+    ],
+    "truth_owner": "Lode",
+    "allowed_storage": "repo-local refs and redacted metadata only",
+    "forbidden_material": [
+      "credentials",
+      "cookies",
+      "tokens",
+      "private browser material",
+      "raw evidence body",
+      "production payload",
+      "user business data",
+      "media bytes"
+    ]
+  },
+  "private_invalidation_boundary": {
+    "private_report_status": "local_signal_only",
+    "platform_report_status": "lode_public_fix_candidate",
+    "forbidden_private_material": [
+      "account identity",
+      "credential material",
+      "browser storage",
+      "private page content",
+      "raw runtime capture"
+    ],
+    "app_may_store": "local UI intent and report preference only"
+  },
+  "overlay_fork_examples": [
+    {
+      "asset_kind": "repair_draft",
+      "asset_ref": "lode://repair-draft/site-capability/xiaohongshu/publish-note-image-text-media/site-changed@0.2.0-draft",
+      "source": "site_changed failure mapping",
+      "status": "candidate",
+      "boundary": "refs-only fixture with no private browser material"
+    },
+    {
+      "asset_kind": "user_overlay",
+      "asset_ref": "lode://overlay/site-capability/xiaohongshu/publish-note-image-text-media/local-report@0.2.0-draft",
+      "source": "local user report signal",
+      "status": "local_only",
+      "boundary": "App intent only; promotion requires Lode checks"
+    },
+    {
+      "asset_kind": "fork",
+      "asset_ref": "lode://fork/site-capability/xiaohongshu/publish-note-image-text-media/public-sample@0.2.0-draft",
+      "source": "maintainer draft candidate",
+      "status": "candidate",
+      "boundary": "Package refs only; no raw evidence"
+    }
+  ],
+  "update_acceptance": {
+    "acceptance_checks": [
+      "validator_report_passed",
+      "repair_draft_validated",
+      "promotion_checks_passed",
+      "sensitive_material_scan_passed",
+      "previous_known_good_ref_retained"
+    ],
+    "promotion_requires": [
+      "new package version or explicit asset version bump",
+      "package lock invalidation reviewed",
+      "Core/App refs-only boundary unchanged"
+    ],
+    "reject_if": [
+      "contains credential or private browser material",
+      "contains raw evidence body or media bytes",
+      "claims hosted sync or runtime execution",
+      "claims stable action behavior without live evidence"
+    ]
+  },
+  "consumer_boundary": "App may render refs-only local report status. Lode owns package truth; Core owns run truth; Harbor owns evidence refs.",
+  "non_goals": [
+    "No marketplace, hosted sync, raw runtime ingestion, automatic retry, or true write execution."
+  ]
+}

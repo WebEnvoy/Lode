@@ -1875,6 +1875,111 @@
         "status": "deferred_experimental",
         "recheck_condition": "deferred_milestone_scope_restored_with_current_head_review_and_runtime_live_evidence"
       }
+    },
+    {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+      "package_type": "site-capability",
+      "package_path": "sites/xiaohongshu/publish-note-image-text-media",
+      "manifest_path": "sites/xiaohongshu/publish-note-image-text-media/manifest.json",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+      "lock_path": "sites/xiaohongshu/publish-note-image-text-media/package-lock.json",
+      "site_slug": "xiaohongshu",
+      "capability_id": "publish-note-image-text-media",
+      "operation_id": "xhs_publish_note_image_text_media",
+      "operation_mode": "write",
+      "version": "0.1.0",
+      "lifecycle": "proposed",
+      "lifecycle_state_vocabulary": [
+        "proposed",
+        "active",
+        "suspected_broken",
+        "broken",
+        "deprecated"
+      ],
+      "updated_at": "2026-09-01T00:00:00Z",
+      "version_status": {
+        "current": "0.1.0",
+        "latest": "0.1.0",
+        "default_locked": "0.1.0",
+        "compatibility_range": ">=0.1.0 <0.2.0"
+      },
+      "rollback": {
+        "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "status": "self_for_initial_version"
+      },
+      "asset_roles": [
+        "input_schema",
+        "normalized_output_schema",
+        "resource_requirements",
+        "version_lifecycle_metadata",
+        "write_deferred_guardrail",
+        "fixture",
+        "core_consumption_fixture",
+        "post_check",
+        "failure_mapping",
+        "catalog_metadata",
+        "repair_draft",
+        "overlay_fork_metadata",
+        "package_lock"
+      ],
+      "resolution": {
+        "strategy": "repo_relative_manifest",
+        "freshness_rule": "Revalidate package identity, action declarations, declared paths, lifecycle, asset roles, and lock before consumption.",
+        "failure_mapping": [
+          "registry_unavailable",
+          "asset_missing",
+          "invalid_contract",
+          "unsupported_version"
+        ]
+      },
+      "work_item": "LODE-307",
+      "lock_work_item": "LODE-307",
+      "consumer_contract": {
+        "first_consumer": "WebEnvoy #409",
+        "manifest_action_declaration_ref": "sites/xiaohongshu/publish-note-image-text-media/manifest.json#action_declaration",
+        "manifest_action_boundary_ref": "sites/xiaohongshu/publish-note-image-text-media/manifest.json#action_boundary",
+        "runtime_execution": "out_of_scope",
+        "admission": "deferred_until_both_action_paths_formal_live_evidence"
+      },
+      "runtime_execution": "out_of_scope",
+      "task_kind": "real_site_media_action",
+      "core_admission_fields": {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "version": "0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "manifest_path": "sites/xiaohongshu/publish-note-image-text-media/manifest.json",
+        "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+        "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+        "resource_requirements_id": "xiaohongshu.publish-note-image-text-media.resources",
+        "post_check_id": "xiaohongshu.publish-note-image-text-media.post-check",
+        "lifecycle": "proposed",
+        "operation_mode": "write",
+        "action_declaration_ref": "sites/xiaohongshu/publish-note-image-text-media/manifest.json#action_declaration",
+        "true_write_execution": "deferred_until_WebEnvoy_409_live_evidence",
+        "save_draft": "not_in_scope",
+        "publish": "not_in_scope",
+        "submitted": false
+      },
+      "runtime_boundary": {
+        "runtime_execution": "out_of_scope",
+        "runner_owner": "WebEnvoy Core",
+        "browser_session_owner": "Harbor",
+        "asset_owner": "Lode",
+        "live_validation": "deferred_to_WebEnvoy_409",
+        "core_lifecycle_owner": "WebEnvoy Core",
+        "boundary_ref": "sites/xiaohongshu/publish-note-image-text-media/manifest.json#action_boundary"
+      },
+      "covered_issues": [
+        "#307",
+        "#400",
+        "#409"
+      ],
+      "runtime_admission": {
+        "enabled": false,
+        "status": "deferred_proposed",
+        "recheck_condition": "WebEnvoy_409_both_action_paths_formal_Harbor_Core_App_evidence_with_post_check_and_reconciliation"
+      }
     }
   ],
   "non_goals": [

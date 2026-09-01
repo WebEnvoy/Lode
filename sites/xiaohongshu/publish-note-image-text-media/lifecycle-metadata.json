@@ -1,0 +1,301 @@
+{
+  "schema_version": "lode.lifecycle-metadata.v0",
+  "lifecycle_metadata_id": "xiaohongshu.publish-note-image-text-media.lifecycle",
+  "lifecycle_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "package_version": "0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "lifecycle_state_vocabulary": {
+    "states": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "state_meaning": {
+      "proposed": "Contract is reviewable and locally validated but no stable default admission or live product claim exists.",
+      "active": "A later version is the supported action contract after live evidence and promotion checks.",
+      "suspected_broken": "Recent evidence suggests the contract may no longer match the site.",
+      "broken": "Maintainer confirmed the contract is not admissible for new runs.",
+      "deprecated": "Historical package remains attributable but a replacement must be preferred."
+    },
+    "allowed_transitions": [
+      {
+        "from": "proposed",
+        "to": "active",
+        "requires": [
+          "validator_report_passed",
+          "both_action_paths_live_evidence_passed",
+          "post_check_and_reconciliation_refs_present",
+          "package_lock_present"
+        ]
+      },
+      {
+        "from": "active",
+        "to": "suspected_broken",
+        "requires_any": true,
+        "requires": [
+          "failed_recent_test",
+          "site_change_signal",
+          "post_check_failed",
+          "evidence_stale_or_expired"
+        ]
+      },
+      {
+        "from": "suspected_broken",
+        "to": "broken",
+        "requires": [
+          "maintainer_confirms_package_or_site_failure"
+        ]
+      },
+      {
+        "from": "suspected_broken",
+        "to": "active",
+        "requires": [
+          "repair_validated",
+          "live_evidence_refreshed",
+          "validator_report_passed"
+        ]
+      },
+      {
+        "from": "active",
+        "to": "deprecated",
+        "requires": [
+          "replacement_package_ref_declared",
+          "previous_known_good_preserved_for_history"
+        ]
+      },
+      {
+        "from": "broken",
+        "to": "deprecated",
+        "requires": [
+          "replacement_package_ref_declared"
+        ]
+      }
+    ],
+    "owner_boundary": "Lode owns package lifecycle and rollback refs; Core owns operation lifecycle; Harbor owns live evidence freshness; App only displays refs."
+  },
+  "lifecycle": {
+    "state": "proposed",
+    "stable_admission_allowed": false,
+    "consumer_meaning": "Reviewable static contract only; neither action is a stable default execution capability.",
+    "promotion_requirements": [
+      "input_schema_present",
+      "normalized_output_schema_present",
+      "resource_requirements_present",
+      "redacted_fixture_present",
+      "post_check_present",
+      "failure_mapping_present",
+      "validator_report_passed",
+      "local_package_resolution_checked",
+      "package_lock_present",
+      "both_action_paths_live_evidence_present",
+      "write_deferred_guardrail_present"
+    ],
+    "demotion_triggers": [
+      "input_contract_broken",
+      "output_contract_broken",
+      "source_shape_changed",
+      "fixture_invalid",
+      "post_check_failed",
+      "validator_report_failed"
+    ]
+  },
+  "version_identity": {
+    "version_scheme": "semver",
+    "current_version": "0.1.0",
+    "latest_version": "0.1.0",
+    "default_locked_version": "0.1.0",
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "version_owner": "Lode",
+    "breaking_change_requires_new_version": [
+      "package_ref, capability_id, operation_id, operation_mode, or action identity changes",
+      "required input/output fields, action effect mapping, or accepted status vocabulary changes",
+      "resource profile semantics or Core binding ownership changes",
+      "fixture, post-check, failure mapping, guardrail, or package lock identity changes",
+      "consumer package path or registry identity changes"
+    ],
+    "non_breaking_change_policy": [
+      "Documentation wording can change without a version bump.",
+      "Known limitations may be clarified without changing action identity or required fields."
+    ]
+  },
+  "rollback": {
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+      "package_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+      "status": "self_for_initial_version",
+      "validated_at": "2026-09-01T00:00:00Z",
+      "validation_source": "tools/lode_validate_package.py"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "status": "self_for_initial_version"
+      }
+    ],
+    "consumer_boundary": "Rollback is package/version/lock refs only; it contains no runtime or user material."
+  },
+  "lock_input": {
+    "lock_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+    "required_fields": [
+      "package_ref",
+      "package_version",
+      "capability_id",
+      "operation_id",
+      "operation_mode",
+      "lifecycle_metadata_id",
+      "lifecycle_metadata_version",
+      "input_schema_ref",
+      "input_schema_version",
+      "output_schema_ref",
+      "output_schema_version",
+      "resource_requirements_id",
+      "resource_requirements_version",
+      "write_deferred_guardrail_id",
+      "write_deferred_guardrail_version",
+      "fixture_id",
+      "fixture_version",
+      "core_consumption_fixture_id",
+      "core_consumption_fixture_version",
+      "post_check_id",
+      "post_check_version",
+      "failure_mapping_id",
+      "failure_mapping_version",
+      "package_lock_ref",
+      "package_lock_version"
+    ],
+    "asset_versions": [
+      {
+        "role": "input_schema",
+        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+        "version": "0.1.0"
+      },
+      {
+        "role": "normalized_output_schema",
+        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+        "version": "0.1.0"
+      },
+      {
+        "role": "resource_requirements",
+        "ref": "xiaohongshu.publish-note-image-text-media.resources",
+        "version": "0.1.0"
+      },
+      {
+        "role": "version_lifecycle_metadata",
+        "ref": "xiaohongshu.publish-note-image-text-media.lifecycle",
+        "version": "0.1.0"
+      },
+      {
+        "role": "write_deferred_guardrail",
+        "ref": "xiaohongshu.publish-note-image-text-media.write-deferred-guardrail",
+        "version": "0.1.0"
+      },
+      {
+        "role": "fixture",
+        "ref": "xiaohongshu.publish-note-image-text-media.fixture",
+        "version": "0.1.0"
+      },
+      {
+        "role": "core_consumption_fixture",
+        "ref": "xiaohongshu.publish-note-image-text-media.core-consumption-fixture",
+        "version": "0.1.0"
+      },
+      {
+        "role": "post_check",
+        "ref": "xiaohongshu.publish-note-image-text-media.post-check",
+        "version": "0.1.0"
+      },
+      {
+        "role": "failure_mapping",
+        "ref": "xiaohongshu.publish-note-image-text-media.failure-mapping",
+        "version": "0.1.0"
+      },
+      {
+        "role": "catalog_metadata",
+        "ref": "xiaohongshu.publish-note-image-text-media.catalog-metadata",
+        "version": "0.1.0"
+      },
+      {
+        "role": "repair_draft",
+        "ref": "xiaohongshu.publish-note-image-text-media.repair-draft",
+        "version": "0.1.0"
+      },
+      {
+        "role": "overlay_fork_metadata",
+        "ref": "xiaohongshu.publish-note-image-text-media.overlay-fork",
+        "version": "0.1.0"
+      }
+    ],
+    "planned_asset_placeholders": [],
+    "consumer_boundary": "Lode provides locked identity and asset refs only; Core owns run lifecycle and authorization."
+  },
+  "deprecation": {
+    "status": "not_deprecated",
+    "deprecated_at": null,
+    "replacement_package_ref": null,
+    "recovery_hint": "No replacement is declared for this proposed initial version."
+  },
+  "invalidation": {
+    "status": "not_invalidated",
+    "marker": null,
+    "allowed_markers": [
+      "temporarily_invalid",
+      "input_contract_broken",
+      "output_contract_broken",
+      "source_shape_changed",
+      "source_schema_changed",
+      "normalizer_failed",
+      "mapping_incomplete",
+      "resource_requirement_changed",
+      "verification_failed"
+    ],
+    "revalidation_triggers": [
+      "formal live evidence or post-check fails",
+      "source shape or action semantics change",
+      "schema, resource profile, guardrail, fixture, or lock validation fails"
+    ],
+    "evidence_boundary": "Invalidation stores refs and summaries only; no runtime or user material is embedded."
+  },
+  "failure_class_mapping": {
+    "invalid_contract": "Package or input violates the declared action boundary.",
+    "resource_unavailable": "Current Harbor facts cannot satisfy the selected action profile.",
+    "site_changed": "Page route or control semantics no longer match the contract.",
+    "operation_result_unknown": "External effect or operation outcome cannot be determined; no retry.",
+    "post_check_failed": "Post-check cannot reconcile action result with page state."
+  },
+  "forbidden_fields": [
+    "selector",
+    "selectors",
+    "dom",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "provider_key",
+    "harbor_profile_id",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "network_response_body",
+    "production_payload",
+    "user_business_data",
+    "media_bytes"
+  ],
+  "non_goals": [
+    "No package promotion from static fixtures.",
+    "No runtime execution, hosted registry, marketplace, or sync behavior.",
+    "No save draft, publish, submit, retry, bypass, or second Core lifecycle."
+  ]
+}
