@@ -113,7 +113,7 @@
       "action_id": "public",
       "requested_path": "public",
       "refs": "opaque_owner_refs",
-      "summary": "bounded_summary"
+      "summary": "public_safe_summary"
     },
     "allowed_fields": [
       "url",
