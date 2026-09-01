@@ -1,0 +1,676 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+  "title": "小红书图文媒体动作归一化输出",
+  "description": "承载图片上传或文字配图生成的 refs-only 结果形状；Core 维护 operation lifecycle，Lode 不复制 run record。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_kind",
+    "status",
+    "classification",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "xhs_publish_note_image_text_media"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "empty",
+        "unavailable"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "success_result",
+        "partial_result",
+        "empty_result",
+        "not_normalizable"
+      ]
+    },
+    "normalized": {
+      "$ref": "#/$defs/media_action_result"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "default": []
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      },
+      "default": []
+    },
+    "empty_reason": {
+      "type": "string",
+      "enum": [
+        "target_not_found",
+        "action_not_observed",
+        "media_not_present"
+      ]
+    },
+    "unavailable_reason": {
+      "type": "string",
+      "enum": [
+        "invalid_contract",
+        "resource_unavailable",
+        "login_required",
+        "permission_insufficient",
+        "safety_challenge",
+        "page_changed",
+        "media_ref_unavailable",
+        "generation_unavailable",
+        "operation_result_unknown",
+        "post_check_failed",
+        "reconciliation_unknown"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "source_refs_partial",
+          "evidence_refs_partial",
+          "operation_running",
+          "operation_result_unknown",
+          "media_constraints_unknown",
+          "order_unknown",
+          "replace_unknown",
+          "remove_unknown"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_refs",
+          "evidence_refs"
+        ],
+        "properties": {
+          "classification": {
+            "enum": [
+              "success_result",
+              "partial_result"
+            ]
+          },
+          "source_refs": {
+            "minItems": 1
+          },
+          "evidence_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "empty_reason"
+        ],
+        "properties": {
+          "classification": {
+            "const": "empty_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "unavailable_reason"
+        ],
+        "properties": {
+          "classification": {
+            "const": "not_normalizable"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "media_action_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_id",
+        "requested_path",
+        "canonical_url",
+        "target_ref",
+        "summary",
+        "source_status",
+        "business_effect",
+        "operation",
+        "media_readback",
+        "page_readback",
+        "post_check",
+        "reconciliation",
+        "recovery",
+        "save_draft",
+        "publish",
+        "submitted"
+      ],
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "enum": [
+            "xhs_publish_note_image_text_media.image_upload",
+            "xhs_publish_note_image_text_media.text_to_image_generate"
+          ]
+        },
+        "requested_path": {
+          "type": "string",
+          "enum": [
+            "image_text_upload",
+            "image_text_generate"
+          ]
+        },
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "located",
+            "partially_located",
+            "unknown"
+          ]
+        },
+        "business_effect": {
+          "$ref": "#/$defs/business_effect"
+        },
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "media_readback": {
+          "$ref": "#/$defs/media_readback"
+        },
+        "page_readback": {
+          "$ref": "#/$defs/page_readback"
+        },
+        "post_check": {
+          "$ref": "#/$defs/post_check"
+        },
+        "reconciliation": {
+          "$ref": "#/$defs/reconciliation"
+        },
+        "recovery": {
+          "$ref": "#/$defs/recovery"
+        },
+        "save_draft": {
+          "const": "not_in_scope"
+        },
+        "publish": {
+          "const": "not_in_scope"
+        },
+        "submitted": {
+          "const": false
+        }
+      },
+      "oneOf": [
+        {
+          "title": "图片上传结果",
+          "properties": {
+            "action_id": {
+              "const": "xhs_publish_note_image_text_media.image_upload"
+            },
+            "requested_path": {
+              "const": "image_text_upload"
+            },
+            "business_effect": {
+              "properties": {
+                "kind": {
+                  "const": "upload"
+                }
+              }
+            },
+            "media_readback": {
+              "required": [
+                "media_count",
+                "order_status"
+              ]
+            }
+          }
+        },
+        {
+          "title": "文字配图生成结果",
+          "properties": {
+            "action_id": {
+              "const": "xhs_publish_note_image_text_media.text_to_image_generate"
+            },
+            "requested_path": {
+              "const": "image_text_generate"
+            },
+            "business_effect": {
+              "properties": {
+                "kind": {
+                  "const": "generate"
+                }
+              }
+            },
+            "media_readback": {
+              "required": [
+                "generation_result_ref"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "business_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "status"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "upload",
+            "generate"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "observed",
+            "unknown",
+            "failed"
+          ]
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operation_ref"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "running",
+            "terminal",
+            "unknown_outcome"
+          ]
+        },
+        "terminal_state": {
+          "type": "string",
+          "enum": [
+            "success",
+            "failure"
+          ]
+        },
+        "operation_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "enum": [
+                "accepted",
+                "running",
+                "unknown_outcome"
+              ]
+            }
+          },
+          "not": {
+            "required": [
+              "terminal_state"
+            ]
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "terminal"
+            }
+          },
+          "required": [
+            "terminal_state"
+          ]
+        }
+      ]
+    },
+    "media_readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "media_count",
+        "order_status",
+        "generation_result_ref"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch",
+            "not_applicable"
+          ]
+        },
+        "media_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "order_status": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "ordered_item_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+          }
+        },
+        "generation_result_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        }
+      }
+    },
+    "page_readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "page_state_ref",
+        "route_state"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        },
+        "page_state_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "route_state": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "unknown",
+            "mismatch"
+          ]
+        }
+      }
+    },
+    "post_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "ref"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "skipped"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "ref"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "mismatched",
+            "unknown",
+            "not_run"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        }
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "entrypoint"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "not_required",
+            "required",
+            "unknown"
+          ]
+        },
+        "entrypoint": {
+          "type": "string",
+          "enum": [
+            "inspect_operation_ref",
+            "await_post_check",
+            "manual_reconciliation",
+            "none"
+          ]
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "source_kind",
+        "producer",
+        "redaction",
+        "schema_hint"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:/-]*$"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "media_action_summary",
+            "creator_publish_page_summary",
+            "business_state_summary"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        },
+        "schema_hint": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_id",
+        "evidence_kind",
+        "producer",
+        "redaction"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:/-]*$"
+        },
+        "evidence_kind": {
+          "type": "string",
+          "enum": [
+            "operation_ref",
+            "post_check_ref",
+            "reconciliation_ref",
+            "snapshot_ref"
+          ]
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "core",
+            "harbor",
+            "fixture"
+          ]
+        },
+        "redaction": {
+          "type": "string",
+          "enum": [
+            "summary_only",
+            "placeholder_only"
+          ]
+        }
+      }
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-media.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_media",
+    "result_kind": "xhs_publish_note_image_text_media",
+    "core_envelope_owner": "WebEnvoy Core",
+    "core_lifecycle_statuses": [
+      "accepted",
+      "running",
+      "terminal",
+      "unknown_outcome"
+    ],
+    "core_lifecycle_owner": "WebEnvoy Core",
+    "required_refs": [
+      "operation_ref",
+      "post_check_ref",
+      "reconciliation_ref"
+    ],
+    "save_draft_publish": "not_in_scope",
+    "unknown_policy": "Unknown external effect, operation outcome, page state or media readback remains unknown and is never retried automatically.",
+    "forbidden_inline_fields": [
+      "selector",
+      "selectors",
+      "dom",
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "media_bytes",
+      "production_payload",
+      "user_business_data"
+    ]
+  }
+}

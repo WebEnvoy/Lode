@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+  "title": "小红书图文媒体动作输入",
+  "description": "一次只请求一个已声明的图片上传或文字配图生成动作；输入仅携带目标、opaque refs 和摘要，授权与幂等绑定由 Core 既有运行时事实承载。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "target_ref",
+    "action_id",
+    "requested_path",
+    "refs",
+    "summary"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$",
+      "description": "受管小红书创作页目标 URL；不携带凭据或生产 payload。"
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "description": "Harbor/Core 拥有的 opaque 目标引用。"
+    },
+    "action_id": {
+      "type": "string",
+      "enum": [
+        "xhs_publish_note_image_text_media.image_upload",
+        "xhs_publish_note_image_text_media.text_to_image_generate"
+      ],
+      "description": "独立业务动作身份，不是可切换的泛化 mode。"
+    },
+    "requested_path": {
+      "type": "string",
+      "enum": [
+        "image_text_upload",
+        "image_text_generate"
+      ],
+      "description": "用户明确选择的图文媒体路径；Core 不从 URL 猜测。"
+    },
+    "refs": {
+      "type": "array",
+      "maxItems": 18,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+        "description": "由上游 owner 持有的 opaque media/owner ref；Lode 不读取或保存其内容。"
+      },
+      "description": "图片上传使用一个或多个 opaque media refs；文字配图可为空。"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "生成输入的短摘要或媒体意图摘要，不是用户正文、提示词全文或媒体内容。"
+    }
+  },
+  "oneOf": [
+    {
+      "title": "图片上传",
+      "required": [
+        "action_id",
+        "requested_path",
+        "refs"
+      ],
+      "properties": {
+        "action_id": {
+          "const": "xhs_publish_note_image_text_media.image_upload"
+        },
+        "requested_path": {
+          "const": "image_text_upload"
+        },
+        "refs": {
+          "minItems": 1
+        }
+      }
+    },
+    {
+      "title": "文字配图生成",
+      "required": [
+        "action_id",
+        "requested_path",
+        "summary"
+      ],
+      "properties": {
+        "action_id": {
+          "const": "xhs_publish_note_image_text_media.text_to_image_generate"
+        },
+        "requested_path": {
+          "const": "image_text_generate"
+        },
+        "refs": {
+          "maxItems": 0
+        }
+      }
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-media.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_media",
+    "operation_mode": "write",
+    "sensitivity": {
+      "url": "public",
+      "target_ref": "harbor_ref",
+      "action_id": "public",
+      "requested_path": "public",
+      "refs": "opaque_owner_refs",
+      "summary": "bounded_summary"
+    },
+    "allowed_fields": [
+      "url",
+      "target_ref",
+      "action_id",
+      "requested_path",
+      "refs",
+      "summary"
+    ],
+    "authorization_binding": "Core binds its existing single-use authorization decision to the exact action_id and target_ref; Lode does not copy authorization refs.",
+    "idempotency_binding": "Core binds its existing TaskTurnRecord idempotency_key to the exact action_id and target_ref; Lode does not copy the key.",
+    "forbidden_fields": [
+      "selector",
+      "selectors",
+      "dom",
+      "cookies",
+      "tokens",
+      "profile_state",
+      "runtime_session",
+      "media_bytes",
+      "content",
+      "production_payload",
+      "user_business_data"
+    ],
+    "unknown_policy": "Missing or ambiguous action facts remain unknown and are not retried automatically."
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "xiaohongshu.publish-note-image-text-media.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode maps bounded failure classes; Core owns the operation result and Harbor owns live evidence."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Action identity, requested path, ref or package contract is malformed.",
+      "owner": "Lode validator/Core admission",
+      "core_mapping": {"category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "媒体动作合同无效。"},
+      "recovery_hint": "Use exactly one declared action and only the allowed refs/summary fields."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Required managed page, control, identity or evidence fact is unavailable.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {"category": "requires_user_action", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "当前小红书媒体页面资源不可用。"},
+      "recovery_hint": "Restore the managed page and collect fresh refs."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "Route, control semantics or readback shape differs from the contract.",
+      "owner": "WebEnvoy Core/Lode",
+      "core_mapping": {"category": "site_changed", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "页面动作语义已变化，未继续执行。"},
+      "recovery_hint": "Stop and review a new package version; do not retry automatically."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "Target is present but no requested media action/result is available.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {"category": "empty_result", "outcome_hint": "empty", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "页面未提供所请求的媒体动作结果。"},
+      "recovery_hint": "Keep the result empty; do not infer media support."
+    },
+    {
+      "lode_failure_class": "login_required",
+      "trigger": "Managed identity cannot be confirmed for the creator page.",
+      "owner": "Harbor",
+      "core_mapping": {"category": "requires_user_action", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "需要恢复小红书登录状态。"},
+      "recovery_hint": "Restore the managed identity through the product entrypoint."
+    },
+    {
+      "lode_failure_class": "permission_insufficient",
+      "trigger": "Current managed identity cannot control the named action.",
+      "owner": "Harbor",
+      "core_mapping": {"category": "permission", "outcome_hint": "blocked", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "当前身份无权执行该媒体动作。"},
+      "recovery_hint": "Use an authorized identity or stop."
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "Site challenge or risk control is present.",
+      "owner": "Harbor",
+      "core_mapping": {"category": "safety_challenge", "outcome_hint": "blocked", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "页面触发风险验证，已停止媒体动作。"},
+      "recovery_hint": "Require explicit user handling; do not bypass or retry."
+    },
+    {
+      "lode_failure_class": "user_cancelled",
+      "trigger": "User cancels the single authorized media action.",
+      "owner": "WebEnvoy App/Core",
+      "core_mapping": {"category": "cancelled", "outcome_hint": "cancelled", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "媒体动作已取消。"},
+      "recovery_hint": "Await a new explicit action authorization."
+    },
+    {
+      "lode_failure_class": "media_ref_unavailable",
+      "trigger": "An image input ref cannot be resolved by its owner.",
+      "owner": "Input owner/Core",
+      "core_mapping": {"category": "input_unavailable", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "图片引用不可用，未替换输入。"},
+      "recovery_hint": "Ask the user to provide a new authorized ref; do not read or store media bytes."
+    },
+    {
+      "lode_failure_class": "generation_unavailable",
+      "trigger": "Required text-to-image input or visible generation control is unavailable.",
+      "owner": "Harbor/Core",
+      "core_mapping": {"category": "resource_unavailable", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "文字配图输入或生成控件不可用。"},
+      "recovery_hint": "Keep generation unknown until the page is safely observed."
+    },
+    {
+      "lode_failure_class": "operation_running",
+      "trigger": "Core reports the selected operation is still running.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {"category": "running", "outcome_hint": "running", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "媒体动作仍在执行，请等待终态。"},
+      "recovery_hint": "Follow the existing operation ref; do not start a second action."
+    },
+    {
+      "lode_failure_class": "operation_result_unknown",
+      "trigger": "Upload/generation may have occurred but terminal result cannot be determined.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {"category": "unknown_outcome", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "媒体动作结果未知，未自动重试。"},
+      "recovery_hint": "Expose the operation ref and recovery entrypoint for reconciliation."
+    },
+    {
+      "lode_failure_class": "upload_failed",
+      "trigger": "The named image upload reached a terminal failure.",
+      "owner": "Harbor/Core",
+      "core_mapping": {"category": "action_failed", "outcome_hint": "failed", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "图片上传失败。"},
+      "recovery_hint": "Show the terminal operation ref and wait for a new authorization before another attempt."
+    },
+    {
+      "lode_failure_class": "generation_failed",
+      "trigger": "The named text-to-image generation reached a terminal failure.",
+      "owner": "Harbor/Core",
+      "core_mapping": {"category": "action_failed", "outcome_hint": "failed", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "文字配图生成失败。"},
+      "recovery_hint": "Show the terminal operation ref; do not silently regenerate."
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "The required post-check cannot verify page/media readback.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {"category": "post_check_failed", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "媒体结果回读校验失败。"},
+      "recovery_hint": "Keep operation and page state unresolved; do not retry."
+    },
+    {
+      "lode_failure_class": "reconciliation_unknown",
+      "trigger": "Operation ref exists but final page state cannot be reconciled.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {"category": "reconciliation_unknown", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true},
+      "app_mapping": {"display": "媒体页面最终状态未知。"},
+      "recovery_hint": "Use the declared recovery entrypoint; never infer success."
+    },
+    {
+      "lode_failure_class": "order_unknown",
+      "trigger": "Production evidence does not prove image order behavior.",
+      "owner": "Lode/Core",
+      "core_mapping": {"category": "not_supported", "outcome_hint": "unknown", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "图片顺序能力尚未验证。"},
+      "recovery_hint": "Keep order unknown and defer to a later package version."
+    },
+    {
+      "lode_failure_class": "replace_unknown",
+      "trigger": "Production evidence does not prove replacement behavior.",
+      "owner": "Lode/Core",
+      "core_mapping": {"category": "not_supported", "outcome_hint": "unknown", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "图片替换能力尚未验证。"},
+      "recovery_hint": "Keep replacement unknown; do not construct a generic media framework."
+    },
+    {
+      "lode_failure_class": "remove_unknown",
+      "trigger": "Production evidence does not prove removal behavior.",
+      "owner": "Lode/Core",
+      "core_mapping": {"category": "not_supported", "outcome_hint": "unknown", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "图片删除能力尚未验证。"},
+      "recovery_hint": "Keep removal unknown and defer it to a later version."
+    },
+    {
+      "lode_failure_class": "save_draft_not_in_scope",
+      "trigger": "A caller requests save-draft through this media package.",
+      "owner": "Lode/Core admission",
+      "core_mapping": {"category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "保存草稿不属于当前媒体动作。"},
+      "recovery_hint": "Use the separate save-draft contract only after its own authorization."
+    },
+    {
+      "lode_failure_class": "publish_not_in_scope",
+      "trigger": "A caller requests publish through this media package.",
+      "owner": "Lode/Core admission",
+      "core_mapping": {"category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false},
+      "app_mapping": {"display": "发布不属于当前媒体动作。"},
+      "recovery_hint": "Use the separate publish contract only after its own authorization."
+    }
+  ],
+  "unknown_policy": {
+    "retryable_by_default": false,
+    "success_claim_requires": [
+      "terminal success",
+      "matching external-effect mapping",
+      "page/media readback",
+      "post_check_ref",
+      "reconciliation_ref"
+    ],
+    "operation_ref_owner": "WebEnvoy Core"
+  },
+  "non_goals": [
+    "No live error execution, browser automation, or external-effect retry.",
+    "No credentials, private runtime state, raw evidence, media bytes, save-draft, or publish behavior."
+  ]
+}

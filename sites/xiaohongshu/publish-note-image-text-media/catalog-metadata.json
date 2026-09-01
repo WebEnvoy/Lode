@@ -1,0 +1,112 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "xiaohongshu.publish-note-image-text-media.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "小红书",
+    "manifest_path": "sites/xiaohongshu/publish-note-image-text-media/manifest.json"
+  },
+  "display": {
+    "name": "小红书图文媒体动作合同",
+    "summary": "两个独立的图片上传与文字配图生成 commit action；只提供 proposed contract，不代表稳定可用或自动执行。",
+    "site_name": "小红书",
+    "category": "media-action"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+        "status": "self_for_initial_version"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "static_contract_only",
+    "updated_at": "2026-09-01T00:00:00Z"
+  },
+  "risk": {
+    "level": "high",
+    "operation": "write-precheck",
+    "reason": "Actions classify upload/create external effects; live admission remains blocked until WebEnvoy #409 proves both paths."
+  },
+  "facets": [
+    "site:xiaohongshu",
+    "image-text",
+    "media-action",
+    "proposed",
+    "two-independent-actions"
+  ],
+  "action_declaration_ref": "manifest.json#action_declaration",
+  "action_ids": [
+    "xhs_publish_note_image_text_media.image_upload",
+    "xhs_publish_note_image_text_media.text_to_image_generate"
+  ],
+  "effect_mapping_owner": "Manifest action_declaration is authoritative: upload action uses effect token upload; text-to-image action uses effect token create and business readback kind generate.",
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present_unknown_only",
+    "post_check_fixture_status": "skipped",
+    "runtime_execution": "out_of_scope_formal_consumer_WebEnvoy_409"
+  },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired",
+      "operation_result_unknown"
+    ],
+    "overlay_fork_metadata_path": "sites/xiaohongshu/publish-note-image-text-media/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may display refs-only recovery status; Lode owns package truth."
+  },
+  "consumer_boundary": "WebEnvoy #409 is the first live consumer. Core owns authorization, idempotency, operation lifecycle and result envelope; Harbor owns execution/evidence; App may display refs-only state.",
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+    "manifest_path": "sites/xiaohongshu/publish-note-image-text-media/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+    "resource_requirements_id": "xiaohongshu.publish-note-image-text-media.resources",
+    "post_check_id": "xiaohongshu.publish-note-image-text-media.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "write"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
+  },
+  "covered_issues": [
+    "#307",
+    "#409",
+    "#400"
+  ],
+  "anchor_work_item": "LODE-307"
+}

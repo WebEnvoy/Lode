@@ -1,0 +1,95 @@
+{
+  "schema_version": "lode.repair-draft.v0",
+  "repair_draft_id": "xiaohongshu.publish-note-image-text-media.repair-draft",
+  "repair_draft_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "capability_id": "publish-note-image-text-media",
+  "operation_id": "xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "run_result_owner": "WebEnvoy Core",
+    "runtime_evidence_ref_owner": "WebEnvoy Harbor",
+    "display_owner": "WebEnvoy App",
+    "summary": "Repair metadata points to a future package update and never stores live evidence or runtime state."
+  },
+  "failure_to_repair": [
+    {"failure_class": "invalid_contract", "repair_owner": "Lode", "draft_action": "repair_action_schema_or_identity", "app_summary": "The media action contract needs maintainer repair."},
+    {"failure_class": "site_changed", "repair_owner": "Lode", "draft_action": "refresh_action_shape_from_reviewed_evidence", "app_summary": "The page action shape changed; a new package candidate is required."},
+    {"failure_class": "post_check_failed", "repair_owner": "Lode/Core/Harbor coordination", "draft_action": "refresh_post_check_mapping", "app_summary": "The action result did not reconcile with page state."},
+    {"failure_class": "evidence_expired", "repair_owner": "Harbor/Core/Lode coordination", "draft_action": "request_fresh_refs_then_revalidate", "app_summary": "Evidence refs expired; no action result is promoted."}
+  ],
+  "draft_lifecycle": {
+    "states": [
+      "candidate",
+      "validated",
+      "promoted",
+      "rejected"
+    ],
+    "allowed_transitions": [
+      {"from": "candidate", "to": "validated", "requires": "validator_report_passed"},
+      {"from": "validated", "to": "promoted", "requires": "package_update_acceptance_passed"},
+      {"from": "candidate", "to": "rejected", "requires": "invalid_or_out_of_scope"}
+    ]
+  },
+  "validation_and_promotion": {
+    "draft_validation_checks": [
+      "validator_report_passed",
+      "post_check_fixture_output_passed",
+      "sensitive_material_scan_passed",
+      "refs_only_sources_present"
+    ],
+    "promotion_checks": [
+      "new_package_version_or_asset_version_bump",
+      "previous_known_good_ref_retained",
+      "consumer_boundary_unchanged",
+      "both_action_paths_live_evidence_present",
+      "no_private_runtime_material"
+    ],
+    "promotion_target": {
+      "target_kind": "package_update",
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.2.0",
+      "requires_new_version": true,
+      "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0"
+    }
+  },
+  "repair_drafts": [
+    {
+      "draft_ref": "lode://repair-draft/site-capability/xiaohongshu/publish-note-image-text-media/site-changed@0.2.0-draft",
+      "source_failure_class": "site_changed",
+      "status": "candidate",
+      "summary": "Refresh the two action shapes only after current WebEnvoy/Harbor evidence is reviewed.",
+      "source_refs": [
+        {"ref_id": "fixture-source-state", "source_kind": "media_action_summary", "redaction": "summary_only"}
+      ],
+      "asset_boundary": {
+        "allowed_asset_kinds": [
+          "fixture",
+          "post_check",
+          "failure_mapping",
+          "catalog_metadata"
+        ],
+        "forbidden_material": [
+          "credentials",
+          "cookies",
+          "tokens",
+          "private browser material",
+          "full document body",
+          "network response body",
+          "production payload",
+          "user business data",
+          "media bytes"
+        ]
+      }
+    }
+  ],
+  "forbidden_material_policy": {
+    "raw_runtime_material": "forbidden",
+    "sensitive_user_material": "forbidden",
+    "private_browser_material": "forbidden"
+  },
+  "consumer_boundary": "App may display repair refs and status; Core owns operation result; Harbor owns evidence; Lode owns package update truth.",
+  "non_goals": [
+    "No marketplace, hosted sync, browser execution, automatic retry, save-draft, publish, or private evidence storage."
+  ]
+}

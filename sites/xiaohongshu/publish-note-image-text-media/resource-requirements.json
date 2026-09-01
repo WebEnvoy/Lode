@@ -1,0 +1,208 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "xiaohongshu.publish-note-image-text-media.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+  "operation_ref": "lode://operation/xhs_publish_note_image_text_media",
+  "operation_mode": "write",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "result_owner": "WebEnvoy Core",
+    "notes": [
+      "Lode declares two action profiles and keeps only refs-only contracts.",
+      "Core binds the existing task turn, single-action authorization decision, and idempotency key to one exact action.",
+      "Harbor owns the managed page, business-effect observation, operation refs, and post-check evidence."
+    ]
+  },
+  "matching_semantics": {
+    "profile_match_rule": "exact_action_profile",
+    "profile_order": "not_priority",
+    "matched_meaning": "Current Harbor facts satisfy the prerequisites for the named action; this does not prove that the action has executed.",
+    "unmatched_meaning": "Return unavailable or unknown without selecting a different action.",
+    "offline_validator_scope": "contract_shape_and_forbidden_field_checks_only_no_live_harbor_matching"
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "xhs-image-upload",
+      "description": "小红书图文图片上传：使用上游提供的 opaque refs，执行一次上传并回读进度、终态与页面媒体顺序。",
+      "operation_boundary": "write",
+      "action_id": "xhs_publish_note_image_text_media.image_upload",
+      "required_harbor_facts": [
+        "runtime.execution_surface.available",
+        "runtime.site_identity.managed",
+        "snapshot.creator_publish_entrypoint.available",
+        "snapshot.image_upload_control.visible",
+        "control_owner.xiaohongshu.managed",
+        "business_state.media_readback.available",
+        "operation_ref.accepted_or_running",
+        "post_check.ref_available",
+        "safety.challenge.absent"
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+        "allowed_origins": [
+          "https://creator.xiaohongshu.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "target_ref",
+          "action_id",
+          "requested_path",
+          "refs",
+          "summary"
+        ],
+        "action_id": "xhs_publish_note_image_text_media.image_upload",
+        "requested_path": "image_text_upload",
+        "refs_policy": "one_or_more_opaque_owner_refs_preserving_input_order",
+        "summary_policy": "bounded_intent_summary_only"
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+        "required_normalized_fields": [
+          "action_id",
+          "requested_path",
+          "business_effect",
+          "operation",
+          "media_readback",
+          "page_readback",
+          "post_check",
+          "reconciliation",
+          "recovery",
+          "submitted"
+        ],
+        "required_refs": [
+          "operation.operation_ref",
+          "post_check.ref",
+          "reconciliation.ref"
+        ]
+      }
+    },
+    {
+      "requirement_profile_id": "xhs-text-to-image-generate",
+      "description": "小红书图文文字配图：只使用摘要输入，在生成控件与所需页面输入均已观察时执行一次生成并回读结果。",
+      "operation_boundary": "write",
+      "action_id": "xhs_publish_note_image_text_media.text_to_image_generate",
+      "required_harbor_facts": [
+        "runtime.execution_surface.available",
+        "runtime.site_identity.managed",
+        "snapshot.creator_publish_entrypoint.available",
+        "snapshot.text_to_image_control.visible",
+        "snapshot.text_to_image_input.available",
+        "control_owner.xiaohongshu.managed",
+        "business_state.media_readback.available",
+        "operation_ref.accepted_or_running",
+        "post_check.ref_available",
+        "safety.challenge.absent"
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
+        "allowed_origins": [
+          "https://creator.xiaohongshu.com"
+        ],
+        "required_input_fields": [
+          "url",
+          "target_ref",
+          "action_id",
+          "requested_path",
+          "refs",
+          "summary"
+        ],
+        "action_id": "xhs_publish_note_image_text_media.text_to_image_generate",
+        "requested_path": "image_text_generate",
+        "refs_policy": "empty_or_owner_refs_only_no_media_bytes",
+        "summary_policy": "bounded_generation_intent_summary_only"
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/output@0.1.0",
+        "required_normalized_fields": [
+          "action_id",
+          "requested_path",
+          "business_effect",
+          "operation",
+          "media_readback",
+          "page_readback",
+          "post_check",
+          "reconciliation",
+          "recovery",
+          "submitted"
+        ],
+        "required_refs": [
+          "operation.operation_ref",
+          "post_check.ref",
+          "reconciliation.ref"
+        ]
+      }
+    }
+  ],
+  "action_admission": {
+    "action_selection": "The exact action_id selects one profile; a requested_path mismatch is invalid and cannot fall through to another action.",
+    "authorization": "Core must bind one existing single-action decision to action_id and target_ref before execution.",
+    "idempotency": "Core must bind one existing TaskTurnRecord idempotency key to action_id and target_ref; Lode stores neither.",
+    "external_effects": {
+      "xhs_publish_note_image_text_media.image_upload": "upload",
+      "xhs_publish_note_image_text_media.text_to_image_generate": "create"
+    },
+    "unknown_outcome": "Preserve unknown_outcome with operation ref and recovery entrypoint; never retry automatically."
+  },
+  "evidence_requirements": {
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "required_ref_kinds": [
+      "media_action_summary",
+      "snapshot_ref",
+      "operation_ref",
+      "post_check_ref",
+      "reconciliation_ref"
+    ],
+    "live_evidence_status": "required_from_WebEnvoy_409",
+    "static_fixture_status": "contract_shape_only_not_live_evidence"
+  },
+  "failure_class_mapping": {
+    "resource_unavailable": "Required page, control, identity, or evidence facts are unavailable.",
+    "permission_insufficient": "The current managed identity cannot control the named action.",
+    "page_changed": "The route or named action control no longer matches the reviewed contract.",
+    "media_ref_unavailable": "An input ref cannot be resolved by its owner; do not substitute a file or retry.",
+    "generation_unavailable": "Required generation input/control is missing or not safely readable.",
+    "operation_result_unknown": "The external effect or final operation result cannot be determined.",
+    "post_check_failed": "The post-check cannot reconcile the operation with the page state.",
+    "reconciliation_unknown": "The operation ref exists but final page reconciliation remains unknown."
+  },
+  "forbidden_fields": [
+    "selector",
+    "selectors",
+    "dom",
+    "cookies",
+    "tokens",
+    "profile_state",
+    "runtime_session",
+    "runtime_session_id",
+    "live_tab_state",
+    "provider_key",
+    "harbor_profile_id",
+    "local_path",
+    "storage_url",
+    "proxy",
+    "raw_evidence_body",
+    "full_dom",
+    "har",
+    "screenshot_body",
+    "network_response_body",
+    "production_payload",
+    "user_business_data",
+    "media_bytes"
+  ],
+  "non_goals": [
+    "No profile/provider/session selection or live matching in Lode.",
+    "No media byte storage, field fill, save draft, publish, submit, retry, or bypass.",
+    "No ordering, replacement, or deletion claim without direct production evidence.",
+    "No copied Core run lifecycle or second operation state machine."
+  ],
+  "covered_issues": [
+    "#307",
+    "#409"
+  ],
+  "anchor_work_item": "LODE-307"
+}
