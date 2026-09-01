@@ -1967,6 +1967,36 @@
       ],
       "live_validation": "not_attempted_real_account_access_forbidden",
       "evidence_policy": "refs_only_no_raw_bodies"
+    },
+    {
+      "query_id": "xiaohongshu-publish-note-image-text-media",
+      "purpose": "Expose the two controlled-evidence Xiaohongshu image-text media actions to the WebEnvoy App catalog.",
+      "filters": {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0"
+      },
+      "covered_issues": [
+        "#307",
+        "#409",
+        "#400"
+      ],
+      "results": [
+        {
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+          "capability_id": "publish-note-image-text-media",
+          "operation_id": "xhs_publish_note_image_text_media",
+          "operation_mode": "write",
+          "manifest_path": "sites/xiaohongshu/publish-note-image-text-media/manifest.json",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-media@0.1.0",
+          "status": "controlled_evidence",
+          "runtime_admission": {
+            "enabled": true,
+            "status": "controlled_evidence",
+            "recheck_condition": "formal_live_evidence_required"
+          },
+          "save_draft": "not_in_scope",
+          "publish": "not_in_scope"
+        }
+      ]
     }
   ],
   "consumer_boundary": "App/Core may consume refs, versions, lifecycle, schema ids, and lock refs. Lode remains package/catalog truth owner; this fixture does not install, execute, publish, sync, or store runtime material.",
