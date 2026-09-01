@@ -31,15 +31,60 @@
       "operation_boundary": "write",
       "action_id": "xhs_publish_note_image_text_media.image_upload",
       "required_harbor_facts": [
-        "runtime.execution_surface.available",
-        "runtime.site_identity.managed",
-        "snapshot.creator_publish_entrypoint.available",
-        "snapshot.image_upload_control.visible",
-        "control_owner.xiaohongshu.managed",
-        "business_state.media_readback.available",
-        "operation_ref.accepted_or_running",
-        "post_check.ref_available",
-        "safety.challenge.absent"
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "runtime.site_identity.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "snapshot.creator_publish_entrypoint.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "snapshot.image_upload_control.visible",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "control_owner.xiaohongshu.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "business_state.media_readback.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "operation_ref.accepted_or_running",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "post_check.ref_available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "safety.challenge.absent",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        }
       ],
       "input_binding": {
         "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
@@ -86,16 +131,66 @@
       "operation_boundary": "write",
       "action_id": "xhs_publish_note_image_text_media.text_to_image_generate",
       "required_harbor_facts": [
-        "runtime.execution_surface.available",
-        "runtime.site_identity.managed",
-        "snapshot.creator_publish_entrypoint.available",
-        "snapshot.text_to_image_control.visible",
-        "snapshot.text_to_image_input.available",
-        "control_owner.xiaohongshu.managed",
-        "business_state.media_readback.available",
-        "operation_ref.accepted_or_running",
-        "post_check.ref_available",
-        "safety.challenge.absent"
+        {
+          "fact_key": "runtime.execution_surface.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "runtime.site_identity.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "snapshot.creator_publish_entrypoint.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "snapshot.text_to_image_control.visible",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "snapshot.text_to_image_input.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "control_owner.xiaohongshu.managed",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "business_state.media_readback.available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "operation_ref.accepted_or_running",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "post_check.ref_available",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        },
+        {
+          "fact_key": "safety.challenge.absent",
+          "owner": "Harbor",
+          "required": true,
+          "freshness": "current_execution_window"
+        }
       ],
       "input_binding": {
         "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-media/input@0.1.0",
