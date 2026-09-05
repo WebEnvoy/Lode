@@ -1,5 +1,7 @@
 # ADR 0006: 小红书与 BOSS 站点知识吸收边界
 
+> 2026-09-06：被 [WebEnvoy Core ADR 0011](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/adr/0011-v1-managed-browser-and-skill-delivery.md) 部分替代。既有站点资料继续保留；BOSS 退出近期交付，小红书全形态合同不再是首版前置。
+
 ## 状态
 
 已接受，2026-07-06。

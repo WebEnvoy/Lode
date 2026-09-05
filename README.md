@@ -1,8 +1,8 @@
 # Lode
 
-Lode 是 WebEnvoy 的能力资产仓库。
+Lode 是 WebEnvoy 的网站 SKILL、AccountSystem 模板与共享知识资产仓库。产品方向和 V1 约束以组织级 [canonical v1 规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准。
 
-它把网站经验、站点能力、站点级清洗与归一化规则、任务模板和测试样例沉淀为可安装、可版本管理、可测试、可修复、可复用的能力资产。
+它把网站入口、身份与经营对象识别、页面语义、操作、验证和恢复沉淀为可安装、可版本管理、可测试、可修复、可复用的 SKILL；结构化合同和脚本只随真实消费者补充。
 
 WebEnvoy Core 解释并执行 Lode 资产；WebEnvoy App 在 Library（资产库）区域提供浏览、安装、配置、调试、探索、维护和上报入口；Harbor 提供执行身份、浏览器运行环境和运行现场。
 

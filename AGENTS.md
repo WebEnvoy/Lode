@@ -1,67 +1,25 @@
-# 仓库指南
+# Lode 执行指南
 
-## 项目结构与模块组织
+Lode 是独立的 MIT 资产仓，维护网站 SKILL、AccountSystem 模板、共享知识、必要脚本和脱敏验证资产。产品方向与 V1 约束以组织级 [canonical v1 规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准。
 
-本仓库是 `WebEnvoy/Lode`，负责站点知识、站点能力、原子动作、任务封装和模板资产。当前文档位于 `README.md` 和 `docs/`；后续资产建议按以下方向组织：`schemas/` 放包格式和能力 Schema，`sites/` 放站点知识与站点能力，`tasks/` 放任务封装，`templates/` 放官方模板，`fixtures/` 放脱敏测试样例，`tools/` 放校验、打包和测试工具。
+## 边界与实施原则
 
-## 构建、测试与开发命令
+- SKILL 是网站知识的主要载体，围绕用户目标组织；AccountSystem 是可被多个 SKILL 引用的独立资产，运行时以用户本地定义为准。
+- Lode 不运行浏览器、不授予权限、不保存 Profile 或生产现场，也不复制 Core 的 Run、授权、幂等或结果状态机。
+- capability package、Schema、fixture、post-check 和脚本只在真实消费者需要时补充；不为未来站点、媒体或形态横向铺满合同。
+- 页面事实未知时保持 unknown；fixture、validator 或资产合并不证明 Runtime、App 或 live 业务能力完成。
+- BOSS 资产保留但退出近期交付。首个小红书消费者只推进图片上传、必要字段回读和页面实际证明支持的一种 commit；文字配图与其他形态后置。
+- 复用现有可消费资产；临时兼容层必须写明消费者和退出条件。不得建立 runner、hosted registry、marketplace、同步服务或通用执行 DSL。
 
-当前尚未初始化 `package.json`。新增工具后，优先统一为：`pnpm install` 安装依赖，`pnpm validate` 校验包和 Schema，`pnpm test` 运行测试，`pnpm lint` 检查格式，`pnpm build` 打包资产。新增命令必须写入 `package.json` 并同步 README 或 `docs/`。
+## 数据与验证
 
-当前技术架构基线是 docs-only；不得为了文档基线 PR 初始化 `package.json`、安装依赖、创建 CLI、生成 schema、创建 fixture、写 validator/packer/tester/registry 代码或提交工具输出。
-
-## 代码风格与命名规范
-
-本仓库以 JSON / YAML / Markdown 为主，TypeScript 只用于 validator、packer、tester 和 registry tooling。站点目录使用稳定 slug，例如 `sites/xiaohongshu/`；能力 ID 使用小写短横线，例如 `publish-note`、`read-comments`；任务封装使用业务中性命名，例如 `collect-details`。Markdown 用于说明，正式执行依赖应落到结构化 Schema。
-
-## 技术架构基线约束
-
-- [ADR 0005](docs/adr/0005-lode-technical-architecture-baseline.md) 是当前技术基线入口；后续 package/schema/tooling Work Item 先引用它，再细化真实文件和命令。
-- JSON / YAML / Markdown 是 Lode 资产主载体；JSON Schema 是正式结构化合同载体，Markdown 只能说明和索引。
-- TypeScript 只用于 offline validator、packer、tester 和 local registry tooling；不得把 Lode tooling 做成 runtime runner、browser automation runner、Core executor 或 App UI。
-- validator 只校验 manifest、JSON Schema、fixture、post-check、local registry 和引用完整性；不得连接生产 runtime、读取真实账号、匹配 live Harbor facts 或执行真实写入。
-- packer 只打包已通过本地校验的资产；local registry tooling 只做本地索引和引用验证。hosted registry、marketplace、team sync 和 public contribution review 不得提前塞进 v0 tooling。
-- manifest 描述身份、版本、生命周期、资源需求和引用；schema 描述 input/output/source/fixture/post-check shape；fixture/post-check 用于验证，不是 live evidence store。
-- 任何能力包、fixture、post-check、normalizer 或 registry 文件不得包含 Cookie、Token、profile state、runtime session、live tab、raw evidence body、完整 DOM/HAR/screenshot、生产 payload 或用户业务数据。
-- 修改技术基线时只改当前 Work Item 直接需要的 docs / contracts / AGENTS 与宿主 PR 元数据；不要顺带重排路线图、创建代码骨架或扩大到其他仓。
-
-## 测试指南
-
-测试应覆盖 schema validation、package validation、fixture validation、capability dry-run tests 和 Markdown link check。测试样例必须可脱敏复现，不依赖真实账号、真实会话或私有业务数据。新增站点能力至少提供最小 fixture、输入输出示例、前置检查和后置验证说明。
-
-docs-only 基线 PR 的最小验证是 `git diff --check`、Markdown/JSON 可读性检查以及 PR body/head readback；只有引入真实 code/schema/runtime/fixture/tooling 行为时才升级到对应测试命令。
-
-## 提交与 Pull Request 规范
-
-提交信息使用 Conventional Commits，例如 `docs: refine capability model`、`feat: add site package schema`。PR 需要说明新增或修改的站点、能力、任务封装、Schema 版本和验证结果。修改包格式时必须说明兼容性影响；新增能力时必须列出资源需求和已知限制。
-
-## 架构与 Agent 专项说明
-
-Lode 只维护资产定义、测试样例、版本和失效标记，不负责运行时执行。WebEnvoy Core 解释并执行 Lode 资产；Harbor 提供 Profile、Execution Identity、Runtime Session、CDP / VNC 和 Evidence。任务封装不应依赖某个具体 Runtime 实现，也不应硬编码 Harbor 内部细节。
-
-## 路线图 / 里程碑 / 功能需求 / 工作项
-
-- 跨仓长期方向以 `WebEnvoy/.github/ROADMAP.md` 为准。
-- 当前执行状态以 GitHub Milestones、Project、issues 和 PR 为准，不在仓库文档中复制维护。
-- GitHub Milestone 只承载当前 1-3 个可交付阶段，不承载全部远期设想。
-- 功能需求（FR）issue 表达用户可见或系统可验证的能力增量。
-- 工作项（Work Item）issue 是可由一个 PR 完成的最小执行单元。
-- 新建功能需求或工作项前，先确认它属于当前活跃 Milestone；不属于则回到总 ROADMAP 或 backlog。
-- 创建或调整 Milestone、功能需求或工作项前，先检查本仓 `docs/adr/pending-decisions.md`；会阻塞当前事项的决策必须链接到 issue，并标明阻塞级别：`Milestone blocker`、`FR blocker`、`Work Item blocker`、`Spec detail` 或 `Deferred`。
-- 被决策阻塞的 issue 使用 `status: needs-decision`；决策完成后必须回写对应 ADR 或 `docs/adr/pending-decisions.md`，再继续拆分或实施。
-- 仓库级 `ROADMAP.md` 是组织级 ROADMAP 的本仓投影，只能说明本仓如何服务总路线，不能新增跨仓阶段、重定义目标状态或覆盖组织级边界。
-- 除仓库级 `ROADMAP.md` 外，单仓 planning 文档只能解释本仓如何服务当前活跃 Milestone，不能新增跨仓 Milestone。
-- 不允许在单仓创建与总 ROADMAP 冲突的平行路线图。
-- 规格文档只服务当前或下一个活跃 Milestone，不提前铺满远期设计。
-- 涉及跨仓方向、阶段阶梯或边界调整时，先更新或评审总 ROADMAP / 跨仓架构，再拆单仓事项。
-
-## 安全与数据处理
-
-不要提交真实凭据、会话状态、未脱敏执行现场、用户私有任务参数或真实业务客户数据。站点能力不应包含账号投放、内容排期、客户运营或广告决策等业务策略；这些属于上游系统。
+- 不得提交 Cookie、Token、凭据、Profile/Instance state、raw DOM/HAR、未脱敏截图、生产 payload 或用户私有业务内容。
+- 资产变更运行 package-specific validator 和必要全仓 validator；Python 使用 `make py-compile`；所有变更运行 `git diff --check`。
+- 新的非平凡解析、校验或脚本至少留下一个最小正向、必要拒绝和恢复/unknown 检查；docs-only 不冒充 live 验收。
 
 ## GitHub-native 交付
 
-- 每次变更绑定真实 GitHub Issue；分支和 PR 链接该 Issue，并直接运行与变更相关的校验。
-- PR 必须在当前 exact head 上完成独立 review，且 required checks 全部通过；变更后重新核对 head、review 和 checks。
-- 合并前从 GitHub 回读 PR 的 base/head、review、checks 和 merge 状态；合并后从 `main` 与 Issue 回读合并提交和状态。
-- GitHub PR、checks 和 Issue 是唯一交付状态；不创建仓内执行状态、影子状态或第二状态机。
+- 当前状态只以 GitHub Issue、原生关系、Milestone、Project、PR、checks、review 和 `main` 回读为准；不创建 carrier 或第二状态机。
+- 普通工作可直接使用 Work Item；只细化当前和下一批，只有真实技术或验收阻塞才建 dependency。
+- PR 绑定真实 Work Item，在 exact head 上完成独立 review 和 `py-compile`、`lode-ci` 等 required checks。
+- `completed` 只表示该资产 Issue 的原验收有证据，且必须说明不代表产品 live；延期保持 open、移出活跃 Milestone并进入 Backlog；替代关闭使用 `not_planned`/Won’t Do。
