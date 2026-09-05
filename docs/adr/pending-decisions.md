@@ -1,5 +1,7 @@
 # Pending Decisions
 
+> 2026-09-06：[WebEnvoy Core ADR 0011](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/adr/0011-v1-managed-browser-and-skill-delivery.md) 已替代合同先行、BOSS 近期交付和小红书全形态前置。下列历史事项只有在当前或下一批真实消费者仍受阻时才恢复为 blocker。
+
 本文件是 Lode ADR 的唯一待决策索引。ADR 正文中的 `Open Questions` 必须链接到
 这里的 ID。
 

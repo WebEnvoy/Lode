@@ -1,27 +1,23 @@
-## Summary
+## 改变的真实消费者路径
 
-- Problem:
-- Scope:
+-
 
-## Related Work
+## 资产与复用
 
-- Issue:
-- Branch:
+- SKILL／AccountSystem／合同范围：
+- 真实消费者与 pin：
+- 复用或删除：
+- 临时兼容层与退出条件（无则 N/A）：
 
-## Validation
+## 风险与验证
 
-- Local commands and results:
-- Required CI checks:
+- unknown／敏感数据／权限边界：
+- 本地检查与结果：
+- required checks：
+- 未验证的 Runtime/live 范围：
 
-## Review and readback
+## 交付事实
 
-- [ ] Linked real Issue
-- [ ] Independent review completed at the exact PR head
-- [ ] Required checks pass
-- [ ] PR base/head, review, checks, and merge status read back from GitHub
-- [ ] After merge, `main` and the linked Issue read back
-
-## Risks and follow-ups
-
-- Risks:
-- Follow-ups:
+- Work Item：
+- exact-head 独立 review：
+- base/head、checks、merge/main/Issue 回读：
