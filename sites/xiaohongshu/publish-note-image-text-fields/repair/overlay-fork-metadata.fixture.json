@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.overlay-fork-metadata.v0",
   "overlay_metadata_id": "xiaohongshu.publish-note-image-text-fields.overlay-fork",
-  "overlay_metadata_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "overlay_metadata_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "capability_id": "publish-note-image-text-fields",
   "operation_id": "xhs_publish_note_image_text_fields",
   "operation_mode": "write",

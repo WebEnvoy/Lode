@@ -1,9 +1,9 @@
 {
   "schema_version": "lode.core-consumption-fixture.v0",
   "fixture_id": "xiaohongshu.publish-note-image-text-fields.core-consumption-fixture",
-  "fixture_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "fixture_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "capability_id": "publish-note-image-text-fields",
   "operation_id": "xhs_publish_note_image_text_fields",
   "operation_mode": "write",
@@ -22,19 +22,19 @@
     "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
     "lock_path": "sites/xiaohongshu/publish-note-image-text-fields/package-lock.json",
     "expected_registry_entry": {
-      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
       "package_type": "site-capability",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-image-text-fields",
       "operation_id": "xhs_publish_note_image_text_fields",
       "operation_mode": "write",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "lifecycle": "proposed"
     }
   },
   "admission_fixture": {
-    "requested_package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
-    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "requested_package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
+    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
     "accepted_operation_modes": ["write"],
     "accepted_lifecycle_states_for_fixture": ["proposed"],
     "input_instances": [

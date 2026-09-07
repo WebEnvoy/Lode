@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.1",
   "title": "小红书图文必要字段写入输入",
   "description": "一次写入上传图文页面的标题与正文；授权、幂等、控制权与 operation 绑定由 Core 承载。",
   "type": "object",
@@ -35,8 +35,8 @@
   },
   "x-lode": {
     "schema_id": "xiaohongshu.publish-note-image-text-fields.input",
-    "schema_version": "0.1.0",
-    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "schema_version": "0.1.1",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
     "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
     "operation_mode": "write",
     "sensitivity": {

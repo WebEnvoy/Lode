@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.failure-mapping.v0",
   "failure_mapping_id": "xiaohongshu.publish-note-image-text-fields.failure-mapping",
-  "failure_mapping_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "failure_mapping_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "capability_id": "publish-note-image-text-fields",
   "operation_id": "xhs_publish_note_image_text_fields",
   "operation_mode": "write",

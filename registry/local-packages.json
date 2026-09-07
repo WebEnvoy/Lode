@@ -1982,17 +1982,17 @@
       }
     },
     {
-      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
       "package_type": "site-capability",
       "package_path": "sites/xiaohongshu/publish-note-image-text-fields",
       "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
       "lock_path": "sites/xiaohongshu/publish-note-image-text-fields/package-lock.json",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-image-text-fields",
       "operation_id": "xhs_publish_note_image_text_fields",
       "operation_mode": "write",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "lifecycle": "proposed",
       "lifecycle_state_vocabulary": [
         "proposed",
@@ -2003,10 +2003,10 @@
       ],
       "updated_at": "2026-09-07T00:00:00Z",
       "version_status": {
-        "current": "0.1.0",
-        "latest": "0.1.0",
-        "default_locked": "0.1.0",
-        "compatibility_range": ">=0.1.0 <0.2.0"
+        "current": "0.1.1",
+        "latest": "0.1.1",
+        "default_locked": "0.1.1",
+        "compatibility_range": ">=0.1.1 <0.2.0"
       },
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
@@ -2050,9 +2050,9 @@
       "runtime_execution": "out_of_scope",
       "task_kind": "real_site_field_action",
       "core_admission_fields": {
-        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
-        "version": "0.1.0",
-        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
+        "version": "0.1.1",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
         "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
         "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
         "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",

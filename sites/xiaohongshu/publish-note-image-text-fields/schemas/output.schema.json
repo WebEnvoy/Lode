@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
   "title": "小红书图文必要字段写入归一化输出",
   "description": "只公开字段匹配状态与 refs；不复制标题、正文或 Core operation lifecycle。",
   "type": "object",
@@ -203,8 +203,8 @@
   },
   "x-lode": {
     "schema_id": "xiaohongshu.publish-note-image-text-fields.output",
-    "schema_version": "0.1.0",
-    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "schema_version": "0.1.1",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
     "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
     "operation_mode": "write",
     "result_kind": "xhs_publish_note_image_text_fields",

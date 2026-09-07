@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.resource-requirements.v0",
   "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
-  "resource_requirements_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "resource_requirements_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
   "operation_mode": "write",
   "lifecycle": "proposed",
@@ -35,7 +35,7 @@
         { "fact_key": "safety.challenge.absent", "owner": "Harbor", "required": true, "freshness": "current_execution_window" }
       ],
       "input_binding": {
-        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.1",
         "allowed_origins": ["https://creator.xiaohongshu.com"],
         "required_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
         "action_id": "xhs_publish_note_image_text_fields.compose",
@@ -43,7 +43,7 @@
         "value_policy": "ephemeral_user_supplied_non_sensitive_test_content"
       },
       "output_binding": {
-        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
         "required_normalized_fields": [
           "action_id", "requested_path", "business_effect", "operation", "field_readback",
           "page_readback", "post_check", "reconciliation", "recovery", "submitted"
