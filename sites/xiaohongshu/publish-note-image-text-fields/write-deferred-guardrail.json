@@ -90,7 +90,7 @@
   },
   "consumer_boundary": "Lode declares the proposed action contract and blocks default admission. Core may admit exact controlled evidence while retaining authorization, idempotency, operation lifecycle and result ownership; Harbor owns live execution/evidence.",
   "source_decisions": [
-    "#313 declares one title/body field_fill action from observed page facts.",
+    "#313 declares one title/body compose action from observed page facts.",
     "WebEnvoy #412 supplies the first formal exact-pin live consumer and no-commit evidence.",
     "Lode #295 and WebEnvoy #419/#422/#423 own save-draft and publish independently."
   ],

@@ -15,7 +15,7 @@
   },
   "display": {
     "name": "小红书图文必要字段写入合同",
-    "summary": "单一标题与正文 field_fill action；只提供 controlled-evidence 合同，不代表 live 成功。",
+    "summary": "单一标题与正文 compose action；只提供 controlled-evidence 合同，不代表 live 成功。",
     "site_name": "小红书",
     "category": "field-action"
   },
@@ -64,9 +64,9 @@
   ],
   "action_declaration_ref": "manifest.json#action_declaration",
   "action_ids": [
-    "xhs_publish_note_image_text_fields.field_fill"
+    "xhs_publish_note_image_text_fields.compose"
   ],
-  "effect_mapping_owner": "Manifest action_declaration is authoritative: field_fill uses the modify external-effect token.",
+  "effect_mapping_owner": "Manifest action_declaration is authoritative: compose uses the modify external-effect token.",
   "test_summary": {
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present_unknown_only",

@@ -81,7 +81,7 @@
   "lifecycle": {
     "state": "proposed",
     "stable_admission_allowed": false,
-    "consumer_meaning": "Reviewable controlled-evidence contract only; field_fill is not a stable default execution capability.",
+    "consumer_meaning": "Reviewable controlled-evidence contract only; compose is not a stable default execution capability.",
     "promotion_requirements": [
       "input_schema_present",
       "normalized_output_schema_present",

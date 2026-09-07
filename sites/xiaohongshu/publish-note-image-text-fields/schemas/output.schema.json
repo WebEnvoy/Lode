@@ -62,7 +62,7 @@
         "reconciliation", "recovery", "save_draft", "publish", "submitted"
       ],
       "properties": {
-        "action_id": { "const": "xhs_publish_note_image_text_fields.field_fill" },
+        "action_id": { "const": "xhs_publish_note_image_text_fields.compose" },
         "requested_path": { "const": "image_text_upload" },
         "canonical_url": {
           "type": "string",

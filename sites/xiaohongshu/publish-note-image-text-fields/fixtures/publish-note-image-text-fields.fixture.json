@@ -84,7 +84,7 @@
     "summary": {
       "url": "https://creator.xiaohongshu.com/publish/publish",
       "target_ref": "target-ref:xiaohongshu/creator-publish-page",
-      "action_id": "xhs_publish_note_image_text_fields.field_fill",
+      "action_id": "xhs_publish_note_image_text_fields.compose",
       "requested_path": "image_text_upload",
       "title_state": "unknown",
       "body_state": "unknown",
@@ -101,7 +101,7 @@
       "classification": "not_normalizable",
       "unavailable_reason": "operation_result_unknown",
       "normalized": {
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "canonical_url": "https://creator.xiaohongshu.com/publish/publish",
         "target_ref": "target-ref:xiaohongshu/creator-publish-page",
@@ -181,7 +181,7 @@
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_only",
     "status_rule": "Unknown operation or readback stays unknown.",
-    "effect_mapping_rule": "field_fill maps to modify.",
+    "effect_mapping_rule": "compose maps to modify.",
     "no_retry_rule": "unknown_outcome requires same-operation reconciliation before any newly authorized write."
   },
   "non_goals": [

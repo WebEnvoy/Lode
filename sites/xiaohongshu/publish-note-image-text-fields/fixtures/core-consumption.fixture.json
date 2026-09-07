@@ -41,7 +41,7 @@
       {
         "url": "https://creator.xiaohongshu.com/publish/publish",
         "target_ref": "target-ref:xiaohongshu/creator-publish-page",
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "title": "非生产验证标题",
         "body": "非生产验证正文"
@@ -61,7 +61,7 @@
       "instance": {
         "url": "https://creator.xiaohongshu.com/publish/publish",
         "target_ref": "target-ref:xiaohongshu/creator-publish-page",
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "title": "非生产验证标题",
         "body": "非生产验证正文"
@@ -75,7 +75,7 @@
       "instance": {
         "url": "https://creator.xiaohongshu.com/publish/publish",
         "target_ref": "target-ref:xiaohongshu/creator-publish-page",
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "title": "非生产验证标题",
         "body": "非生产验证正文",
@@ -112,7 +112,7 @@
   },
   "safety_boundary": {
     "package_lifecycle": "proposed",
-    "external_effects": { "xhs_publish_note_image_text_fields.field_fill": "modify" },
+    "external_effects": { "xhs_publish_note_image_text_fields.compose": "modify" },
     "unknown_policy": "unknown_outcome_is_preserved_and_not_retried",
     "forbidden_actions": ["upload", "save_draft", "publish", "submit", "retry", "bypass"]
   },

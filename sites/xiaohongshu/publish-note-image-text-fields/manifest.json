@@ -23,7 +23,7 @@
     "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
     "actions": [
       {
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "category": "commit",
         "target_scope": {
           "site_slug": "xiaohongshu",
@@ -40,9 +40,9 @@
     ]
   },
   "action_boundary": {
-    "allowed_actions": ["field_fill"],
+    "allowed_actions": ["compose"],
     "consumer_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
-    "external_effects": { "field_fill": "modify" },
+    "external_effects": { "compose": "modify" },
     "forbidden_actions": ["upload", "save_draft", "publish", "submit", "retry", "bypass"],
     "public_readback": "Expose only title/body matched, mismatch, or unknown states; do not copy values into public evidence.",
     "unknown_policy": "Query the same operation ref; never replay field input automatically.",
