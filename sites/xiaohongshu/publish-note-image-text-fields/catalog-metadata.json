@@ -1,0 +1,111 @@
+{
+  "schema_version": "lode.catalog-metadata.v0",
+  "catalog_metadata_id": "xiaohongshu.publish-note-image-text-fields.catalog-metadata",
+  "catalog_metadata_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "capability_id": "publish-note-image-text-fields",
+  "operation_id": "xhs_publish_note_image_text_fields",
+  "operation_mode": "write",
+  "source": {
+    "owner": "Lode",
+    "kind": "repo-local-package",
+    "label": "小红书",
+    "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json"
+  },
+  "display": {
+    "name": "小红书图文必要字段写入合同",
+    "summary": "单一标题与正文 field_fill action；只提供 controlled-evidence 合同，不代表 live 成功。",
+    "site_name": "小红书",
+    "category": "field-action"
+  },
+  "version": {
+    "current": "0.1.0",
+    "latest": "0.1.0",
+    "default_locked": "0.1.0",
+    "lifecycle": "proposed",
+    "lifecycle_state_vocabulary": [
+      "proposed",
+      "active",
+      "suspected_broken",
+      "broken",
+      "deprecated"
+    ],
+    "compatibility_range": ">=0.1.0 <0.2.0",
+    "previous_known_good": {
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0"
+    },
+    "rollback_candidates": [
+      {
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+        "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+        "status": "self_for_initial_version"
+      }
+    ]
+  },
+  "status": {
+    "catalog_state": "available",
+    "installability": "intent_only",
+    "source_health": "static_contract_only",
+    "updated_at": "2026-09-07T00:00:00Z"
+  },
+  "risk": {
+    "level": "high",
+    "operation": "write-precheck",
+    "reason": "The action modifies title/body fields but does not save or publish; live proof belongs to WebEnvoy #412."
+  },
+  "facets": [
+    "site:xiaohongshu",
+    "image-text",
+    "field-action",
+    "proposed",
+    "single-action"
+  ],
+  "action_declaration_ref": "manifest.json#action_declaration",
+  "action_ids": [
+    "xhs_publish_note_image_text_fields.field_fill"
+  ],
+  "effect_mapping_owner": "Manifest action_declaration is authoritative: field_fill uses the modify external-effect token.",
+  "test_summary": {
+    "validator": "tools/lode_validate_package.py",
+    "fixture_status": "present_unknown_only",
+    "post_check_fixture_status": "skipped",
+    "runtime_execution": "out_of_scope_formal_consumer_WebEnvoy_412"
+  },
+  "repair_summary": {
+    "status": "repair_draft_fixture_present",
+    "failure_classes": [
+      "invalid_contract",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired",
+      "operation_result_unknown"
+    ],
+    "overlay_fork_metadata_path": "sites/xiaohongshu/publish-note-image-text-fields/repair/overlay-fork-metadata.fixture.json",
+    "app_display_boundary": "App may display refs-only recovery status; Lode owns package truth."
+  },
+  "consumer_boundary": "WebEnvoy #412 is the first live consumer. Core owns authorization, idempotency, lifecycle and result envelope; Harbor owns execution/evidence; App displays refs-only match state.",
+  "core_admission_fields": {
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "version": "0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
+    "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+    "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+    "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
+    "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
+    "lifecycle": "proposed",
+    "operation_mode": "write"
+  },
+  "result_view": {
+    "status": "absent",
+    "fallback": "standard_renderer"
+  },
+  "covered_issues": [
+    "#313",
+    "WebEnvoy#412",
+    "WebEnvoy#451"
+  ],
+  "anchor_work_item": "LODE-313"
+}

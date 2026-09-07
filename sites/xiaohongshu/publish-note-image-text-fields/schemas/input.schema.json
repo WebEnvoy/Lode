@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+  "title": "小红书图文必要字段写入输入",
+  "description": "一次写入上传图文页面的标题与正文；授权、幂等、控制权与 operation 绑定由 Core 承载。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://creator\\.xiaohongshu\\.com/publish/publish/?$"
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "action_id": { "const": "xhs_publish_note_image_text_fields.field_fill" },
+    "requested_path": { "const": "image_text_upload" },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20,
+      "description": "用户提供的非敏感测试标题；Lode 只声明边界，不保存运行值。"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "用户提供的非敏感测试正文；Lode 只声明边界，不保存运行值。"
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-fields.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
+    "operation_mode": "write",
+    "sensitivity": {
+      "url": "public",
+      "target_ref": "harbor_ref",
+      "action_id": "public",
+      "requested_path": "public",
+      "title": "user_supplied_ephemeral",
+      "body": "user_supplied_ephemeral"
+    },
+    "allowed_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
+    "authorization_binding": "Core binds its existing single-use authorization decision to the exact action_id and target_ref.",
+    "idempotency_binding": "Core binds its existing TaskTurnRecord idempotency_key to the exact action_id and target_ref.",
+    "runtime_value_retention": "Title and body are ephemeral runtime inputs and are not copied into public result evidence.",
+    "forbidden_fields": [
+      "selector", "selectors", "dom", "cookies", "tokens", "profile_state", "runtime_session",
+      "media_bytes", "production_payload", "user_business_data"
+    ],
+    "unknown_policy": "An unknown field-write outcome is queried by the same operation ref and never retried automatically."
+  }
+}

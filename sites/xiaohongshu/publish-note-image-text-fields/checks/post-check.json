@@ -1,0 +1,87 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
+  "post_check_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "capability_id": "publish-note-image-text-fields",
+  "operation_id": "xhs_publish_note_image_text_fields",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "execution_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "display_owner": "WebEnvoy App"
+  },
+  "result_contract": {
+    "schema_version": "lode.post-check-result.v0",
+    "status_values": ["passed", "failed", "skipped"],
+    "required_fields": [
+      "status", "reason", "source_refs", "evidence_refs", "action_id", "requested_path",
+      "business_effect", "operation", "field_readback", "page_readback", "reconciliation",
+      "recovery", "submitted"
+    ],
+    "unknown_policy": "Unknown write/readback stays unknown and is reconciled through the same operation ref.",
+    "source_ref_policy": "summary_refs_only_no_field_values",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "submitted_policy": "Save draft and publish are outside this package; submitted remains false."
+  },
+  "requirements": [
+    {
+      "requirement_id": "action-identity-and-effect",
+      "description": "Verify the exact field_fill/image_text_upload pair and modify effect.",
+      "required_source_refs": ["fixture-source-action"],
+      "required_evidence_refs": ["fixture-evidence-operation"],
+      "on_failure": "Return invalid_contract; do not choose another action."
+    },
+    {
+      "requirement_id": "operation-lifecycle-ref",
+      "description": "Preserve the Core-owned operation state and operation ref.",
+      "required_source_refs": ["fixture-source-action"],
+      "required_evidence_refs": ["fixture-evidence-operation"],
+      "on_failure": "Return operation_result_unknown and never retry automatically."
+    },
+    {
+      "requirement_id": "field-and-page-readback",
+      "description": "Re-read title/body match states, validation and page route without exposing values or raw page material.",
+      "required_source_refs": ["fixture-source-page", "fixture-source-state"],
+      "required_evidence_refs": ["fixture-evidence-post-check"],
+      "on_failure": "Return post_check_failed or reconciliation_unknown."
+    },
+    {
+      "requirement_id": "no-commit",
+      "description": "Confirm save_draft, publish and submitted remain out of scope.",
+      "required_source_refs": ["fixture-source-state"],
+      "required_evidence_refs": ["fixture-evidence-reconcile"],
+      "on_failure": "Fail closed and do not claim a safe field result."
+    }
+  ],
+  "fixture_post_check_output": {
+    "status": "skipped",
+    "reason": "Static fixture does not execute field writes; live evidence belongs to WebEnvoy #412.",
+    "source_refs": ["fixture-source-action", "fixture-source-page", "fixture-source-state"],
+    "evidence_refs": ["fixture-evidence-operation", "fixture-evidence-post-check", "fixture-evidence-reconcile"],
+    "action_id": "xhs_publish_note_image_text_fields.field_fill",
+    "requested_path": "image_text_upload",
+    "business_effect": "unknown",
+    "operation": "unknown_outcome",
+    "submitted": false
+  },
+  "failure_boundary": {
+    "login_required": "No managed identity fact; return unavailable.",
+    "permission_insufficient": "Control owner is not confirmed; do not execute.",
+    "page_changed": "Route or field targets differ; stop.",
+    "field_unavailable": "Title/body is not uniquely editable; stop.",
+    "validation_failed": "Page readback does not match the requested value.",
+    "operation_result_unknown": "Expose operation ref and reconcile; no retry.",
+    "post_check_failed": "Required readback or refs are missing.",
+    "reconciliation_unknown": "Operation exists but page state cannot be reconciled."
+  },
+  "real_page_validation": {
+    "status": "deferred_to_WebEnvoy_412",
+    "reason": "Static Lode fixture is not live evidence.",
+    "required_later_runtime": ["current WebEnvoy main", "exact Lode pin", "managed non-production Profile", "refs-only live evidence"]
+  },
+  "non_goals": ["No browser execution, media action, save draft, publish, retry or raw evidence."],
+  "covered_issues": ["#313", "WebEnvoy#412"],
+  "anchor_work_item": "LODE-313"
+}

@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+  "title": "小红书图文必要字段写入归一化输出",
+  "description": "只公开字段匹配状态与 refs；不复制标题、正文或 Core operation lifecycle。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["result_kind", "status", "classification", "normalized", "source_refs", "evidence_refs"],
+  "properties": {
+    "result_kind": { "const": "xhs_publish_note_image_text_fields" },
+    "status": { "enum": ["available", "empty", "unavailable"] },
+    "classification": { "enum": ["success_result", "partial_result", "empty_result", "not_normalizable"] },
+    "normalized": { "$ref": "#/$defs/field_action_result" },
+    "source_refs": { "type": "array", "items": { "$ref": "#/$defs/source_ref" }, "default": [] },
+    "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidence_ref" }, "default": [] },
+    "empty_reason": { "enum": ["target_not_found", "action_not_observed", "fields_not_present"] },
+    "unavailable_reason": {
+      "enum": [
+        "invalid_contract", "resource_unavailable", "login_required", "permission_insufficient",
+        "safety_challenge", "page_changed", "field_unavailable", "validation_failed",
+        "operation_result_unknown", "post_check_failed", "reconciliation_unknown"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "source_refs_partial", "evidence_refs_partial", "operation_running",
+          "operation_result_unknown", "field_limits_unknown"
+        ]
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "available" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "classification": { "enum": ["success_result", "partial_result"] },
+          "source_refs": { "minItems": 1 },
+          "evidence_refs": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "empty" } }, "required": ["status"] },
+      "then": { "required": ["empty_reason"], "properties": { "classification": { "const": "empty_result" } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] },
+      "then": { "required": ["unavailable_reason"], "properties": { "classification": { "const": "not_normalizable" } } }
+    }
+  ],
+  "$defs": {
+    "field_action_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_id", "requested_path", "canonical_url", "target_ref", "source_status",
+        "business_effect", "operation", "field_readback", "page_readback", "post_check",
+        "reconciliation", "recovery", "save_draft", "publish", "submitted"
+      ],
+      "properties": {
+        "action_id": { "const": "xhs_publish_note_image_text_fields.field_fill" },
+        "requested_path": { "const": "image_text_upload" },
+        "canonical_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://creator\\.xiaohongshu\\.com/publish/publish(?:/|\\?from=tab_switch)?$"
+        },
+        "target_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "source_status": { "enum": ["located", "partially_located", "unknown"] },
+        "business_effect": { "$ref": "#/$defs/business_effect" },
+        "operation": { "$ref": "#/$defs/operation" },
+        "field_readback": { "$ref": "#/$defs/field_readback" },
+        "page_readback": { "$ref": "#/$defs/page_readback" },
+        "post_check": { "$ref": "#/$defs/post_check" },
+        "reconciliation": { "$ref": "#/$defs/reconciliation" },
+        "recovery": { "$ref": "#/$defs/recovery" },
+        "save_draft": { "const": "not_in_scope" },
+        "publish": { "const": "not_in_scope" },
+        "submitted": { "const": false }
+      }
+    },
+    "business_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "status"],
+      "properties": {
+        "kind": { "const": "modify" },
+        "status": { "enum": ["requested", "observed", "unknown", "failed"] }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "operation_ref"],
+      "properties": {
+        "status": { "enum": ["accepted", "running", "terminal", "unknown_outcome"] },
+        "terminal_state": { "enum": ["success", "failure"] },
+        "operation_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": { "status": { "enum": ["accepted", "running", "unknown_outcome"] } },
+          "not": { "required": ["terminal_state"] }
+        },
+        {
+          "properties": { "status": { "const": "terminal" } },
+          "required": ["terminal_state"]
+        }
+      ]
+    },
+    "field_readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "title", "body", "validation_status"],
+      "properties": {
+        "status": { "enum": ["observed", "unknown", "mismatch"] },
+        "title": { "$ref": "#/$defs/field_state" },
+        "body": { "$ref": "#/$defs/field_state" },
+        "validation_status": { "enum": ["passed", "failed", "unknown"] }
+      }
+    },
+    "field_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value_state"],
+      "properties": {
+        "status": { "enum": ["observed", "unknown", "mismatch"] },
+        "value_state": { "enum": ["matched", "mismatch", "unknown"] }
+      }
+    },
+    "page_readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "page_state_ref", "route_state"],
+      "properties": {
+        "status": { "enum": ["observed", "unknown", "mismatch"] },
+        "page_state_ref": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$" },
+        "route_state": { "enum": ["observed", "unknown", "mismatch"] }
+      }
+    },
+    "post_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "ref"],
+      "properties": {
+        "status": { "enum": ["passed", "failed", "skipped"] },
+        "ref": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$" }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "ref"],
+      "properties": {
+        "status": { "enum": ["matched", "mismatched", "unknown", "not_run"] },
+        "ref": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$" }
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "entrypoint"],
+      "properties": {
+        "status": { "enum": ["not_required", "required", "unknown"] },
+        "entrypoint": { "enum": ["inspect_operation_ref", "await_post_check", "manual_reconciliation", "none"] }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "source_kind", "producer", "redaction", "schema_hint"],
+      "properties": {
+        "ref_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:/-]*$" },
+        "source_kind": { "enum": ["field_action_summary", "creator_publish_page_summary", "business_state_summary"] },
+        "producer": { "enum": ["core", "harbor", "fixture"] },
+        "redaction": { "enum": ["summary_only", "placeholder_only"] },
+        "schema_hint": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "evidence_kind", "producer", "redaction"],
+      "properties": {
+        "ref_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:/-]*$" },
+        "evidence_kind": { "enum": ["operation_ref", "post_check_ref", "reconciliation_ref", "snapshot_ref"] },
+        "producer": { "enum": ["core", "harbor", "fixture"] },
+        "redaction": { "enum": ["summary_only", "placeholder_only"] }
+      }
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-fields.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
+    "operation_mode": "write",
+    "result_kind": "xhs_publish_note_image_text_fields",
+    "core_envelope_owner": "WebEnvoy Core",
+    "core_lifecycle_owner": "WebEnvoy Core",
+    "required_refs": ["operation_ref", "post_check_ref", "reconciliation_ref"],
+    "public_value_policy": "Only matched/mismatch/unknown field states are public; title and body values stay ephemeral.",
+    "save_draft_publish": "not_in_scope",
+    "unknown_policy": "Unknown write or readback is reconciled by the same operation ref and never retried automatically.",
+    "forbidden_inline_fields": [
+      "selector", "selectors", "dom", "cookies", "tokens", "profile_state", "runtime_session",
+      "media_bytes", "production_payload", "user_business_data"
+    ]
+  }
+}
