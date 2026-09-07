@@ -40,7 +40,7 @@
       {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
         "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
-        "status": "self_for_initial_version"
+        "status": "previous_known_good"
       }
     ]
   },

@@ -2011,7 +2011,7 @@
       "rollback": {
         "previous_known_good_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
         "previous_known_good_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
-        "status": "self_for_initial_version"
+        "status": "previous_known_good"
       },
       "asset_roles": [
         "input_schema",
@@ -2054,8 +2054,8 @@
         "version": "0.1.1",
         "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
         "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
-        "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
-        "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+        "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.1",
+        "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
         "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
         "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
         "lifecycle": "proposed",
