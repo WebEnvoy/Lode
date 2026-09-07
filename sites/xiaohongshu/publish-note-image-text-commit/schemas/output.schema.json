@@ -54,11 +54,19 @@
                   "marker_state": {"const": "matched"}
                 }
               },
-              "post_check": {"properties": {"status": {"const": "passed"}}},
-              "reconciliation": {"properties": {"status": {"const": "matched"}}},
+              "post_check": {"properties": {"status": {"const": "passed"}, "ref": {"type": "string"}}},
+              "reconciliation": {"properties": {"status": {"const": "matched"}, "ref": {"type": "string"}}},
               "recovery": {"properties": {"status": {"const": "not_required"}, "entrypoint": {"const": "none"}}},
               "submitted": {"const": true}
             }
+          },
+          "evidence_refs": {
+            "allOf": [
+              {"contains": {"properties": {"evidence_kind": {"const": "operation_ref"}}, "required": ["evidence_kind"]}, "minContains": 1},
+              {"contains": {"properties": {"evidence_kind": {"const": "snapshot_ref"}}, "required": ["evidence_kind"]}, "minContains": 1},
+              {"contains": {"properties": {"evidence_kind": {"const": "post_check_ref"}}, "required": ["evidence_kind"]}, "minContains": 1},
+              {"contains": {"properties": {"evidence_kind": {"const": "reconciliation_ref"}}, "required": ["evidence_kind"]}, "minContains": 1}
+            ]
           }
         }
       }
