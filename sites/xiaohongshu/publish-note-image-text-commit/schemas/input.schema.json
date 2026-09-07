@@ -40,14 +40,18 @@
       "enum": ["not_applicable", "only_me", "public"]
     }
   },
-  "allOf": [
+  "oneOf": [
     {
-      "if": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"}}, "required": ["action_id"]},
-      "then": {"properties": {"visibility": {"const": "not_applicable"}}}
+      "properties": {
+        "action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"},
+        "visibility": {"const": "not_applicable"}
+      }
     },
     {
-      "if": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.publish"}}, "required": ["action_id"]},
-      "then": {"properties": {"visibility": {"enum": ["only_me", "public"]}}}
+      "properties": {
+        "action_id": {"const": "xhs_publish_note_image_text_commit.publish"},
+        "visibility": {"enum": ["only_me", "public"]}
+      }
     }
   ],
   "x-lode": {
@@ -56,6 +60,14 @@
     "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
     "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
     "operation_mode": "write",
+    "sensitivity": {
+      "url": "public",
+      "target_ref": "harbor_ref",
+      "action_id": "public",
+      "requested_path": "public",
+      "marker": "public_safe_summary",
+      "visibility": "public"
+    },
     "allowed_fields": ["url", "target_ref", "action_id", "requested_path", "marker", "visibility"],
     "authorization_binding": "Core binds explicit authorization and ControlLease to the exact account, target_ref and action_id.",
     "idempotency_binding": "Core assigns a distinct operation ref and idempotency key to each external action.",

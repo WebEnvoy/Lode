@@ -110,8 +110,30 @@
     ],
     "action_id": "xhs_publish_note_image_text_commit.save_draft",
     "requested_path": "image_text_upload",
-    "business_effect": "unknown",
-    "operation": "unknown_outcome",
+    "business_effect": {
+      "kind": "save_draft",
+      "status": "unknown"
+    },
+    "operation": {
+      "status": "unknown_outcome",
+      "operation_ref": "operation-ref:fixture/save-draft"
+    },
+    "content_readback": {
+      "state": "unknown",
+      "management_list_state": "unknown",
+      "detail_state": "not_run",
+      "fields_state": "unknown",
+      "media_state": "unknown",
+      "marker_state": "unknown"
+    },
+    "reconciliation": {
+      "status": "unknown",
+      "ref": "reconciliation-ref:fixture/save-draft"
+    },
+    "recovery": {
+      "status": "required",
+      "entrypoint": "manual_reconciliation"
+    },
     "submitted": true
   },
   "failure_boundary": {

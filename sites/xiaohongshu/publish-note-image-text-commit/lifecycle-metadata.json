@@ -145,7 +145,7 @@
     "consumer_boundary": "Rollback is package/version/lock refs only; it contains no runtime or user material."
   },
   "lock_input": {
-    "lock_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
     "required_fields": [
       "package_ref",
       "package_version",

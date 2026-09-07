@@ -31,6 +31,100 @@
     {
       "if": {"properties": {"status": {"const": "unavailable"}}, "required": ["status"]},
       "then": {"required": ["unavailable_reason"], "properties": {"classification": {"const": "not_normalizable"}}}
+    },
+    {
+      "if": {"properties": {"classification": {"const": "success_result"}}, "required": ["classification"]},
+      "then": {
+        "properties": {
+          "status": {"const": "available"},
+          "normalized": {
+            "properties": {
+              "marker_state": {"const": "matched"},
+              "business_effect": {"properties": {"status": {"const": "observed"}}},
+              "operation": {
+                "required": ["terminal_state"],
+                "properties": {"status": {"const": "terminal"}, "terminal_state": {"const": "success"}}
+              },
+              "content_readback": {
+                "properties": {
+                  "management_list_state": {"const": "matched"},
+                  "detail_state": {"const": "matched"},
+                  "fields_state": {"const": "matched"},
+                  "media_state": {"const": "matched"},
+                  "marker_state": {"const": "matched"}
+                }
+              },
+              "post_check": {"properties": {"status": {"const": "passed"}}},
+              "reconciliation": {"properties": {"status": {"const": "matched"}}},
+              "recovery": {"properties": {"status": {"const": "not_required"}, "entrypoint": {"const": "none"}}},
+              "submitted": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"}}, "required": ["action_id"]}},
+        "required": ["normalized"]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "visibility_state": {"const": "not_applicable"},
+              "business_effect": {"properties": {"kind": {"const": "save_draft"}}},
+              "content_readback": {"properties": {"state": {"enum": ["draft_saved", "not_observed", "unknown"]}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.publish"}}, "required": ["action_id"]}},
+        "required": ["normalized"]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "visibility_state": {"enum": ["only_me", "public", "unknown"]},
+              "business_effect": {"properties": {"kind": {"const": "publish"}}},
+              "content_readback": {"properties": {"state": {"enum": ["published", "not_observed", "unknown"]}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "success_result"},
+          "normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"}}, "required": ["action_id"]}
+        },
+        "required": ["classification", "normalized"]
+      },
+      "then": {"properties": {"normalized": {"properties": {"content_readback": {"properties": {"state": {"const": "draft_saved"}}}}}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "success_result"},
+          "normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.publish"}}, "required": ["action_id"]}
+        },
+        "required": ["classification", "normalized"]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "visibility_state": {"enum": ["only_me", "public"]},
+              "content_readback": {"properties": {"state": {"const": "published"}}}
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -69,6 +163,7 @@
       "required": ["status", "operation_ref"],
       "properties": {
         "status": {"enum": ["terminal", "unknown_outcome"]},
+        "terminal_state": {"enum": ["success", "failure"]},
         "operation_ref": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"}
       }
     },
