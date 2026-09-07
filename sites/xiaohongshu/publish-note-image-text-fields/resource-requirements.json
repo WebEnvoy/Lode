@@ -1,0 +1,92 @@
+{
+  "schema_version": "lode.resource-requirements.v0",
+  "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
+  "resource_requirements_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
+  "operation_mode": "write",
+  "lifecycle": "proposed",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "matching_owner": "WebEnvoy Core",
+    "runtime_facts_owner": "Harbor",
+    "result_owner": "WebEnvoy Core"
+  },
+  "matching_semantics": {
+    "profile_match_rule": "exact_action_profile",
+    "matched_meaning": "Current Harbor facts satisfy the prerequisites; this does not prove that the write executed.",
+    "unmatched_meaning": "Return unavailable or unknown without choosing another action."
+  },
+  "resource_requirement_profiles": [
+    {
+      "requirement_profile_id": "xhs-image-text-field-fill",
+      "description": "小红书上传图文标题与正文写入及页面回读。",
+      "operation_boundary": "write",
+      "action_id": "xhs_publish_note_image_text_fields.field_fill",
+      "required_harbor_facts": [
+        { "fact_key": "runtime.execution_surface.available", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "runtime.site_identity.managed", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "snapshot.creator_publish_entrypoint.available", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "snapshot.image_text_title_input.editable", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "snapshot.image_text_body_editor.editable", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "control_owner.xiaohongshu.managed", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "operation_ref.accepted_or_running", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "post_check.ref_available", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
+        { "fact_key": "safety.challenge.absent", "owner": "Harbor", "required": true, "freshness": "current_execution_window" }
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+        "allowed_origins": ["https://creator.xiaohongshu.com"],
+        "required_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
+        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "requested_path": "image_text_upload",
+        "value_policy": "ephemeral_user_supplied_non_sensitive_test_content"
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+        "required_normalized_fields": [
+          "action_id", "requested_path", "business_effect", "operation", "field_readback",
+          "page_readback", "post_check", "reconciliation", "recovery", "submitted"
+        ],
+        "required_refs": ["operation.operation_ref", "post_check.ref", "reconciliation.ref"]
+      }
+    }
+  ],
+  "action_admission": {
+    "action_selection": "Only the exact field_fill action and image_text_upload path are accepted.",
+    "authorization": "Core binds one existing single-action decision to action_id and target_ref before execution.",
+    "idempotency": "Core binds one existing idempotency key; Lode stores neither the decision nor the key.",
+    "external_effects": { "xhs_publish_note_image_text_fields.field_fill": "modify" },
+    "unknown_outcome": "Preserve unknown_outcome with operation ref and never retry automatically."
+  },
+  "evidence_requirements": {
+    "source_ref_policy": "summary_refs_only_no_field_values",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "required_ref_kinds": ["field_action_summary", "snapshot_ref", "operation_ref", "post_check_ref", "reconciliation_ref"],
+    "live_evidence_status": "required_from_WebEnvoy_412",
+    "static_fixture_status": "contract_shape_only_not_live_evidence"
+  },
+  "failure_class_mapping": {
+    "resource_unavailable": "Required page, identity, field or evidence facts are unavailable.",
+    "permission_insufficient": "The managed identity cannot control the action.",
+    "page_changed": "The route or field targets no longer match the reviewed contract.",
+    "field_unavailable": "A required title or body field is not uniquely editable.",
+    "validation_failed": "The page rejects or changes a requested field value.",
+    "operation_result_unknown": "The write or final result cannot be determined.",
+    "post_check_failed": "The post-check cannot reconcile the operation with page state.",
+    "reconciliation_unknown": "The operation exists but final page reconciliation remains unknown."
+  },
+  "forbidden_fields": [
+    "selector", "selectors", "dom", "cookies", "tokens", "profile_state", "runtime_session",
+    "runtime_session_id", "live_tab_state", "provider_key", "harbor_profile_id", "local_path",
+    "storage_url", "proxy", "raw_evidence_body", "full_dom", "har", "screenshot_body",
+    "network_response_body", "production_payload", "user_business_data", "media_bytes"
+  ],
+  "non_goals": [
+    "No browser execution or live matching in Lode.",
+    "No media action, optional fields, save draft, publish, submit, retry or bypass.",
+    "No copied Core operation lifecycle or generic form framework."
+  ],
+  "covered_issues": ["#313", "WebEnvoy#412"],
+  "anchor_work_item": "LODE-313"
+}

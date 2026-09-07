@@ -1,0 +1,184 @@
+{
+  "manifest_version": "lode.site-capability.manifest.v0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "package_type": "site-capability",
+  "site": {
+    "slug": "xiaohongshu",
+    "display_name": "小红书",
+    "supported_origins": ["https://www.xiaohongshu.com", "https://creator.xiaohongshu.com"]
+  },
+  "capability": {
+    "capability_id": "publish-note-image-text-fields",
+    "operation_id": "xhs_publish_note_image_text_fields",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
+    "capability_family": "xiaohongshu_publish_note_image_text_fields",
+    "operation_mode": "write",
+    "target_type": "creator_publish_page",
+    "version": "0.1.0",
+    "lifecycle": "proposed",
+    "tags": ["site:xiaohongshu", "image-text", "field-write", "risk:external-effect", "lifecycle:proposed"]
+  },
+  "action_declaration": {
+    "schema_version": "lode.capability-action-declaration.v0",
+    "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
+    "actions": [
+      {
+        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "category": "commit",
+        "target_scope": {
+          "site_slug": "xiaohongshu",
+          "target_types": ["creator_publish_page"],
+          "supported_origins": ["https://creator.xiaohongshu.com"]
+        },
+        "resource_requirements": {
+          "path": "resource-requirements.json",
+          "id": "xiaohongshu.publish-note-image-text-fields.resources",
+          "profile_ids": ["xhs-image-text-field-fill"]
+        },
+        "external_effects": ["modify"]
+      }
+    ]
+  },
+  "action_boundary": {
+    "allowed_actions": ["field_fill"],
+    "consumer_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
+    "external_effects": { "field_fill": "modify" },
+    "forbidden_actions": ["upload", "save_draft", "publish", "submit", "retry", "bypass"],
+    "public_readback": "Expose only title/body matched, mismatch, or unknown states; do not copy values into public evidence.",
+    "unknown_policy": "Query the same operation ref; never replay field input automatically.",
+    "save_draft_publish_boundary": "Save draft and publish are separate contracts owned by Lode #295 and WebEnvoy #419/#422/#423."
+  },
+  "entrypoint": {
+    "kind": "declarative-normalizer",
+    "ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields/entrypoint"
+  },
+  "asset_refs": [
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "normalized_output_schema",
+      "path": "schemas/output.schema.json",
+      "status": "present",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+      "schema_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "resource_requirements",
+      "path": "resource-requirements.json",
+      "status": "present",
+      "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
+      "resource_requirements_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "version_lifecycle_metadata",
+      "path": "lifecycle-metadata.json",
+      "status": "present",
+      "lifecycle_metadata_id": "xiaohongshu.publish-note-image-text-fields.lifecycle",
+      "lifecycle_metadata_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "write_deferred_guardrail",
+      "path": "write-deferred-guardrail.json",
+      "status": "present",
+      "guardrail_id": "xiaohongshu.publish-note-image-text-fields.write-deferred-guardrail",
+      "guardrail_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "fixture",
+      "path": "fixtures/publish-note-image-text-fields.fixture.json",
+      "status": "present",
+      "fixture_id": "xiaohongshu.publish-note-image-text-fields.fixture",
+      "fixture_version": "0.1.0",
+      "source_shape": "xiaohongshu.publish-note-image-text-fields.source.creator_publish_page_summary@0.1.0",
+      "redaction": "summary_only",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "core_consumption_fixture",
+      "path": "fixtures/core-consumption.fixture.json",
+      "status": "present",
+      "fixture_id": "xiaohongshu.publish-note-image-text-fields.core-consumption-fixture",
+      "fixture_version": "0.1.0",
+      "consumer": "WebEnvoy Core admission and schema validation",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "status": "present",
+      "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
+      "post_check_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "failure_mapping",
+      "path": "failure-mapping.json",
+      "status": "present",
+      "failure_mapping_id": "xiaohongshu.publish-note-image-text-fields.failure-mapping",
+      "failure_mapping_version": "0.1.0",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "catalog_metadata",
+      "path": "catalog-metadata.json",
+      "status": "present",
+      "catalog_metadata_id": "xiaohongshu.publish-note-image-text-fields.catalog-metadata",
+      "catalog_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App/Core catalog",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "repair_draft",
+      "path": "repair/repair-draft.fixture.json",
+      "status": "present",
+      "repair_draft_id": "xiaohongshu.publish-note-image-text-fields.repair-draft",
+      "repair_draft_version": "0.1.0",
+      "consumer": "WebEnvoy App repair display and Core failure attribution",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "overlay_fork_metadata",
+      "path": "repair/overlay-fork-metadata.fixture.json",
+      "status": "present",
+      "overlay_metadata_id": "xiaohongshu.publish-note-image-text-fields.overlay-fork",
+      "overlay_metadata_version": "0.1.0",
+      "consumer": "WebEnvoy App refs-only repair status",
+      "work_item": "LODE-313"
+    },
+    {
+      "role": "package_lock",
+      "path": "package-lock.json",
+      "status": "present",
+      "lock_id": "xiaohongshu.publish-note-image-text-fields.lock",
+      "lock_version": "0.1.0",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "work_item": "LODE-313"
+    }
+  ],
+  "known_limitations": [
+    "Only title and body are declared from current non-production page evidence; all other fields remain unknown.",
+    "Lifecycle stays proposed until WebEnvoy #412 provides exact-pin formal Runtime evidence.",
+    "Save draft and publish are outside this package."
+  ],
+  "forbidden_contents": [
+    "cookies", "tokens", "profile_state", "runtime_session", "live_tab_state", "selector", "dom",
+    "raw_evidence_body", "production_payload", "user_business_data", "media_bytes"
+  ],
+  "covered_issues": ["#313", "WebEnvoy#412", "WebEnvoy#451"],
+  "anchor_work_item": "LODE-313",
+  "non_goals": [
+    "No browser execution, media action, save draft, publish, submit, retry, bypass, or generic form framework.",
+    "No Core operation state machine; Core owns authorization, run lifecycle, operation refs and reconciliation.",
+    "No persisted title, body, account, Profile, raw page, or production material."
+  ]
+}

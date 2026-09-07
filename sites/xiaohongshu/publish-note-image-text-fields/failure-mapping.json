@@ -1,0 +1,120 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "xiaohongshu.publish-note-image-text-fields.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "capability_id": "publish-note-image-text-fields",
+  "operation_id": "xhs_publish_note_image_text_fields",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App"
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Action, path, target or field input violates the contract.",
+      "owner": "Lode validator/Core admission",
+      "core_mapping": { "category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false },
+      "app_mapping": { "display": "字段写入合同无效。" }
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Required managed page, identity, field or evidence fact is unavailable.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": { "category": "requires_user_action", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "当前创作页资源不可用。" }
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "Route, field semantics or readback shape differs from the contract.",
+      "owner": "WebEnvoy Core/Lode",
+      "core_mapping": { "category": "site_changed", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "页面字段语义已变化，未继续执行。" }
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "Target exists but the required fields are absent.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": { "category": "empty_result", "outcome_hint": "empty", "retryable": false, "requires_user_action": false },
+      "app_mapping": { "display": "页面没有可写的必要字段。" }
+    },
+    {
+      "lode_failure_class": "login_required",
+      "trigger": "Managed identity cannot be confirmed for the creator page.",
+      "owner": "Harbor",
+      "core_mapping": { "category": "requires_user_action", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "需要恢复小红书登录状态。" }
+    },
+    {
+      "lode_failure_class": "permission_insufficient",
+      "trigger": "Current managed identity or control owner cannot perform the action.",
+      "owner": "Harbor",
+      "core_mapping": { "category": "permission", "outcome_hint": "blocked", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "当前身份或控制权不足。" }
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "Site challenge or risk control is present.",
+      "owner": "Harbor",
+      "core_mapping": { "category": "safety_challenge", "outcome_hint": "blocked", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "页面触发风险验证，字段写入已停止。" }
+    },
+    {
+      "lode_failure_class": "field_unavailable",
+      "trigger": "Title or body is missing, ambiguous, hidden, disabled or not editable.",
+      "owner": "Harbor/Core",
+      "core_mapping": { "category": "resource_unavailable", "outcome_hint": "unavailable", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "标题或正文输入不可用。" }
+    },
+    {
+      "lode_failure_class": "validation_failed",
+      "trigger": "Page validation rejects a field or readback differs from the requested value.",
+      "owner": "Harbor/Core",
+      "core_mapping": { "category": "action_failed", "outcome_hint": "failed", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "字段校验或回读不一致。" }
+    },
+    {
+      "lode_failure_class": "operation_result_unknown",
+      "trigger": "The write may have occurred but its result cannot be determined.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": { "category": "unknown_outcome", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "字段写入结果未知，未自动重试。" }
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "Title/body or page readback cannot be verified.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": { "category": "post_check_failed", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "字段回读校验失败。" }
+    },
+    {
+      "lode_failure_class": "reconciliation_unknown",
+      "trigger": "Operation exists but final page state cannot be reconciled.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": { "category": "reconciliation_unknown", "outcome_hint": "unknown", "retryable": false, "requires_user_action": true },
+      "app_mapping": { "display": "字段页面最终状态未知。" }
+    },
+    {
+      "lode_failure_class": "save_draft_not_in_scope",
+      "trigger": "A caller requests save draft through this package.",
+      "owner": "Lode/Core admission",
+      "core_mapping": { "category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false },
+      "app_mapping": { "display": "保存草稿不属于当前字段动作。" }
+    },
+    {
+      "lode_failure_class": "publish_not_in_scope",
+      "trigger": "A caller requests publish through this package.",
+      "owner": "Lode/Core admission",
+      "core_mapping": { "category": "invalid_contract", "outcome_hint": "reject", "retryable": false, "requires_user_action": false },
+      "app_mapping": { "display": "发布不属于当前字段动作。" }
+    }
+  ],
+  "unknown_policy": {
+    "retryable_by_default": false,
+    "success_claim_requires": ["terminal success", "title/body matched", "page readback", "post_check_ref", "reconciliation_ref"],
+    "operation_ref_owner": "WebEnvoy Core"
+  },
+  "non_goals": ["No browser execution, persisted field values, save draft, publish or automatic retry."]
+}
