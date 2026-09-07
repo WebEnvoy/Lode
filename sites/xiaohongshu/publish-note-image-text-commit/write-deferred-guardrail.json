@@ -1,0 +1,117 @@
+{
+  "schema_version": "lode.write-deferred-guardrail.v0",
+  "guardrail_id": "xiaohongshu.publish-note-image-text-commit.write-deferred-guardrail",
+  "guardrail_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "capability_id": "publish-note-image-text-commit",
+  "operation_id": "xhs_publish_note_image_text_commit",
+  "operation_mode": "write",
+  "work_item": "LODE-295",
+  "guardrail": {
+    "status": "active",
+    "applies_to_operation_modes": [
+      "validate_only",
+      "draft",
+      "preview",
+      "write"
+    ],
+    "current_package_allowed_modes": [],
+    "blocked_claims": [
+      "unverified_external_effect",
+      "unverified_operation_result",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ]
+  },
+  "validate_only_boundary": {
+    "status": "active",
+    "allowed_now": [
+      "contract_validation",
+      "refs_only_fixture_validation",
+      "operation_ref_shape_validation"
+    ],
+    "blocked_now": [
+      "live_action_execution",
+      "save_draft",
+      "publish",
+      "submit",
+      "retry",
+      "bypass"
+    ],
+    "requires_before_admission": [
+      "exact_declared_action_id",
+      "Core_single_action_authorization_binding",
+      "Core_idempotency_binding",
+      "current_Harbor_resource_match",
+      "live_operation_and_post_check_refs"
+    ]
+  },
+  "draft_preview_boundary": {
+    "status": "deferred",
+    "allowed_later": [
+      "Core-controlled save_draft",
+      "Core-controlled publish"
+    ],
+    "blocked_now": [
+      "draft",
+      "preview",
+      "save_draft",
+      "publish"
+    ],
+    "requires_before_admission": [
+      "this exact package and action",
+      "explicit_user_authorization",
+      "current identity and business-target match",
+      "new operation and idempotency key"
+    ],
+    "deferred_until": "WebEnvoy controlled-evidence admission consumes this exact package with #419/#422/#423 live evidence"
+  },
+  "true_write_boundary": {
+    "execution_status": "deferred",
+    "entry_condition_only": true,
+    "deferred_until": "WebEnvoy Core consumes this exact package under controlled-evidence admission for #419/#422/#423",
+    "must_reject_if": [
+      "action_id is missing or is not one of the two exact actions",
+      "Core cannot bind explicit authorization and ControlLease to the account, target and action",
+      "Core cannot bind a new operation ref and idempotency key to the action",
+      "required current-page composition, field, media, commit-control or identity fact is absent, stale or mismatched",
+      "a previous related operation is running or unknown without completed reconciliation",
+      "post-check or reconciliation refs cannot be produced",
+      "the action would expose credentials, media bytes, user content or private runtime material"
+    ],
+    "allowed_now": [
+      "contract_validation",
+      "refs_only_fixtures"
+    ]
+  },
+  "admission_guardrail": {
+    "write_execution": "blocked",
+    "must_reject_if": [
+      "action_id is missing, unknown, or does not match requested_path",
+      "Core cannot bind one single-action authorization decision to the exact action and target",
+      "Core cannot bind one TaskTurnRecord idempotency key to the exact action and target",
+      "required Harbor page/control/identity fact is absent, stale, or mismatched",
+      "operation result or external effect is unknown and a success claim is requested",
+      "post-check or reconciliation ref is absent",
+      "an undeclared action, retry, replay or bypass is requested",
+      "the action would store media bytes, user content, or private runtime material"
+    ],
+    "allowed_now": [
+      "contract_validation",
+      "refs_only_fixtures"
+    ]
+  },
+  "consumer_boundary": "Lode declares the proposed actions and remains non-executing. Core owns authorization, ControlLease, idempotency, ExternalOutcome and reconciliation; Harbor owns live execution/evidence; App renders refs-only state.",
+  "source_decisions": [
+    "#295 is one package with page-proven save_draft and publish actions.",
+    "WebEnvoy #419/#422/#423 supply formal live consumer evidence and cleanup.",
+    "Core remains the only owner of authorization, ControlLease, idempotency, ExternalOutcome and reconciliation."
+  ],
+  "non_goals": [
+    "No browser execution or independent live admission from this static guardrail.",
+    "No generic commit framework, retry, bypass or copied Core lifecycle."
+  ]
+}
