@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.post-check.v0",
   "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
-  "post_check_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "post_check_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "capability_id": "publish-note-image-text-fields",
   "operation_id": "xhs_publish_note_image_text_fields",
   "operation_mode": "write",
@@ -28,7 +28,7 @@
   "requirements": [
     {
       "requirement_id": "action-identity-and-effect",
-      "description": "Verify the exact field_fill/image_text_upload pair and modify effect.",
+      "description": "Verify the exact compose/image_text_upload pair and modify effect.",
       "required_source_refs": ["fixture-source-action"],
       "required_evidence_refs": ["fixture-evidence-operation"],
       "on_failure": "Return invalid_contract; do not choose another action."
@@ -60,7 +60,7 @@
     "reason": "Static fixture does not execute field writes; live evidence belongs to WebEnvoy #412.",
     "source_refs": ["fixture-source-action", "fixture-source-page", "fixture-source-state"],
     "evidence_refs": ["fixture-evidence-operation", "fixture-evidence-post-check", "fixture-evidence-reconcile"],
-    "action_id": "xhs_publish_note_image_text_fields.field_fill",
+    "action_id": "xhs_publish_note_image_text_fields.compose",
     "requested_path": "image_text_upload",
     "business_effect": "unknown",
     "operation": "unknown_outcome",

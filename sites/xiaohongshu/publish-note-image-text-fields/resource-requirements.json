@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.resource-requirements.v0",
   "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
-  "resource_requirements_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "resource_requirements_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "operation_ref": "lode://operation/xhs_publish_note_image_text_fields",
   "operation_mode": "write",
   "lifecycle": "proposed",
@@ -22,7 +22,7 @@
       "requirement_profile_id": "xhs-image-text-field-fill",
       "description": "小红书上传图文标题与正文写入及页面回读。",
       "operation_boundary": "write",
-      "action_id": "xhs_publish_note_image_text_fields.field_fill",
+      "action_id": "xhs_publish_note_image_text_fields.compose",
       "required_harbor_facts": [
         { "fact_key": "runtime.execution_surface.available", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
         { "fact_key": "runtime.site_identity.managed", "owner": "Harbor", "required": true, "freshness": "current_execution_window" },
@@ -35,15 +35,15 @@
         { "fact_key": "safety.challenge.absent", "owner": "Harbor", "required": true, "freshness": "current_execution_window" }
       ],
       "input_binding": {
-        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.1",
         "allowed_origins": ["https://creator.xiaohongshu.com"],
         "required_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "value_policy": "ephemeral_user_supplied_non_sensitive_test_content"
       },
       "output_binding": {
-        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
         "required_normalized_fields": [
           "action_id", "requested_path", "business_effect", "operation", "field_readback",
           "page_readback", "post_check", "reconciliation", "recovery", "submitted"
@@ -53,10 +53,10 @@
     }
   ],
   "action_admission": {
-    "action_selection": "Only the exact field_fill action and image_text_upload path are accepted.",
+    "action_selection": "Only the exact compose action and image_text_upload path are accepted.",
     "authorization": "Core binds one existing single-action decision to action_id and target_ref before execution.",
     "idempotency": "Core binds one existing idempotency key; Lode stores neither the decision nor the key.",
-    "external_effects": { "xhs_publish_note_image_text_fields.field_fill": "modify" },
+    "external_effects": { "xhs_publish_note_image_text_fields.compose": "modify" },
     "unknown_outcome": "Preserve unknown_outcome with operation ref and never retry automatically."
   },
   "evidence_requirements": {

@@ -1,17 +1,17 @@
 {
   "schema_version": "lode.fixture.v0",
   "fixture_id": "xiaohongshu.publish-note-image-text-fields.fixture",
-  "fixture_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "fixture_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "capability_id": "publish-note-image-text-fields",
   "operation_id": "xhs_publish_note_image_text_fields",
   "operation_mode": "write",
   "fixture_kind": "redacted_field_action",
   "source_shape": {
     "source_shape_id": "xiaohongshu.publish-note-image-text-fields.source.creator_publish_page_summary",
-    "source_shape_version": "0.1.0",
+    "source_shape_version": "0.1.1",
     "source_kind": "creator_publish_page_summary",
-    "schema_hint": "xiaohongshu-publish-note-image-text-fields-source@0.1.0"
+    "schema_hint": "xiaohongshu-publish-note-image-text-fields-source@0.1.1"
   },
   "redaction_policy": {
     "status": "redacted",
@@ -30,7 +30,7 @@
       "captured_at": "2026-09-07T00:00:00Z",
       "redaction": "summary_only",
       "retention": "fixture_only",
-      "schema_hint": "xiaohongshu-publish-note-image-text-fields-action@0.1.0"
+      "schema_hint": "xiaohongshu-publish-note-image-text-fields-action@0.1.1"
     },
     {
       "ref_id": "fixture-source-page",
@@ -39,7 +39,7 @@
       "captured_at": "2026-09-07T00:00:00Z",
       "redaction": "summary_only",
       "retention": "fixture_only",
-      "schema_hint": "xiaohongshu-publish-note-image-text-fields-page@0.1.0"
+      "schema_hint": "xiaohongshu-publish-note-image-text-fields-page@0.1.1"
     },
     {
       "ref_id": "fixture-source-state",
@@ -48,7 +48,7 @@
       "captured_at": "2026-09-07T00:00:00Z",
       "redaction": "summary_only",
       "retention": "fixture_only",
-      "schema_hint": "xiaohongshu-publish-note-image-text-fields-state@0.1.0"
+      "schema_hint": "xiaohongshu-publish-note-image-text-fields-state@0.1.1"
     }
   ],
   "evidence_refs": [
@@ -84,7 +84,7 @@
     "summary": {
       "url": "https://creator.xiaohongshu.com/publish/publish",
       "target_ref": "target-ref:xiaohongshu/creator-publish-page",
-      "action_id": "xhs_publish_note_image_text_fields.field_fill",
+      "action_id": "xhs_publish_note_image_text_fields.compose",
       "requested_path": "image_text_upload",
       "title_state": "unknown",
       "body_state": "unknown",
@@ -93,7 +93,7 @@
     }
   },
   "normalized_fixture": {
-    "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
+    "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
     "integrity_hint": "fixture-only",
     "data": {
       "result_kind": "xhs_publish_note_image_text_fields",
@@ -101,7 +101,7 @@
       "classification": "not_normalizable",
       "unavailable_reason": "operation_result_unknown",
       "normalized": {
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "requested_path": "image_text_upload",
         "canonical_url": "https://creator.xiaohongshu.com/publish/publish",
         "target_ref": "target-ref:xiaohongshu/creator-publish-page",
@@ -132,21 +132,21 @@
           "source_kind": "field_action_summary",
           "producer": "fixture",
           "redaction": "summary_only",
-          "schema_hint": "xiaohongshu-publish-note-image-text-fields-action@0.1.0"
+          "schema_hint": "xiaohongshu-publish-note-image-text-fields-action@0.1.1"
         },
         {
           "ref_id": "fixture-source-page",
           "source_kind": "creator_publish_page_summary",
           "producer": "fixture",
           "redaction": "summary_only",
-          "schema_hint": "xiaohongshu-publish-note-image-text-fields-page@0.1.0"
+          "schema_hint": "xiaohongshu-publish-note-image-text-fields-page@0.1.1"
         },
         {
           "ref_id": "fixture-source-state",
           "source_kind": "business_state_summary",
           "producer": "fixture",
           "redaction": "summary_only",
-          "schema_hint": "xiaohongshu-publish-note-image-text-fields-state@0.1.0"
+          "schema_hint": "xiaohongshu-publish-note-image-text-fields-state@0.1.1"
         }
       ],
       "evidence_refs": [
@@ -181,7 +181,7 @@
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_only",
     "status_rule": "Unknown operation or readback stays unknown.",
-    "effect_mapping_rule": "field_fill maps to modify.",
+    "effect_mapping_rule": "compose maps to modify.",
     "no_retry_rule": "unknown_outcome requires same-operation reconciliation before any newly authorized write."
   },
   "non_goals": [

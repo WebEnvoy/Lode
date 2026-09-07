@@ -2002,7 +2002,7 @@
       "query_id": "xiaohongshu-publish-note-image-text-fields",
       "purpose": "Expose the controlled-evidence Xiaohongshu image-text title/body field action to the WebEnvoy App catalog.",
       "filters": {
-        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0"
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1"
       },
       "covered_issues": [
         "#313",
@@ -2011,12 +2011,12 @@
       ],
       "results": [
         {
-          "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
           "capability_id": "publish-note-image-text-fields",
           "operation_id": "xhs_publish_note_image_text_fields",
           "operation_mode": "write",
           "manifest_path": "sites/xiaohongshu/publish-note-image-text-fields/manifest.json",
-          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
           "status": "controlled_evidence",
           "runtime_admission": {
             "enabled": true,

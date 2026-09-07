@@ -1,6 +1,6 @@
 {
   "manifest_version": "lode.site-capability.manifest.v0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
   "package_type": "site-capability",
   "site": {
     "slug": "xiaohongshu",
@@ -14,7 +14,7 @@
     "capability_family": "xiaohongshu_publish_note_image_text_fields",
     "operation_mode": "write",
     "target_type": "creator_publish_page",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "lifecycle": "proposed",
     "tags": ["site:xiaohongshu", "image-text", "field-write", "risk:external-effect", "lifecycle:proposed"]
   },
@@ -23,7 +23,7 @@
     "schema_ref": "lode://schema/capability-action-declaration@0.1.0",
     "actions": [
       {
-        "action_id": "xhs_publish_note_image_text_fields.field_fill",
+        "action_id": "xhs_publish_note_image_text_fields.compose",
         "category": "commit",
         "target_scope": {
           "site_slug": "xiaohongshu",
@@ -40,9 +40,9 @@
     ]
   },
   "action_boundary": {
-    "allowed_actions": ["field_fill"],
+    "allowed_actions": ["compose"],
     "consumer_input_fields": ["url", "target_ref", "action_id", "requested_path", "title", "body"],
-    "external_effects": { "field_fill": "modify" },
+    "external_effects": { "compose": "modify" },
     "forbidden_actions": ["upload", "save_draft", "publish", "submit", "retry", "bypass"],
     "public_readback": "Expose only title/body matched, mismatch, or unknown states; do not copy values into public evidence.",
     "unknown_policy": "Query the same operation ref; never replay field input automatically.",
@@ -57,16 +57,16 @@
       "role": "input_schema",
       "path": "schemas/input.schema.json",
       "status": "present",
-      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.0",
-      "schema_version": "0.1.0",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/input@0.1.1",
+      "schema_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
       "role": "normalized_output_schema",
       "path": "schemas/output.schema.json",
       "status": "present",
-      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.0",
-      "schema_version": "0.1.0",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-fields/output@0.1.1",
+      "schema_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -74,7 +74,7 @@
       "path": "resource-requirements.json",
       "status": "present",
       "resource_requirements_id": "xiaohongshu.publish-note-image-text-fields.resources",
-      "resource_requirements_version": "0.1.0",
+      "resource_requirements_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -82,7 +82,7 @@
       "path": "lifecycle-metadata.json",
       "status": "present",
       "lifecycle_metadata_id": "xiaohongshu.publish-note-image-text-fields.lifecycle",
-      "lifecycle_metadata_version": "0.1.0",
+      "lifecycle_metadata_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -90,7 +90,7 @@
       "path": "write-deferred-guardrail.json",
       "status": "present",
       "guardrail_id": "xiaohongshu.publish-note-image-text-fields.write-deferred-guardrail",
-      "guardrail_version": "0.1.0",
+      "guardrail_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -98,8 +98,8 @@
       "path": "fixtures/publish-note-image-text-fields.fixture.json",
       "status": "present",
       "fixture_id": "xiaohongshu.publish-note-image-text-fields.fixture",
-      "fixture_version": "0.1.0",
-      "source_shape": "xiaohongshu.publish-note-image-text-fields.source.creator_publish_page_summary@0.1.0",
+      "fixture_version": "0.1.1",
+      "source_shape": "xiaohongshu.publish-note-image-text-fields.source.creator_publish_page_summary@0.1.1",
       "redaction": "summary_only",
       "work_item": "LODE-313"
     },
@@ -108,7 +108,7 @@
       "path": "fixtures/core-consumption.fixture.json",
       "status": "present",
       "fixture_id": "xiaohongshu.publish-note-image-text-fields.core-consumption-fixture",
-      "fixture_version": "0.1.0",
+      "fixture_version": "0.1.1",
       "consumer": "WebEnvoy Core admission and schema validation",
       "work_item": "LODE-313"
     },
@@ -117,7 +117,7 @@
       "path": "checks/post-check.json",
       "status": "present",
       "post_check_id": "xiaohongshu.publish-note-image-text-fields.post-check",
-      "post_check_version": "0.1.0",
+      "post_check_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -125,7 +125,7 @@
       "path": "failure-mapping.json",
       "status": "present",
       "failure_mapping_id": "xiaohongshu.publish-note-image-text-fields.failure-mapping",
-      "failure_mapping_version": "0.1.0",
+      "failure_mapping_version": "0.1.1",
       "work_item": "LODE-313"
     },
     {
@@ -133,7 +133,7 @@
       "path": "catalog-metadata.json",
       "status": "present",
       "catalog_metadata_id": "xiaohongshu.publish-note-image-text-fields.catalog-metadata",
-      "catalog_metadata_version": "0.1.0",
+      "catalog_metadata_version": "0.1.1",
       "consumer": "WebEnvoy App/Core catalog",
       "work_item": "LODE-313"
     },
@@ -142,7 +142,7 @@
       "path": "repair/repair-draft.fixture.json",
       "status": "present",
       "repair_draft_id": "xiaohongshu.publish-note-image-text-fields.repair-draft",
-      "repair_draft_version": "0.1.0",
+      "repair_draft_version": "0.1.1",
       "consumer": "WebEnvoy App repair display and Core failure attribution",
       "work_item": "LODE-313"
     },
@@ -151,7 +151,7 @@
       "path": "repair/overlay-fork-metadata.fixture.json",
       "status": "present",
       "overlay_metadata_id": "xiaohongshu.publish-note-image-text-fields.overlay-fork",
-      "overlay_metadata_version": "0.1.0",
+      "overlay_metadata_version": "0.1.1",
       "consumer": "WebEnvoy App refs-only repair status",
       "work_item": "LODE-313"
     },
@@ -160,8 +160,8 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "xiaohongshu.publish-note-image-text-fields.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.0",
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-fields@0.1.1",
       "work_item": "LODE-313"
     }
   ],
