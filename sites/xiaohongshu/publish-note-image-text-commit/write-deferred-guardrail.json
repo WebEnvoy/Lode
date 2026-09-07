@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.write-deferred-guardrail.v0",
   "guardrail_id": "xiaohongshu.publish-note-image-text-commit.write-deferred-guardrail",
-  "guardrail_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "guardrail_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -74,7 +74,7 @@
     "entry_condition_only": true,
     "deferred_until": "WebEnvoy Core consumes this exact package under controlled-evidence admission for #419/#422/#423",
     "must_reject_if": [
-      "action_id is missing or is not one of the two exact actions",
+      "action_id is missing or is not one of the three exact actions",
       "Core cannot bind explicit authorization and ControlLease to the account, target and action",
       "Core cannot bind a new operation ref and idempotency key to the action",
       "required current-page composition, field, media, commit-control or identity fact is absent, stale or mismatched",
@@ -106,7 +106,7 @@
   },
   "consumer_boundary": "Lode declares the proposed actions and remains non-executing. Core owns authorization, ControlLease, idempotency, ExternalOutcome and reconciliation; Harbor owns live execution/evidence; App renders refs-only state.",
   "source_decisions": [
-    "#295 is one package with page-proven save_draft and publish actions.",
+    "#295 is one package with page-proven save_draft, publish and marker-bound cleanup actions.",
     "WebEnvoy #419/#422/#423 supply formal live consumer evidence and cleanup.",
     "Core remains the only owner of authorization, ControlLease, idempotency, ExternalOutcome and reconciliation."
   ],

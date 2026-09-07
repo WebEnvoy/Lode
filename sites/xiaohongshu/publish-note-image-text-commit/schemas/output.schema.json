@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
-  "title": "小红书图文保存或发布归一化输出",
-  "description": "保存草稿或发布的 refs-only 结果；Core 维护 Run、ExternalOutcome 与 operation 生命周期。",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
+  "title": "小红书图文提交与清理归一化输出",
+  "description": "保存草稿、发布或唯一标记清理的 refs-only 结果；Core 维护 Run、ExternalOutcome 与 operation 生命周期。",
   "type": "object",
   "additionalProperties": false,
   "required": ["result_kind", "status", "classification", "normalized", "source_refs", "evidence_refs"],
@@ -47,8 +47,6 @@
               },
               "content_readback": {
                 "properties": {
-                  "management_list_state": {"const": "matched"},
-                  "detail_state": {"const": "matched"},
                   "fields_state": {"const": "matched"},
                   "media_state": {"const": "matched"},
                   "marker_state": {"const": "matched"}
@@ -107,13 +105,30 @@
     },
     {
       "if": {
+        "properties": {"normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.cleanup"}}, "required": ["action_id"]}},
+        "required": ["normalized"]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "visibility_state": {"const": "not_applicable"},
+              "business_effect": {"properties": {"kind": {"const": "cleanup"}}},
+              "content_readback": {"properties": {"state": {"enum": ["deleted", "not_observed", "unknown"]}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
         "properties": {
           "classification": {"const": "success_result"},
           "normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"}}, "required": ["action_id"]}
         },
         "required": ["classification", "normalized"]
       },
-      "then": {"properties": {"normalized": {"properties": {"content_readback": {"properties": {"state": {"const": "draft_saved"}}}}}}}
+      "then": {"properties": {"normalized": {"properties": {"content_readback": {"properties": {"state": {"const": "draft_saved"}, "management_list_state": {"const": "matched"}, "detail_state": {"const": "matched"}}}}}}}
     },
     {
       "if": {
@@ -128,7 +143,32 @@
           "normalized": {
             "properties": {
               "visibility_state": {"enum": ["only_me", "public"]},
-              "content_readback": {"properties": {"state": {"const": "published"}}}
+              "content_readback": {"properties": {"state": {"const": "published"}, "management_list_state": {"const": "matched"}, "detail_state": {"const": "matched"}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "success_result"},
+          "normalized": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.cleanup"}}, "required": ["action_id"]}
+        },
+        "required": ["classification", "normalized"]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "visibility_state": {"const": "not_applicable"},
+              "content_readback": {
+                "properties": {
+                  "state": {"const": "deleted"},
+                  "management_list_state": {"const": "not_found"},
+                  "detail_state": {"const": "not_run"}
+                }
+              }
             }
           }
         }
@@ -141,7 +181,7 @@
       "additionalProperties": false,
       "required": ["action_id", "requested_path", "canonical_url", "target_ref", "marker_state", "visibility_state", "business_effect", "operation", "content_readback", "post_check", "reconciliation", "recovery", "submitted"],
       "properties": {
-        "action_id": {"type": "string", "enum": ["xhs_publish_note_image_text_commit.save_draft", "xhs_publish_note_image_text_commit.publish"]},
+        "action_id": {"type": "string", "enum": ["xhs_publish_note_image_text_commit.save_draft", "xhs_publish_note_image_text_commit.publish", "xhs_publish_note_image_text_commit.cleanup"]},
         "requested_path": {"const": "image_text_upload"},
         "canonical_url": {"type": "string", "format": "uri", "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$"},
         "target_ref": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
@@ -161,7 +201,7 @@
       "additionalProperties": false,
       "required": ["kind", "status"],
       "properties": {
-        "kind": {"enum": ["save_draft", "publish"]},
+        "kind": {"enum": ["save_draft", "publish", "cleanup"]},
         "status": {"enum": ["observed", "not_observed", "unknown"]}
       }
     },
@@ -180,7 +220,7 @@
       "additionalProperties": false,
       "required": ["state", "management_list_state", "detail_state", "fields_state", "media_state", "marker_state"],
       "properties": {
-        "state": {"enum": ["draft_saved", "published", "not_observed", "unknown"]},
+        "state": {"enum": ["draft_saved", "published", "deleted", "not_observed", "unknown"]},
         "management_list_state": {"enum": ["matched", "not_found", "unknown", "not_run"]},
         "detail_state": {"enum": ["matched", "mismatched", "unknown", "not_run"]},
         "fields_state": {"enum": ["matched", "mismatched", "unknown"]},
@@ -243,8 +283,8 @@
   },
   "x-lode": {
     "schema_id": "xiaohongshu.publish-note-image-text-commit.output",
-    "schema_version": "0.1.0",
-    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "schema_version": "0.1.1",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
     "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
     "operation_mode": "write",
     "required_refs": ["source_refs", "evidence_refs", "operation_ref", "post_check_ref", "reconciliation_ref"],

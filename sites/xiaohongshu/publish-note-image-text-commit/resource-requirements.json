@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.resource-requirements.v0",
   "resource_requirements_id": "xiaohongshu.publish-note-image-text-commit.resources",
-  "resource_requirements_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "resource_requirements_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
   "operation_mode": "write",
   "lifecycle": "proposed",
@@ -12,7 +12,7 @@
     "runtime_facts_owner": "Harbor",
     "result_owner": "WebEnvoy Core",
     "notes": [
-      "Lode declares two action profiles and keeps only refs-only contracts.",
+      "Lode declares three exact action profiles and keeps only refs-only contracts.",
       "Core binds the existing task turn, single-action authorization decision, and idempotency key to one exact action.",
       "Harbor owns the managed page, business-effect observation, operation refs, and post-check evidence."
     ]
@@ -99,7 +99,7 @@
         }
       ],
       "input_binding": {
-        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
         "allowed_origins": [
           "https://creator.xiaohongshu.com"
         ],
@@ -117,7 +117,7 @@
         "visibility": "not_applicable"
       },
       "output_binding": {
-        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
         "required_normalized_fields": [
           "action_id",
           "requested_path",
@@ -216,7 +216,7 @@
         }
       ],
       "input_binding": {
-        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
         "allowed_origins": [
           "https://creator.xiaohongshu.com"
         ],
@@ -234,7 +234,7 @@
         "visibility": "only_me_or_public"
       },
       "output_binding": {
-        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
         "required_normalized_fields": [
           "action_id",
           "requested_path",
@@ -252,15 +252,44 @@
           "reconciliation.ref"
         ]
       }
+    },
+    {
+      "requirement_profile_id": "xhs-image-text-cleanup",
+      "description": "小红书图文清理：仅在当前编辑页完整匹配唯一测试标记、字段与媒体后，删除对应作品并回读管理列表缺失状态。",
+      "operation_boundary": "write",
+      "action_id": "xhs_publish_note_image_text_commit.cleanup",
+      "required_harbor_facts": [
+        {"fact_key": "runtime.execution_surface.available", "owner": "Harbor", "required": true, "freshness": "current_execution_window"},
+        {"fact_key": "runtime.site_identity.managed", "owner": "Harbor", "required": true, "freshness": "current_execution_window"},
+        {"fact_key": "control_owner.xiaohongshu.managed", "owner": "Harbor", "required": true, "freshness": "current_execution_window"},
+        {"fact_key": "operation_ref.accepted_or_running", "owner": "Harbor", "required": true, "freshness": "current_execution_window"},
+        {"fact_key": "post_check.ref_available", "owner": "Harbor", "required": true, "freshness": "current_execution_window"},
+        {"fact_key": "safety.challenge.absent", "owner": "Harbor", "required": true, "freshness": "current_execution_window"}
+      ],
+      "input_binding": {
+        "input_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
+        "allowed_origins": ["https://creator.xiaohongshu.com"],
+        "required_input_fields": ["url", "target_ref", "action_id", "requested_path", "marker", "visibility"],
+        "action_id": "xhs_publish_note_image_text_commit.cleanup",
+        "requested_path": "image_text_upload",
+        "marker_policy": "exact_unique_non_sensitive_test_marker_required_before_delete",
+        "visibility": "not_applicable"
+      },
+      "output_binding": {
+        "output_schema": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
+        "required_normalized_fields": ["action_id", "requested_path", "business_effect", "operation", "content_readback", "post_check", "reconciliation", "recovery", "submitted"],
+        "required_refs": ["operation.operation_ref", "post_check.ref", "reconciliation.ref"]
+      }
     }
   ],
   "action_admission": {
-    "action_selection": "The exact action_id selects one profile; save_draft and publish never fall through to each other.",
+    "action_selection": "The exact action_id selects one profile; save_draft, publish and cleanup never fall through to each other.",
     "authorization": "Core must bind one existing single-action decision to action_id and target_ref before execution.",
     "idempotency": "Core must bind one existing TaskTurnRecord idempotency key to action_id and target_ref; Lode stores neither.",
     "external_effects": {
       "xhs_publish_note_image_text_commit.save_draft": "create",
-      "xhs_publish_note_image_text_commit.publish": "publish"
+      "xhs_publish_note_image_text_commit.publish": "publish",
+      "xhs_publish_note_image_text_commit.cleanup": "modify"
     },
     "unknown_outcome": "Preserve unknown_outcome with operation ref and recovery entrypoint; never retry automatically."
   },
@@ -312,7 +341,7 @@
   ],
   "non_goals": [
     "No profile/provider/session selection or live matching in Lode.",
-    "No upload, field fill, cleanup, retry or bypass action in this package.",
+    "No upload, field fill, retry or bypass action in this package.",
     "No generic commit registry, selector DSL, site state machine, queue or copied Core lifecycle."
   ],
   "covered_issues": [

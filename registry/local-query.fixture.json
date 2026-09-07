@@ -2030,9 +2030,9 @@
     },
     {
       "query_id": "xiaohongshu-publish-note-image-text-commit",
-      "purpose": "Expose the two page-proven Xiaohongshu image-text save-draft and publish actions to the WebEnvoy App catalog.",
+      "purpose": "Expose the three page-proven Xiaohongshu image-text save-draft, publish and marker-bound cleanup actions to the WebEnvoy App catalog.",
       "filters": {
-        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0"
+        "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1"
       },
       "covered_issues": [
         "#295",
@@ -2042,12 +2042,12 @@
       ],
       "results": [
         {
-          "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+          "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
           "capability_id": "publish-note-image-text-commit",
           "operation_id": "xhs_publish_note_image_text_commit",
           "operation_mode": "write",
           "manifest_path": "sites/xiaohongshu/publish-note-image-text-commit/manifest.json",
-          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+          "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
           "status": "controlled_evidence",
           "runtime_admission": {
             "enabled": true,
@@ -2055,7 +2055,8 @@
             "recheck_condition": "formal_live_evidence_required"
           },
           "save_draft": "declared_exact_action",
-          "publish": "declared_exact_action"
+          "publish": "declared_exact_action",
+          "cleanup": "declared_exact_action"
         }
       ]
     }

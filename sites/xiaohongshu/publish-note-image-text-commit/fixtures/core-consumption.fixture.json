@@ -1,9 +1,9 @@
 {
   "schema_version": "lode.core-consumption-fixture.v0",
   "fixture_id": "xiaohongshu.publish-note-image-text-commit.core-consumption-fixture",
-  "fixture_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "fixture_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -23,19 +23,19 @@
     "manifest_path": "sites/xiaohongshu/publish-note-image-text-commit/manifest.json",
     "lock_path": "sites/xiaohongshu/publish-note-image-text-commit/package-lock.json",
     "expected_registry_entry": {
-      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+      "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
       "package_type": "site-capability",
       "site_slug": "xiaohongshu",
       "capability_id": "publish-note-image-text-commit",
       "operation_id": "xhs_publish_note_image_text_commit",
       "operation_mode": "write",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "lifecycle": "proposed"
     }
   },
   "admission_fixture": {
-    "requested_package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "requested_package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
+    "requested_lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
     "accepted_operation_modes": [
       "write"
     ],
@@ -100,6 +100,20 @@
         "requested_path": "image_text_upload",
         "marker": "WE-XHS-FIXTURE-PUBLISH-001",
         "visibility": "only_me"
+      },
+      "expected_result": "valid"
+    },
+    {
+      "case_id": "valid-cleanup-input",
+      "schema_path": "sites/xiaohongshu/publish-note-image-text-commit/schemas/input.schema.json",
+      "instance_kind": "inline",
+      "instance": {
+        "url": "https://creator.xiaohongshu.com/publish/publish?from=tab_switch",
+        "target_ref": "target-ref:xiaohongshu/test-business-target",
+        "action_id": "xhs_publish_note_image_text_commit.cleanup",
+        "requested_path": "image_text_upload",
+        "marker": "WE-XHS-FIXTURE-CLEANUP-001",
+        "visibility": "not_applicable"
       },
       "expected_result": "valid"
     },
@@ -214,6 +228,6 @@
   ],
   "non_goals": [
     "No browser, profile, session, provider, credentials, DOM, HAR, screenshot, media bytes, production payload or user content.",
-    "No upload, field fill, cleanup, retry, bypass or copied Core lifecycle."
+    "No upload, field fill, retry, bypass or copied Core lifecycle."
   ]
 }
