@@ -67,7 +67,7 @@
         "canonical_url": {
           "type": "string",
           "format": "uri",
-          "pattern": "^https://creator\\.xiaohongshu\\.com/publish/publish(?:/|\\?from=tab_switch)?$"
+          "pattern": "^https://creator\\.xiaohongshu\\.com/publish/publish/?$|^https://creator\\.xiaohongshu\\.com/publish/publish\\?from=tab_switch$"
         },
         "target_ref": {
           "type": "string",
