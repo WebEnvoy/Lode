@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
+  "title": "小红书图文保存或发布归一化输出",
+  "description": "保存草稿或发布的 refs-only 结果；Core 维护 Run、ExternalOutcome 与 operation 生命周期。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["result_kind", "status", "classification", "normalized", "source_refs", "evidence_refs"],
+  "properties": {
+    "result_kind": {"const": "xhs_publish_note_image_text_commit"},
+    "status": {"type": "string", "enum": ["available", "unavailable"]},
+    "classification": {"type": "string", "enum": ["success_result", "partial_result", "not_normalizable"]},
+    "normalized": {"$ref": "#/$defs/commit_result"},
+    "source_refs": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}, "default": []},
+    "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidence_ref"}, "default": []},
+    "unavailable_reason": {
+      "type": "string",
+      "enum": ["invalid_contract", "resource_unavailable", "login_required", "permission_insufficient", "safety_challenge", "page_changed", "commit_control_unavailable", "operation_result_unknown", "post_check_failed", "reconciliation_unknown"]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["source_refs_partial", "evidence_refs_partial", "operation_running", "operation_result_unknown", "management_list_unknown", "detail_readback_unknown", "visibility_unknown"]},
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "available"}}, "required": ["status"]},
+      "then": {"properties": {"classification": {"enum": ["success_result", "partial_result"]}, "source_refs": {"minItems": 1}, "evidence_refs": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "unavailable"}}, "required": ["status"]},
+      "then": {"required": ["unavailable_reason"], "properties": {"classification": {"const": "not_normalizable"}}}
+    }
+  ],
+  "$defs": {
+    "commit_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action_id", "requested_path", "canonical_url", "target_ref", "marker_state", "visibility_state", "business_effect", "operation", "content_readback", "post_check", "reconciliation", "recovery", "submitted"],
+      "properties": {
+        "action_id": {"type": "string", "enum": ["xhs_publish_note_image_text_commit.save_draft", "xhs_publish_note_image_text_commit.publish"]},
+        "requested_path": {"const": "image_text_upload"},
+        "canonical_url": {"type": "string", "format": "uri", "pattern": "^https://creator\\.xiaohongshu\\.com(?:/.*)?$"},
+        "target_ref": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+        "marker_state": {"type": "string", "enum": ["matched", "mismatched", "unknown"]},
+        "visibility_state": {"type": "string", "enum": ["not_applicable", "only_me", "public", "unknown"]},
+        "business_effect": {"$ref": "#/$defs/business_effect"},
+        "operation": {"$ref": "#/$defs/operation"},
+        "content_readback": {"$ref": "#/$defs/content_readback"},
+        "post_check": {"$ref": "#/$defs/post_check"},
+        "reconciliation": {"$ref": "#/$defs/reconciliation"},
+        "recovery": {"$ref": "#/$defs/recovery"},
+        "submitted": {"type": "boolean"}
+      }
+    },
+    "business_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "status"],
+      "properties": {
+        "kind": {"enum": ["save_draft", "publish"]},
+        "status": {"enum": ["observed", "not_observed", "unknown"]}
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "operation_ref"],
+      "properties": {
+        "status": {"enum": ["terminal", "unknown_outcome"]},
+        "operation_ref": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"}
+      }
+    },
+    "content_readback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "management_list_state", "detail_state", "fields_state", "media_state", "marker_state"],
+      "properties": {
+        "state": {"enum": ["draft_saved", "published", "not_observed", "unknown"]},
+        "management_list_state": {"enum": ["matched", "not_found", "unknown", "not_run"]},
+        "detail_state": {"enum": ["matched", "mismatched", "unknown", "not_run"]},
+        "fields_state": {"enum": ["matched", "mismatched", "unknown"]},
+        "media_state": {"enum": ["matched", "mismatched", "unknown"]},
+        "marker_state": {"enum": ["matched", "mismatched", "unknown"]},
+        "content_ref": {"type": ["string", "null"], "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+        "canonical_url": {"type": ["string", "null"], "format": "uri"}
+      }
+    },
+    "post_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "ref"],
+      "properties": {
+        "status": {"enum": ["passed", "failed", "skipped"]},
+        "ref": {"type": ["string", "null"], "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"}
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "ref"],
+      "properties": {
+        "status": {"enum": ["matched", "mismatched", "unknown", "not_run"]},
+        "ref": {"type": ["string", "null"], "maxLength": 2048, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"}
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "entrypoint"],
+      "properties": {
+        "status": {"enum": ["not_required", "required", "unknown"]},
+        "entrypoint": {"enum": ["none", "inspect_operation_ref", "await_post_check", "manual_reconciliation"]}
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "source_kind", "producer", "redaction", "schema_hint"],
+      "properties": {
+        "ref_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:/-]*$"},
+        "source_kind": {"enum": ["commit_action_summary", "creator_publish_page_summary", "business_state_summary"]},
+        "producer": {"enum": ["core", "harbor", "fixture"]},
+        "redaction": {"enum": ["summary_only", "placeholder_only"]},
+        "schema_hint": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "evidence_kind", "producer", "redaction"],
+      "properties": {
+        "ref_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:/-]*$"},
+        "evidence_kind": {"enum": ["operation_ref", "snapshot_ref", "post_check_ref", "reconciliation_ref"]},
+        "producer": {"enum": ["core", "harbor", "fixture"]},
+        "redaction": {"enum": ["summary_only", "placeholder_only"]}
+      }
+    }
+  },
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-commit.output",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
+    "operation_mode": "write",
+    "required_refs": ["source_refs", "evidence_refs", "operation_ref", "post_check_ref", "reconciliation_ref"],
+    "unknown_policy": "An unknown write remains unknown; only same-operation query and reconciliation are allowed before any new action.",
+    "forbidden_inline_material": ["raw_dom", "har", "screenshots", "credentials", "cookies", "tokens", "profile_state", "media_bytes", "user_content"]
+  }
+}

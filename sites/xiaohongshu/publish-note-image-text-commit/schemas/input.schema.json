@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
+  "title": "小红书图文保存或发布输入",
+  "description": "一次只请求保存草稿或发布中的一个明确动作；授权、身份、幂等与 operation 生命周期由 Core 承载。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["url", "target_ref", "action_id", "requested_path", "marker", "visibility"],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://creator\\.xiaohongshu\\.com/publish/publish(?:[/?#].*)?$",
+      "description": "当前受管小红书图文创作页 URL。"
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "description": "由 Core/Harbor 持有的 opaque 经营对象引用。"
+    },
+    "action_id": {
+      "type": "string",
+      "enum": [
+        "xhs_publish_note_image_text_commit.save_draft",
+        "xhs_publish_note_image_text_commit.publish"
+      ]
+    },
+    "requested_path": {"const": "image_text_upload"},
+    "marker": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "description": "用于草稿、发布结果和清理回查的唯一非敏感测试标记。"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["not_applicable", "only_me", "public"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.save_draft"}}, "required": ["action_id"]},
+      "then": {"properties": {"visibility": {"const": "not_applicable"}}}
+    },
+    {
+      "if": {"properties": {"action_id": {"const": "xhs_publish_note_image_text_commit.publish"}}, "required": ["action_id"]},
+      "then": {"properties": {"visibility": {"enum": ["only_me", "public"]}}}
+    }
+  ],
+  "x-lode": {
+    "schema_id": "xiaohongshu.publish-note-image-text-commit.input",
+    "schema_version": "0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
+    "operation_mode": "write",
+    "allowed_fields": ["url", "target_ref", "action_id", "requested_path", "marker", "visibility"],
+    "authorization_binding": "Core binds explicit authorization and ControlLease to the exact account, target_ref and action_id.",
+    "idempotency_binding": "Core assigns a distinct operation ref and idempotency key to each external action.",
+    "unknown_policy": "Preserve an unknown result and reconcile the same operation before considering any new action.",
+    "forbidden_fields": ["selector", "selectors", "dom", "cookies", "tokens", "profile_state", "runtime_session", "media_bytes", "content", "production_payload", "user_business_data"]
+  }
+}

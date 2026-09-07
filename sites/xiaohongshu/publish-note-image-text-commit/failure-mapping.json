@@ -1,0 +1,257 @@
+{
+  "schema_version": "lode.failure-mapping.v0",
+  "failure_mapping_id": "xiaohongshu.publish-note-image-text-commit.failure-mapping",
+  "failure_mapping_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "capability_id": "publish-note-image-text-commit",
+  "operation_id": "xhs_publish_note_image_text_commit",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "envelope_owner": "WebEnvoy Core",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode maps bounded failure classes; Core owns the operation result and Harbor owns live evidence."
+  },
+  "classes": [
+    {
+      "lode_failure_class": "invalid_contract",
+      "trigger": "Action identity, requested path, marker or package contract is malformed.",
+      "owner": "Lode validator/Core admission",
+      "core_mapping": {
+        "category": "invalid_contract",
+        "outcome_hint": "reject",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "保存或发布合同无效。"
+      },
+      "recovery_hint": "Use exactly one declared action and the allowed fields."
+    },
+    {
+      "lode_failure_class": "resource_unavailable",
+      "trigger": "Required managed page, identity, content or evidence fact is unavailable.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "当前创作页资源不可用。"
+      },
+      "recovery_hint": "Restore the managed page and collect fresh refs."
+    },
+    {
+      "lode_failure_class": "site_changed",
+      "trigger": "Route, commit control semantics or result readback differs from the contract.",
+      "owner": "WebEnvoy Core/Lode",
+      "core_mapping": {
+        "category": "site_changed",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "页面提交语义已变化，未继续执行。"
+      },
+      "recovery_hint": "Review a new package version; do not replay the action."
+    },
+    {
+      "lode_failure_class": "empty_result",
+      "trigger": "The exact save-draft or publish control is not present.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "empty_result",
+        "outcome_hint": "empty",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "页面未提供所请求的动作。"
+      },
+      "recovery_hint": "Keep the action unavailable; do not select another control."
+    },
+    {
+      "lode_failure_class": "login_required",
+      "trigger": "Managed account identity cannot be confirmed.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "requires_user_action",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "需要恢复小红书登录状态。"
+      },
+      "recovery_hint": "Restore the managed identity through the product entrypoint."
+    },
+    {
+      "lode_failure_class": "permission_insufficient",
+      "trigger": "Account or business target cannot control the named action.",
+      "owner": "Harbor/Core",
+      "core_mapping": {
+        "category": "permission",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "当前账号或经营对象无权执行该动作。"
+      },
+      "recovery_hint": "Use the authorized target or stop."
+    },
+    {
+      "lode_failure_class": "safety_challenge",
+      "trigger": "A login, captcha or site safety challenge is present.",
+      "owner": "Harbor",
+      "core_mapping": {
+        "category": "safety_challenge",
+        "outcome_hint": "blocked",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "页面需要人工安全验证，已停止。"
+      },
+      "recovery_hint": "Require user handling; never bypass or auto-retry."
+    },
+    {
+      "lode_failure_class": "user_cancelled",
+      "trigger": "The user cancels the single authorized action.",
+      "owner": "WebEnvoy App/Core",
+      "core_mapping": {
+        "category": "cancelled",
+        "outcome_hint": "cancelled",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "动作已取消。"
+      },
+      "recovery_hint": "Await a new explicit action."
+    },
+    {
+      "lode_failure_class": "commit_control_unavailable",
+      "trigger": "The exact save-draft or publish control is unavailable or ambiguous.",
+      "owner": "Harbor/Core",
+      "core_mapping": {
+        "category": "resource_unavailable",
+        "outcome_hint": "unavailable",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "保存或发布控件不可用。"
+      },
+      "recovery_hint": "Re-observe the current page; do not use a different control."
+    },
+    {
+      "lode_failure_class": "operation_running",
+      "trigger": "Core reports that the selected operation is still running.",
+      "owner": "WebEnvoy Core",
+      "core_mapping": {
+        "category": "running",
+        "outcome_hint": "running",
+        "retryable": false,
+        "requires_user_action": false
+      },
+      "app_mapping": {
+        "display": "动作仍在执行，请等待终态。"
+      },
+      "recovery_hint": "Follow the same operation ref."
+    },
+    {
+      "lode_failure_class": "operation_result_unknown",
+      "trigger": "The action may have occurred but its terminal business result is unknown.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {
+        "category": "unknown_outcome",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "动作结果未知，未自动重放。"
+      },
+      "recovery_hint": "Query and reconcile the same operation ref."
+    },
+    {
+      "lode_failure_class": "save_draft_failed",
+      "trigger": "The save-draft operation reached a known terminal failure.",
+      "owner": "Harbor/Core",
+      "core_mapping": {
+        "category": "action_failed",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "保存草稿失败。"
+      },
+      "recovery_hint": "Retain the terminal operation ref; a later attempt needs a new operation."
+    },
+    {
+      "lode_failure_class": "publish_failed",
+      "trigger": "The publish operation reached a known terminal failure.",
+      "owner": "Harbor/Core",
+      "core_mapping": {
+        "category": "action_failed",
+        "outcome_hint": "failed",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "发布失败。"
+      },
+      "recovery_hint": "Retain the terminal operation ref; a later attempt needs a new operation."
+    },
+    {
+      "lode_failure_class": "post_check_failed",
+      "trigger": "List, detail, marker, field or media readback is missing or mismatched.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {
+        "category": "post_check_failed",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "业务结果回读校验失败。"
+      },
+      "recovery_hint": "Preserve unknown and continue same-operation observation."
+    },
+    {
+      "lode_failure_class": "reconciliation_unknown",
+      "trigger": "The operation ref exists but marked content cannot be reconciled.",
+      "owner": "WebEnvoy Core/Harbor",
+      "core_mapping": {
+        "category": "reconciliation_unknown",
+        "outcome_hint": "unknown",
+        "retryable": false,
+        "requires_user_action": true
+      },
+      "app_mapping": {
+        "display": "业务结果仍无法对账。"
+      },
+      "recovery_hint": "Use same-operation reconciliation; never infer success or replay."
+    }
+  ],
+  "unknown_policy": {
+    "retryable_by_default": false,
+    "success_claim_requires": [
+      "terminal success",
+      "matching action/effect mapping",
+      "unique marker readback",
+      "post_check_ref",
+      "reconciliation_ref"
+    ],
+    "operation_ref_owner": "WebEnvoy Core"
+  },
+  "non_goals": [
+    "No live error execution, browser automation or external-effect retry.",
+    "No credentials, private runtime state, raw evidence, media bytes or copied operation lifecycle."
+  ]
+}

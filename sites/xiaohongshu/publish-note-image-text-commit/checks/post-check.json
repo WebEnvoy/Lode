@@ -1,0 +1,159 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "post_check_id": "xiaohongshu.publish-note-image-text-commit.post-check",
+  "post_check_version": "0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "capability_id": "publish-note-image-text-commit",
+  "operation_id": "xhs_publish_note_image_text_commit",
+  "operation_mode": "write",
+  "owner_boundary": {
+    "declaration_owner": "Lode",
+    "execution_owner": "WebEnvoy Core",
+    "evidence_owner": "Harbor",
+    "display_owner": "WebEnvoy App",
+    "summary": "Lode declares checks; Core owns operation lifecycle and authorization; Harbor supplies refs-only page and effect evidence."
+  },
+  "result_contract": {
+    "schema_version": "lode.post-check-result.v0",
+    "status_values": [
+      "passed",
+      "failed",
+      "skipped"
+    ],
+    "required_fields": [
+      "status",
+      "reason",
+      "source_refs",
+      "evidence_refs",
+      "action_id",
+      "requested_path",
+      "business_effect",
+      "operation",
+      "content_readback",
+      "reconciliation",
+      "recovery",
+      "submitted"
+    ],
+    "status_meaning": {
+      "passed": "The named action, operation ref, business effect, content readback and reconciliation agree with refs-only evidence.",
+      "failed": "A required fact, ref, effect mapping, readback or no-out-of-scope invariant is missing or mismatched.",
+      "skipped": "The static fixture cannot execute a live action; skipped is not a success claim."
+    },
+    "unknown_policy": "accepted/running/unknown_outcome are preserved from Core; unknown external effect or reconciliation is never upgraded and never retried.",
+    "source_ref_policy": "summary_refs_only",
+    "evidence_ref_policy": "refs_only_no_inline_bodies",
+    "submitted_policy": "submitted is true only after Core records that the named external action was initiated; it never substitutes for business-effect readback."
+  },
+  "requirements": [
+    {
+      "requirement_id": "action-identity-and-effect",
+      "description": "Verify exactly one action: save_draft maps to create; publish maps to publish.",
+      "required_status": "observed_or_unknown",
+      "required_source_refs": [
+        "fixture-source-action"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-operation"
+      ],
+      "on_failure": "Return invalid_contract or operation_result_unknown; never select the other action."
+    },
+    {
+      "requirement_id": "operation-lifecycle-ref",
+      "description": "Preserve the Core-owned operation ref and terminal or unknown outcome without creating a second lifecycle.",
+      "required_status": "observed_or_unknown",
+      "required_source_refs": [
+        "fixture-source-action"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-operation"
+      ],
+      "on_failure": "Return operation_result_unknown and expose same-operation recovery; never retry automatically."
+    },
+    {
+      "requirement_id": "content-readback",
+      "description": "Re-read the uniquely marked draft or published item, fields and media through refs-only page evidence.",
+      "required_status": "observed_or_unknown",
+      "required_source_refs": [
+        "fixture-source-page",
+        "fixture-source-state"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-post-check"
+      ],
+      "on_failure": "Return post_check_failed or reconciliation_unknown and preserve unknown values."
+    },
+    {
+      "requirement_id": "action-separation",
+      "description": "Confirm save_draft does not publish and publish does not replay a prior save or unknown publish.",
+      "required_status": "passed",
+      "required_source_refs": [
+        "fixture-source-state"
+      ],
+      "required_evidence_refs": [
+        "fixture-evidence-reconcile"
+      ],
+      "on_failure": "Fail closed as invalid_contract."
+    }
+  ],
+  "fixture_post_check_output": {
+    "status": "skipped",
+    "reason": "Static fixture does not execute save-draft or publish; live packaged evidence belongs to WebEnvoy #419/#422/#423.",
+    "source_refs": [
+      "fixture-source-action",
+      "fixture-source-page",
+      "fixture-source-state"
+    ],
+    "evidence_refs": [
+      "fixture-evidence-operation",
+      "fixture-evidence-post-check",
+      "fixture-evidence-reconcile"
+    ],
+    "action_id": "xhs_publish_note_image_text_commit.save_draft",
+    "requested_path": "image_text_upload",
+    "business_effect": "unknown",
+    "operation": "unknown_outcome",
+    "submitted": true
+  },
+  "failure_boundary": {
+    "login_required": "No managed identity fact; return unavailable.",
+    "permission_insufficient": "Account or business target is not confirmed; do not execute.",
+    "page_changed": "Route or exact commit control differs from the contract; stop.",
+    "commit_control_unavailable": "The exact save-draft or publish control is unavailable.",
+    "operation_result_unknown": "Effect or terminal state is unclear; query and reconcile the same operation, no replay.",
+    "post_check_failed": "Required list/detail/content readback or refs are missing or mismatched.",
+    "reconciliation_unknown": "Operation exists but marked content cannot be reconciled."
+  },
+  "real_page_validation": {
+    "status": "required_from_WebEnvoy_419_422_423",
+    "reason": "Static Lode fixtures are not live evidence and cannot complete the product issues.",
+    "required_later_runtime": [
+      "current WebEnvoy main",
+      "exact pinned Lode revision",
+      "managed non-production profile",
+      "Core/Harbor/App operation, snapshot, post-check and reconciliation refs"
+    ],
+    "forbidden_later_evidence": [
+      "cookies",
+      "tokens",
+      "profile state",
+      "runtime session",
+      "raw DOM",
+      "HAR",
+      "screenshot body",
+      "network response body",
+      "production payload",
+      "user business data"
+    ]
+  },
+  "non_goals": [
+    "No browser execution or live post-check runner in Lode.",
+    "No upload, field fill, cleanup, retry, bypass, raw evidence or second lifecycle."
+  ],
+  "covered_issues": [
+    "#295",
+    "WebEnvoy#419",
+    "WebEnvoy#422",
+    "WebEnvoy#423"
+  ],
+  "anchor_work_item": "LODE-295"
+}
