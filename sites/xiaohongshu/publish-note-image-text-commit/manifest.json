@@ -1,6 +1,6 @@
 {
   "manifest_version": "lode.site-capability.manifest.v0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "package_type": "site-capability",
   "site": {
     "slug": "xiaohongshu",
@@ -17,7 +17,7 @@
     "capability_family": "xiaohongshu_publish_note_image_text_commit",
     "operation_mode": "write",
     "target_type": "creator_publish_page",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "lifecycle": "proposed",
     "tags": [
       "site:xiaohongshu",
@@ -78,15 +78,39 @@
         "external_effects": [
           "publish"
         ]
+      },
+      {
+        "action_id": "xhs_publish_note_image_text_commit.cleanup",
+        "category": "destructive",
+        "target_scope": {
+          "site_slug": "xiaohongshu",
+          "target_types": [
+            "creator_publish_page"
+          ],
+          "supported_origins": [
+            "https://creator.xiaohongshu.com"
+          ]
+        },
+        "resource_requirements": {
+          "path": "resource-requirements.json",
+          "id": "xiaohongshu.publish-note-image-text-commit.resources",
+          "profile_ids": [
+            "xhs-image-text-cleanup"
+          ]
+        },
+        "external_effects": [
+          "delete"
+        ]
       }
     ]
   },
   "action_boundary": {
     "allowed_actions": [
       "save_draft",
-      "publish"
+      "publish",
+      "cleanup"
     ],
-    "action_identity_rule": "Each request names exactly one declared action_id; save_draft and publish are distinct operations.",
+    "action_identity_rule": "Each request names exactly one declared action_id; save_draft, publish and cleanup are distinct operations.",
     "consumer_input_fields": [
       "url",
       "target_ref",
@@ -97,7 +121,8 @@
     ],
     "external_effects": {
       "save_draft": "create",
-      "publish": "publish"
+      "publish": "publish",
+      "cleanup": "delete"
     },
     "forbidden_actions": [
       "upload",
@@ -106,7 +131,7 @@
       "bypass"
     ],
     "unknown_policy": "Preserve unknown and query/reconcile the same operation ref before any new action.",
-    "commit_boundary": "Draft save never publishes; publish never replays an unknown save or publish operation."
+    "commit_boundary": "Draft save never publishes; cleanup deletes only exact marker-matched task content; no action replays an unknown operation."
   },
   "entrypoint": {
     "kind": "declarative-normalizer",
@@ -117,16 +142,16 @@
       "role": "input_schema",
       "path": "schemas/input.schema.json",
       "status": "present",
-      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
-      "schema_version": "0.1.0",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
+      "schema_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
       "role": "normalized_output_schema",
       "path": "schemas/output.schema.json",
       "status": "present",
-      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
-      "schema_version": "0.1.0",
+      "schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
+      "schema_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -134,7 +159,7 @@
       "path": "resource-requirements.json",
       "status": "present",
       "resource_requirements_id": "xiaohongshu.publish-note-image-text-commit.resources",
-      "resource_requirements_version": "0.1.0",
+      "resource_requirements_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -142,7 +167,7 @@
       "path": "lifecycle-metadata.json",
       "status": "present",
       "lifecycle_metadata_id": "xiaohongshu.publish-note-image-text-commit.lifecycle",
-      "lifecycle_metadata_version": "0.1.0",
+      "lifecycle_metadata_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -150,7 +175,7 @@
       "path": "write-deferred-guardrail.json",
       "status": "present",
       "guardrail_id": "xiaohongshu.publish-note-image-text-commit.write-deferred-guardrail",
-      "guardrail_version": "0.1.0",
+      "guardrail_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -158,8 +183,8 @@
       "path": "fixtures/publish-note-image-text-commit.fixture.json",
       "status": "present",
       "fixture_id": "xiaohongshu.publish-note-image-text-commit.fixture",
-      "fixture_version": "0.1.0",
-      "source_shape": "xiaohongshu.publish-note-image-text-commit.source.creator_publish_page_summary@0.1.0",
+      "fixture_version": "0.1.1",
+      "source_shape": "xiaohongshu.publish-note-image-text-commit.source.creator_publish_page_summary@0.1.1",
       "redaction": "summary_only",
       "work_item": "LODE-295"
     },
@@ -168,7 +193,7 @@
       "path": "fixtures/core-consumption.fixture.json",
       "status": "present",
       "fixture_id": "xiaohongshu.publish-note-image-text-commit.core-consumption-fixture",
-      "fixture_version": "0.1.0",
+      "fixture_version": "0.1.1",
       "consumer": "WebEnvoy Core admission and schema validation",
       "work_item": "LODE-295"
     },
@@ -177,7 +202,7 @@
       "path": "checks/post-check.json",
       "status": "present",
       "post_check_id": "xiaohongshu.publish-note-image-text-commit.post-check",
-      "post_check_version": "0.1.0",
+      "post_check_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -185,7 +210,7 @@
       "path": "failure-mapping.json",
       "status": "present",
       "failure_mapping_id": "xiaohongshu.publish-note-image-text-commit.failure-mapping",
-      "failure_mapping_version": "0.1.0",
+      "failure_mapping_version": "0.1.1",
       "work_item": "LODE-295"
     },
     {
@@ -193,7 +218,7 @@
       "path": "catalog-metadata.json",
       "status": "present",
       "catalog_metadata_id": "xiaohongshu.publish-note-image-text-commit.catalog-metadata",
-      "catalog_metadata_version": "0.1.0",
+      "catalog_metadata_version": "0.1.1",
       "consumer": "WebEnvoy App/Core catalog",
       "work_item": "LODE-295"
     },
@@ -202,7 +227,7 @@
       "path": "repair/repair-draft.fixture.json",
       "status": "present",
       "repair_draft_id": "xiaohongshu.publish-note-image-text-commit.repair-draft",
-      "repair_draft_version": "0.1.0",
+      "repair_draft_version": "0.1.1",
       "consumer": "WebEnvoy App repair display and Core failure attribution",
       "work_item": "LODE-295"
     },
@@ -211,7 +236,7 @@
       "path": "repair/overlay-fork-metadata.fixture.json",
       "status": "present",
       "overlay_metadata_id": "xiaohongshu.publish-note-image-text-commit.overlay-fork",
-      "overlay_metadata_version": "0.1.0",
+      "overlay_metadata_version": "0.1.1",
       "consumer": "WebEnvoy App refs-only repair status",
       "work_item": "LODE-295"
     },
@@ -220,14 +245,14 @@
       "path": "package-lock.json",
       "status": "present",
       "lock_id": "xiaohongshu.publish-note-image-text-commit.lock",
-      "lock_version": "0.1.0",
-      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+      "lock_version": "0.1.1",
+      "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
       "work_item": "LODE-295"
     }
   ],
   "known_limitations": [
     "Lifecycle remains proposed until WebEnvoy #419/#422/#423 complete formal live draft reopen, publish readback, reconciliation and cleanup.",
-    "Only the page-proven image-text save-draft and publish actions are declared.",
+    "Only the page-proven image-text save-draft, publish and marker-bound cleanup actions are declared.",
     "Cleanup is a separate destructive operation and is not bundled into publish."
   ],
   "forbidden_contents": [

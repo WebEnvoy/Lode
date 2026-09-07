@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.post-check.v0",
   "post_check_id": "xiaohongshu.publish-note-image-text-commit.post-check",
-  "post_check_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "post_check_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -47,7 +47,7 @@
   "requirements": [
     {
       "requirement_id": "action-identity-and-effect",
-      "description": "Verify exactly one action: save_draft maps to create; publish maps to publish.",
+      "description": "Verify exactly one action: save_draft maps to create; publish maps to publish; cleanup maps to marker-bound removal.",
       "required_status": "observed_or_unknown",
       "required_source_refs": [
         "fixture-source-action"
@@ -71,7 +71,7 @@
     },
     {
       "requirement_id": "content-readback",
-      "description": "Re-read the uniquely marked draft or published item, fields and media through refs-only page evidence.",
+      "description": "Re-read the uniquely marked draft or published item, or prove the exact cleanup target is absent, through refs-only page evidence.",
       "required_status": "observed_or_unknown",
       "required_source_refs": [
         "fixture-source-page",
@@ -84,7 +84,7 @@
     },
     {
       "requirement_id": "action-separation",
-      "description": "Confirm save_draft does not publish and publish does not replay a prior save or unknown publish.",
+      "description": "Confirm save_draft does not publish, publish does not replay, and cleanup removes only the exact marker-matched task content.",
       "required_status": "passed",
       "required_source_refs": [
         "fixture-source-state"
@@ -169,7 +169,7 @@
   },
   "non_goals": [
     "No browser execution or live post-check runner in Lode.",
-    "No upload, field fill, cleanup, retry, bypass, raw evidence or second lifecycle."
+    "No upload, field fill, retry, bypass, raw evidence or second lifecycle."
   ],
   "covered_issues": [
     "#295",

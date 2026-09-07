@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import unittest
 from pathlib import Path
@@ -13,7 +14,7 @@ from tools.lode_validate_package import Report, validate_action_declaration
 
 
 ROOT = Path(__file__).resolve().parents[1]
-XHS_PACKAGES = ("search-notes", "read-note-detail", "publish-note-precheck")
+XHS_PACKAGES = ("search-notes", "read-note-detail", "publish-note-precheck", "publish-note-image-text-commit")
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -56,6 +57,39 @@ class ActionDeclarationTests(unittest.TestCase):
         second["action_id"] = "xhs_search_notes.read_next_page"
         manifest["action_declaration"]["actions"].append(second)
         self.assertEqual([], self.errors("search-notes", manifest))
+
+    def test_cleanup_is_exact_destructive_delete_with_required_provenance(self) -> None:
+        package_root = ROOT / "sites" / "xiaohongshu" / "publish-note-image-text-commit"
+        manifest = load(package_root / "manifest.json")
+        resources = load(package_root / "resource-requirements.json")
+        fixture = load(package_root / "fixtures" / "core-consumption.fixture.json")
+        action = next(item for item in manifest["action_declaration"]["actions"] if item["action_id"].endswith(".cleanup"))
+        profile = next(item for item in resources["resource_requirement_profiles"] if item["action_id"].endswith(".cleanup"))
+        facts = {item["fact_key"] for item in profile["required_harbor_facts"]}
+        required = {
+            "snapshot.cleanup_control.available",
+            "business_state.cleanup_marker.unique_match",
+            "business_state.cleanup_target.task_created",
+            "business_state.cleanup_content.matched",
+        }
+        self.assertEqual("destructive", action["category"])
+        self.assertEqual(["delete"], action["external_effects"])
+        self.assertTrue(required <= facts)
+        for missing in required:
+            with self.subTest(missing=missing):
+                self.assertFalse(required <= (facts - {missing}))
+        cleanup_inputs = [item for item in fixture["admission_fixture"]["input_instances"] if item["action_id"].endswith(".cleanup")]
+        self.assertEqual(1, len(cleanup_inputs))
+        self.assertEqual("delete", fixture["safety_boundary"]["external_effects"][cleanup_inputs[0]["action_id"]])
+        self.assertNotIn("cleanup", fixture["safety_boundary"]["forbidden_actions"])
+
+    def test_commit_package_lock_digests_match_assets(self) -> None:
+        package_root = ROOT / "sites" / "xiaohongshu" / "publish-note-image-text-commit"
+        package_lock = load(package_root / "package-lock.json")
+        for asset in package_lock["locked_assets"]:
+            with self.subTest(path=asset["path"]):
+                actual = hashlib.sha256((package_root / asset["path"]).read_bytes()).hexdigest()
+                self.assertEqual(asset["sha256"], actual)
 
     def test_fail_closed_mutations(self) -> None:
         mutations: dict[str, Callable[[dict[str, Any]], None]] = {

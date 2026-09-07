@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
-  "title": "小红书图文保存或发布输入",
-  "description": "一次只请求保存草稿或发布中的一个明确动作；授权、身份、幂等与 operation 生命周期由 Core 承载。",
+  "$id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
+  "title": "小红书图文提交与清理输入",
+  "description": "一次只请求保存草稿、发布或清理中的一个明确动作；授权、身份、幂等与 operation 生命周期由 Core 承载。",
   "type": "object",
   "additionalProperties": false,
   "required": ["url", "target_ref", "action_id", "requested_path", "marker", "visibility"],
@@ -24,7 +24,8 @@
       "type": "string",
       "enum": [
         "xhs_publish_note_image_text_commit.save_draft",
-        "xhs_publish_note_image_text_commit.publish"
+        "xhs_publish_note_image_text_commit.publish",
+        "xhs_publish_note_image_text_commit.cleanup"
       ]
     },
     "requested_path": {"const": "image_text_upload"},
@@ -52,12 +53,18 @@
         "action_id": {"const": "xhs_publish_note_image_text_commit.publish"},
         "visibility": {"enum": ["only_me", "public"]}
       }
+    },
+    {
+      "properties": {
+        "action_id": {"const": "xhs_publish_note_image_text_commit.cleanup"},
+        "visibility": {"const": "not_applicable"}
+      }
     }
   ],
   "x-lode": {
     "schema_id": "xiaohongshu.publish-note-image-text-commit.input",
-    "schema_version": "0.1.0",
-    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "schema_version": "0.1.1",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
     "operation_ref": "lode://operation/xhs_publish_note_image_text_commit",
     "operation_mode": "write",
     "sensitivity": {

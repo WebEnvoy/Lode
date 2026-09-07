@@ -1,9 +1,9 @@
 {
   "schema_version": "lode.catalog-metadata.v0",
   "catalog_metadata_id": "xiaohongshu.publish-note-image-text-commit.catalog-metadata",
-  "catalog_metadata_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "catalog_metadata_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
+  "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -14,15 +14,15 @@
     "manifest_path": "sites/xiaohongshu/publish-note-image-text-commit/manifest.json"
   },
   "display": {
-    "name": "小红书图文保存与发布合同",
-    "summary": "页面已证明的保存草稿与发布两个精确动作；不提供通用 commit 框架。",
+    "name": "小红书图文提交与清理合同",
+    "summary": "页面已证明的保存草稿、发布与唯一标记清理三个精确动作；不提供通用 commit 框架。",
     "site_name": "小红书",
     "category": "commit-action"
   },
   "version": {
-    "current": "0.1.0",
-    "latest": "0.1.0",
-    "default_locked": "0.1.0",
+    "current": "0.1.1",
+    "latest": "0.1.1",
+    "default_locked": "0.1.1",
     "lifecycle": "proposed",
     "lifecycle_state_vocabulary": [
       "proposed",
@@ -31,7 +31,7 @@
       "broken",
       "deprecated"
     ],
-    "compatibility_range": ">=0.1.0 <0.2.0",
+    "compatibility_range": ">=0.1.1 <0.2.0",
     "previous_known_good": {
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
       "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0"
@@ -40,7 +40,7 @@
       {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
         "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-        "status": "self_for_initial_version"
+        "status": "previous_patch"
       }
     ]
   },
@@ -53,21 +53,22 @@
   "risk": {
     "level": "high",
     "operation": "write-precheck",
-    "reason": "Save-draft creates a draft and publish creates externally visible content; Core retains authorization and one-operation safety gates."
+    "reason": "Save-draft, publish and marker-bound cleanup change external content; Core retains authorization and one-operation safety gates."
   },
   "facets": [
     "site:xiaohongshu",
     "image-text",
     "commit-action",
     "proposed",
-    "two-independent-actions"
+    "three-independent-actions"
   ],
   "action_declaration_ref": "manifest.json#action_declaration",
   "action_ids": [
     "xhs_publish_note_image_text_commit.save_draft",
-    "xhs_publish_note_image_text_commit.publish"
+    "xhs_publish_note_image_text_commit.publish",
+    "xhs_publish_note_image_text_commit.cleanup"
   ],
-  "effect_mapping_owner": "Manifest action_declaration is authoritative: save_draft maps to create and publish maps to publish.",
+  "effect_mapping_owner": "Manifest action_declaration is authoritative: save_draft maps to create, publish maps to publish, and cleanup maps to delete.",
   "test_summary": {
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present_unknown_only",
@@ -88,12 +89,12 @@
   },
   "consumer_boundary": "WebEnvoy #419/#422/#423 are the live consumers. Core owns authorization, ControlLease, idempotency, ExternalOutcome and reconciliation; Harbor owns execution/evidence; App renders refs-only state.",
   "core_admission_fields": {
-    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-    "version": "0.1.0",
-    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
+    "version": "0.1.1",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
     "manifest_path": "sites/xiaohongshu/publish-note-image-text-commit/manifest.json",
-    "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
-    "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
+    "input_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
+    "output_schema_id": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
     "resource_requirements_id": "xiaohongshu.publish-note-image-text-commit.resources",
     "post_check_id": "xiaohongshu.publish-note-image-text-commit.post-check",
     "lifecycle": "proposed",

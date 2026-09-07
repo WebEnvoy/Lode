@@ -1,8 +1,8 @@
 {
   "schema_version": "lode.repair-draft.v0",
   "repair_draft_id": "xiaohongshu.publish-note-image-text-commit.repair-draft",
-  "repair_draft_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+  "repair_draft_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -58,7 +58,7 @@
       "draft_ref": "lode://repair-draft/site-capability/xiaohongshu/publish-note-image-text-commit/site-changed@0.2.0-draft",
       "source_failure_class": "site_changed",
       "status": "candidate",
-      "summary": "Refresh the two action shapes only after current WebEnvoy/Harbor evidence is reviewed.",
+      "summary": "Refresh the three action shapes only after current WebEnvoy/Harbor evidence is reviewed.",
       "source_refs": [
         {"ref_id": "fixture-source-state", "source_kind": "commit_action_summary", "redaction": "summary_only"}
       ],

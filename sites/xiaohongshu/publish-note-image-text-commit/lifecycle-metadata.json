@@ -1,9 +1,9 @@
 {
   "schema_version": "lode.lifecycle-metadata.v0",
   "lifecycle_metadata_id": "xiaohongshu.publish-note-image-text-commit.lifecycle",
-  "lifecycle_metadata_version": "0.1.0",
-  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-  "package_version": "0.1.0",
+  "lifecycle_metadata_version": "0.1.1",
+  "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
+  "package_version": "0.1.1",
   "capability_id": "publish-note-image-text-commit",
   "operation_id": "xhs_publish_note_image_text_commit",
   "operation_mode": "write",
@@ -109,10 +109,10 @@
   },
   "version_identity": {
     "version_scheme": "semver",
-    "current_version": "0.1.0",
-    "latest_version": "0.1.0",
-    "default_locked_version": "0.1.0",
-    "compatibility_range": ">=0.1.0 <0.2.0",
+    "current_version": "0.1.1",
+    "latest_version": "0.1.1",
+    "default_locked_version": "0.1.1",
+    "compatibility_range": ">=0.1.1 <0.2.0",
     "version_owner": "Lode",
     "breaking_change_requires_new_version": [
       "package_ref, capability_id, operation_id, operation_mode, or action identity changes",
@@ -131,7 +131,7 @@
       "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
       "package_version": "0.1.0",
       "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-      "status": "self_for_initial_version",
+      "status": "previous_patch",
       "validated_at": "2026-09-01T00:00:00Z",
       "validation_source": "tools/lode_validate_package.py"
     },
@@ -139,13 +139,13 @@
       {
         "package_ref": "lode://site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
         "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
-        "status": "self_for_initial_version"
+        "status": "previous_patch"
       }
     ],
     "consumer_boundary": "Rollback is package/version/lock refs only; it contains no runtime or user material."
   },
   "lock_input": {
-    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.0",
+    "lock_ref": "lode://lock/site-capability/xiaohongshu/publish-note-image-text-commit@0.1.1",
     "required_fields": [
       "package_ref",
       "package_version",
@@ -176,63 +176,63 @@
     "asset_versions": [
       {
         "role": "input_schema",
-        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.0",
-        "version": "0.1.0"
+        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/input@0.1.1",
+        "version": "0.1.1"
       },
       {
         "role": "normalized_output_schema",
-        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.0",
-        "version": "0.1.0"
+        "ref": "lode://schema/site-capability/xiaohongshu/publish-note-image-text-commit/output@0.1.1",
+        "version": "0.1.1"
       },
       {
         "role": "resource_requirements",
         "ref": "xiaohongshu.publish-note-image-text-commit.resources",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "version_lifecycle_metadata",
         "ref": "xiaohongshu.publish-note-image-text-commit.lifecycle",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "write_deferred_guardrail",
         "ref": "xiaohongshu.publish-note-image-text-commit.write-deferred-guardrail",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "fixture",
         "ref": "xiaohongshu.publish-note-image-text-commit.fixture",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "core_consumption_fixture",
         "ref": "xiaohongshu.publish-note-image-text-commit.core-consumption-fixture",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "post_check",
         "ref": "xiaohongshu.publish-note-image-text-commit.post-check",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "failure_mapping",
         "ref": "xiaohongshu.publish-note-image-text-commit.failure-mapping",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "catalog_metadata",
         "ref": "xiaohongshu.publish-note-image-text-commit.catalog-metadata",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "repair_draft",
         "ref": "xiaohongshu.publish-note-image-text-commit.repair-draft",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       {
         "role": "overlay_fork_metadata",
         "ref": "xiaohongshu.publish-note-image-text-commit.overlay-fork",
-        "version": "0.1.0"
+        "version": "0.1.1"
       }
     ],
     "planned_asset_placeholders": [],
