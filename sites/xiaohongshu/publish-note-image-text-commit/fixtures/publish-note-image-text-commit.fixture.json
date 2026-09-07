@@ -273,7 +273,7 @@
   "validation_expectation": {
     "offline_validator_scope": "shape_and_forbidden_field_checks_only",
     "status_rule": "Unknown operation/effect/readback is never upgraded to available or successful.",
-    "effect_mapping_rule": "save_draft maps to create; publish maps to publish.",
+    "effect_mapping_rule": "save_draft maps to create; publish maps to publish; cleanup maps to delete.",
     "lifecycle_rule": "Fixture does not promote proposed lifecycle or prove live behavior.",
     "no_retry_rule": "unknown_outcome is terminal for this attempt and requires reconciliation before a new authorization."
   },

@@ -58,6 +58,14 @@
         "requested_path": "image_text_upload",
         "marker": "WE-XHS-FIXTURE-PUBLISH-001",
         "visibility": "only_me"
+      },
+      {
+        "url": "https://creator.xiaohongshu.com/publish/publish?from=tab_switch",
+        "target_ref": "target-ref:xiaohongshu/test-business-target",
+        "action_id": "xhs_publish_note_image_text_commit.cleanup",
+        "requested_path": "image_text_upload",
+        "marker": "WE-XHS-FIXTURE-CLEANUP-001",
+        "visibility": "not_applicable"
       }
     ],
     "expected_admission_checks": [
@@ -70,7 +78,8 @@
       "input_instances_match_input_schema",
       "normalized_fixture_matches_output_schema",
       "action_id_is_explicit_and_unique",
-      "save_draft_and_publish_are_distinct",
+      "save_draft_publish_and_cleanup_are_distinct",
+      "cleanup_is_destructive_delete",
       "Core_authorization_ControlLease_and_idempotency_remain_external_truth"
     ]
   },
@@ -207,13 +216,13 @@
     "true_write_execution": "blocked",
     "external_effects": {
       "xhs_publish_note_image_text_commit.save_draft": "create",
-      "xhs_publish_note_image_text_commit.publish": "publish"
+      "xhs_publish_note_image_text_commit.publish": "publish",
+      "xhs_publish_note_image_text_commit.cleanup": "delete"
     },
     "unknown_policy": "unknown_outcome_is_preserved_and_not_retried",
     "forbidden_actions": [
       "upload",
       "field_fill",
-      "cleanup",
       "retry",
       "bypass"
     ]

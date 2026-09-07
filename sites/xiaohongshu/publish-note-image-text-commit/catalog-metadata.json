@@ -68,7 +68,7 @@
     "xhs_publish_note_image_text_commit.publish",
     "xhs_publish_note_image_text_commit.cleanup"
   ],
-  "effect_mapping_owner": "Manifest action_declaration is authoritative: save_draft maps to create, publish maps to publish, and cleanup maps to modify.",
+  "effect_mapping_owner": "Manifest action_declaration is authoritative: save_draft maps to create, publish maps to publish, and cleanup maps to delete.",
   "test_summary": {
     "validator": "tools/lode_validate_package.py",
     "fixture_status": "present_unknown_only",

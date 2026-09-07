@@ -21,6 +21,8 @@
       "unverified_operation_result",
       "save_draft",
       "publish",
+      "cleanup",
+      "delete",
       "submit",
       "retry",
       "bypass"
@@ -53,13 +55,16 @@
     "status": "deferred",
     "allowed_later": [
       "Core-controlled save_draft",
-      "Core-controlled publish"
+      "Core-controlled publish",
+      "Core-controlled marker-bound cleanup"
     ],
     "blocked_now": [
       "draft",
       "preview",
       "save_draft",
-      "publish"
+      "publish",
+      "cleanup",
+      "delete"
     ],
     "requires_before_admission": [
       "this exact package and action",
