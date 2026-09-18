@@ -1,10 +1,10 @@
 # Lode
 
-Lode 是 WebEnvoy 的网站 SKILL、AccountSystem 模板与共享知识资产仓库。产品方向和 V1 约束以组织级 [canonical v1 规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准。
+Lode 是 WebEnvoy 的网站 SKILL、AccountSystem 模板与共享知识资产仓库。产品方向和 V1 约束以组织级 [canonical 产品规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准。[S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) 的新基线在跨仓文档合并前为 Proposed。
 
 它把网站入口、身份与经营对象识别、页面语义、操作、验证和恢复沉淀为可安装、可版本管理、可测试、可修复、可复用的 SKILL；结构化合同和脚本只随真实消费者补充。
 
-WebEnvoy Core 解释并执行 Lode 资产；WebEnvoy App 在 Library（资产库）区域提供浏览、安装、配置、调试、探索、维护和上报入口；Harbor 提供执行身份、浏览器运行环境和运行现场。
+WebEnvoy 通过 CLI、API、已安装 Plugin 或其他正式入口消费 Lode 资产；Harbor 提供执行身份、浏览器运行环境和运行现场。App 专属 Library 产品化冻结，不是 Lode 资产可用性的前提。
 
 ## 一句话定位
 
@@ -23,7 +23,7 @@ Lode 负责沉淀和维护：
 - 能力测试样例；
 - 能力版本与失效标记。
 
-这些资产可以被 WebEnvoy Core 执行，也可以在 WebEnvoy App 的 Library（资产库）区域中被人类用户浏览、安装、配置、调试和维护。
+这些资产可以经 WebEnvoy 正式入口被安装、读取、执行、验证和维护；具体入口不改变 Lode 的版本、来源和资产边界。
 
 ## 资产边界
 
@@ -40,12 +40,13 @@ Lode 需要同时支持平台资产和用户个人资产。
   └── 用户 overlay / fork / draft
 ```
 
-## 与 App / Core / Harbor 的关系
+## 与 WebEnvoy / Harbor 的关系
 
-- WebEnvoy App 负责 Library（资产库）工作台，提供资产浏览、安装、配置、探索、修复和上报入口；
-- WebEnvoy Core 负责解释和执行 Lode 资产，并记录任务运行事实；
+- WebEnvoy 负责通过共同正式入口解释和执行 Lode 资产，并记录授权、Run 和结果事实；
 - Harbor 负责浏览器身份、运行会话、查看器、人工接管和运行证据；
-- Lode 负责站点知识、能力包、任务模板、输出契约、归一化器（`normalizer`）、测试样例、版本和失效标记。
+- Lode 负责可分发的站点 SKILL package、AccountSystem 模板、references、必要脚本与 assets、任务声明、输出契约、测试样例、版本和来源。
+
+S2 [#563](https://github.com/WebEnvoy/WebEnvoy/issues/563) 后续统一站点 SKILL package 的任务声明、references、受管脚本入口、固定依赖、输入输出与验证引用；S3 [#564](https://github.com/WebEnvoy/WebEnvoy/issues/564) 后续定义创作、转换与修复。两项均为 Backlog，本批不改变现有 manifest、validator、registry、fixture 或运行 wire。文字指导与可执行任务必须显式区分；脚本不能自行授予权限或建立独立 runner／队列／状态机。
 
 Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具体任务输入、真实生产原始载荷、用户业务客户数据或未脱敏执行现场。它定义并版本化能力结果的公共形态，以及从站点原始来源到公共结果的抽取（extraction）、解析（parsing）、映射（mapping）和归一化（normalization）规则；WebEnvoy Core 负责运行时调用、校验、投影和封装，Harbor 负责提供证据引用（`evidence_ref`）、原始载荷引用（`raw_payload_ref`）和来源轨迹（`source_trace`）。
 
@@ -110,7 +111,7 @@ python3 -m unittest tools.test_result_view_declarations
 该合同只提供兼容元数据，不定义或执行 HTML/Component host、sandbox、资源协议或远程脚本。
 
 样例能力包还包含 `package-lock.json`，用于固定能力包引用、能力 ID、
-版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示 App
+版本、锁定资产版本和失效触发条件。该文件只是本地可校验合同，不表示正式入口
 安装/更新、托管登记表、Core 运行记录或运行环境执行已经实现。
 
 ## 小红书只读能力包
@@ -150,7 +151,7 @@ python3 -m unittest tools.test_result_view_declarations
 - `sites/boss/greet-precheck`：声明 BOSS 职位或招聘者沟通目标，输出打招呼内容预览、
   目标引用、风险提示和不发送边界。
 
-这两个包只做 `validate_only` 写前验证，支持 Core/App 消费静态结构定义、脱敏固定样本、
+这两个包只做 `validate_only` 写前验证，支持正式消费者读取静态结构定义、脱敏固定样本、
 post-check、失败分类和仓库本地登记表结果。它们不执行保存、上传、发布、投递、
 打招呼或发送消息；真实页面验证仍需要人工拥有的已登录浏览器现场。
 

@@ -1,11 +1,12 @@
 # Lode 执行指南
 
-Lode 是独立的 MIT 资产仓，维护网站 SKILL、AccountSystem 模板、共享知识、必要脚本和脱敏验证资产。产品方向与 V1 约束以组织级 [canonical v1 规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准。
+Lode 是独立的 MIT 资产仓，维护网站 SKILL、AccountSystem 模板、共享知识、必要脚本和脱敏验证资产。产品方向与 V1 约束以组织级 [canonical 产品规范](https://github.com/WebEnvoy/.github/blob/main/docs/product-architecture-v1.md) 为准；S0 新基线在跨仓文档合并前为 Proposed。
 
 ## 边界与实施原则
 
-- SKILL 是网站知识的主要载体，围绕用户目标组织；AccountSystem 是可被多个 SKILL 引用的独立资产，运行时以用户本地定义为准。
+- SKILL package 是网站知识和可分发执行资产的主要载体，围绕用户目标组织 references、必要脚本与 assets、任务声明、验证和恢复；文字指导与可执行任务必须显式区分。AccountSystem 是可被多个 SKILL 引用的独立资产，运行时以用户本地定义为准。
 - Lode 不运行浏览器、不授予权限、不保存 Profile 或生产现场，也不复制 Core 的 Run、授权、幂等或结果状态机。
+- CLI、API、Plugin 和可信用户入口消费同一资产事实；App Library 产品化冻结，不能成为安装、验证、修复或使用的隐藏依赖。
 - capability package、Schema、fixture、post-check 和脚本只在真实消费者需要时补充；不为未来站点、媒体或形态横向铺满合同。
 - 页面事实未知时保持 unknown；fixture、validator 或资产合并不证明 Runtime、App 或 live 业务能力完成。
 - BOSS 资产保留但退出近期交付。首个小红书消费者只推进图片上传、必要字段回读和页面实际证明支持的一种 commit；文字配图与其他形态后置。
