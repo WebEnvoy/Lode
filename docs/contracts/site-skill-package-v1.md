@@ -93,38 +93,20 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 
 ### 3.1 Script 执行位置的最低合同
 
-Lode 不提供 runner。凡 WebEnvoy 将一个已准入 script 送入运行时，配套 WebEnvoy 合同
-至少要求以下 OS 边界；API 授权不能代替这些边界：
+Lode 不提供 runner，也不定义 OS policy。可执行包只声明 WebEnvoy 受管执行合同和所需
+broker capability；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/site-skill-execution-v1.md)
+拥有下列事实的唯一规范：script 在 Agent-side managed worker 中运行，不能在 Core/Harbor
+进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按真实 ACL
+隔离，owner control socket 不对 Agent identity 开放。Lode 不复制这套 OS 身份、文件或
+网络规则，也不把 API Grant 说成 OS 权限。
 
-- **位置和身份（本 v1 选定）**：script 只在 S1 批准的 Agent-side managed worker
-  进程中运行，且不在 Core/Harbor 进程内加载或执行。worker 使用 S1 分配的独立
-  Agent OS identity；owner control socket 由 owner identity 持有并以宿主 ACL 排除
-  Agent identity。S1/Harbor 拥有进程监督、停止、socket ACL、文件和网络 role matrix；
-  本文件不另造 Agent/owner 身份或授权系统。
-- **代码准入与 OS 权限分离**：准入记录只允许指定 `package_ref`、`revision_ref`、
-  `script_ref` 和 source digest 被该 worker 加载；它不授予新的文件或网络权限。准入后
-  的 trusted code 仍只能使用 worker identity 已有的宿主权限，包声明不能扩大该权限。
-- **文件**：包以只读已校验 bytes 提供，任务工作目录是 Agent identity 拥有的受管临时
-  目录。worker 只可访问 S1/Harbor role matrix 已允许的包文件、声明的 material/file
-  capability 和 result/evidence sink；owner/Profile/credential 数据根及未声明路径由宿主
-  ACL 拒绝。是否存在额外本机文件范围由该 role matrix 决定，不由 SKILL 推导。
-- **网络**：worker 的直接网络权限由同一 role matrix 实际决定；没有获准的 Network
-  capability 时不能联网，有获准范围时只能使用该范围或 Harbor broker。超出已声明能力、
-  Grant、origin 和 task scope 的 DNS、socket 或出站由宿主拒绝；本合同不新增 Network
-  body/interception/modification 合同，也不宣称提供面向任意不可信代码的通用沙箱。
-- **输入/凭据**：Core/Harbor 只交付版本化、哈希绑定的 code reference、有界 input、
-  不透明 observation/target ref、timeout/cancel 和 capability refs。Cookie、Token、
-  profile state、用户 HOME 和 credential store 不得作为参数、环境变量或隐式挂载传入。
-
-如果宿主只能依靠同一 OS 用户下的不同 bearer、路由、环境变量或约定路径来隔离
-Agent 与 owner 文件，则不满足本合同；同 UID 进程可读取 owner-controlled 文件，或
-Agent-side worker 可读取 owner control socket 时，该 script 必须被拒绝执行。独立 service
-UID 本身也不足以证明隔离；S1/实现候选必须证明 Agent identity、owner socket ACL、
-包/临时目录访问和实际网络 role matrix。没有这些宿主强制事实时，只能保留包读取和
-`knowledge_only`，不能报告可信代码准入或安全执行就绪。
-
-上述执行位置只是一项安全前提；它不改变 Lode 的资产 owner，也不把包变成可直接
-调用 Browser Provider 的程序。
+包只能声明 `webenvoy.site-skill-script-abi/v1` 和
+`webenvoy.site-skill-broker/v1` 接受的 capability refs。script 的直接文件、网络、进程、
+CDP/Juggler、eval、shell 和 credential 入口不属于该 ABI；它通过 broker 取得已校验的
+输入、fresh observation/target、正式 Runtime capability 和有界输出。这里的 ABI/代码准入
+是 trusted code 合同，不是面向任意不可信代码的通用 sandbox；准入不会扩大 worker 的
+实际 OS 权限。OS 失败、身份不明或 owner socket ACL 不成立时，WebEnvoy 必须拒绝 task
+dispatch；包仍可按本文件的 knowledge-only 资产路径被读取，不能将此失败报告为可执行成功。
 
 ## 4. Manifest、身份与完整性
 
@@ -223,6 +205,10 @@ entrypoint:
   capability_refs: [lode://site-capability/<ref>@<version>]
 inputs:
   schema_ref: lode://schema/<ref>@<version>
+  carrier: webenvoy.managed-task-inline/v1 # none | webenvoy.managed-task-inline/v1
+  max_bytes: 65536
+  content_type: application/json
+  sensitivity: public # public | user_content
 outputs:
   schema_ref: lode://schema/<ref>@<version>
   result_kind: <bounded-kind>
@@ -259,7 +245,19 @@ data_handling:
 - `entrypoint` 至少提供一个 capability ref 或已声明 script ref。`SKILL.md` 的自然
   语言步骤不构成 entrypoint。多个 capability 的顺序若影响结果，必须在任务声明中
   以有限、可验证的分支和 pre/post-check 表达，不能引入通用 block graph。
-- `inputs.schema_ref` 和 `outputs.schema_ref` 必须能解析到 Lode JSON Schema。输出中的
+- `inputs.schema_ref` 和 `outputs.schema_ref` 必须能解析到 Lode JSON Schema，并由固定
+  `revision_ref`/`package_digest` 钉住 schema bytes。`inputs.carrier=none` 时任务只接受
+  空输入；`inputs.carrier=webenvoy.managed-task-inline/v1` 时，Agent 请求在版本化
+  managed-task envelope 的 `input.value` 直接携带 JSON 值，Core 先按 pinned
+  `inputs.schema_ref` 严格校验，再把该值短暂交给受管 worker。请求不接受 URL、本地路径、
+  Cookie、Token、credential、脚本、任意 socket/endpoint 或自行发明的 opaque input ref；
+  现有真实 file/material ref 仍只能沿各自既有 Grant 合同消费，不由本 carrier 扩展。
+  `max_bytes` 在 v1 对 `carrier=none` 必须为 `0`，对 inline carrier 为 `1--65536` 的
+  整数，按 managed-task v1 的紧凑 UTF-8 JSON 输入值计量；包声明的上限只能收窄运行时
+  合同。原始输入不会进入 `TaskIntent.input.summary`、
+  普通 Run metadata、Lode 日志或 Plugin 响应；worker 只在本次受管调用期间从 broker
+  取得已校验值，Core 只保留既有 task/run 归因、幂等事实和必要的非敏感摘要。
+- 输出中的
   collection 必须声明字段类型、单位、可空/unknown/empty、分页、截断、去重、版本和
   错误映射；缺页、截断未标记或无法核验的结果不能成为 `success_result`。
 - `verification.post_check_ref` 拥有业务成功条件。浏览器导航完成、HTTP 2xx、脚本
@@ -282,9 +280,10 @@ data_handling:
 | --- | --- |
 | `script_ref` / `path` | 包内稳定身份和相对路径；路径不能越界 |
 | `source_commit` / `version` / `sha256` | Lode 来源、版本和完整性；改变即新 revision 或新 script version |
-| `runtime_kind` / `entrypoint` | 受管执行 host 可识别的固定语言和入口；不等于 Provider API |
+| `runtime_kind` / `entrypoint` | 受管执行 host 可识别的固定语言和入口；必须声明 `webenvoy.site-skill-script-abi/v1`，不等于 Provider API |
 | `input_schema_ref` / `output_schema_ref` | 有界输入、输出和单位；禁止隐式环境输入 |
 | `capability_refs` / `action` | 只声明允许调用的正式能力和动作类别 |
+| `broker` | 固定为 `webenvoy.site-skill-broker/v1`；只声明所需的 broker capability，不声明本地 socket、路径或网络规则 |
 | `target_binding` | 需要的 Page/Frame/document/observation/业务 target 类型；实际 ref 由 Harbor 当前观察提供 |
 | `timeout` / `cancel` | 有界运行和取消要求；取消不回滚已经派发的外部效果 |
 | `data_handling` | 敏感等级、脱敏、是否允许外发；默认无外发 |
@@ -297,7 +296,8 @@ data_handling:
 
 获准 script 只能调用已接受的 WebEnvoy Runtime capability。它不能直接调用 CDP、
 Juggler、Provider endpoint、任意 JavaScript/eval、任意 shell、Cookie/storage、
-文件路径或未声明的网络。需要 fresh observation 时，script 可以请求正式 observation
+文件路径或未声明的网络；实际 OS 权限和 owner-secret ACL 由配套 WebEnvoy 合同及 S1
+宿主拥有。需要 fresh observation 时，script 可以通过 broker 请求正式 observation
 并获得新的 target ref；旧 ref 失效后不能静默重绑到另一个节点。
 
 ## 7. 与既有包和 #508 生命周期的兼容
@@ -374,8 +374,8 @@ Lode 输出的是可被 Core 引用的 normalized data、source/evidence ref pol
 
 | Obligation | 本候选判断 | 依据和实施前门槛 |
 | --- | --- | --- |
-| `DO-PLUGIN-EXPOSURE` | `triggered` | 已安装任务的正式元数据由既有 `webenvoy_skills.skill.inspect` 的 `webenvoy.site-task-summary/v1` 可选投影承载；执行沿现有 Core `POST /tasks` 的 `webenvoy.task-intent.v0`，结果归属现有 Run/Result Envelope。投影只按现有 `skill_scope`/task scope 过滤获准 package revision，入口、版本、错误和兼容规则由配套执行合同与 Plugin Runtime Exposure 窄增量共同冻结；不能只新增包字段。 |
-| `DO-GRANT-WIRE` | `not-triggered` | 本候选只复用既有 `skill_scope`（资产管理）、browser `allowed_operations`/Profile/origin/task scope 和现有 Runtime capability；没有新持久 Grant 维度。若实现增加 script、egress 或 site-task 专属持久字段，必须先把它改为 `triggered` 并更新 Grant 合同。 |
+| `DO-PLUGIN-EXPOSURE` | `triggered` | 已安装任务的正式元数据由既有 `webenvoy_skills.skill.inspect` 的 `webenvoy.site-task-summary/v1` 可选投影承载；普通 Agent 的执行、查询和停止由配套执行合同冻结的 `webenvoy_task` managed projection 承载，内部才调用同一 Core Task/Run。投影只按现有 `skill_scope`/site-task task scope 过滤获准 package revision，入口、版本、输入、错误和兼容规则必须与 WebEnvoy/Plugin 合同一致；不能只新增包字段。 |
+| `DO-GRANT-WIRE` | `triggered` | site task 新增 `task.submit`、`task.query`、`task.stop` Agent operation，统一由 [Grant Wire Contract V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/grant-wire-contract-v1.md) 拥有；合并顺序为先合入该 WebEnvoy合同，再消费本包声明。包只声明所需 `skill_refs`、`source_refs`、inline input carrier 和 broker capability，不复制 Grant 或 OS policy。 |
 | `DO-NETWORK-CONTRACT` | `conditional` | 本包默认无主动 Network，且不声明 body/interception/modification。若任务实际需要公共 Network payload 或主动外发，先由 S4 接受 [Network Runtime V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/network-runtime-contract-v1.md) 并重判。 |
 | `DO-CONSOLE-CONTRACT` | `not-triggered` | 包不新增 console/page-error public payload；只可引用已有诊断结果。 |
 | `DO-PROVIDER-PRIVATE-SCHEMA` | `not-triggered` | 包不保存 Provider 环境、启动参数、私有 handle 或 replay bundle。 |
