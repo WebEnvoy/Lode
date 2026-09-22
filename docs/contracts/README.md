@@ -4,6 +4,7 @@
 
 | 合同 | 权威载体 |
 | --- | --- |
+| 站点 SKILL 包、固定任务、完整性、依赖与历史引用 | [Site SKILL Package V1](site-skill-package-v1.md)；经独立审查并合入 main 后作为 Accepted 实施基线，不表示 Runtime 执行或站点验收完成。 |
 | 能力包最小格式、生命周期、资源需求边界 | [ADR 0002](../adr/0002-capability-package-minimum-format.md) |
 | input/output/source schema、fixture、post-check、validator 报告边界 | [ADR 0003](../adr/0003-schema-fixtures-and-post-check.md) |
 | asset taxonomy、workflow package、registry / version / invalidation 边界 | [ADR 0004](../adr/0004-asset-types-and-registry.md) |
@@ -22,7 +23,7 @@
 
 实现、测试、schema、validator、runtime 或 generated facts 不应引用 `docs/draft/` 作为权威合同。
 
-未纳入 contracts：public contribution review / marketplace distribution、personal asset storage / sync / overlay conflict policy、App Library UX、Reports UX、真实 package 文件布局、runner、schedule、visual builder、hosted registry。这些内容尚未被 Stage 2 接受。
+站点 SKILL 的文件布局和本地修改保留边界由 Site SKILL Package V1 承接。未纳入 contracts：public contribution review / marketplace distribution、完整 personal asset storage / sync / overlay conflict policy、App Library UX、Reports UX、其他 package 类型的文件布局、runner、schedule、visual builder、hosted registry。
 
 ## 后续 Tooling 骨架入口
 
