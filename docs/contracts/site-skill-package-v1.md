@@ -96,31 +96,32 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 Lode 不提供 runner。凡 WebEnvoy 将一个已准入 script 送入运行时，配套 WebEnvoy 合同
 至少要求以下 OS 边界；API 授权不能代替这些边界：
 
-- script 只在 S1/Harbor 批准的受限 Agent-side OS 进程或等价 worker 中运行，且不在
-  Core/Harbor 进程内加载或执行。OS identity、owner/control socket、文件和网络的
-  role matrix 由 S1/Harbor 合同拥有；本文件不另造一套 Agent/owner 身份或授权系统。
-- 包内容以只读方式提供；任务工作目录是受管、任务范围内的临时目录。script 只能
-  读取包内声明文件和已有 capability 提供的不透明材料，写入只能经正式的临时材料、
-  evidence 或结果引用，不得打开任意用户路径、Profile 目录、Lode checkout 或
-  credential store。
-- OS 文件权限必须拒绝未声明路径；经代码准入的 script 只能使用 S1/Harbor worker
-  已明确允许的本机文件范围和正式 file/material capability。运行时不得把 Cookie、
-  Token、profile state 或用户 HOME 作为环境变量或隐式挂载传入。
-- 未声明的 raw socket、任意 DNS 和任意出站连接默认拒绝；经代码准入的 script 如需
-  本机网络，只能使用 S1/Harbor worker 已明确允许的范围、已接受的 WebEnvoy Network
-  capability/Harbor broker，并同时通过现有 Grant、origin 和 task scope。本合同不建立
-  Network body/interception/modification 合同。
-- script 的进程身份、文件和网络边界由 WebEnvoy 实现和现场证据证明；`grant_id`、
-  HTTP/MCP 认证或包内字段单独不能声称 sandbox。具体 OS 技术（例如平台进程隔离或
-  既有受管 worker）属于 WebEnvoy 实现合同，不由 Lode 发明新的路径隔离或长期 runner。
+- **位置和身份（本 v1 选定）**：script 只在 S1 批准的 Agent-side managed worker
+  进程中运行，且不在 Core/Harbor 进程内加载或执行。worker 使用 S1 分配的独立
+  Agent OS identity；owner control socket 由 owner identity 持有并以宿主 ACL 排除
+  Agent identity。S1/Harbor 拥有进程监督、停止、socket ACL、文件和网络 role matrix；
+  本文件不另造 Agent/owner 身份或授权系统。
+- **代码准入与 OS 权限分离**：准入记录只允许指定 `package_ref`、`revision_ref`、
+  `script_ref` 和 source digest 被该 worker 加载；它不授予新的文件或网络权限。准入后
+  的 trusted code 仍只能使用 worker identity 已有的宿主权限，包声明不能扩大该权限。
+- **文件**：包以只读已校验 bytes 提供，任务工作目录是 Agent identity 拥有的受管临时
+  目录。worker 只可访问 S1/Harbor role matrix 已允许的包文件、声明的 material/file
+  capability 和 result/evidence sink；owner/Profile/credential 数据根及未声明路径由宿主
+  ACL 拒绝。是否存在额外本机文件范围由该 role matrix 决定，不由 SKILL 推导。
+- **网络**：worker 的直接网络权限由同一 role matrix 实际决定；没有获准的 Network
+  capability 时不能联网，有获准范围时只能使用该范围或 Harbor broker。超出已声明能力、
+  Grant、origin 和 task scope 的 DNS、socket 或出站由宿主拒绝；本合同不新增 Network
+  body/interception/modification 合同，也不宣称提供面向任意不可信代码的通用沙箱。
+- **输入/凭据**：Core/Harbor 只交付版本化、哈希绑定的 code reference、有界 input、
+  不透明 observation/target ref、timeout/cancel 和 capability refs。Cookie、Token、
+  profile state、用户 HOME 和 credential store 不得作为参数、环境变量或隐式挂载传入。
 
 如果宿主只能依靠同一 OS 用户下的不同 bearer、路由、环境变量或约定路径来隔离
 Agent 与 owner 文件，则不满足本合同；同 UID 进程可读取 owner-controlled 文件，或
-Agent-side worker 可读取 owner control socket 时，该 script 必须被拒绝执行。WebEnvoy
-的 S1/实现候选必须先记录宿主强制的进程、socket、文件和网络边界；独立 service UID
-本身也不足以证明该隔离。没有可验证的拒绝事实时，只能保留包读取和 `knowledge_only`，
-不能报告可信代码准入或安全执行就绪。这里的 OS 边界是受限执行前提，不是一个面向
-任意不可信代码的通用 sandbox。
+Agent-side worker 可读取 owner control socket 时，该 script 必须被拒绝执行。独立 service
+UID 本身也不足以证明隔离；S1/实现候选必须证明 Agent identity、owner socket ACL、
+包/临时目录访问和实际网络 role matrix。没有这些宿主强制事实时，只能保留包读取和
+`knowledge_only`，不能报告可信代码准入或安全执行就绪。
 
 上述执行位置只是一项安全前提；它不改变 Lode 的资产 owner，也不把包变成可直接
 调用 Browser Provider 的程序。
@@ -134,7 +135,7 @@ JSON Schema 属于后续实现 Work Item，不能用 Markdown 示例代替 valid
 manifest_version: lode.site-skill-package.manifest.v1
 package_type: site-skill
 package_ref: lode://site-skill/<site>/<name>
-revision_ref: lode://site-skill/<site>/<name>@<version>#<package-digest>
+revision_ref: lode://site-skill/<site>/<name>@<version>#<source-commit>
 version: 1.0.0
 lifecycle: proposed # proposed | experimental | stable | deprecated
 site:
@@ -148,7 +149,7 @@ source:
   source_ref: <approved-source-ref>
 integrity:
   package_digest: sha256:<digest>
-  files: [{path: SKILL.md, role: entrypoint, bytes: 123, sha256: sha256:<digest>}]
+  files: [{path: SKILL.md, role: entrypoint, bytes: 123, sha256: sha256:<digest>}] # manifest.json excluded
 compatibility:
   package_contract: lode.site-skill-package/v1
   execution_contract: webenvoy.site-skill-execution/v1
@@ -160,17 +161,34 @@ validation: {}
 必需语义如下：
 
 - `package_ref` 在站点内稳定；改名、换站点或改变包边界即为新身份。`revision_ref`
-  必须同时绑定 `package_ref`、完整 `version` 和不可变 `package_digest`，不能使用
-  `latest`、工作树路径或浮动分支。
+  必须同时绑定 `package_ref`、完整 `version` 和 `source.commit`，不能使用 `latest`、
+  工作树路径或浮动分支。`integrity.package_digest` 是单独的完整性 pin；WebEnvoy/Core
+  必须同时固定 `revision_ref` 和 package digest，不能把 digest 重新嵌入 `revision_ref`。
 - `version` 是 Lode 的 package version。破坏任务输入/输出、脚本 ABI、source shape、
   verification 或 repair contract 时必须升版本或显式 `deprecated`；WebEnvoy 只能
   记录和选择 Lode 已声明的版本。
 - `source` 至少包含 repository、package path、immutable commit 和获准 source ref。
   source path 是来源元数据，不是 Agent 可访问的本地文件路径。
-- `integrity.files[]` 按包内相对路径列出每个普通文件的角色、字节数和 SHA-256。
-  `package_digest` 对规范化 manifest（暂时省略 `integrity.package_digest` 字段）
-  和按字典序排列的 `(path, bytes, sha256)` tuples 计算；因此 digest 不循环且可在
-  不执行代码的情况下复核。manifest 摘要与文件摘要都属于 Lode owner fact。
+- `integrity.files[]` 按包内相对路径列出每个普通文件的角色、字节数和 SHA-256，且
+  **不得列出 `manifest.json` 自身**；manifest 的完整性由下面的 canonical manifest
+  输入单独覆盖。缺少 manifest 条目不是漏记，而是 v1 的固定规则。
+- `package_digest` 使用可复现的 UTF-8 输入计算：先解析无重复 key 的 JSON，将唯一的
+  `integrity.package_digest` 字段从对象中移除，再按 RFC 8785 JSON Canonicalization
+  Scheme（JCS）编码；随后按相对路径字典序追加每个非 manifest 普通文件的
+  `path\t<decimal-bytes>\t<sha256>\n` tuple。最终输入为
+  `lode.site-skill-package/v1\n`、canonical manifest bytes、换行和这些 tuples 的
+  拼接，取 SHA-256 并写为 `sha256:<lowercase-hex>`。`integrity.files[]` 的 path 必须
+  唯一且按字典序排列；其他有集合语义的 manifest 数组也按各字段合同规定的稳定顺序
+  写入，不能把 JSON 对象 key 或数组重排交给消费者猜测。因此 manifest 不会把自己的摘要
+  纳入 `files[]`，`package_digest` 也不会进入自己的 canonical 输入；同一输入总是得到
+  同一 digest，且无需执行代码即可复核。
+- `source.commit` 必须在计算 digest 前从来源仓库解析为不可变的**原始来源 commit**；
+  它可以包含没有生成 digest 的 manifest，但发布流程不得把计算出的 digest 再写回并
+  amend 这个 commit，也不得把“只注入生成 digest 的 artifact commit”登记为
+  `source.commit`。`revision_ref` 只含该 source commit，不含 package digest；若发布物
+  把生成的 `integrity.package_digest` 写入 manifest，canonical 计算仍移除该字段，故
+  不会出现“commit 包含自身 digest”的循环。manifest、source commit 和 package digest
+  的一致性都是 Lode owner fact。
 - `lifecycle` 复用 ADR 0002 的 `proposed`、`experimental`、`stable`、`deprecated`。
   `stable` 只表示包材料满足 Lode 的资产验证门，不表示已安装、已获运行授权或业务
   成功。
@@ -227,6 +245,11 @@ data_handling:
 
 - `operation_id` 必须引用 WebEnvoy 已有 capability operation 或经配套 WebEnvoy 合同
   接受的新 operation。Lode 不定义 CLI/MCP 路由、工具名、Grant 字段或 Provider endpoint。
+- `task_ref` 是 Lode 包内的稳定任务身份；提交到 WebEnvoy 的既有 Task Intent 不增加
+  `task_ref` 顶层字段，而由 `capability.ref = lode:capability/<capability_id>`、
+  `capability.version`、`source_ref` 和 `lock_ref` 精确解析回这项声明。`package_ref`
+  选择包版本，Lode resolver 再把它固定到一个 `revision_ref`/digest；Core 的 Run 归因
+  使用既有 `task_intent_ref`、capability refs 和 `package_ref`，不建立第二 task registry。
 - `action` 复用 ADR 0007。它是 Lode 的动作声明，不是授权结果；`commit` 或
   `destructive` 任务仍必须由 Core 按现有授权、确认、ControlLease、idempotency 和
   unknown 合同处理。
@@ -295,7 +318,9 @@ pre/post-check、resource requirement 和 invalidation marker 继续有效。sit
 安装和选择严格复用 WebEnvoy [Managed SKILL Library Lifecycle V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/skill-library-lifecycle-v1.md)：
 
 1. Core 仅接受批准 manifest 中的完整 `revision_ref`，安装后保持 disabled；
-2. `enable` 只选择已安装、兼容、摘要正确且已准入的 revision；
+2. `enable` 只选择已安装、兼容、完整性摘要正确的 revision。**代码准入是执行门，
+   不是资产启用门**：`knowledge_only` 包可以在获准的资产范围内安装、enable 和
+   read；enable 不代表 script 已准入，也不代表可以提交 task；
 3. `update`/`rollback` 使用明确目标和 CAS；`disable` 保留内容、选择和历史；
 4. Core 在同一受管库记录 Lode `package_ref`、`revision_ref`、version 和 digest 的
    projection，并以不一致拒绝，不能另写一份包身份真相；
@@ -349,7 +374,7 @@ Lode 输出的是可被 Core 引用的 normalized data、source/evidence ref pol
 
 | Obligation | 本候选判断 | 依据和实施前门槛 |
 | --- | --- | --- |
-| `DO-PLUGIN-EXPOSURE` | `triggered` | 已安装任务需要新的动态 task/capability discovery 或 task projection；配套执行合同给出 specialist 语义。实现前必须同步 [Plugin Runtime Exposure V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/plugin-runtime-exposure-v1.md) 的入口、过滤、版本、错误和兼容；不能只新增包字段。 |
+| `DO-PLUGIN-EXPOSURE` | `triggered` | 已安装任务的正式元数据由既有 `webenvoy_skills.skill.inspect` 的 `webenvoy.site-task-summary/v1` 可选投影承载；执行沿现有 Core `POST /tasks` 的 `webenvoy.task-intent.v0`，结果归属现有 Run/Result Envelope。投影只按现有 `skill_scope`/task scope 过滤获准 package revision，入口、版本、错误和兼容规则由配套执行合同与 Plugin Runtime Exposure 窄增量共同冻结；不能只新增包字段。 |
 | `DO-GRANT-WIRE` | `not-triggered` | 本候选只复用既有 `skill_scope`（资产管理）、browser `allowed_operations`/Profile/origin/task scope 和现有 Runtime capability；没有新持久 Grant 维度。若实现增加 script、egress 或 site-task 专属持久字段，必须先把它改为 `triggered` 并更新 Grant 合同。 |
 | `DO-NETWORK-CONTRACT` | `conditional` | 本包默认无主动 Network，且不声明 body/interception/modification。若任务实际需要公共 Network payload 或主动外发，先由 S4 接受 [Network Runtime V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/network-runtime-contract-v1.md) 并重判。 |
 | `DO-CONSOLE-CONTRACT` | `not-triggered` | 包不新增 console/page-error public payload；只可引用已有诊断结果。 |
