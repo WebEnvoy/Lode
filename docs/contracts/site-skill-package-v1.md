@@ -1,13 +1,10 @@
 # Site SKILL Package V1
 
-状态：规范候选（`#563`，待本分支评审与合入）；版本：v1；产品归口：`#563`（parent `#475`）；owner：Lode（包身份、版本、来源、完整性、任务声明及包内知识资产）。
+状态：经独立审查并合入 main 后成为 Accepted 实施基线，不表示 Runtime 或站点已验收；版本：v1；产品归口：WebEnvoy/WebEnvoy `#563`（parent `#475`）；owner：Lode（包身份、版本、来源、完整性、任务声明及包内知识资产）。
 
-本文件冻结 Lode 提供给 WebEnvoy 的网站 SKILL 包合同。当前候选分支为
-[`codex/spec-563-package`](https://github.com/WebEnvoy/Lode/tree/codex/spec-563-package)。WebEnvoy
-的配套执行合同在候选分支
-[`codex/spec-563-skill`](https://github.com/WebEnvoy/WebEnvoy/tree/codex/spec-563-skill)
-的 [Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/site-skill-execution-v1.md)。
-这两个链接指向待评审候选，不能用来声称对应文档已经存在于 `main`。
+本文件冻结 Lode 提供给 WebEnvoy 的网站 SKILL 包合同。配套
+[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/8c05ca8ea54387d618d1bdf0cdf87f5b6a8bb766/docs/specs/site-skill-execution-v1.md)
+引用固定提交中的合同内容；引用本身不表示该合同已被接受或进入 `main`。
 
 本合同扩展 Lode 已接受的 site-capability 包边界，不替代
 [ADR 0002](../adr/0002-capability-package-minimum-format.md)、
@@ -52,7 +49,7 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 | 安装、启用、更新、回滚、禁用、选择、历史和 receipt | WebEnvoy Core 的 [Managed SKILL Library Lifecycle V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/skill-library-lifecycle-v1.md) | Plugin 只投影；Lode 不维护第二份安装状态 |
 | Principal、Grant、task scope、Profile ceiling、当前连接、ControlLease、Run、idempotency、ExternalOutcome、unknown 和恢复 | WebEnvoy Core/Harbor 既有合同 | Lode 只声明所需 capability、动作和验证条件 |
 | Page、Frame、document generation、observation/target ref、Provider 现场、实际文件/网络权限 | Harbor 与既有 Runtime 合同 | Lode 只能引用不透明 ref 和 capability |
-| 正式任务执行入口及跨进程结果投影 | WebEnvoy 的配套 [Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/site-skill-execution-v1.md) | Lode 声明任务输入、输出、脚本和验证要求 |
+| 正式任务执行入口及跨进程结果投影 | WebEnvoy 的配套 [Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/8c05ca8ea54387d618d1bdf0cdf87f5b6a8bb766/docs/specs/site-skill-execution-v1.md) | Lode 声明任务输入、输出、脚本和验证要求 |
 
 `package_ref` 是 Lode 的稳定逻辑身份；不可变的 `revision_ref` 指向其中一个完整
 包版本。WebEnvoy 的受管 `skill_ref` 是生命周期投影，可以引用 `package_ref`，但
@@ -94,7 +91,7 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 ### 3.1 Script 执行位置的最低合同
 
 Lode 不提供 runner，也不定义 OS policy。可执行包只声明 WebEnvoy 受管执行合同和所需
-broker capability；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/site-skill-execution-v1.md)
+broker capability；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/8c05ca8ea54387d618d1bdf0cdf87f5b6a8bb766/docs/specs/site-skill-execution-v1.md)
 拥有下列事实的唯一规范：script 在 Agent-side managed worker 中运行，不能在 Core/Harbor
 进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按真实 ACL
 隔离，owner control socket 不对 Agent identity 开放。Lode 不复制这套 OS 身份、文件或
@@ -375,7 +372,7 @@ Lode 输出的是可被 Core 引用的 normalized data、source/evidence ref pol
 | Obligation | 本候选判断 | 依据和实施前门槛 |
 | --- | --- | --- |
 | `DO-PLUGIN-EXPOSURE` | `triggered` | 已安装任务的正式元数据由既有 `webenvoy_skills.skill.inspect` 的 `webenvoy.site-task-summary/v1` 可选投影承载；普通 Agent 的执行、查询和停止由配套执行合同冻结的 `webenvoy_task` managed projection 承载，内部才调用同一 Core Task/Run。投影只按现有 `skill_scope`/site-task task scope 过滤获准 package revision，入口、版本、输入、错误和兼容规则必须与 WebEnvoy/Plugin 合同一致；不能只新增包字段。 |
-| `DO-GRANT-WIRE` | `triggered` | site task 新增 `task.submit`、`task.query`、`task.stop` Agent operation，统一由 [Grant Wire Contract V1](https://github.com/WebEnvoy/WebEnvoy/blob/codex/spec-563-skill/docs/specs/grant-wire-contract-v1.md) 拥有；合并顺序为先合入该 WebEnvoy合同，再消费本包声明。包只声明所需 `skill_refs`、`source_refs`、inline input carrier 和 broker capability，不复制 Grant 或 OS policy。 |
+| `DO-GRANT-WIRE` | `triggered` | site task 新增 `task.submit`、`task.query`、`task.stop` Agent operation，统一由 [Grant Wire Contract V1](https://github.com/WebEnvoy/WebEnvoy/blob/8c05ca8ea54387d618d1bdf0cdf87f5b6a8bb766/docs/specs/grant-wire-contract-v1.md) 拥有；正式消费者须等待包合同与该 WebEnvoy 合同各自接受。包只声明所需 `skill_refs`、`source_refs`、inline input carrier 和 broker capability，不复制 Grant 或 OS policy。 |
 | `DO-NETWORK-CONTRACT` | `conditional` | 本包默认无主动 Network，且不声明 body/interception/modification。若任务实际需要公共 Network payload 或主动外发，先由 S4 接受 [Network Runtime V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/network-runtime-contract-v1.md) 并重判。 |
 | `DO-CONSOLE-CONTRACT` | `not-triggered` | 包不新增 console/page-error public payload；只可引用已有诊断结果。 |
 | `DO-PROVIDER-PRIVATE-SCHEMA` | `not-triggered` | 包不保存 Provider 环境、启动参数、私有 handle 或 replay bundle。 |
@@ -393,12 +390,7 @@ Lode 输出的是可被 Core 引用的 normalized data、source/evidence ref pol
 WebEnvoy Core/Harbor 的既有授权、Run、unknown 和现场合同。若当前候选与这些已接受
 合同冲突，应暂停实现并更新拥有该语义的合同，不能靠包文档覆盖。
 
-跨仓集成顺序为：
-
-1. 评审并接受本分支 `codex/spec-563-package` 的精确提交；
-2. 用该提交作为 WebEnvoy `codex/spec-563-skill` 的 Lode package companion，评审
-   配套执行合同；
-3. 两个候选都接受后，由集成 owner 把两个 `main` 路径写入各自共享索引，并把本文件
-   中的候选分支链接替换为合入后的稳定链接；
-4. 实现 Work Item 另行提供 source admission、OS worker 文件/网络边界、真实安装、
-   Plugin/Grant schema、Run/unknown 和 live site 证据。规格接受不等于这些授权或实现。
+包合同可以先于配套执行合同接受；正式消费者必须等待两份合同各自接受。
+实现 Work Item 另行提供 source admission、OS worker 的实际权限和 owner 隔离、
+真实安装、Plugin/Grant schema、Run/unknown 和 live site 证据。
+规格接受不等于这些授权或实现。
