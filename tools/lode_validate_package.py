@@ -1905,7 +1905,10 @@ def _site_skill_json(report: Report, root: Path, path: Path, role: str, display_
         return None
     report.ref(role, display_path, "present")
     try:
-        return parse_unique_json_document(path.read_bytes())
+        value = parse_unique_json_document(path.read_bytes())
+        if not isinstance(value, dict):
+            raise ValueError("Site-skill JSON asset must be an object.")
+        return value
     except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         add_error(report, "invalid_contract", display_path, f"Invalid JSON: {exc}", "Fix the JSON asset before package validation.")
         return None

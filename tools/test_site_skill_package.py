@@ -67,14 +67,15 @@ class ControlledSiteSkillPackageTests(unittest.TestCase):
             "checks/post-check.json",
             "package-lock.json",
         ]:
-            with self.subTest(asset=relative), tempfile.TemporaryDirectory(prefix="lode-site-skill-") as directory:
-                package_root = Path(directory) / "package"
-                shutil.copytree(PACKAGE, package_root)
-                (package_root / relative).write_text("[]\n", encoding="utf-8")
-                rewrite_package_pins(package_root)
-                report = validate_package(package_root)
-                self.assertTrue(report.errors)
-                self.assertTrue(any(error["code"] == "invalid_contract" for error in report.errors))
+            for invalid in ["[]", "null", "false", "1", '"text"']:
+                with self.subTest(asset=relative, value=invalid), tempfile.TemporaryDirectory(prefix="lode-site-skill-") as directory:
+                    package_root = Path(directory) / "package"
+                    shutil.copytree(PACKAGE, package_root)
+                    (package_root / relative).write_text(invalid + "\n", encoding="utf-8")
+                    rewrite_package_pins(package_root)
+                    report = validate_package(package_root)
+                    self.assertTrue(report.errors)
+                    self.assertTrue(any(error["code"] == "invalid_contract" for error in report.errors))
 
 
 if __name__ == "__main__":
