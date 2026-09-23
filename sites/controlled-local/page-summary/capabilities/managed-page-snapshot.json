@@ -1,0 +1,9 @@
+{
+  "capability_ref": "lode://site-capability/controlled-local/managed-page-snapshot@1.0.0",
+  "capability_id": "managed-page-snapshot",
+  "version": "1.0.0",
+  "source_ref": "PENDING_SOURCE_REF",
+  "lock_ref": "lode://lock/site-skill/controlled-local/page-summary@1.0.0",
+  "operation_id": "instance.snapshot",
+  "action": "read"
+}

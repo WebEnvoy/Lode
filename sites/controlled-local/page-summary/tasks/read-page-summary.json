@@ -1,0 +1,42 @@
+{
+  "task_ref": "read-page-summary",
+  "version": "1.0.0",
+  "title": "Summarize the controlled local catalog page",
+  "intent": "Return the canonical URL, title, and visible summary of the current controlled local catalog page.",
+  "operation_id": "instance.snapshot",
+  "action": "read",
+  "applicability": {
+    "origins": ["http://127.0.0.1:4173"],
+    "target_type": "web_page"
+  },
+  "entrypoint": {
+    "kind": "capability_refs",
+    "capability_refs": ["lode://site-capability/controlled-local/managed-page-snapshot@1.0.0"]
+  },
+  "inputs": {
+    "schema_ref": "lode://schema/site-skill/controlled-local/page-summary/input@1.0.0",
+    "carrier": "none",
+    "max_bytes": 0,
+    "sensitivity": "public"
+  },
+  "outputs": {
+    "schema_ref": "lode://schema/site-skill/controlled-local/page-summary/output@1.0.0",
+    "result_kind": "page_summary",
+    "completeness": "required"
+  },
+  "preconditions": ["current_page_target_available"],
+  "verification": {
+    "post_check_ref": "lode://check/site-skill/controlled-local/page-summary/post-check@1.0.0",
+    "required_evidence_refs": ["snapshot_ref"]
+  },
+  "failure_recovery": {
+    "failure_classes": ["invalid_contract", "resource_unavailable", "site_changed", "post_check_failed", "evidence_expired"],
+    "repair_ref": "lode://reference/site-skill/controlled-local/page-summary/recovery@1.0.0",
+    "unknown_policy": "query_original_run_only"
+  },
+  "known_branches": ["page_mismatch", "snapshot_incomplete", "post_check_failed"],
+  "data_handling": {
+    "output_sensitivity": "public",
+    "external_egress": "none"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "manifest_version": "lode.site-skill-package.manifest.v1",
+  "package_type": "site-skill",
+  "package_ref": "lode://site-skill/controlled-local/page-summary",
+  "revision_ref": "PENDING_REVISION_REF",
+  "version": "1.0.0",
+  "lifecycle": "experimental",
+  "site": {
+    "site_id": "controlled-local",
+    "supported_origins": [
+      "http://127.0.0.1:4173"
+    ]
+  },
+  "source": {
+    "repository": "WebEnvoy/Lode",
+    "package_path": "sites/controlled-local/page-summary",
+    "commit": "PENDING_SOURCE_COMMIT",
+    "source_ref": "PENDING_SOURCE_REF"
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "lock_ref": "lode://lock/site-skill/controlled-local/page-summary@1.0.0"
+  },
+  "integrity": {
+    "files": [
+      {
+        "path": "SKILL.md",
+        "role": "entrypoint",
+        "bytes": 843,
+        "sha256": "sha256:19851466cbd786b90f4b4a7e9021ba6c425c6b27de67e9ffd476a79aa5209cac"
+      },
+      {
+        "path": "capabilities/managed-page-snapshot.json",
+        "role": "capability_declaration",
+        "bytes": 333,
+        "sha256": "sha256:c9290c27652d7bd5a8ad9eb48617e6512f9f1943b4a624bb1537786b14fd192f"
+      },
+      {
+        "path": "checks/post-check.json",
+        "role": "post_check",
+        "bytes": 630,
+        "sha256": "sha256:0bf27ec6a177e5602f5680206200110a4b107d539ee897491d8e4a733f85ec02"
+      },
+      {
+        "path": "package-lock.json",
+        "role": "package_lock",
+        "bytes": 395,
+        "sha256": "sha256:0792b3f5e2f55202e7370d6f2d1aafacf86bcb154c208251356a1cd9f96b9e5e"
+      },
+      {
+        "path": "references/recovery.md",
+        "role": "repair_guidance",
+        "bytes": 401,
+        "sha256": "sha256:73888ff2f81aaed5030d67fd71b5dffe064be9040b40517e407774303347b707"
+      },
+      {
+        "path": "schemas/input.schema.json",
+        "role": "input_schema",
+        "bytes": 234,
+        "sha256": "sha256:d39500018e005bd8bbdb6b7e6bc4bba0074372db06a2413b8d2893a6875e42d4"
+      },
+      {
+        "path": "schemas/output.schema.json",
+        "role": "output_schema",
+        "bytes": 1434,
+        "sha256": "sha256:a4dc9ce72cf65fb93f15243bece1455fe7741dcc35995dce3ac678bea730e37b"
+      },
+      {
+        "path": "tasks/read-page-summary.json",
+        "role": "task_declaration",
+        "bytes": 1585,
+        "sha256": "sha256:c4924c4ef236f9fe74c6e42e7a5028894262ed3da6cde4ea899b2b8cc4ec56bf"
+      }
+    ]
+  },
+  "compatibility": {
+    "package_contract": "lode.site-skill-package/v1",
+    "execution_contract": "webenvoy.site-skill-execution/v1",
+    "required_capabilities": [
+      {
+        "ref": "lode://site-capability/controlled-local/managed-page-snapshot@1.0.0",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "role": "capability_declaration",
+      "path": "capabilities/managed-page-snapshot.json",
+      "capability_ref": "lode://site-capability/controlled-local/managed-page-snapshot@1.0.0"
+    },
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "schema_ref": "lode://schema/site-skill/controlled-local/page-summary/input@1.0.0"
+    },
+    {
+      "role": "output_schema",
+      "path": "schemas/output.schema.json",
+      "schema_ref": "lode://schema/site-skill/controlled-local/page-summary/output@1.0.0"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "check_ref": "lode://check/site-skill/controlled-local/page-summary/post-check@1.0.0"
+    },
+    {
+      "role": "repair_guidance",
+      "path": "references/recovery.md",
+      "reference_ref": "lode://reference/site-skill/controlled-local/page-summary/recovery@1.0.0"
+    }
+  ],
+  "tasks": [
+    {
+      "task_ref": "read-page-summary",
+      "path": "tasks/read-page-summary.json"
+    }
+  ],
+  "validation": {
+    "runtime_execution": "not_claimed",
+    "live_evidence": "not_claimed"
+  }
+}

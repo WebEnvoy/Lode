@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-skill/controlled-local/page-summary/output@1.0.0",
+  "type": "object",
+  "required": ["result_kind", "status", "normalized", "source_refs", "evidence_refs"],
+  "properties": {
+    "result_kind": {"const": "page_summary"},
+    "status": {"const": "available"},
+    "normalized": {
+      "type": "object",
+      "required": ["canonical_url", "title", "summary"],
+      "properties": {
+        "canonical_url": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "source_kind"],
+        "properties": {
+          "ref_id": {"type": "string"},
+          "source_kind": {"const": "harbor_page"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "evidence_kind", "producer", "redaction"],
+        "properties": {
+          "ref_id": {"type": "string"},
+          "evidence_kind": {"const": "snapshot_ref"},
+          "producer": {"const": "harbor"},
+          "redaction": {"const": "summary_only"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

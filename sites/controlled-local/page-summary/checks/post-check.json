@@ -1,0 +1,17 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "check_ref": "lode://check/site-skill/controlled-local/page-summary/post-check@1.0.0",
+  "requirements": [
+    {
+      "requirement_id": "controlled-current-page",
+      "required_status": "available",
+      "required_normalized_fields": ["canonical_url", "title", "summary"],
+      "expected_normalized_fields": {
+        "canonical_url": "http://127.0.0.1:4173/catalog",
+        "title": "Controlled Local Catalog",
+        "summary": {"contains": "Deterministic local catalog summary for WebEnvoy acceptance."}
+      },
+      "required_evidence_refs": ["snapshot_ref"]
+    }
+  ]
+}

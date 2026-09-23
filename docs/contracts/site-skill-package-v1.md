@@ -90,20 +90,26 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 
 ### 3.1 Script 执行位置的最低合同
 
-Lode 不提供 runner，也不定义 OS policy。可执行包只声明 WebEnvoy 受管执行合同和所需
-broker capability；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/eb173b3f564f5427875a78b9803be8f945057c8e/docs/specs/site-skill-execution-v1.md)
+Lode 不提供 runner，也不定义 OS policy。只有实际执行包内 `script_ref` 的 task 才需要
+受管 worker；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/eb173b3f564f5427875a78b9803be8f945057c8e/docs/specs/site-skill-execution-v1.md)
 拥有下列事实的唯一规范：script 在 Agent-side managed worker 中运行，不能在 Core/Harbor
-进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按真实 ACL
-隔离，owner control socket 不对 Agent identity 开放。Lode 不复制这套 OS 身份、文件或
-网络规则，也不把 API Grant 说成 OS 权限。
+进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按其支持的
+信任模式约束。Lode 不复制这套 OS 身份、文件或网络规则，也不把 API Grant 说成 OS 权限。
 
-包只能声明 `webenvoy.site-skill-script-abi/v1` 和
+仅调用正式 capability、并由 Core 解释既有声明式检查的 task 不执行包内代码，不创建
+worker，也不依赖 worker identity 或 owner socket ACL。它仍须通过 package/lifecycle、
+当前 Grant 与浏览器现场、data-egress 和业务 post-check。声明式检查只允许 Core 已支持的
+有界字段/比较规则，不能包含可求值表达式、脚本或新的 workflow 语义；把包代码改称
+post-check 不改变其代码执行属性。
+
+执行包内 script 的 task 只能使用 `webenvoy.site-skill-script-abi/v1` 和
 `webenvoy.site-skill-broker/v1` 接受的 capability refs。script 的直接文件、网络、进程、
 CDP/Juggler、eval、shell 和 credential 入口不属于该 ABI；它通过 broker 取得已校验的
 输入、fresh observation/target、正式 Runtime capability 和有界输出。这里的 ABI/代码准入
 是 trusted code 合同，不是面向任意不可信代码的通用 sandbox；准入不会扩大 worker 的
-实际 OS 权限。OS 失败、身份不明或 owner socket ACL 不成立时，WebEnvoy 必须拒绝 task
-dispatch；包仍可按本文件的 knowledge-only 资产路径被读取，不能将此失败报告为可执行成功。
+实际 OS 权限。script task 在 worker identity 或 owner socket ACL 无法按 S1/宿主支持的
+信任模式证明时，WebEnvoy 必须拒绝 dispatch；包仍可按本文件的 knowledge-only 资产路径
+被读取，不能将此失败报告为可执行成功。
 
 ## 4. Manifest、身份与完整性
 
@@ -126,6 +132,7 @@ source:
   package_path: sites/<site>/<name>
   commit: <immutable-commit>
   source_ref: <approved-source-ref>
+package_lock: {path: package-lock.json, lock_ref: lode://lock/site-skill/<site>/<name>@<version>}
 integrity:
   package_digest: sha256:<digest>
   files: [{path: SKILL.md, role: entrypoint, bytes: 123, sha256: sha256:<digest>}] # manifest.json excluded
@@ -133,6 +140,8 @@ compatibility:
   package_contract: lode.site-skill-package/v1
   execution_contract: webenvoy.site-skill-execution/v1
   required_capabilities: []
+assets:
+  - {role: capability_declaration, path: capabilities/<capability-id>.json, capability_ref: lode://site-capability/<site>/<capability>@<version>}
 tasks: []
 validation: {}
 ```
@@ -148,6 +157,14 @@ validation: {}
   记录和选择 Lode 已声明的版本。
 - `source` 至少包含 repository、package path、immutable commit 和获准 source ref。
   source path 是来源元数据，不是 Agent 可访问的本地文件路径。
+- `assets[]` 只定位 package-local、由 `integrity.files[]` 固定的普通文件。Task schema、
+  post-check 和 capability declaration 必须使用各自有类型的 ref 字段；路径不得越出包根。
+- 有正式 task capability 引用的包必须声明 `package_lock` locator。它指向包内普通
+  JSON 文件，文件必须包含 package ref、revision ref、version、source ref 和 capability
+  ref；`lock_ref` 必须稳定绑定同一 package version。该 lock 文件自身列入
+  `integrity.files[]`，其内容由 package digest 覆盖，不能包含 package digest 以免形成
+  循环。Capability 声明的 `source_ref` 必须与 `source.source_ref` 相同，`lock_ref` 必须
+  与 `package_lock.lock_ref` 相同。此文件是包内 pin 材料，不是第二 registry 或运行时锁状态。
 - `integrity.files[]` 按包内相对路径列出每个普通文件的角色、字节数和 SHA-256，且
   **不得列出 `manifest.json` 自身**；manifest 的完整性由下面的 canonical manifest
   输入单独覆盖。缺少 manifest 条目不是漏记，而是 v1 的固定规则。
@@ -242,6 +259,12 @@ data_handling:
 - `entrypoint` 至少提供一个 capability ref 或已声明 script ref。`SKILL.md` 的自然
   语言步骤不构成 entrypoint。多个 capability 的顺序若影响结果，必须在任务声明中
   以有限、可验证的分支和 pre/post-check 表达，不能引入通用 block graph。
+- Capability-only task 可以用 `entrypoint: {kind: capability_refs, capability_refs: [...]}`
+  声明唯一的既有 capability 引用；引用必须与 manifest `assets[]` 中唯一的
+  `capability_declaration` locator 一致。该普通 JSON 资产至少记录
+  `capability_ref`、`capability_id`、`version`、`source_ref`、`lock_ref`、`operation_id`
+  和 `action`，并列入 `integrity.files[]`。消费者从该完整性固定的声明解析 Task Intent
+  capability tuple，不能从 SKILL 文本或任意 task 字段推导。
 - `inputs.schema_ref` 和 `outputs.schema_ref` 必须能解析到 Lode JSON Schema，并由固定
   `revision_ref`/`package_digest` 钉住 schema bytes。`inputs.carrier=none` 时任务只接受
   空输入；`inputs.carrier=webenvoy.managed-task-inline/v1` 时，Agent 请求在版本化
