@@ -12,6 +12,20 @@ from typing import Any
 
 
 SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
+SUPPORTED_SITE_SKILL_MANIFEST_VERSION = "lode.site-skill-package.manifest.v1"
+CONTROLLED_SITE_SKILL_PACKAGE_REF = "lode://site-skill/controlled-local/page-summary"
+CONTROLLED_SITE_SKILL_CAPABILITY_REF = "lode://site-capability/controlled-local/managed-page-snapshot@1.0.0"
+CONTROLLED_SITE_SKILL_LOCK_REF = "lode://lock/site-skill/controlled-local/page-summary@1.0.0"
+CONTROLLED_SITE_SKILL_FILES = {
+    "SKILL.md",
+    "capabilities/managed-page-snapshot.json",
+    "checks/post-check.json",
+    "package-lock.json",
+    "references/recovery.md",
+    "schemas/input.schema.json",
+    "schemas/output.schema.json",
+    "tasks/read-page-summary.json",
+}
 SUPPORTED_LOCAL_REGISTRY_VERSION = "lode.local-package-index.v0"
 SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
 SUPPORTED_PACKAGE_TYPE = "site-capability"
@@ -149,6 +163,18 @@ def reject_non_finite_json_constant(value: str) -> None:
 
 def parse_json_document(value: str | bytes) -> Any:
     return json.loads(value, parse_constant=reject_non_finite_json_constant)
+
+
+def parse_unique_json_document(value: str | bytes) -> Any:
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, child in pairs:
+            if key in result:
+                raise ValueError(f"Duplicate JSON object key `{key}`.")
+            result[key] = child
+        return result
+
+    return json.loads(value, object_pairs_hook=unique_object, parse_constant=reject_non_finite_json_constant)
 
 
 def load_json(report: Report, root: Path, path: Path, role: str, display_path: str | None = None) -> Any | None:
@@ -1872,12 +1898,479 @@ def validate_core_consumption_fixture(report: Report, package_root: Path, fixtur
         add_error(report, "fixture_invalid", path, "Core-consumption fixture package/lock refs do not match manifest truth.", "Bind the fixture to the current package and lock refs.")
 
 
+def _site_skill_json(report: Report, root: Path, path: Path, role: str, display_path: str) -> Any | None:
+    if not path.exists() or path.is_symlink() or not path.is_file():
+        report.ref(role, display_path, "missing")
+        add_error(report, "asset_missing", display_path, "Site-skill asset must be a present regular file without symlinks.", "Restore the declared package-local file.")
+        return None
+    report.ref(role, display_path, "present")
+    try:
+        value = parse_unique_json_document(path.read_bytes())
+        if not isinstance(value, dict):
+            raise ValueError("Site-skill JSON asset must be an object.")
+        return value
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
+        add_error(report, "invalid_contract", display_path, f"Invalid JSON: {exc}", "Fix the JSON asset before package validation.")
+        return None
+
+
+def _site_skill_path(root: Path, value: Any, display_path: str) -> Path | None:
+    if not isinstance(value, str) or not value or "\\" in value:
+        return None
+    candidate = Path(value)
+    if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
+        return None
+    resolved = (root / candidate).resolve()
+    try:
+        resolved.relative_to(root.resolve())
+    except ValueError:
+        return None
+    current = root
+    for part in candidate.parts:
+        current = current / part
+        if current.is_symlink():
+            return None
+    return resolved
+
+
+def _site_skill_package_files(report: Report, root: Path) -> set[str]:
+    found: set[str] = set()
+    if root.is_symlink() or not root.is_dir():
+        add_error(report, "invalid_contract", str(root), "Package root must be a real directory.", "Use a non-symlink package root.")
+        return found
+    stack = [root]
+    while stack:
+        directory = stack.pop()
+        try:
+            children = list(directory.iterdir())
+        except OSError as exc:
+            add_error(report, "invalid_contract", rel(root, directory), f"Cannot enumerate package directory: {exc}", "Restore readable package files.")
+            continue
+        for child in children:
+            display = rel(root, child)
+            if child.is_symlink():
+                add_error(report, "invalid_contract", display, "Site-skill package cannot contain symlinks.", "Replace the symlink with a regular package file.")
+            elif child.is_dir():
+                stack.append(child)
+            elif child.is_file():
+                found.add(display)
+            else:
+                add_error(report, "invalid_contract", display, "Site-skill package entries must be regular files or directories.", "Remove special files from the package.")
+    found.discard("manifest.json")
+    return found
+
+
+def _site_skill_canonical_manifest(report: Report, manifest: dict[str, Any]) -> bytes | None:
+    if any(isinstance(item, float) for item in _walk_json_values(manifest)):
+        add_error(report, "invalid_contract", "manifest.json", "JCS manifest cannot contain floating-point values in this package contract.", "Use JSON integers or strings for manifest values.")
+        return None
+    canonical = dict(manifest)
+    integrity = canonical.get("integrity")
+    if not isinstance(integrity, dict):
+        return None
+    canonical_integrity = dict(integrity)
+    canonical_integrity.pop("package_digest", None)
+    canonical["integrity"] = canonical_integrity
+    try:
+        return json.dumps(canonical, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        add_error(report, "invalid_contract", "manifest.json", f"Cannot canonicalize package manifest: {exc}", "Keep the manifest within JSON Canonicalization Scheme values.")
+        return None
+
+
+def _walk_json_values(value: Any) -> list[Any]:
+    values: list[Any] = []
+    stack = [value]
+    while stack:
+        item = stack.pop()
+        values.append(item)
+        if isinstance(item, dict):
+            stack.extend(item.values())
+        elif isinstance(item, list):
+            stack.extend(item)
+    return values
+
+
+def validate_site_skill_integrity(report: Report, root: Path, manifest: dict[str, Any]) -> set[str]:
+    integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
+    require_keys(report, integrity, ["package_digest", "files"], "manifest.json#integrity")
+    records = integrity.get("files")
+    if not isinstance(records, list) or not records:
+        add_error(report, "invalid_contract", "manifest.json#integrity.files", "Site-skill integrity.files must be a non-empty array.", "List each package-local ordinary file exactly once.")
+        records = []
+    paths: list[str] = []
+    declared: set[str] = set()
+    tuples: list[str] = []
+    for index, record in enumerate(records):
+        path_label = f"manifest.json#integrity.files[{index}]"
+        if not isinstance(record, dict):
+            add_error(report, "invalid_contract", path_label, "Integrity file entry must be an object.", "Declare path, role, bytes, and sha256.")
+            continue
+        require_keys(report, record, ["path", "role", "bytes", "sha256"], path_label)
+        asset_path = _site_skill_path(root, record.get("path"), path_label)
+        if asset_path is None:
+            add_error(report, "invalid_contract", path_label, "Integrity path must be a safe package-relative path without symlinks.", "Use a normalized relative file path inside the package root.")
+            continue
+        path_value = str(record["path"])
+        paths.append(path_value)
+        if path_value == "manifest.json" or path_value in declared:
+            add_error(report, "invalid_contract", path_label, "Integrity paths must be unique and must exclude manifest.json.", "List each non-manifest package file once.")
+            continue
+        declared.add(path_value)
+        if not isinstance(record.get("role"), str) or not record.get("role"):
+            add_error(report, "invalid_contract", f"{path_label}.role", "Integrity role must be a non-empty string.", "Name the asset's package role.")
+        try:
+            data = asset_path.read_bytes()
+        except OSError as exc:
+            add_error(report, "asset_missing", path_value, f"Cannot read integrity file: {exc}", "Restore the declared package asset.")
+            continue
+        actual_hash = "sha256:" + hashlib.sha256(data).hexdigest()
+        size = record.get("bytes")
+        if isinstance(size, bool) or not isinstance(size, int) or size != len(data):
+            add_error(report, "invalid_contract", path_value, "Integrity byte count does not match the file.", "Recompute the file size from the package bytes.")
+        if record.get("sha256") != actual_hash:
+            add_error(report, "invalid_contract", path_value, "Integrity SHA-256 does not match the file.", "Recompute the file hash from the package bytes.")
+        tuples.append(f"{path_value}\t{len(data)}\t{actual_hash}\n")
+    if paths != sorted(paths):
+        add_error(report, "invalid_contract", "manifest.json#integrity.files", "Integrity files must be sorted by package-relative path.", "Sort integrity.files by path.")
+    actual_files = _site_skill_package_files(report, root)
+    if actual_files != declared:
+        add_error(report, "invalid_contract", "manifest.json#integrity.files", f"Integrity file set differs from package files: missing={sorted(actual_files - declared)}, extra={sorted(declared - actual_files)}.", "Pin every ordinary package file and remove undeclared files.")
+    if actual_files != CONTROLLED_SITE_SKILL_FILES:
+        add_error(report, "invalid_contract", "manifest.json#integrity.files", f"Controlled package contains an unexpected file set: missing={sorted(CONTROLLED_SITE_SKILL_FILES - actual_files)}, extra={sorted(actual_files - CONTROLLED_SITE_SKILL_FILES)}.", "Keep the controlled fixture package limited to its declared knowledge, task, capability, schema, and check files.")
+    canonical_manifest = _site_skill_canonical_manifest(report, manifest)
+    digest = integrity.get("package_digest")
+    if not isinstance(digest, str) or not digest.startswith("sha256:") or len(digest) != 71 or any(ch not in "0123456789abcdef" for ch in digest[7:]):
+        add_error(report, "invalid_contract", "manifest.json#integrity.package_digest", "Package digest must be a lowercase sha256 value.", "Compute the digest using the site-skill v1 canonical input.")
+    elif canonical_manifest is not None:
+        digest_input = b"lode.site-skill-package/v1\n" + canonical_manifest + b"\n" + "".join(sorted(tuples, key=lambda row: row.split("\t", 1)[0])).encode("utf-8")
+        expected = "sha256:" + hashlib.sha256(digest_input).hexdigest()
+        if digest != expected:
+            add_error(report, "invalid_contract", "manifest.json#integrity.package_digest", "Package digest does not match the canonical manifest and integrity file tuples.", "Recompute the digest from the final package manifest and files.")
+    return declared
+
+
+def validate_site_skill_package_lock(report: Report, root: Path, manifest: dict[str, Any], integrity_files: set[str]) -> dict[str, Any] | None:
+    lock_locator = manifest.get("package_lock") if isinstance(manifest.get("package_lock"), dict) else {}
+    require_keys(report, lock_locator, ["path", "lock_ref"], "manifest.json#package_lock")
+    if lock_locator.get("lock_ref") != CONTROLLED_SITE_SKILL_LOCK_REF:
+        add_error(report, "invalid_contract", "manifest.json#package_lock.lock_ref", "Controlled package lock ref must use the fixed site-skill package identity.", "Keep the package lock ref stable for this package version.")
+    if lock_locator.get("path") != "package-lock.json":
+        add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Controlled package lock must use its fixed package-local path.", "Use package-lock.json as the lock locator.")
+    lock_path = _site_skill_path(root, lock_locator.get("path"), "manifest.json#package_lock.path")
+    if lock_path is None:
+        add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Package lock path must be a safe package-relative file.", "Use a normalized package-relative path without symlinks.")
+        return None
+    if str(lock_locator.get("path")) not in integrity_files:
+        add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Package lock file must be covered by integrity.files.", "Add the lock file to the package integrity list.")
+    integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
+    lock_records = [item for item in integrity.get("files", []) if isinstance(item, dict) and item.get("path") == lock_locator.get("path")]
+    if len(lock_records) != 1 or lock_records[0].get("role") != "package_lock":
+        add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Package lock must have one integrity file record with role package_lock.", "Declare the lock asset in integrity.files.")
+    lock = _site_skill_json(report, root, lock_path, "package_lock", str(lock_locator.get("path")))
+    if not isinstance(lock, dict):
+        if lock is not None:
+            add_error(report, "invalid_contract", str(lock_locator.get("path")), "Package lock asset must be a JSON object.", "Declare package lock fields as one JSON object.")
+        return None
+    require_keys(report, lock, ["schema_version", "lock_ref", "package_ref", "revision_ref", "version", "source_ref", "capability_ref"], str(lock_locator.get("path")))
+    expected = {
+        "schema_version": "lode.site-skill-package.lock.v1",
+        "lock_ref": lock_locator.get("lock_ref"),
+        "package_ref": manifest.get("package_ref"),
+        "revision_ref": manifest.get("revision_ref"),
+        "version": manifest.get("version"),
+        "source_ref": nested_get(manifest, ["source", "source_ref"]),
+    }
+    for key, value in expected.items():
+        if lock.get(key) != value:
+            add_error(report, "invalid_contract", f"{lock_locator.get('path')}#{key}", f"Package lock `{key}` does not match manifest truth.", "Keep the digest-pinned package lock aligned with manifest identity.")
+    return lock
+
+
+def validate_site_skill_task(report: Report, root: Path, task: dict[str, Any], task_path: str, manifest: dict[str, Any], capability_asset: dict[str, Any] | None, lock: dict[str, Any] | None) -> None:
+    require_keys(report, task, ["task_ref", "version", "title", "intent", "operation_id", "action", "applicability", "entrypoint", "inputs", "outputs", "verification", "data_handling"], task_path)
+    if task.get("task_ref") != "read-page-summary" or task.get("version") != manifest.get("version"):
+        add_error(report, "invalid_contract", task_path, "Controlled task identity/version does not match the package.", "Bind the declared task to this package version.")
+    if task.get("operation_id") != "instance.snapshot" or task.get("action") != "read":
+        add_error(report, "invalid_contract", task_path, "This capability-only task must declare instance.snapshot/read.", "Use the exact existing read operation and action.")
+    applicability = task.get("applicability") if isinstance(task.get("applicability"), dict) else {}
+    if applicability.get("origins") != ["http://127.0.0.1:4173"] or applicability.get("target_type") != "web_page":
+        add_error(report, "invalid_contract", f"{task_path}#applicability", "Task applicability must be limited to the fixed local catalog origin and web_page target.", "Keep this controlled package bound to its local fixture site.")
+    entrypoint = task.get("entrypoint") if isinstance(task.get("entrypoint"), dict) else {}
+    refs = entrypoint.get("capability_refs")
+    if set(entrypoint) != {"kind", "capability_refs"} or entrypoint.get("kind") != "capability_refs" or not isinstance(refs, list) or len(refs) != 1 or not isinstance(capability_asset, dict) or refs[0] != CONTROLLED_SITE_SKILL_CAPABILITY_REF or refs[0] != capability_asset.get("capability_ref"):
+        add_error(report, "invalid_contract", f"{task_path}#entrypoint", "Task must reference exactly its single manifest-located capability declaration.", "Bind one capability ref to the digest-pinned capability asset.")
+    if "script_ref" in entrypoint or (root / "scripts").exists():
+        add_error(report, "invalid_contract", f"{task_path}#entrypoint", "This controlled task must be capability-backed and contain no executable package script.", "Remove script entrypoints and package scripts.")
+    inputs = task.get("inputs") if isinstance(task.get("inputs"), dict) else {}
+    if inputs.get("carrier") != "none" or isinstance(inputs.get("max_bytes"), bool) or inputs.get("max_bytes") != 0:
+        add_error(report, "invalid_contract", f"{task_path}#inputs", "Controlled task input must use carrier none with max_bytes 0.", "Do not accept task-supplied content or URLs.")
+    outputs = task.get("outputs") if isinstance(task.get("outputs"), dict) else {}
+    if outputs.get("result_kind") != "page_summary" or outputs.get("completeness") != "required":
+        add_error(report, "invalid_contract", f"{task_path}#outputs", "Controlled task output must be a required page_summary.", "Declare the fixed public summary result kind.")
+    handling = task.get("data_handling") if isinstance(task.get("data_handling"), dict) else {}
+    if handling.get("output_sensitivity") != "public" or handling.get("external_egress") != "none":
+        add_error(report, "invalid_contract", f"{task_path}#data_handling", "Controlled task output must be public and have no external egress.", "Keep only public summary fields and disable egress.")
+    if nested_get(task, ["failure_recovery", "unknown_policy"]) != "query_original_run_only":
+        add_error(report, "invalid_contract", f"{task_path}#failure_recovery.unknown_policy", "Unknown outcomes must be reconciled against the original Run only.", "Keep the no-replay recovery rule explicit.")
+    if isinstance(capability_asset, dict):
+        cap_path = capability_asset.get("path")
+        integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
+        pinned_paths = {record.get("path") for record in integrity.get("files", []) if isinstance(record, dict)}
+        safe_cap_path = _site_skill_path(root, cap_path, "manifest.json#assets.capability_declaration.path")
+        if safe_cap_path is None or cap_path not in pinned_paths:
+            add_error(report, "invalid_contract", "manifest.json#assets.capability_declaration.path", "Capability declaration must be a safe integrity-pinned file.", "Pin the declaration asset and keep its path inside the package.")
+            cap = None
+        else:
+            cap = _site_skill_json(report, root, safe_cap_path, "capability_declaration", str(cap_path))
+        required = ["capability_ref", "capability_id", "version", "source_ref", "lock_ref", "operation_id", "action"]
+        if not isinstance(cap, dict):
+            add_error(report, "invalid_contract", "manifest.json#assets.capability_declaration", "Capability declaration must be a JSON object.", "Restore the pinned capability declaration asset.")
+        else:
+            require_keys(report, cap, required, str(cap_path))
+            expected = {
+                "capability_ref": CONTROLLED_SITE_SKILL_CAPABILITY_REF,
+                "capability_id": "managed-page-snapshot",
+                "version": "1.0.0",
+                "source_ref": nested_get(manifest, ["source", "source_ref"]),
+                "lock_ref": nested_get(manifest, ["package_lock", "lock_ref"]),
+                "operation_id": "instance.snapshot",
+                "action": "read",
+            }
+            for key, value in expected.items():
+                if cap.get(key) != value:
+                    add_error(report, "invalid_contract", f"{cap_path}#{key}", f"Capability declaration `{key}` does not match the fixed package pin.", "Align capability identity and its package source/lock pin.")
+            if isinstance(lock, dict) and lock.get("capability_ref") != cap.get("capability_ref"):
+                add_error(report, "invalid_contract", f"{cap_path}#capability_ref", "Package lock capability_ref does not match the declaration.", "Keep the package lock bound to the declared capability.")
+            task_required = task.get("operation_id") == cap.get("operation_id") and task.get("action") == cap.get("action")
+            if not task_required:
+                add_error(report, "invalid_contract", task_path, "Task operation/action must match its pinned capability declaration.", "Use the operation and action named by the capability asset.")
+
+
+def validate_site_skill_schemas_and_check(report: Report, root: Path, task: dict[str, Any], manifest: dict[str, Any]) -> None:
+    task_path = "tasks/read-page-summary.json"
+    inputs = task.get("inputs") if isinstance(task.get("inputs"), dict) else {}
+    outputs = task.get("outputs") if isinstance(task.get("outputs"), dict) else {}
+    input_ref = inputs.get("schema_ref")
+    output_ref = outputs.get("schema_ref")
+    assets = manifest.get("assets") if isinstance(manifest.get("assets"), list) else []
+    checks = {item.get("role"): item for item in assets if isinstance(item, dict) and isinstance(item.get("role"), str)}
+    for key, ref, role in [("inputs", input_ref, "input_schema"), ("outputs", output_ref, "output_schema")]:
+        locator = checks.get(role)
+        if not isinstance(locator, dict) or locator.get("schema_ref") != ref:
+            add_error(report, "invalid_contract", f"{task_path}#{key}.schema_ref", f"Task {key} schema_ref must resolve to the manifest `{role}` asset.", "Keep task schema refs and manifest asset locators aligned.")
+            continue
+        path_value = locator.get("path")
+        schema_path = _site_skill_path(root, path_value, f"manifest.json#assets.{role}.path")
+        if schema_path is None:
+            add_error(report, "invalid_contract", f"manifest.json#assets.{role}.path", "Schema path must be a safe package-relative file.", "Use a normalized package-relative schema path.")
+            continue
+        schema = _site_skill_json(report, root, schema_path, role, str(path_value))
+        if not isinstance(schema, dict):
+            if schema is not None:
+                add_error(report, "invalid_contract", str(path_value), "Schema asset must be a JSON object.", "Declare the pinned JSON Schema as an object.")
+            continue
+        if schema.get("$id") != ref or schema.get("type") != "object" or schema.get("additionalProperties") is not False:
+            add_error(report, "invalid_contract", str(path_value), "Schema identity and strict object boundary must match the task ref.", "Use the pinned schema ref and reject undeclared fields.")
+        required = schema.get("required")
+        properties = schema.get("properties") if isinstance(schema.get("properties"), dict) else {}
+        if role == "input_schema" and (required != [] or properties != {}):
+            add_error(report, "invalid_contract", str(path_value), "Carrier-none input schema must accept only an empty object.", "Declare no input properties or required values.")
+        if role == "output_schema":
+            normalized = properties.get("normalized") if isinstance(properties.get("normalized"), dict) else {}
+            normalized_props = normalized.get("properties") if isinstance(normalized.get("properties"), dict) else {}
+            expected_root = {"result_kind", "status", "normalized", "source_refs", "evidence_refs"}
+            if not expected_root.issubset(set(required if isinstance(required, list) else [])) or set(normalized_props) != {"canonical_url", "title", "summary"}:
+                add_error(report, "invalid_contract", str(path_value), "Output schema must require the fixed page-summary fields and three normalized strings.", "Expose only public canonical URL, title, summary, and refs.")
+            if normalized.get("required") != ["canonical_url", "title", "summary"] or normalized.get("additionalProperties") is not False:
+                add_error(report, "invalid_contract", f"{path_value}#normalized", "Normalized output must require exactly the three public fields.", "Reject additional normalized output fields.")
+            result_kind_schema = properties.get("result_kind") if isinstance(properties.get("result_kind"), dict) else {}
+            status_schema = properties.get("status") if isinstance(properties.get("status"), dict) else {}
+            if result_kind_schema.get("const") != "page_summary" or status_schema.get("const") != "available":
+                add_error(report, "invalid_contract", str(path_value), "Output schema result_kind and status must match the Core projection.", "Use the fixed page_summary/available result identity.")
+            refs_schema = properties.get("source_refs") if isinstance(properties.get("source_refs"), dict) else {}
+            evidence_schema = properties.get("evidence_refs") if isinstance(properties.get("evidence_refs"), dict) else {}
+            if refs_schema.get("type") != "array" or evidence_schema.get("type") != "array":
+                add_error(report, "invalid_contract", str(path_value), "Source and evidence refs must be arrays.", "Expose bounded provenance refs without inline evidence bodies.")
+            for field in ["canonical_url", "title", "summary"]:
+                field_schema = normalized_props.get(field)
+                if not isinstance(field_schema, dict) or field_schema.get("type") != "string":
+                    add_error(report, "invalid_contract", f"{path_value}#normalized.{field}", "Normalized output fields must be strings.", "Use string schemas for the public summary fields.")
+    check_ref = nested_get(task, ["verification", "post_check_ref"])
+    check_locator = checks.get("post_check")
+    if not isinstance(check_locator, dict) or check_locator.get("check_ref") != check_ref:
+        add_error(report, "invalid_contract", f"{task_path}#verification.post_check_ref", "Task post-check ref must resolve to the manifest post_check asset.", "Keep the task verification ref aligned with the pinned check.")
+        return
+    check_path = _site_skill_path(root, check_locator.get("path"), "manifest.json#assets.post_check.path")
+    if check_path is None:
+        add_error(report, "invalid_contract", "manifest.json#assets.post_check.path", "Post-check path must be a safe package-relative file.", "Use a normalized package-relative check path.")
+        return
+    check = _site_skill_json(report, root, check_path, "post_check", str(check_locator.get("path")))
+    if not isinstance(check, dict):
+        if check is not None:
+            add_error(report, "invalid_contract", str(check_locator.get("path")), "Post-check asset must be a JSON object.", "Declare the post-check as one JSON object.")
+        return
+    require_keys(report, check, ["schema_version", "check_ref", "requirements"], str(check_locator.get("path")))
+    if check.get("schema_version") != "lode.post-check.v0" or check.get("check_ref") != check_ref:
+        add_error(report, "invalid_contract", str(check_locator.get("path")), "Post-check must use the pinned lode.post-check.v0 ref.", "Align check schema version and ref.")
+    requirements = check.get("requirements")
+    expected_requirement = {
+        "requirement_id": "controlled-current-page",
+        "required_status": "available",
+        "required_normalized_fields": ["canonical_url", "title", "summary"],
+        "expected_normalized_fields": {
+            "canonical_url": "http://127.0.0.1:4173/catalog",
+            "title": "Controlled Local Catalog",
+            "summary": {"contains": "Deterministic local catalog summary for WebEnvoy acceptance."},
+        },
+        "required_evidence_refs": ["snapshot_ref"],
+    }
+    if requirements != [expected_requirement]:
+        add_error(report, "post_check_failed", str(check_locator.get("path")), "Post-check must require the fixed local URL/title and a contained summary phrase plus snapshot evidence.", "Use the exact bounded controlled-page requirement.")
+    if nested_get(task, ["verification", "required_evidence_refs"]) != ["snapshot_ref"]:
+        add_error(report, "post_check_failed", f"{task_path}#verification.required_evidence_refs", "Task must require the Harbor snapshot_ref evidence.", "Bind verification to the current Harbor snapshot observation.")
+    repair_ref = nested_get(task, ["failure_recovery", "repair_ref"])
+    repair_locator = checks.get("repair_guidance")
+    integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
+    pinned_paths = {record.get("path") for record in integrity.get("files", []) if isinstance(record, dict)}
+    if not isinstance(repair_locator, dict) or repair_locator.get("reference_ref") != repair_ref or repair_locator.get("path") not in pinned_paths:
+        add_error(report, "invalid_contract", f"{task_path}#failure_recovery.repair_ref", "Task recovery guidance must resolve to an integrity-pinned manifest asset.", "Keep the recovery ref local and covered by the package digest.")
+
+
+def validate_site_skill_registry_entry(report: Report, repo_root: Path, package_root: Path, index_path: str, index: int, entry: dict[str, Any], manifest: dict[str, Any], task_refs: list[str]) -> None:
+    entry_path = f"{index_path}#entries[{index}]"
+    required = ["package_ref", "package_type", "package_path", "manifest_path", "revision_ref", "package_digest", "task_refs"]
+    require_keys(report, entry, required, entry_path)
+    expected = {
+        "package_ref": manifest.get("package_ref"),
+        "package_type": "site-skill",
+        "revision_ref": manifest.get("revision_ref"),
+        "package_digest": nested_get(manifest, ["integrity", "package_digest"]),
+        "task_refs": task_refs,
+    }
+    for key, value in expected.items():
+        if entry.get(key) != value:
+            add_error(report, "invalid_contract", f"{entry_path}.{key}", f"Registry `{key}` does not match the site-skill manifest.", "Keep local package discoverability aligned with manifest truth.")
+    package_path = entry.get("package_path")
+    manifest_path = entry.get("manifest_path")
+    if not isinstance(package_path, str) or Path(package_path).is_absolute() or (repo_root / package_path).resolve() != package_root.resolve():
+        add_error(report, "invalid_contract", f"{entry_path}.package_path", "Registry package_path must resolve to the validated package root.", "Use the repository-relative package path.")
+    if package_path and manifest_path != f"{package_path}/manifest.json":
+        add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point at the package manifest.", "Use the package-relative manifest locator.")
+
+
+def validate_site_skill_package(root: Path, registry_index: Path | None, report: Report, manifest: dict[str, Any]) -> Report:
+    manifest = _site_skill_json(report, root, root / "manifest.json", "manifest", "manifest.json")
+    if not isinstance(manifest, dict):
+        return report
+    report.package_ref = manifest.get("package_ref")
+    required = ["manifest_version", "package_type", "package_ref", "revision_ref", "version", "lifecycle", "site", "source", "package_lock", "integrity", "compatibility", "assets", "tasks"]
+    require_keys(report, manifest, required, "manifest.json")
+    if manifest.get("manifest_version") != SUPPORTED_SITE_SKILL_MANIFEST_VERSION or manifest.get("package_type") != "site-skill":
+        add_error(report, "unsupported_version", "manifest.json", "Unsupported site-skill package manifest.", f"Use `{SUPPORTED_SITE_SKILL_MANIFEST_VERSION}` with package_type site-skill.")
+    if manifest.get("package_ref") != CONTROLLED_SITE_SKILL_PACKAGE_REF or manifest.get("version") != "1.0.0" or manifest.get("lifecycle") != "experimental":
+        add_error(report, "invalid_contract", "manifest.json", "This validator accepts only the fixed controlled-local page-summary package identity.", "Keep the bounded fixture package identity and experimental lifecycle.")
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    require_keys(report, source, ["repository", "package_path", "commit", "source_ref"], "manifest.json#source")
+    commit = source.get("commit")
+    if not isinstance(commit, str) or len(commit) != 40 or any(ch not in "0123456789abcdef" for ch in commit):
+        add_error(report, "invalid_contract", "manifest.json#source.commit", "Source commit must be a full immutable lowercase Git SHA-1.", "Freeze raw source before computing the package digest.")
+    expected_revision = f"{manifest.get('package_ref')}@{manifest.get('version')}#{commit}" if isinstance(commit, str) else None
+    if manifest.get("revision_ref") != expected_revision:
+        add_error(report, "invalid_contract", "manifest.json#revision_ref", "Revision ref must bind package ref, version, and immutable source commit.", "Rebuild revision_ref from the pinned package identity.")
+    expected_source_ref = f"lode://source/site-skill/controlled-local/page-summary@1.0.0#{commit}" if isinstance(commit, str) else None
+    if source.get("repository") != "WebEnvoy/Lode" or source.get("package_path") != "sites/controlled-local/page-summary" or source.get("source_ref") != expected_source_ref:
+        add_error(report, "invalid_contract", "manifest.json#source", "Source metadata must identify this package at its immutable raw-source commit.", "Use the repository, package path, and source ref for the frozen source revision.")
+    site = manifest.get("site") if isinstance(manifest.get("site"), dict) else {}
+    if site.get("site_id") != "controlled-local" or site.get("supported_origins") != ["http://127.0.0.1:4173"]:
+        add_error(report, "invalid_contract", "manifest.json#site", "Site applicability must be limited to the fixed localhost origin.", "Do not permit fallback origins or third-party sites.")
+    compatibility = manifest.get("compatibility") if isinstance(manifest.get("compatibility"), dict) else {}
+    if compatibility.get("package_contract") != "lode.site-skill-package/v1" or compatibility.get("execution_contract") != "webenvoy.site-skill-execution/v1":
+        add_error(report, "invalid_contract", "manifest.json#compatibility", "Package and execution contract refs must match site-skill v1.", "Keep consumer contract compatibility explicit.")
+    expected_capabilities = [{"ref": CONTROLLED_SITE_SKILL_CAPABILITY_REF, "version": "1.0.0"}]
+    if compatibility.get("required_capabilities") != expected_capabilities:
+        add_error(report, "invalid_contract", "manifest.json#compatibility.required_capabilities", "Package capability compatibility must name the single pinned managed snapshot capability.", "Keep package-level capability compatibility aligned with the task declaration.")
+    actual_files = validate_site_skill_integrity(report, root, manifest)
+    lock = validate_site_skill_package_lock(report, root, manifest, actual_files)
+    assets = manifest.get("assets") if isinstance(manifest.get("assets"), list) else []
+    integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
+    integrity_paths = {record.get("path") for record in integrity.get("files", []) if isinstance(record, dict)}
+    for asset_index, asset in enumerate(assets):
+        if not isinstance(asset, dict):
+            add_error(report, "invalid_contract", f"manifest.json#assets[{asset_index}]", "Manifest asset locator must be an object.", "Declare a role, path, and typed ref.")
+            continue
+        asset_path = _site_skill_path(root, asset.get("path"), f"manifest.json#assets[{asset_index}].path")
+        if asset_path is None or asset.get("path") not in integrity_paths:
+            add_error(report, "invalid_contract", f"manifest.json#assets[{asset_index}].path", "Manifest asset must be a safe, integrity-pinned package-local file.", "Pin each manifest asset locator in integrity.files.")
+    asset_roles = [item.get("role") for item in assets if isinstance(item, dict)]
+    expected_asset_roles = {"capability_declaration", "input_schema", "output_schema", "post_check", "repair_guidance"}
+    if len(asset_roles) != len(expected_asset_roles) or set(asset_roles) != expected_asset_roles:
+        add_error(report, "invalid_contract", "manifest.json#assets", "Controlled package must declare each supported typed asset role exactly once.", "Keep one capability, two schemas, one post-check, and one recovery reference.")
+    capability_assets = [item for item in assets if isinstance(item, dict) and item.get("role") == "capability_declaration"]
+    if len(capability_assets) != 1:
+        add_error(report, "invalid_contract", "manifest.json#assets", "Controlled task must declare exactly one capability_declaration asset.", "Expose one digest-pinned capability declaration locator.")
+        capability_asset = None
+    else:
+        capability_asset = capability_assets[0]
+        if capability_asset.get("capability_ref") != CONTROLLED_SITE_SKILL_CAPABILITY_REF:
+            add_error(report, "invalid_contract", "manifest.json#assets.capability_declaration.capability_ref", "Capability ref must use the fixed controlled package identity.", "Keep the package bound to the managed page snapshot capability.")
+        if capability_asset.get("path") not in actual_files:
+            add_error(report, "invalid_contract", "manifest.json#assets.capability_declaration", "Capability declaration must be covered by integrity.files.", "Include its bytes in the package integrity pin.")
+    task_entries = manifest.get("tasks") if isinstance(manifest.get("tasks"), list) else []
+    if len(task_entries) != 1 or not isinstance(task_entries[0], dict):
+        add_error(report, "invalid_contract", "manifest.json#tasks", "Controlled package must declare exactly one task locator.", "Expose the single bounded page-summary task.")
+        task_refs: list[str] = []
+        task = None
+        task_path_value = None
+    else:
+        task_ref = task_entries[0].get("task_ref")
+        task_path_value = task_entries[0].get("path")
+        task_refs = [task_ref] if isinstance(task_ref, str) else []
+        task_path = _site_skill_path(root, task_path_value, "manifest.json#tasks.path")
+        if task_path is None or task_path_value not in actual_files:
+            add_error(report, "invalid_contract", "manifest.json#tasks.path", "Task declaration must resolve to an integrity-pinned package file.", "Pin the declared task JSON file.")
+            task = None
+        else:
+            task = _site_skill_json(report, root, task_path, "task_declaration", str(task_path_value))
+    if task is not None and isinstance(task, dict) and isinstance(task_path_value, str):
+        if task.get("task_ref") != task_entries[0].get("task_ref"):
+            add_error(report, "invalid_contract", "manifest.json#tasks[0].task_ref", "Task locator ref does not match the task declaration.", "Keep the manifest task locator and task_ref identical.")
+        validate_site_skill_task(report, root, task, task_path_value, manifest, capability_asset, lock)
+        validate_site_skill_schemas_and_check(report, root, task, manifest)
+    elif task is not None:
+        add_error(report, "invalid_contract", str(task_path_value or "manifest.json#tasks"), "Task declaration asset must be a JSON object.", "Declare the task contract as one JSON object.")
+    scan_forbidden_keys(report, manifest, "manifest.json")
+    for file_path in actual_files:
+        if file_path.endswith(".json"):
+            data = _site_skill_json(report, root, root / file_path, "pinned_asset", file_path)
+            if data is not None:
+                scan_forbidden_keys(report, data, file_path)
+    registry_path = registry_index or discover_local_registry(root)
+    if registry_path is not None:
+        repo_root = discover_repo_root(registry_path.parent) or registry_path.parent
+        index_path = rel(repo_root, registry_path)
+        index = _site_skill_json(report, repo_root, registry_path, "local_registry_index", index_path)
+        if isinstance(index, dict):
+            entries = index.get("entries")
+            matches = [(idx, entry) for idx, entry in enumerate(entries) if isinstance(entry, dict) and entry.get("package_ref") == manifest.get("package_ref")] if isinstance(entries, list) else []
+            if len(matches) != 1:
+                add_error(report, "registry_unavailable", index_path, "Local registry must contain exactly one entry for this site-skill package.", "Add one repo-local manifest locator for the package.")
+            else:
+                idx, entry = matches[0]
+                validate_site_skill_registry_entry(report, repo_root, root, index_path, idx, entry, manifest, task_refs)
+        elif index is not None:
+            add_error(report, "invalid_contract", index_path, "Local registry index must be a JSON object.", "Keep the local package index as one JSON object.")
+    return report
+
+
 def validate_package(root: Path, registry_index: Path | None = None) -> Report:
     report = Report(root)
     manifest_path = root / "manifest.json"
     manifest = load_json(report, root, manifest_path, "manifest")
     if not isinstance(manifest, dict):
         return report
+    if manifest.get("manifest_version") == SUPPORTED_SITE_SKILL_MANIFEST_VERSION:
+        return validate_site_skill_package(root, registry_index, report, manifest)
     refs = validate_manifest(report, root, manifest)
     assets = load_present_assets(report, root, refs)
 

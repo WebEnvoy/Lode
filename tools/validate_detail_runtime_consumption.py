@@ -72,7 +72,11 @@ def validate(data: dict[str, Any]) -> list[str]:
     entries = data["entries"]
     if {entry["operation_id"] for entry in entries} != OPERATIONS:
         errors.append("both detail operations must appear exactly once")
-    registry = {entry["operation_id"]: entry for entry in load(ROOT / "registry/local-packages.json")["entries"]}
+    registry = {
+        entry["operation_id"]: entry
+        for entry in load(ROOT / "registry/local-packages.json")["entries"]
+        if entry.get("package_type") == "site-capability"
+    }
     for entry in entries:
         operation = entry["operation_id"]
         current = registry.get(operation)
