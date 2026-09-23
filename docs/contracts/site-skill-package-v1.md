@@ -336,8 +336,14 @@ pre/post-check、resource requirement 和 invalidation marker 继续有效。sit
 
 包损坏、缺失、未准入或不可兼容只阻断该包和依赖它的任务，不能阻断 Profile 管理、
 通用浏览器能力或没有网站 SKILL 的任务。包更新只影响未来新 Run；进行中的 Run 继续
-使用 admission 时固定的 revision。local overlay、草稿修复和自动合并不在 v1 中，
-任何本地修改都保留原文件并要求显式修复或新 revision。
+使用 admission 时固定的 revision。站点资产创作指南只允许在独立创作位置保存草稿和
+完整、固定的本地 overlay revision；不提供 overlay 管理命令、自动合并或同步服务。
+任何直接修改受管物化文件的行为仍是 `managed_skill_local_modified`，须保留原文件，
+另存草稿并产生新 revision。创作、来源准入、安装与启用分别遵循
+[站点资产创作与导入 V1](site-asset-authoring-import-v1.md) 和 WebEnvoy #508
+Managed SKILL Library Lifecycle；该创作指南仅替代本段对本地草稿/overlay/草稿修复的
+整体排除，不改变 S2 包身份或 #508 的来源准入、disabled-by-default、CAS、
+local-modified、receipt/query/no-replay 语义。自动合并和复杂 fork 仍 deferred。
 
 ## 8. 验证、修复与结果边界
 
