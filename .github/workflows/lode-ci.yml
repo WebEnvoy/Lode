@@ -29,7 +29,7 @@ jobs:
       - name: Validate runtime boundary
         run: python3 tools/validate_runtime_boundary_contract.py
       - name: Run unit tests
-        run: python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations
+        run: python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations tools.test_site_skill_package
       - name: Check JSON, YAML, and Markdown files
         shell: bash
         run: |

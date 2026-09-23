@@ -2192,6 +2192,17 @@
         "status": "controlled_evidence",
         "recheck_condition": "formal_live_evidence_required"
       }
+    },
+    {
+      "package_ref": "lode://site-skill/controlled-local/page-summary",
+      "package_type": "site-skill",
+      "package_path": "sites/controlled-local/page-summary",
+      "manifest_path": "sites/controlled-local/page-summary/manifest.json",
+      "revision_ref": "lode://site-skill/controlled-local/page-summary@1.0.0#48ba83eff3d8321eae1699155e6be5a64b8efc5d",
+      "package_digest": "sha256:b5454650c8d143de8cd87392fd2a91f55225b0862224e681754ed1a41279acd8",
+      "task_refs": [
+        "read-page-summary"
+      ]
     }
   ],
   "non_goals": [

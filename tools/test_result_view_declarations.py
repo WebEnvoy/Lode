@@ -21,7 +21,11 @@ from tools.lode_validate_package import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_ROOTS = tuple(sorted(path.parent for path in (ROOT / "sites").glob("*/*/manifest.json")))
+PACKAGE_ROOTS = tuple(sorted(
+    path.parent
+    for path in (ROOT / "sites").glob("*/*/manifest.json")
+    if json.loads(path.read_text(encoding="utf-8")).get("package_type") == "site-capability"
+))
 PRESENT_ROOT = ROOT / "sites" / "xiaohongshu" / "search-notes"
 
 

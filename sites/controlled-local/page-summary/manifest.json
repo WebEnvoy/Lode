@@ -2,7 +2,7 @@
   "manifest_version": "lode.site-skill-package.manifest.v1",
   "package_type": "site-skill",
   "package_ref": "lode://site-skill/controlled-local/page-summary",
-  "revision_ref": "PENDING_REVISION_REF",
+  "revision_ref": "lode://site-skill/controlled-local/page-summary@1.0.0#48ba83eff3d8321eae1699155e6be5a64b8efc5d",
   "version": "1.0.0",
   "lifecycle": "experimental",
   "site": {
@@ -14,8 +14,8 @@
   "source": {
     "repository": "WebEnvoy/Lode",
     "package_path": "sites/controlled-local/page-summary",
-    "commit": "PENDING_SOURCE_COMMIT",
-    "source_ref": "PENDING_SOURCE_REF"
+    "commit": "48ba83eff3d8321eae1699155e6be5a64b8efc5d",
+    "source_ref": "lode://source/site-skill/controlled-local/page-summary@1.0.0#48ba83eff3d8321eae1699155e6be5a64b8efc5d"
   },
   "package_lock": {
     "path": "package-lock.json",
@@ -32,8 +32,8 @@
       {
         "path": "capabilities/managed-page-snapshot.json",
         "role": "capability_declaration",
-        "bytes": 333,
-        "sha256": "sha256:c9290c27652d7bd5a8ad9eb48617e6512f9f1943b4a624bb1537786b14fd192f"
+        "bytes": 416,
+        "sha256": "sha256:d099318946af50b6cb298cbaa60fef0ffdbcdcaa1c580807c0e4781db0beddd9"
       },
       {
         "path": "checks/post-check.json",
@@ -44,8 +44,8 @@
       {
         "path": "package-lock.json",
         "role": "package_lock",
-        "bytes": 395,
-        "sha256": "sha256:0792b3f5e2f55202e7370d6f2d1aafacf86bcb154c208251356a1cd9f96b9e5e"
+        "bytes": 552,
+        "sha256": "sha256:5510abcce20f6bffe9c28b6021d323e689d52011db39518af0e5ad9a71b186f9"
       },
       {
         "path": "references/recovery.md",
@@ -71,7 +71,8 @@
         "bytes": 1585,
         "sha256": "sha256:c4924c4ef236f9fe74c6e42e7a5028894262ed3da6cde4ea899b2b8cc4ec56bf"
       }
-    ]
+    ],
+    "package_digest": "sha256:b5454650c8d143de8cd87392fd2a91f55225b0862224e681754ed1a41279acd8"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",

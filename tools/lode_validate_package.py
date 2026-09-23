@@ -2066,6 +2066,8 @@ def validate_site_skill_package_lock(report: Report, root: Path, manifest: dict[
         add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Package lock must have one integrity file record with role package_lock.", "Declare the lock asset in integrity.files.")
     lock = _site_skill_json(report, root, lock_path, "package_lock", str(lock_locator.get("path")))
     if not isinstance(lock, dict):
+        if lock is not None:
+            add_error(report, "invalid_contract", str(lock_locator.get("path")), "Package lock asset must be a JSON object.", "Declare package lock fields as one JSON object.")
         return None
     require_keys(report, lock, ["schema_version", "lock_ref", "package_ref", "revision_ref", "version", "source_ref", "capability_ref"], str(lock_locator.get("path")))
     expected = {
@@ -2162,6 +2164,8 @@ def validate_site_skill_schemas_and_check(report: Report, root: Path, task: dict
             continue
         schema = _site_skill_json(report, root, schema_path, role, str(path_value))
         if not isinstance(schema, dict):
+            if schema is not None:
+                add_error(report, "invalid_contract", str(path_value), "Schema asset must be a JSON object.", "Declare the pinned JSON Schema as an object.")
             continue
         if schema.get("$id") != ref or schema.get("type") != "object" or schema.get("additionalProperties") is not False:
             add_error(report, "invalid_contract", str(path_value), "Schema identity and strict object boundary must match the task ref.", "Use the pinned schema ref and reject undeclared fields.")
@@ -2200,6 +2204,8 @@ def validate_site_skill_schemas_and_check(report: Report, root: Path, task: dict
         return
     check = _site_skill_json(report, root, check_path, "post_check", str(check_locator.get("path")))
     if not isinstance(check, dict):
+        if check is not None:
+            add_error(report, "invalid_contract", str(check_locator.get("path")), "Post-check asset must be a JSON object.", "Declare the post-check as one JSON object.")
         return
     require_keys(report, check, ["schema_version", "check_ref", "requirements"], str(check_locator.get("path")))
     if check.get("schema_version") != "lode.post-check.v0" or check.get("check_ref") != check_ref:
@@ -2230,16 +2236,13 @@ def validate_site_skill_schemas_and_check(report: Report, root: Path, task: dict
 
 def validate_site_skill_registry_entry(report: Report, repo_root: Path, package_root: Path, index_path: str, index: int, entry: dict[str, Any], manifest: dict[str, Any], task_refs: list[str]) -> None:
     entry_path = f"{index_path}#entries[{index}]"
-    required = ["package_ref", "package_type", "package_path", "manifest_path", "site_slug", "version", "revision_ref", "package_digest", "lifecycle", "task_refs", "updated_at", "resolution"]
+    required = ["package_ref", "package_type", "package_path", "manifest_path", "revision_ref", "package_digest", "task_refs"]
     require_keys(report, entry, required, entry_path)
     expected = {
         "package_ref": manifest.get("package_ref"),
         "package_type": "site-skill",
-        "site_slug": nested_get(manifest, ["site", "site_id"]),
-        "version": manifest.get("version"),
         "revision_ref": manifest.get("revision_ref"),
         "package_digest": nested_get(manifest, ["integrity", "package_digest"]),
-        "lifecycle": manifest.get("lifecycle"),
         "task_refs": task_refs,
     }
     for key, value in expected.items():
@@ -2251,9 +2254,6 @@ def validate_site_skill_registry_entry(report: Report, repo_root: Path, package_
         add_error(report, "invalid_contract", f"{entry_path}.package_path", "Registry package_path must resolve to the validated package root.", "Use the repository-relative package path.")
     if package_path and manifest_path != f"{package_path}/manifest.json":
         add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point at the package manifest.", "Use the package-relative manifest locator.")
-    resolution = entry.get("resolution") if isinstance(entry.get("resolution"), dict) else {}
-    if resolution.get("strategy") != "repo_relative_manifest":
-        add_error(report, "invalid_contract", f"{entry_path}.resolution", "Site-skill registry resolution must use repo_relative_manifest.", "Keep the local registry as a manifest locator only.")
 
 
 def validate_site_skill_package(root: Path, registry_index: Path | None, report: Report, manifest: dict[str, Any]) -> Report:
@@ -2334,6 +2334,8 @@ def validate_site_skill_package(root: Path, registry_index: Path | None, report:
             add_error(report, "invalid_contract", "manifest.json#tasks[0].task_ref", "Task locator ref does not match the task declaration.", "Keep the manifest task locator and task_ref identical.")
         validate_site_skill_task(report, root, task, task_path_value, manifest, capability_asset, lock)
         validate_site_skill_schemas_and_check(report, root, task, manifest)
+    elif task is not None:
+        add_error(report, "invalid_contract", str(task_path_value or "manifest.json#tasks"), "Task declaration asset must be a JSON object.", "Declare the task contract as one JSON object.")
     scan_forbidden_keys(report, manifest, "manifest.json")
     for file_path in actual_files:
         if file_path.endswith(".json"):
@@ -2353,6 +2355,8 @@ def validate_site_skill_package(root: Path, registry_index: Path | None, report:
             else:
                 idx, entry = matches[0]
                 validate_site_skill_registry_entry(report, repo_root, root, index_path, idx, entry, manifest, task_refs)
+        elif index is not None:
+            add_error(report, "invalid_contract", index_path, "Local registry index must be a JSON object.", "Keep the local package index as one JSON object.")
     return report
 
 

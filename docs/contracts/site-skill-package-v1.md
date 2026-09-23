@@ -90,11 +90,12 @@ receipt、ExternalOutcome 或现场恢复有关的语义由配套执行合同及
 
 ### 3.1 Script 执行位置的最低合同
 
-Lode 不提供 runner，也不定义 OS policy。只有实际执行包内 `script_ref` 的 task 才需要
-受管 worker；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/eb173b3f564f5427875a78b9803be8f945057c8e/docs/specs/site-skill-execution-v1.md)
+Lode 不提供 runner，也不定义 OS policy。可执行包只声明 WebEnvoy 受管执行合同和所需
+broker capability；[Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/eb173b3f564f5427875a78b9803be8f945057c8e/docs/specs/site-skill-execution-v1.md)
 拥有下列事实的唯一规范：script 在 Agent-side managed worker 中运行，不能在 Core/Harbor
-进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按其支持的
-信任模式约束。Lode 不复制这套 OS 身份、文件或网络规则，也不把 API Grant 说成 OS 权限。
+进程内加载或执行；worker 的 Agent OS identity 与 owner identity 由 S1/宿主按真实 ACL
+隔离，owner control socket 不对 Agent identity 开放。Lode 不复制这套 OS 身份、文件或
+网络规则，也不把 API Grant 说成 OS 权限。
 
 仅调用正式 capability、并由 Core 解释既有声明式检查的 task 不执行包内代码，不创建
 worker，也不依赖 worker identity 或 owner socket ACL。它仍须通过 package/lifecycle、
@@ -107,9 +108,8 @@ post-check 不改变其代码执行属性。
 CDP/Juggler、eval、shell 和 credential 入口不属于该 ABI；它通过 broker 取得已校验的
 输入、fresh observation/target、正式 Runtime capability 和有界输出。这里的 ABI/代码准入
 是 trusted code 合同，不是面向任意不可信代码的通用 sandbox；准入不会扩大 worker 的
-实际 OS 权限。script task 在 worker identity 或 owner socket ACL 无法按 S1/宿主支持的
-信任模式证明时，WebEnvoy 必须拒绝 dispatch；包仍可按本文件的 knowledge-only 资产路径
-被读取，不能将此失败报告为可执行成功。
+实际 OS 权限。OS 失败、身份不明或 owner socket ACL 不成立时，WebEnvoy 必须拒绝 task
+dispatch；包仍可按本文件的 knowledge-only 资产路径被读取，不能将此失败报告为可执行成功。
 
 ## 4. Manifest、身份与完整性
 
