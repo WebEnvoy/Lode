@@ -545,6 +545,13 @@ def render_markdown(report: dict[str, Any]) -> str:
     for sample in report["positive_candidates"]:
         registration = sample["opencli_registration"]
         request = sample["request_candidate"]
+        user_agent = request["user_agent"]
+        if user_agent is None and request.get("effective_user_agent"):
+            user_agent_text = (
+                f"未由 adapter 显式设置；Node 24 `fetch` 有效默认 `{request['effective_user_agent']}`"
+            )
+        else:
+            user_agent_text = user_agent or "上游未设置"
         file_labels = [f"`{item['path']}` (`{item['sha256']}`)" for item in sample["files"]]
         import_labels = [f"`{module}`" for modules in registration["source_imports_by_file"].values() for module in modules]
         lines.extend([
@@ -555,7 +562,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"- 源文件：{', '.join(file_labels)}。",
             f"- 源 imports：{', '.join(import_labels)}。",
             f"- parser：`{sample['parser']}`；响应候选 `{sample['response_kind']}`；分页：{sample['pagination_semantics']}",
-            f"- 请求：`{request['method']} {request['origin']}{request['path_template']}`；query `{json.dumps(request['query'], ensure_ascii=False)}`；Accept `{request['accept'] or '上游未设置'}`；User-Agent `{request['user_agent'] or '上游未设置'}`。",
+            f"- 请求：`{request['method']} {request['origin']}{request['path_template']}`；query `{json.dumps(request['query'], ensure_ascii=False)}`；Accept `{request['accept'] or '上游未设置'}`；User-Agent `{user_agent_text}`。",
             "- 参数来自静态注册及参数校验源码：",
             "",
             "  | 参数 | 类型 | 必需/默认值/范围 | 证据 |",

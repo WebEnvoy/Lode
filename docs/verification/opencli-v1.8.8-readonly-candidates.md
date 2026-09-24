@@ -55,7 +55,7 @@ This second positive sample exercises public JSON parsing and user-controlled pa
 - 源文件：`clis/devto/latest.js` (`6b7290772a6f0c22bcbfc3b6da1f331c42d0c58bbb636ab9e1840b274f527302`)。
 - 源 imports：`@jackwener/opencli/registry`, `@jackwener/opencli/errors`。
 - parser：`inline JSON mapping in cli.func`；响应候选 `application/json`；分页：One requested page; `rank` is offset by `(page - 1) * limit`; no next-page or total-count signal is consumed.
-- 请求：`GET https://dev.to/api/articles/latest`；query `{"per_page": "limit (1..100)", "page": "page (1..1000)"}`；Accept `application/json`；User-Agent `上游未设置`。
+- 请求：`GET https://dev.to/api/articles/latest`；query `{"per_page": "limit (1..100)", "page": "page (1..1000)"}`；Accept `application/json`；User-Agent `未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node``。
 - 参数来自静态注册及参数校验源码：
 
   | 参数 | 类型 | 必需/默认值/范围 | 证据 |
@@ -89,7 +89,7 @@ Selected before shared implementation to test a third site and an Atom/XML parse
 - 源文件：`clis/arxiv/recent.js` (`59e2b9efb159ee7277ba284beaaae4119b8cd931967ad328499ced6bb9deafaa`), `clis/arxiv/utils.js` (`08518cd096e6c127bd1cebe83e6d1d6551bc3de2d1781bd1b7d9249f31e74708`)。
 - 源 imports：`@jackwener/opencli/registry`, `@jackwener/opencli/errors`, `./utils.js`, `@jackwener/opencli/errors`。
 - parser：`parseEntries in arxiv/utils.js`；响应候选 `application/atom+xml`；分页：One query with max_results and descending submitted date; no start offset or continuation token is consumed.
-- 请求：`GET https://export.arxiv.org/api/query`；query `{"search_query": "cat:{validated-category}", "max_results": "limit (1..50)", "sortBy": "submittedDate", "sortOrder": "descending"}`；Accept `上游未设置`；User-Agent `上游未设置`。
+- 请求：`GET https://export.arxiv.org/api/query`；query `{"search_query": "cat:{validated-category}", "max_results": "limit (1..50)", "sortBy": "submittedDate", "sortOrder": "descending"}`；Accept `上游未设置`；User-Agent `未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node``。
 - 参数来自静态注册及参数校验源码：
 
   | 参数 | 类型 | 必需/默认值/范围 | 证据 |
@@ -112,7 +112,7 @@ Selected before shared implementation to test a third site and an Atom/XML parse
   - The candidate deterministically bundles the two pinned source files and preserves the helper/parser bodies; external errors-module top-level behavior remains unknown, and no general importer or arbitrary-module execution is claimed.
   - The regex parser can return earlier complete entries from truncated XML and does not report truncation; no completeness claim is safe without broker/body completeness evidence.
   - Malformed XML without entries and a valid empty feed both become EmptyResultError at the adapter boundary.
-  - The source does not set Accept or User-Agent; a fixed WebEnvoy transport header would be a disclosed wrapper change.
+  - The adapter does not explicitly set Accept or User-Agent; Node 24 built-in fetch supplies the effective User-Agent `node`, which the managed wrapper now pins explicitly. No additional Accept header is added.
   - `Strategy.PUBLIC` and `access: read` are declarations, not authorization or network-safety evidence.
 
 ## 固定拒绝样本

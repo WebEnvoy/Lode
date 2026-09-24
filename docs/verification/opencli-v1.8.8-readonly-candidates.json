@@ -450,6 +450,8 @@
         },
         "accept": "application/json",
         "user_agent": null,
+        "effective_user_agent": "node",
+        "effective_user_agent_basis": "Node 24 built-in fetch default; separately confirmed with a local loopback request check and the same-runner public diagnostic.",
         "evidence": [
           "https://dev.to/api/articles/latest?per_page=${limit}&page=${page}",
           "headers: { accept: 'application/json' }"
@@ -801,6 +803,8 @@
         },
         "accept": null,
         "user_agent": null,
+        "effective_user_agent": "node",
+        "effective_user_agent_basis": "Node 24 built-in fetch default; separately confirmed with a local loopback request check.",
         "evidence": [
           "export const ARXIV_BASE = 'https://export.arxiv.org/api/query'",
           "${ARXIV_BASE}?${params}"
@@ -988,7 +992,7 @@
         "The candidate deterministically bundles the two pinned source files and preserves the helper/parser bodies; external errors-module top-level behavior remains unknown, and no general importer or arbitrary-module execution is claimed.",
         "The regex parser can return earlier complete entries from truncated XML and does not report truncation; no completeness claim is safe without broker/body completeness evidence.",
         "Malformed XML without entries and a valid empty feed both become EmptyResultError at the adapter boundary.",
-        "The source does not set Accept or User-Agent; a fixed WebEnvoy transport header would be a disclosed wrapper change.",
+        "The adapter does not explicitly set Accept or User-Agent; Node 24 built-in fetch supplies the effective User-Agent `node`, which the managed wrapper now pins explicitly. No additional Accept header is added.",
         "`Strategy.PUBLIC` and `access: read` are declarations, not authorization or network-safety evidence."
       ],
       "source_reuse": {

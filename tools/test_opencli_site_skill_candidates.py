@@ -135,6 +135,12 @@ class ProposedPackageTests(unittest.TestCase):
                 self.assertEqual(task["network_read"]["origin"], sample["origin"])
                 self.assertEqual(task["network_read"]["pathname"], sample["path"])
                 self.assertEqual(task["network_read"]["query_keys"], sample["query_keys"])
+                self.assertEqual(task["network_read"]["headers"], generator.policy(sample)["headers"])
+                if sample["user_agent_source"] == "node_fetch_default":
+                    self.assertIsNone(sample["user_agent"], "the pinned OpenCLI call must remain free of an explicit User-Agent")
+                    self.assertEqual(task["network_read"]["headers"]["user-agent"], "node")
+                    self.assertEqual(candidate["request_candidate"]["effective_user_agent"], "node")
+                    self.assertIn("Node 24 built-in fetch default", candidate["request_candidate"]["effective_user_agent_basis"])
                 self.assertEqual(task["network_read"]["max_redirects"], 2)
                 self.assertEqual(task["network_read"]["max_response_bytes"], sample["max_response_bytes"])
                 self.assertEqual(task["network_read"]["timeout_ms"], sample["timeout_ms"])

@@ -14,7 +14,7 @@
   "entrypoint": {
     "script_ref": "lode://script/site-skill/devto/opencli-latest-articles/read-latest-articles-page@0.1.0",
     "script_version": "0.1.0",
-    "script_sha256": "sha256:66e259c0ca6e33607b1884fccd40782d207b7d2a92c7788d3d4223116a31b25d",
+    "script_sha256": "sha256:f75defbb7b42171e39e1f90f17976c9ffda6dcff449ca173132b1bdaf0bb4380",
     "runtime_kind": "webenvoy.site-skill-script-abi/v1",
     "broker": "webenvoy.site-skill-broker/v1.1",
     "capability_refs": [
@@ -31,7 +31,8 @@
       "page"
     ],
     "headers": {
-      "accept": "application/json"
+      "accept": "application/json",
+      "user-agent": "node"
     },
     "content_types": [
       "application/json"

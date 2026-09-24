@@ -1,6 +1,6 @@
 // Fixed compatibility shim for OpenCLI 1.8.8 PUBLIC read adapters.
 // Generated from reviewed source text; all reads use this run's WebEnvoy broker.
-const __opencliSpec = Object.freeze({"result_kind":"opencli_github_trending_repositories","mode":"top_n","media_type":"text/html","headers":{"accept":"text/html","user-agent":"Mozilla/5.0 (compatible; opencli/github-trending)"}});
+const __opencliSpec = Object.freeze({"result_kind":"opencli_github_trending_repositories","mode":"top_n","media_type":"text/html","headers":{"accept":"text/html","user-agent":"Mozilla/5.0 (compatible; opencli/github-trending)"},"fetch_default_headers":{}});
 const __completenessProfile = Object.freeze({"kind":"html-requested-count","default_limit":25,"open_pattern":"<article\\b[^>]*class=\"[^\"]*\\bBox-row\\b[^\"]*\"[^>]*>","close_pattern":"</article>","required_non_empty_fields":["repo","url"],"safe_integer_fields":["stars","forks","starsSince"],"url_field":"url","url_prefix":"https://github.com/"});
 let __opencliRegistration;
 let __opencliBroker;
@@ -116,6 +116,10 @@ async function __brokerFetch(value, options = {}) {
   for (const [rawName, headerValue] of Object.entries(options.headers ?? {})) {
     const name = rawName.toLowerCase();
     if (Object.hasOwn(headers, name) || !Object.hasOwn(__opencliSpec.headers, name) || typeof headerValue !== 'string' || headerValue !== __opencliSpec.headers[name]) throw new CommandExecutionError('adapter request header differs from its pinned policy');
+    headers[name] = headerValue;
+  }
+  for (const [name, headerValue] of Object.entries(__opencliSpec.fetch_default_headers)) {
+    if (Object.hasOwn(headers, name) && headers[name] !== headerValue) throw new CommandExecutionError('adapter request header differs from its pinned fetch default');
     headers[name] = headerValue;
   }
   if (Object.keys(headers).length !== Object.keys(__opencliSpec.headers).length) throw new CommandExecutionError('adapter omitted a pinned request header');

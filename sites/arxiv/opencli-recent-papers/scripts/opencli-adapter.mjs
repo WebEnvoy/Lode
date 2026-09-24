@@ -1,6 +1,6 @@
 // Fixed compatibility shim for OpenCLI 1.8.8 PUBLIC read adapters.
 // Generated from reviewed source text; all reads use this run's WebEnvoy broker.
-const __opencliSpec = Object.freeze({"result_kind":"opencli_arxiv_recent_papers","mode":"max_results","media_type":"application/atom+xml","headers":{}});
+const __opencliSpec = Object.freeze({"result_kind":"opencli_arxiv_recent_papers","mode":"max_results","media_type":"application/atom+xml","headers":{"user-agent":"node"},"fetch_default_headers":{"user-agent":"node"}});
 const __completenessProfile = Object.freeze({"kind":"atom-feed-count-and-total","default_limit":10,"entry_open_pattern":"<entry\\b[^>]*>","entry_close_pattern":"</entry>","total_pattern":"<opensearch:totalResults\\b[^>]*>\\s*(\\d+)\\s*</opensearch:totalResults>","feed_open_pattern":"<feed\\b","feed_close_pattern":"</feed>\\s*$","required_non_empty_fields":["id","title","url"],"url_template":"https://arxiv.org/abs/{id}"});
 let __opencliRegistration;
 let __opencliBroker;
@@ -83,6 +83,10 @@ async function __brokerFetch(value, options = {}) {
   for (const [rawName, headerValue] of Object.entries(options.headers ?? {})) {
     const name = rawName.toLowerCase();
     if (Object.hasOwn(headers, name) || !Object.hasOwn(__opencliSpec.headers, name) || typeof headerValue !== 'string' || headerValue !== __opencliSpec.headers[name]) throw new CommandExecutionError('adapter request header differs from its pinned policy');
+    headers[name] = headerValue;
+  }
+  for (const [name, headerValue] of Object.entries(__opencliSpec.fetch_default_headers)) {
+    if (Object.hasOwn(headers, name) && headers[name] !== headerValue) throw new CommandExecutionError('adapter request header differs from its pinned fetch default');
     headers[name] = headerValue;
   }
   if (Object.keys(headers).length !== Object.keys(__opencliSpec.headers).length) throw new CommandExecutionError('adapter omitted a pinned request header');

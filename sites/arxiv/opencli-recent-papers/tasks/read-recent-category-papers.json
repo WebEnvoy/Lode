@@ -14,7 +14,7 @@
   "entrypoint": {
     "script_ref": "lode://script/site-skill/arxiv/opencli-recent-papers/read-recent-category-papers@0.1.0",
     "script_version": "0.1.0",
-    "script_sha256": "sha256:e212bc3fbe74301d55506ed81fb8e603bc4e1fa250a435a9df363bc1b5ba0884",
+    "script_sha256": "sha256:1b92606157a9e96de9063006a5b82d602d9a630bcdcf765fe10da6668c00f026",
     "runtime_kind": "webenvoy.site-skill-script-abi/v1",
     "broker": "webenvoy.site-skill-broker/v1.1",
     "capability_refs": [
@@ -32,7 +32,9 @@
       "sortBy",
       "sortOrder"
     ],
-    "headers": {},
+    "headers": {
+      "user-agent": "node"
+    },
     "content_types": [
       "application/atom+xml"
     ],

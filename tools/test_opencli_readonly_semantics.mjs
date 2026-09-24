@@ -214,7 +214,8 @@ async function testDevtoLatest() {
   assert.equal(request.pathname, '/api/articles/latest');
   assert.equal(request.searchParams.get('per_page'), '20');
   assert.equal(request.searchParams.get('page'), '2');
-  assert.equal(network.calls[0].options.headers.accept, 'application/json');
+  assert.deepEqual(network.calls[0].options, { headers: { accept: 'application/json' } },
+    'the pinned adapter explicitly passes only Accept; Node fetch supplies its User-Agent default');
 
   const completeBody = await textFixture('devto-latest-complete.json');
   const completeNetwork = fixtureFetch('https://dev.to', '/api/articles/latest', completeBody, { json: true });
@@ -261,6 +262,7 @@ async function testArxivRecent() {
   assert.equal(request.searchParams.get('max_results'), '10');
   assert.equal(request.searchParams.get('sortBy'), 'submittedDate');
   assert.equal(request.searchParams.get('sortOrder'), 'descending');
+  assert.deepEqual(network.calls[0].options, {}, 'the pinned adapter leaves request headers to Node fetch defaults');
 
   const truncatedNetwork = fixtureFetch('https://export.arxiv.org', '/api/query', await textFixture('arxiv-truncated.atom'));
   const truncated = await loadAdapter('third_party/opencli-1.8.8/clis/arxiv/recent.js', truncatedNetwork.fetch);
@@ -344,7 +346,7 @@ async function testPackagedAdapterCandidates(sourceSemantics) {
   assert.equal(devtoUrl.pathname, '/api/articles/latest');
   assert.equal(devtoUrl.searchParams.get('per_page'), '20');
   assert.equal(devtoUrl.searchParams.get('page'), '2');
-  assert.deepEqual(devto.calls[0].headers, { accept: 'application/json' });
+  assert.deepEqual(devto.calls[0].headers, { accept: 'application/json', 'user-agent': 'node' });
   assertCandidateEvidence(devto.output, 'core:public-http:devto:fixture');
 
   const devtoEmpty = await executePackagedAdapter('devto', {}, {
@@ -393,7 +395,7 @@ async function testPackagedAdapterCandidates(sourceSemantics) {
   assert.equal(arxivUrl.searchParams.get('max_results'), '10');
   assert.equal(arxivUrl.searchParams.get('sortBy'), 'submittedDate');
   assert.equal(arxivUrl.searchParams.get('sortOrder'), 'descending');
-  assert.deepEqual(arxiv.calls[0].headers, {});
+  assert.deepEqual(arxiv.calls[0].headers, { 'user-agent': 'node' });
   assertCandidateEvidence(arxiv.output, 'core:public-http:arxiv:fixture');
 
   const arxivEmpty = await executePackagedAdapter('arxiv', { category: 'cs.CL', limit: 10 }, {

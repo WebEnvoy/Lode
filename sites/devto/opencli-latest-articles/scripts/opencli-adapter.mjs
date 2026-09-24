@@ -1,6 +1,6 @@
 // Fixed compatibility shim for OpenCLI 1.8.8 PUBLIC read adapters.
 // Generated from reviewed source text; all reads use this run's WebEnvoy broker.
-const __opencliSpec = Object.freeze({"result_kind":"opencli_devto_latest_articles","mode":"requested_page","media_type":"application/json","headers":{"accept":"application/json"}});
+const __opencliSpec = Object.freeze({"result_kind":"opencli_devto_latest_articles","mode":"requested_page","media_type":"application/json","headers":{"accept":"application/json","user-agent":"node"},"fetch_default_headers":{"user-agent":"node"}});
 const __completenessProfile = Object.freeze({"kind":"json-page-required-fields","required_non_empty_fields":["id","title","url"],"url_prefix":"https://dev.to/","finite_nullable_number_fields":["reactions","comments"]});
 let __opencliRegistration;
 let __opencliBroker;
@@ -83,6 +83,10 @@ async function __brokerFetch(value, options = {}) {
   for (const [rawName, headerValue] of Object.entries(options.headers ?? {})) {
     const name = rawName.toLowerCase();
     if (Object.hasOwn(headers, name) || !Object.hasOwn(__opencliSpec.headers, name) || typeof headerValue !== 'string' || headerValue !== __opencliSpec.headers[name]) throw new CommandExecutionError('adapter request header differs from its pinned policy');
+    headers[name] = headerValue;
+  }
+  for (const [name, headerValue] of Object.entries(__opencliSpec.fetch_default_headers)) {
+    if (Object.hasOwn(headers, name) && headers[name] !== headerValue) throw new CommandExecutionError('adapter request header differs from its pinned fetch default');
     headers[name] = headerValue;
   }
   if (Object.keys(headers).length !== Object.keys(__opencliSpec.headers).length) throw new CommandExecutionError('adapter omitted a pinned request header');

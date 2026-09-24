@@ -2,7 +2,7 @@
   "manifest_version": "lode.site-skill-package.manifest.v1",
   "package_type": "site-skill",
   "package_ref": "lode://site-skill/devto/opencli-latest-articles",
-  "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#1c6aa0c6175ff288744318f38f8db26b95e2035a",
+  "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#997eef09a7116ec70216383d36e4b5be802e9126",
   "version": "0.1.0",
   "lifecycle": "proposed",
   "site": {
@@ -14,8 +14,8 @@
   "source": {
     "repository": "WebEnvoy/Lode",
     "package_path": "sites/devto/opencli-latest-articles",
-    "commit": "1c6aa0c6175ff288744318f38f8db26b95e2035a",
-    "source_ref": "lode://source/site-skill/devto/opencli-latest-articles@0.1.0#1c6aa0c6175ff288744318f38f8db26b95e2035a"
+    "commit": "997eef09a7116ec70216383d36e4b5be802e9126",
+    "source_ref": "lode://source/site-skill/devto/opencli-latest-articles@0.1.0#997eef09a7116ec70216383d36e4b5be802e9126"
   },
   "package_lock": {
     "path": "package-lock.json",
@@ -33,7 +33,7 @@
         "path": "capabilities/public-read.json",
         "role": "capability_declaration",
         "bytes": 411,
-        "sha256": "sha256:26738914955097d22e2ca571c85bf72b5cef5edae0ae6249ee575a14de1b04de"
+        "sha256": "sha256:21602aa9fc5e2c9a0e23f16e258ed0f9add25397e6c7c3a2271b7e6df6ceeaae"
       },
       {
         "path": "checks/post-check.json",
@@ -51,7 +51,7 @@
         "path": "package-lock.json",
         "role": "package_lock",
         "bytes": 543,
-        "sha256": "sha256:fb1a301e93e450f66f5955e28350076524ea1a5b415f8c9ded1b8ac730acc63a"
+        "sha256": "sha256:68932d8e6a70ad4177ae766e41af2dfb83b9433e815dfc6ded49036e127e3e8a"
       },
       {
         "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
@@ -62,8 +62,8 @@
       {
         "path": "references/opencli-source-mapping.md",
         "role": "source_mapping",
-        "bytes": 4212,
-        "sha256": "sha256:31fbc6f6ab4c0040c62588520981889352e9693a511b5f08bdb0d93c21f0e71c"
+        "bytes": 4528,
+        "sha256": "sha256:9df7e339eaf03bad388662fa4bb0b6d2ecc5d77c31ced5212f802504c37630aa"
       },
       {
         "path": "references/recovery.md",
@@ -86,17 +86,17 @@
       {
         "path": "scripts/opencli-adapter.mjs",
         "role": "script_source",
-        "bytes": 12167,
-        "sha256": "sha256:66e259c0ca6e33607b1884fccd40782d207b7d2a92c7788d3d4223116a31b25d"
+        "bytes": 12529,
+        "sha256": "sha256:f75defbb7b42171e39e1f90f17976c9ffda6dcff449ca173132b1bdaf0bb4380"
       },
       {
         "path": "tasks/read-latest-articles-page.json",
         "role": "task_declaration",
-        "bytes": 2727,
-        "sha256": "sha256:f21945460754fa14b9d43b986a173938bfc86706f991f6229988376b8960f8ea"
+        "bytes": 2755,
+        "sha256": "sha256:e269d1ed450b042562a43c6dd981e14b2dff06bd31c32b4f9d320c00f62c54fb"
       }
     ],
-    "package_digest": "sha256:1edbb5bc5c59b1aa8f9014e5a33bab25b68571a2b35bf02d072818fabbb8473c"
+    "package_digest": "sha256:60d13ec59a6979d3152c5e2026e4d2ce5054b1af663edff97a71dd949cb15562"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -139,9 +139,9 @@
     {
       "script_ref": "lode://script/site-skill/devto/opencli-latest-articles/read-latest-articles-page@0.1.0",
       "path": "scripts/opencli-adapter.mjs",
-      "source_commit": "1c6aa0c6175ff288744318f38f8db26b95e2035a",
+      "source_commit": "997eef09a7116ec70216383d36e4b5be802e9126",
       "version": "0.1.0",
-      "sha256": "sha256:66e259c0ca6e33607b1884fccd40782d207b7d2a92c7788d3d4223116a31b25d",
+      "sha256": "sha256:f75defbb7b42171e39e1f90f17976c9ffda6dcff449ca173132b1bdaf0bb4380",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",
       "entrypoint": "run",
       "input_schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/input@0.1.0",

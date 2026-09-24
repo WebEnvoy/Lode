@@ -63,6 +63,8 @@ SAMPLES: list[dict[str, Any]] = [
         "source_functions": ["parseTrendingHtml"],
         "accept": "text/html",
         "user_agent": "Mozilla/5.0 (compatible; opencli/github-trending)",
+        "effective_user_agent": "Mozilla/5.0 (compatible; opencli/github-trending)",
+        "user_agent_source": "adapter_explicit",
         "path": "/trending",
         "allow_one_path_segment": True,
         "query_keys": ["since"],
@@ -89,6 +91,8 @@ SAMPLES: list[dict[str, Any]] = [
         "source_functions": [],
         "accept": "application/json",
         "user_agent": None,
+        "effective_user_agent": "node",
+        "user_agent_source": "node_fetch_default",
         "path": "/api/articles/latest",
         "allow_one_path_segment": False,
         "query_keys": ["per_page", "page"],
@@ -118,6 +122,8 @@ SAMPLES: list[dict[str, Any]] = [
         "source_functions": ["parseEntries"],
         "accept": None,
         "user_agent": None,
+        "effective_user_agent": "node",
+        "user_agent_source": "node_fetch_default",
         "path": "/api/query",
         "allow_one_path_segment": False,
         "query_keys": ["search_query", "max_results", "sortBy", "sortOrder"],
@@ -295,8 +301,8 @@ def policy(sample: dict[str, Any]) -> dict[str, Any]:
     headers: dict[str, str] = {}
     if sample["accept"] is not None:
         headers["accept"] = sample["accept"]
-    if sample["user_agent"] is not None:
-        headers["user-agent"] = sample["user_agent"]
+    if sample["effective_user_agent"] is not None:
+        headers["user-agent"] = sample["effective_user_agent"]
     return {
         "transport": "program_anonymous_https",
         "origin": sample["origin"],
@@ -317,6 +323,10 @@ def network_wrapper(sample: dict[str, Any]) -> str:
         "mode": {"github": "top_n", "devto": "requested_page", "arxiv": "max_results"}[sample["site"]],
         "media_type": sample["content_types"][0],
         "headers": policy(sample)["headers"],
+        "fetch_default_headers": (
+            {"user-agent": sample["effective_user_agent"]}
+            if sample["user_agent_source"] == "node_fetch_default" else {}
+        ),
     }
     completeness_profile = sample["completeness_profile"]
     url_shim = ""
@@ -448,6 +458,10 @@ async function __brokerFetch(value, options = {{}}) {{
     if (Object.hasOwn(headers, name) || !Object.hasOwn(__opencliSpec.headers, name) || typeof headerValue !== 'string' || headerValue !== __opencliSpec.headers[name]) throw new CommandExecutionError('adapter request header differs from its pinned policy');
     headers[name] = headerValue;
   }}
+  for (const [name, headerValue] of Object.entries(__opencliSpec.fetch_default_headers)) {{
+    if (Object.hasOwn(headers, name) && headers[name] !== headerValue) throw new CommandExecutionError('adapter request header differs from its pinned fetch default');
+    headers[name] = headerValue;
+  }}
   if (Object.keys(headers).length !== Object.keys(__opencliSpec.headers).length) throw new CommandExecutionError('adapter omitted a pinned request header');
   __opencliReadCount += 1;
   const response = await __opencliBroker.network.read({{ url: String(value), method: 'GET', headers }});
@@ -563,7 +577,11 @@ def markdown_mapping(sample: dict[str, Any], report: dict[str, Any], policy_valu
     )
     parser_text = ", ".join(f"`{item}`" for item in sample["source_functions"]) or "adapter 内联记录映射"
     accept_text = sample["accept"] if sample["accept"] is not None else "未声明；兼容层不添加 Accept"
-    ua_text = sample["user_agent"] if sample["user_agent"] is not None else "未声明；兼容层不添加 User-Agent"
+    if sample["user_agent_source"] == "node_fetch_default":
+        ua_text = "上游未显式设置；Node 24 `fetch` 默认 `node`，兼容层将这个有效默认值固定为 broker 请求头"
+    else:
+        ua_text = f"上游显式设置 `{sample['user_agent']}`"
+    explicit_headers = {key: value for key, value in (("accept", sample["accept"]), ("user-agent", sample["user_agent"])) if value is not None}
     url_compat_text = (
         "- GitHub 源调用 `new URL()`。受管 VM 不注入 Node `URL` 或其他宿主全局，因此候选在包内提供只支持已固定 origin/path、至多一个声明路径段和声明 query key 的小型 URL 字符串接口；它不提供网络请求、DNS 或宿主运行时能力。\n"
         if requires_url_compat(sample) else ""
@@ -582,7 +600,7 @@ def markdown_mapping(sample: dict[str, Any], report: dict[str, Any], policy_valu
 ## 保留与包装
 
 - 保留 parser/业务映射：{parser_text}；输入参数校验和 URL/query 构造保留上游逻辑。
-- 入口包装只替换 OpenCLI 注册/error import，并将原始 `fetch` 名称解析到固定兼容 shim；arXiv 两个审查源以确定性文本 bundle 合并，移除静态 ESM import/export 标记，不改变工具/解析函数体。
+- 入口包装只替换 OpenCLI 注册/error import，并将原始 `fetch` 名称解析到固定兼容 shim；shim 校验上游显式请求头，并只补入 Node 24 `fetch` 的固定默认 `User-Agent: node`（适用于未显式指定该头的样本）；arXiv 两个审查源以确定性文本 bundle 合并，移除静态 ESM import/export 标记，不改变工具/解析函数体。
 {url_compat_text}- 兼容 shim 限制每个 Run 一次匿名 GET，将上游 Response 使用到的 `ok/status/text()/json()` 映射到 `network.read`；禁止未声明 method/body/credentials/redirect 参数。响应只在 worker 内存使用，结果只写 normalized records 与 opaque ref。
 - 不使用浏览器 snapshot/DOM、原生网络、浏览器 Cookie/登录态、代理或任何凭据。HTTP 2xx 不等于业务成功。
 
@@ -592,7 +610,7 @@ def markdown_mapping(sample: dict[str, Any], report: dict[str, Any], policy_valu
 {json.dumps(policy_value, ensure_ascii=False, indent=2)}
 ```
 
-请求头：Accept=`{accept_text}`；User-Agent=`{ua_text}`。跳转最多 2 次同策略内；响应正文体积限制为 `{policy_value['max_response_bytes']}` 字节，超时 `{policy_value['timeout_ms']}` ms。该声明待 WebEnvoy #594 合同/实现接受后才可能执行。
+上游显式请求头：`{json.dumps(explicit_headers, ensure_ascii=False) or '无'}`。有效 broker 策略：Accept=`{accept_text}`；User-Agent=`{ua_text}`。跳转最多 2 次同策略内；响应正文体积限制为 `{policy_value['max_response_bytes']}` 字节，超时 `{policy_value['timeout_ms']}` ms。该声明待 WebEnvoy #594 合同/实现接受后才可能执行。
 
 ## 输出语义与限制
 

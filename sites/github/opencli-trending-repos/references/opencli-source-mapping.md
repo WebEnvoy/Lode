@@ -12,7 +12,7 @@
 ## 保留与包装
 
 - 保留 parser/业务映射：`parseTrendingHtml`；输入参数校验和 URL/query 构造保留上游逻辑。
-- 入口包装只替换 OpenCLI 注册/error import，并将原始 `fetch` 名称解析到固定兼容 shim；arXiv 两个审查源以确定性文本 bundle 合并，移除静态 ESM import/export 标记，不改变工具/解析函数体。
+- 入口包装只替换 OpenCLI 注册/error import，并将原始 `fetch` 名称解析到固定兼容 shim；shim 校验上游显式请求头，并只补入 Node 24 `fetch` 的固定默认 `User-Agent: node`（适用于未显式指定该头的样本）；arXiv 两个审查源以确定性文本 bundle 合并，移除静态 ESM import/export 标记，不改变工具/解析函数体。
 - GitHub 源调用 `new URL()`。受管 VM 不注入 Node `URL` 或其他宿主全局，因此候选在包内提供只支持已固定 origin/path、至多一个声明路径段和声明 query key 的小型 URL 字符串接口；它不提供网络请求、DNS 或宿主运行时能力。
 - 兼容 shim 限制每个 Run 一次匿名 GET，将上游 Response 使用到的 `ok/status/text()/json()` 映射到 `network.read`；禁止未声明 method/body/credentials/redirect 参数。响应只在 worker 内存使用，结果只写 normalized records 与 opaque ref。
 - 不使用浏览器 snapshot/DOM、原生网络、浏览器 Cookie/登录态、代理或任何凭据。HTTP 2xx 不等于业务成功。
@@ -41,7 +41,7 @@
 }
 ```
 
-请求头：Accept=`text/html`；User-Agent=`Mozilla/5.0 (compatible; opencli/github-trending)`。跳转最多 2 次同策略内；响应正文体积限制为 `2097152` 字节，超时 `10000` ms。该声明待 WebEnvoy #594 合同/实现接受后才可能执行。
+上游显式请求头：`{"accept": "text/html", "user-agent": "Mozilla/5.0 (compatible; opencli/github-trending)"}`。有效 broker 策略：Accept=`text/html`；User-Agent=`上游显式设置 `Mozilla/5.0 (compatible; opencli/github-trending)``。跳转最多 2 次同策略内；响应正文体积限制为 `2097152` 字节，超时 `10000` ms。该声明待 WebEnvoy #594 合同/实现接受后才可能执行。
 
 ## 输出语义与限制
 
