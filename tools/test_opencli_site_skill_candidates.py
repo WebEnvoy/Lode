@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -71,6 +72,21 @@ class ProposedPackageTests(unittest.TestCase):
         source_commits = {manifest["source"]["commit"] for manifest in manifests}
         self.assertEqual(len(source_commits), 1)
         self.assertEqual(generator.run(next(iter(source_commits)), check=True), 0)
+
+    def test_lode_source_pins_resolve_to_commits_containing_candidate_packages(self) -> None:
+        for sample in generator.SAMPLES:
+            package_path = f"sites/{sample['site']}/{sample['name']}"
+            manifest = read_json(ROOT / package_path / "manifest.json")
+            commit = manifest["source"]["commit"]
+            for relative in ("manifest.json", "package-lock.json", "capabilities/public-read.json", "scripts/opencli-adapter.mjs", f"tasks/{sample['task']}.json"):
+                result = subprocess.run(
+                    ["git", "cat-file", "-e", f"{commit}:{package_path}/{relative}"],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 0, f"source pin {commit} lacks {package_path}/{relative}")
 
     def test_candidates_are_located_in_existing_registry_and_use_exact_candidate_contract(self) -> None:
         registry_entries = REGISTRY["entries"]

@@ -2,7 +2,7 @@
   "manifest_version": "lode.site-skill-package.manifest.v1",
   "package_type": "site-skill",
   "package_ref": "lode://site-skill/github/opencli-trending-repos",
-  "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+  "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
   "version": "0.1.0",
   "lifecycle": "proposed",
   "site": {
@@ -14,8 +14,8 @@
   "source": {
     "repository": "WebEnvoy/Lode",
     "package_path": "sites/github/opencli-trending-repos",
-    "commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
-    "source_ref": "lode://source/site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1"
+    "commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
+    "source_ref": "lode://source/site-skill/github/opencli-trending-repos@0.1.0#40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e"
   },
   "package_lock": {
     "path": "package-lock.json",
@@ -33,7 +33,7 @@
         "path": "capabilities/public-read.json",
         "role": "capability_declaration",
         "bytes": 410,
-        "sha256": "sha256:b160082d85c48faa07df1c588e135f65d06cf01cff765b3280007cab65544bae"
+        "sha256": "sha256:e9091bc95f889793198b62e3696e9d799739e78d18f01e89215546588f2c65f4"
       },
       {
         "path": "checks/post-check.json",
@@ -51,7 +51,7 @@
         "path": "package-lock.json",
         "role": "package_lock",
         "bytes": 543,
-        "sha256": "sha256:165bacf446d2e197387434c7bd8cba3604269f066378c9cdbca1d3b7e235f420"
+        "sha256": "sha256:b1b5c0e142e731f715f7e23b9b65aff300d5b7cdd120da34e5c1613901815ba8"
       },
       {
         "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
@@ -96,7 +96,7 @@
         "sha256": "sha256:032489b92e003987e49538e1c84e6ae39e49742ccc865d80d2dc8c4d0dbd1c82"
       }
     ],
-    "package_digest": "sha256:41353b30c66961d9a2b8336176a4944540702b53c09197a3af48c02b501d3438"
+    "package_digest": "sha256:2251cc55bd5be852b72b5d833cc1436a3bb4336dbb92bfd30437fdaa84fb1e50"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -139,7 +139,7 @@
     {
       "script_ref": "lode://script/site-skill/github/opencli-trending-repos/read-trending-repositories@0.1.0",
       "path": "scripts/opencli-adapter.mjs",
-      "source_commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "source_commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
       "version": "0.1.0",
       "sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",
