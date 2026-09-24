@@ -50,6 +50,28 @@ def source_comparison_bytes(relative_path: str, data: bytes) -> bytes:
     return canonical_bytes(value)
 
 
+def source_repository_for_commit(commit: str) -> Path | None:
+    candidates = [ROOT, ROOT / ".provenance/controlled-local-source"]
+    for repository in candidates:
+        if not repository.exists():
+            continue
+        git_prefix = ["git", "-C", str(repository)]
+        object_exists = subprocess.run(
+            [*git_prefix, "cat-file", "-e", f"{commit}^{{commit}}"], capture_output=True, check=False
+        )
+        if object_exists.returncode != 0:
+            continue
+        reachable_refs = subprocess.run(
+            [*git_prefix, "for-each-ref", f"--contains={commit}", "--format=%(refname)"], capture_output=True, text=True, check=False
+        )
+        reachable_from_head = subprocess.run(
+            [*git_prefix, "merge-base", "--is-ancestor", commit, "HEAD"], capture_output=True, check=False
+        )
+        if reachable_refs.returncode == 0 and (reachable_refs.stdout.strip() or reachable_from_head.returncode == 0):
+            return repository
+    return None
+
+
 class GitHubTrendingPackageTests(unittest.TestCase):
     def test_registered_package_passes_the_official_validator(self) -> None:
         report = validate_package(PACKAGE, ROOT / "registry/local-packages.json")
@@ -211,13 +233,12 @@ class GitHubTrendingPackageTests(unittest.TestCase):
             self.assertEqual(40, len(commit))
             self.assertEqual(str(package_root.relative_to(ROOT)), package_path)
 
-            commit_ref = f"{commit}^{{commit}}"
-            resolved_commit = subprocess.run(
-                ["git", "cat-file", "-e", commit_ref], cwd=ROOT, capture_output=True, text=True, check=False
-            )
-            self.assertEqual(0, resolved_commit.returncode, f"source commit is not present: {commit}")
+            source_repository = source_repository_for_commit(commit)
+            self.assertIsNotNone(source_repository, f"source commit is missing or unreachable: {commit}")
+            assert source_repository is not None
+            git_prefix = ["git", "-C", str(source_repository)]
             source_tree = subprocess.run(
-                ["git", "cat-file", "-e", f"{commit}:{package_path}"], cwd=ROOT, capture_output=True, text=True, check=False
+                [*git_prefix, "cat-file", "-e", f"{commit}:{package_path}"], capture_output=True, text=True, check=False
             )
             self.assertEqual(0, source_tree.returncode, f"source package path is absent at {commit}: {package_path}")
 
@@ -225,7 +246,7 @@ class GitHubTrendingPackageTests(unittest.TestCase):
                 relative_path = record["path"]
                 source_object = f"{commit}:{package_path}/{relative_path}"
                 source_file = subprocess.run(
-                    ["git", "show", source_object], cwd=ROOT, capture_output=True, check=False
+                    [*git_prefix, "show", source_object], capture_output=True, check=False
                 )
                 self.assertEqual(0, source_file.returncode, f"source asset is absent: {source_object}")
                 current_bytes = (package_root / relative_path).read_bytes()
