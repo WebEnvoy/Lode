@@ -646,7 +646,7 @@ def package_files(sample: dict[str, Any], source_commit: str, source_record: dic
             "requirement_id": "public-response-and-complete-request-scope",
             "required_status": "available",
             "required_normalized_fields": ["parameters", "records", "completeness", "pagination"],
-            "expected_normalized_fields": {"completeness": "complete", "pagination.completeness": "complete"},
+            "expected_normalized_fields": {"completeness": "complete"},
             "required_evidence_refs": ["public_http_response"],
         }],
     }

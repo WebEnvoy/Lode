@@ -38,8 +38,8 @@
       {
         "path": "checks/post-check.json",
         "role": "post_check",
-        "bytes": 614,
-        "sha256": "sha256:682e7a94e05dfef787052e31dff83e98a666ec19a74b2d25560dc6281d9d7e5c"
+        "bytes": 567,
+        "sha256": "sha256:b821b982a230a9bc5317f546eda67e282e3a99d940bf30f47dfae7ee0a8f8e95"
       },
       {
         "path": "fixtures/README.md",
@@ -96,7 +96,7 @@
         "sha256": "sha256:f21945460754fa14b9d43b986a173938bfc86706f991f6229988376b8960f8ea"
       }
     ],
-    "package_digest": "sha256:b79c6e15c9f21961c16460464667195eb688c3f1e4031d591ca27b6bf5912c40"
+    "package_digest": "sha256:1026bf531bcf346dbbad57818d4bae3fecbc9c781011b98d4aa96db8a07d40da"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",

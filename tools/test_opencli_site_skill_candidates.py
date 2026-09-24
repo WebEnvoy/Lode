@@ -160,6 +160,14 @@ class ProposedPackageTests(unittest.TestCase):
                 self.assertEqual(output_schema["properties"]["evidence_refs"]["maxItems"], 1)
                 normalized = output_schema["properties"]["normalized"]["properties"]
                 self.assertNotIn("minItems", normalized["records"], "the fixed output schema must allow a verified empty record set")
+                generated_post_check = json.loads(generator.package_files(sample, manifest["source"]["commit"], generator.source_record())["checks/post-check.json"])
+                expected_fields = generated_post_check["requirements"][0]["expected_normalized_fields"]
+                self.assertTrue(expected_fields, "post-check must retain a positive completeness condition")
+                self.assertTrue(
+                    set(expected_fields).issubset(normalized),
+                    "post-check expected fields must use direct keys supported by Core lookup; nested consistency belongs in output schema",
+                )
+                self.assertFalse(any("." in field for field in expected_fields), "post-check field lookup does not resolve dotted paths")
                 example_output = {
                     "result_kind": task["outputs"]["result_kind"],
                     "status": "available",
