@@ -21,7 +21,7 @@ The first sample checks whether the existing raw HTML parser and parameter seman
 - 源文件：`clis/github-trending/repos.js` (`0efc684322b8a70cac358ea3cdccc24bebf105a8d09e7fb6aa6c170e1fd72a32`)。
 - 源 imports：`@jackwener/opencli/registry`, `@jackwener/opencli/errors`。
 - parser：`parseTrendingHtml`；响应候选 `text/html`；分页：One page; `limit` slices returned rows and the source provides no continuation token or completeness signal.
-- 请求：`GET https://github.com/trending/{encoded-language?}`；query `{"since": "daily|weekly|monthly"}`；Accept `text/html`；User-Agent `Mozilla/5.0 (compatible; opencli/github-trending)`。
+- 请求：`GET https://github.com/trending/{encoded-language?}`；query `{"since": "daily|weekly|monthly"}`；Accept `text/html`；User-Agent：Mozilla/5.0 (compatible; opencli/github-trending)。
 - 参数来自静态注册及参数校验源码：
 
   | 参数 | 类型 | 必需/默认值/范围 | 证据 |
@@ -55,7 +55,7 @@ This second positive sample exercises public JSON parsing and user-controlled pa
 - 源文件：`clis/devto/latest.js` (`6b7290772a6f0c22bcbfc3b6da1f331c42d0c58bbb636ab9e1840b274f527302`)。
 - 源 imports：`@jackwener/opencli/registry`, `@jackwener/opencli/errors`。
 - parser：`inline JSON mapping in cli.func`；响应候选 `application/json`；分页：One requested page; `rank` is offset by `(page - 1) * limit`; no next-page or total-count signal is consumed.
-- 请求：`GET https://dev.to/api/articles/latest`；query `{"per_page": "limit (1..100)", "page": "page (1..1000)"}`；Accept `application/json`；User-Agent `未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node``。
+- 请求：`GET https://dev.to/api/articles/latest`；query `{"per_page": "limit (1..100)", "page": "page (1..1000)"}`；Accept `application/json`；User-Agent：未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node`。
 - 参数来自静态注册及参数校验源码：
 
   | 参数 | 类型 | 必需/默认值/范围 | 证据 |
@@ -89,7 +89,7 @@ Selected before shared implementation to test a third site and an Atom/XML parse
 - 源文件：`clis/arxiv/recent.js` (`59e2b9efb159ee7277ba284beaaae4119b8cd931967ad328499ced6bb9deafaa`), `clis/arxiv/utils.js` (`08518cd096e6c127bd1cebe83e6d1d6551bc3de2d1781bd1b7d9249f31e74708`)。
 - 源 imports：`@jackwener/opencli/registry`, `@jackwener/opencli/errors`, `./utils.js`, `@jackwener/opencli/errors`。
 - parser：`parseEntries in arxiv/utils.js`；响应候选 `application/atom+xml`；分页：One query with max_results and descending submitted date; no start offset or continuation token is consumed.
-- 请求：`GET https://export.arxiv.org/api/query`；query `{"search_query": "cat:{validated-category}", "max_results": "limit (1..50)", "sortBy": "submittedDate", "sortOrder": "descending"}`；Accept `上游未设置`；User-Agent `未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node``。
+- 请求：`GET https://export.arxiv.org/api/query`；query `{"search_query": "cat:{validated-category}", "max_results": "limit (1..50)", "sortBy": "submittedDate", "sortOrder": "descending"}`；Accept `上游未设置`；User-Agent：未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node`。
 - 参数来自静态注册及参数校验源码：
 
   | 参数 | 类型 | 必需/默认值/范围 | 证据 |

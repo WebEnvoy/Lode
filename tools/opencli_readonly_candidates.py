@@ -562,7 +562,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"- 源文件：{', '.join(file_labels)}。",
             f"- 源 imports：{', '.join(import_labels)}。",
             f"- parser：`{sample['parser']}`；响应候选 `{sample['response_kind']}`；分页：{sample['pagination_semantics']}",
-            f"- 请求：`{request['method']} {request['origin']}{request['path_template']}`；query `{json.dumps(request['query'], ensure_ascii=False)}`；Accept `{request['accept'] or '上游未设置'}`；User-Agent `{user_agent_text}`。",
+            f"- 请求：`{request['method']} {request['origin']}{request['path_template']}`；query `{json.dumps(request['query'], ensure_ascii=False)}`；Accept `{request['accept'] or '上游未设置'}`；User-Agent：{user_agent_text}。",
             "- 参数来自静态注册及参数校验源码：",
             "",
             "  | 参数 | 类型 | 必需/默认值/范围 | 证据 |",

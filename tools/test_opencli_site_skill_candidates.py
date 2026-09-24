@@ -62,6 +62,14 @@ class StaticRegistrationTests(unittest.TestCase):
                 with self.assertRaises(inspector.CandidateError):
                     inspector.extract_cli_declaration(source.replace(before, after, 1))
 
+    def test_readonly_report_keeps_effective_user_agent_inline_code_balanced(self) -> None:
+        markdown = inspector.render_markdown(inspector.build_report())
+        request_lines = [line for line in markdown.splitlines() if line.startswith("- 请求：")]
+
+        self.assertEqual(len(request_lines), 3)
+        self.assertIn("User-Agent：未由 adapter 显式设置；Node 24 `fetch` 有效默认 `node`。", markdown)
+        self.assertNotIn("User-Agent `未由 adapter 显式设置；Node 24 `fetch`", markdown)
+
 
 class ProposedPackageTests(unittest.TestCase):
     def test_candidate_generator_matches_committed_candidate_bytes(self) -> None:
