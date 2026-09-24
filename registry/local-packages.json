@@ -2221,7 +2221,7 @@
       "package_path": "sites/github/opencli-trending-repos",
       "manifest_path": "sites/github/opencli-trending-repos/manifest.json",
       "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
-      "package_digest": "sha256:2251cc55bd5be852b72b5d833cc1436a3bb4336dbb92bfd30437fdaa84fb1e50",
+      "package_digest": "sha256:43e6995f29b68ae8d08c5693c0df5376e2b26bd249c4673c38dbf3fc90a7a599",
       "task_refs": [
         "read-trending-repositories"
       ]
@@ -2232,7 +2232,7 @@
       "package_path": "sites/devto/opencli-latest-articles",
       "manifest_path": "sites/devto/opencli-latest-articles/manifest.json",
       "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
-      "package_digest": "sha256:ca48279a1fdef7b7889ac3a5622a3945bdf42b8e3b36906fd7efc5430949e1f3",
+      "package_digest": "sha256:db5ca90a4f49343196a3d9b989bc1e34420f1837e7d1bb409cb93d34ea541aee",
       "task_refs": [
         "read-latest-articles-page"
       ]
@@ -2243,7 +2243,7 @@
       "package_path": "sites/arxiv/opencli-recent-papers",
       "manifest_path": "sites/arxiv/opencli-recent-papers/manifest.json",
       "revision_ref": "lode://site-skill/arxiv/opencli-recent-papers@0.1.0#40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
-      "package_digest": "sha256:1a35402e0e15acf94ec991d28a623694bf0ba729fcc56eeaa85e6f4456d99d7e",
+      "package_digest": "sha256:8df5ebf8e4c71d5e3d0cb1c373a4284046a5efe49ee47af767b860ea05fc54f9",
       "task_refs": [
         "read-recent-category-papers"
       ]

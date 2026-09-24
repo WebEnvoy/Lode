@@ -17,6 +17,7 @@ function cli(definition) {
   __opencliRegistration = definition;
 }
 
+
 function __checkCompleteness(input, records, body) {
   const profile = __completenessProfile;
   const requiredValues = (row) => profile.required_non_empty_fields.every((key) => typeof row[key] === 'string' && row[key].length > 0);

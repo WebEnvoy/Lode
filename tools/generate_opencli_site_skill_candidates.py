@@ -319,6 +319,48 @@ def network_wrapper(sample: dict[str, Any]) -> str:
         "headers": policy(sample)["headers"],
     }
     completeness_profile = sample["completeness_profile"]
+    url_shim = ""
+    if requires_url_compat(sample):
+        url_policy = {
+            "origin": sample["origin"],
+            "pathname": sample["path"],
+            "allow_one_path_segment": sample["allow_one_path_segment"],
+            "query_keys": sample["query_keys"],
+        }
+        url_shim = f"""
+// The approved worker intentionally has no Node host globals. Keep the
+// adapter's URL construction inside this bounded, package-local interface.
+const __opencliUrlPolicy = Object.freeze({json.dumps(url_policy, ensure_ascii=False, separators=(',', ':'))});
+function __opencliPathAllowed(pathname) {{
+  if (pathname === __opencliUrlPolicy.pathname) return true;
+  if (!__opencliUrlPolicy.allow_one_path_segment || !pathname.startsWith(__opencliUrlPolicy.pathname + '/')) return false;
+  const segment = pathname.slice(__opencliUrlPolicy.pathname.length + 1);
+  if (!segment || segment.includes('/')) return false;
+  let decoded;
+  try {{ decoded = decodeURIComponent(segment); }} catch {{ return false; }}
+  return Boolean(decoded && decoded !== '.' && decoded !== '..' && !/[\\\\/\\u0000-\\u001f\\u007f-\\u009f]/.test(decoded) && !/%(?:2f|5c|2e|00)/i.test(decoded));
+}}
+class __OpenCliURL {{
+  constructor(value) {{
+    if (typeof value !== 'string' || value.length > 2048 || /[?#\\\\\\u0000-\\u001f\\u007f-\\u009f]/.test(value) || !value.startsWith(__opencliUrlPolicy.origin)) throw new TypeError('URL is outside the pinned adapter interface');
+    const pathname = value.slice(__opencliUrlPolicy.origin.length);
+    if (!__opencliPathAllowed(pathname)) throw new TypeError('URL path is outside the pinned adapter interface');
+    this.__pathname = pathname;
+    this.__query = new Map();
+    this.searchParams = Object.freeze({{ set: (name, rawValue) => {{
+      if (typeof name !== 'string' || !__opencliUrlPolicy.query_keys.includes(name)) throw new TypeError('URL query key is outside the pinned adapter interface');
+      const item = String(rawValue);
+      if (item.length > 512 || /[\\u0000-\\u001f\\u007f-\\u009f]/.test(item)) throw new TypeError('URL query value is outside the pinned adapter interface');
+      this.__query.set(name, item);
+    }} }});
+  }}
+  toString() {{
+    const query = [...this.__query].map(([name, value]) => encodeURIComponent(name) + '=' + encodeURIComponent(value).replace(/%20/g, '+')).join('&');
+    return __opencliUrlPolicy.origin + this.__pathname + (query ? '?' + query : '');
+  }}
+}}
+Object.defineProperty(globalThis, 'URL', {{ value: __OpenCliURL, writable: false, configurable: false }});
+"""
     return f"""// Fixed compatibility shim for OpenCLI 1.8.8 PUBLIC read adapters.
 // Generated from reviewed source text; all reads use this run's WebEnvoy broker.
 const __opencliSpec = Object.freeze({json.dumps(spec, ensure_ascii=False, separators=(',', ':'))});
@@ -337,6 +379,7 @@ function cli(definition) {{
   if (__opencliRegistration) throw new Error('multiple adapter registrations are unsupported');
   __opencliRegistration = definition;
 }}
+{url_shim}
 
 function __checkCompleteness(input, records, body) {{
   const profile = __completenessProfile;
@@ -460,6 +503,11 @@ async function __run(input, broker, _context) {{
 """
 
 
+def requires_url_compat(sample: dict[str, Any]) -> bool:
+    """Detect the narrow URL constructor surface used by a fixed source set."""
+    return any(re.search(r"\bnew\s+URL\s*\(", read_utf8(ROOT / relative)) for relative in sample["source_files"])
+
+
 def source_script(sample: dict[str, Any]) -> bytes:
     segments: list[str] = []
     for relative in sample["source_files"]:
@@ -516,6 +564,10 @@ def markdown_mapping(sample: dict[str, Any], report: dict[str, Any], policy_valu
     parser_text = ", ".join(f"`{item}`" for item in sample["source_functions"]) or "adapter 内联记录映射"
     accept_text = sample["accept"] if sample["accept"] is not None else "未声明；兼容层不添加 Accept"
     ua_text = sample["user_agent"] if sample["user_agent"] is not None else "未声明；兼容层不添加 User-Agent"
+    url_compat_text = (
+        "- GitHub 源调用 `new URL()`。受管 VM 不注入 Node `URL` 或其他宿主全局，因此候选在包内提供只支持已固定 origin/path、至多一个声明路径段和声明 query key 的小型 URL 字符串接口；它不提供网络请求、DNS 或宿主运行时能力。\n"
+        if requires_url_compat(sample) else ""
+    )
     return f"""# OpenCLI 来源与兼容映射候选：{sample['display']}
 
 状态：**候选材料**。这不是代码准入、安装、启用、正式执行或 live 验收结论。
@@ -531,7 +583,7 @@ def markdown_mapping(sample: dict[str, Any], report: dict[str, Any], policy_valu
 
 - 保留 parser/业务映射：{parser_text}；输入参数校验和 URL/query 构造保留上游逻辑。
 - 入口包装只替换 OpenCLI 注册/error import，并将原始 `fetch` 名称解析到固定兼容 shim；arXiv 两个审查源以确定性文本 bundle 合并，移除静态 ESM import/export 标记，不改变工具/解析函数体。
-- 兼容 shim 限制每个 Run 一次匿名 GET，将上游 Response 使用到的 `ok/status/text()/json()` 映射到 `network.read`；禁止未声明 method/body/credentials/redirect 参数。响应只在 worker 内存使用，结果只写 normalized records 与 opaque ref。
+{url_compat_text}- 兼容 shim 限制每个 Run 一次匿名 GET，将上游 Response 使用到的 `ok/status/text()/json()` 映射到 `network.read`；禁止未声明 method/body/credentials/redirect 参数。响应只在 worker 内存使用，结果只写 normalized records 与 opaque ref。
 - 不使用浏览器 snapshot/DOM、原生网络、浏览器 Cookie/登录态、代理或任何凭据。HTTP 2xx 不等于业务成功。
 
 ## 固定匿名读取策略候选

@@ -14,7 +14,7 @@
   "entrypoint": {
     "script_ref": "lode://script/site-skill/github/opencli-trending-repos/read-trending-repositories@0.1.0",
     "script_version": "0.1.0",
-    "script_sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43",
+    "script_sha256": "sha256:084376ca938b0d4d473dafec660b1bffbf1ec90ed3d4b1095658914bab9da9e9",
     "runtime_kind": "webenvoy.site-skill-script-abi/v1",
     "broker": "webenvoy.site-skill-broker/v1.1",
     "capability_refs": [

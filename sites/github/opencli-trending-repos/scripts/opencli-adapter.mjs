@@ -17,6 +17,40 @@ function cli(definition) {
   __opencliRegistration = definition;
 }
 
+// The approved worker intentionally has no Node host globals. Keep the
+// adapter's URL construction inside this bounded, package-local interface.
+const __opencliUrlPolicy = Object.freeze({"origin":"https://github.com","pathname":"/trending","allow_one_path_segment":true,"query_keys":["since"]});
+function __opencliPathAllowed(pathname) {
+  if (pathname === __opencliUrlPolicy.pathname) return true;
+  if (!__opencliUrlPolicy.allow_one_path_segment || !pathname.startsWith(__opencliUrlPolicy.pathname + '/')) return false;
+  const segment = pathname.slice(__opencliUrlPolicy.pathname.length + 1);
+  if (!segment || segment.includes('/')) return false;
+  let decoded;
+  try { decoded = decodeURIComponent(segment); } catch { return false; }
+  return Boolean(decoded && decoded !== '.' && decoded !== '..' && !/[\\/\u0000-\u001f\u007f-\u009f]/.test(decoded) && !/%(?:2f|5c|2e|00)/i.test(decoded));
+}
+class __OpenCliURL {
+  constructor(value) {
+    if (typeof value !== 'string' || value.length > 2048 || /[?#\\\u0000-\u001f\u007f-\u009f]/.test(value) || !value.startsWith(__opencliUrlPolicy.origin)) throw new TypeError('URL is outside the pinned adapter interface');
+    const pathname = value.slice(__opencliUrlPolicy.origin.length);
+    if (!__opencliPathAllowed(pathname)) throw new TypeError('URL path is outside the pinned adapter interface');
+    this.__pathname = pathname;
+    this.__query = new Map();
+    this.searchParams = Object.freeze({ set: (name, rawValue) => {
+      if (typeof name !== 'string' || !__opencliUrlPolicy.query_keys.includes(name)) throw new TypeError('URL query key is outside the pinned adapter interface');
+      const item = String(rawValue);
+      if (item.length > 512 || /[\u0000-\u001f\u007f-\u009f]/.test(item)) throw new TypeError('URL query value is outside the pinned adapter interface');
+      this.__query.set(name, item);
+    } });
+  }
+  toString() {
+    const query = [...this.__query].map(([name, value]) => encodeURIComponent(name) + '=' + encodeURIComponent(value).replace(/%20/g, '+')).join('&');
+    return __opencliUrlPolicy.origin + this.__pathname + (query ? '?' + query : '');
+  }
+}
+Object.defineProperty(globalThis, 'URL', { value: __OpenCliURL, writable: false, configurable: false });
+
+
 function __checkCompleteness(input, records, body) {
   const profile = __completenessProfile;
   const requiredValues = (row) => profile.required_non_empty_fields.every((key) => typeof row[key] === 'string' && row[key].length > 0);

@@ -62,8 +62,8 @@
       {
         "path": "references/opencli-source-mapping.md",
         "role": "source_mapping",
-        "bytes": 4330,
-        "sha256": "sha256:8cdefbb9e6422565cc989d33e8068f0671e7b1275d0d483dee697e533a628529"
+        "bytes": 4616,
+        "sha256": "sha256:e677cc087d0838285ac7cd08ddeefc4534e835fbf45c151cd7d964a5a6f5ea7a"
       },
       {
         "path": "references/recovery.md",
@@ -86,17 +86,17 @@
       {
         "path": "scripts/opencli-adapter.mjs",
         "role": "script_source",
-        "bytes": 15740,
-        "sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43"
+        "bytes": 17987,
+        "sha256": "sha256:084376ca938b0d4d473dafec660b1bffbf1ec90ed3d4b1095658914bab9da9e9"
       },
       {
         "path": "tasks/read-trending-repositories.json",
         "role": "task_declaration",
         "bytes": 2786,
-        "sha256": "sha256:032489b92e003987e49538e1c84e6ae39e49742ccc865d80d2dc8c4d0dbd1c82"
+        "sha256": "sha256:bdca87bb8c9a75ab6973e753f1471a372a7fa6ac9ceabd6b46d780ffa464c774"
       }
     ],
-    "package_digest": "sha256:2251cc55bd5be852b72b5d833cc1436a3bb4336dbb92bfd30437fdaa84fb1e50"
+    "package_digest": "sha256:43e6995f29b68ae8d08c5693c0df5376e2b26bd249c4673c38dbf3fc90a7a599"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -141,7 +141,7 @@
       "path": "scripts/opencli-adapter.mjs",
       "source_commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
       "version": "0.1.0",
-      "sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43",
+      "sha256": "sha256:084376ca938b0d4d473dafec660b1bffbf1ec90ed3d4b1095658914bab9da9e9",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",
       "entrypoint": "run",
       "input_schema_ref": "lode://schema/site-skill/github/opencli-trending-repos/input@0.1.0",

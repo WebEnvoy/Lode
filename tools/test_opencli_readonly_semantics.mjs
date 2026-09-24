@@ -103,10 +103,14 @@ async function executePackagedAdapter(site, input, { body, contentType, status =
   assert.doesNotMatch(source, /\b(?:eval|Function)\s*\(|\bimport\s*\(|\b(?:require|child_process)\b|process\.env/);
   let output;
   const calls = [];
-  const context = vm.createContext({ URL });
+  // Match the installed worker's context: only the generated module's own
+  // globals are present; Node host globals such as URL are not injected.
+  const context = vm.createContext(Object.create(null));
+  assert.equal(vm.runInContext('typeof URL', context), 'undefined');
   const module = new vm.SourceTextModule(source, { context, identifier: packagedAdapters[site] });
   await module.link(() => { throw new Error('candidate bundle unexpectedly imported a module'); });
   await module.evaluate();
+  assert.equal(vm.runInContext('typeof URL', context), site === 'github' ? 'function' : 'undefined');
   const responseRef = `core:public-http:${site}:fixture`;
   const broker = {
     network: {
@@ -304,6 +308,14 @@ async function testPackagedAdapterCandidates(sourceSemantics) {
   assert.equal(github.output.normalized.parameters.limit, 3);
   assert.equal(github.output.normalized.records.length, 2, 'limit is an upper bound; a complete shorter page remains available');
   assertCandidateEvidence(github.output, responseRef);
+
+  const githubLanguage = await executePackagedAdapter('github', { since: 'weekly', language: 'c++', limit: 1 }, {
+    body: await textFixture('github-trending.html'), contentType: 'text/html; charset=utf-8',
+  });
+  assert.equal(githubLanguage.error, undefined);
+  assert.equal(githubLanguage.calls[0].url, 'https://github.com/trending/c%2B%2B?since=weekly',
+    'the in-VM URL interface preserves the adapter’s encoded path and query behavior');
+  assert.equal(githubLanguage.output.normalized.parameters.language, 'c++');
 
   const githubEmpty = await executePackagedAdapter('github', { limit: 3 }, {
     body: await textFixture('github-trending-empty.html'), contentType: 'text/html',

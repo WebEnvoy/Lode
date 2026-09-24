@@ -86,17 +86,17 @@
       {
         "path": "scripts/opencli-adapter.mjs",
         "role": "script_source",
-        "bytes": 14959,
-        "sha256": "sha256:5eff9849f6954bb6adbd10ec8397b87c7abe134bbcf47330b8fd6b5d9ea8426a"
+        "bytes": 14960,
+        "sha256": "sha256:e212bc3fbe74301d55506ed81fb8e603bc4e1fa250a435a9df363bc1b5ba0884"
       },
       {
         "path": "tasks/read-recent-category-papers.json",
         "role": "task_declaration",
         "bytes": 2755,
-        "sha256": "sha256:a2a7662bbef35da17794ae8d07259e09d1df3b330594a5509d9ee72232596b22"
+        "sha256": "sha256:093bf6b1f1ef6b795704497a743d8dcacdd362e455df413def96d0527934e534"
       }
     ],
-    "package_digest": "sha256:1a35402e0e15acf94ec991d28a623694bf0ba729fcc56eeaa85e6f4456d99d7e"
+    "package_digest": "sha256:8df5ebf8e4c71d5e3d0cb1c373a4284046a5efe49ee47af767b860ea05fc54f9"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -141,7 +141,7 @@
       "path": "scripts/opencli-adapter.mjs",
       "source_commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
       "version": "0.1.0",
-      "sha256": "sha256:5eff9849f6954bb6adbd10ec8397b87c7abe134bbcf47330b8fd6b5d9ea8426a",
+      "sha256": "sha256:e212bc3fbe74301d55506ed81fb8e603bc4e1fa250a435a9df363bc1b5ba0884",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",
       "entrypoint": "run",
       "input_schema_ref": "lode://schema/site-skill/arxiv/opencli-recent-papers/input@0.1.0",
