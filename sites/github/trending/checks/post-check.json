@@ -1,0 +1,18 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "check_ref": "lode://check/site-skill/github/trending/daily-top5@1.0.0",
+  "requirements": [
+    {
+      "requirement_id": "daily-trending-top-five",
+      "required_status": "available",
+      "required_normalized_fields": ["period", "requested_count", "rows", "completeness", "snapshot_coverage"],
+      "expected_normalized_fields": {
+        "period": "daily",
+        "requested_count": 5,
+        "completeness": "complete",
+        "snapshot_coverage": "complete"
+      },
+      "required_evidence_refs": ["snapshot_ref"]
+    }
+  ]
+}

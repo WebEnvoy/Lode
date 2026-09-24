@@ -1,0 +1,67 @@
+{
+  "task_ref": "read-daily-trending-top5",
+  "version": "1.0.0",
+  "title": "Read the first five daily GitHub Trending repositories",
+  "intent": "Return the first five repositories on the current public daily GitHub Trending page with their name, URL, language, and stars today.",
+  "operation_id": "instance.snapshot",
+  "action": "read",
+  "applicability": {
+    "origins": [
+      "https://github.com"
+    ],
+    "target_type": "web_page"
+  },
+  "entrypoint": {
+    "script_ref": "lode://script/site-skill/github/trending/read-daily-top5@1.0.0",
+    "script_version": "1.0.0",
+    "script_sha256": "sha256:d73b66d5711ddd5a4e9295d8df4677f431b62d3f44b513698e095a2a31ffb0ab",
+    "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+    "broker": "webenvoy.site-skill-broker/v1",
+    "capability_refs": [
+      "lode://site-capability/github/managed-page-snapshot@1.0.0"
+    ]
+  },
+  "inputs": {
+    "schema_ref": "lode://schema/site-skill/github/trending/daily-top5/input@1.0.0",
+    "carrier": "none",
+    "max_bytes": 0,
+    "sensitivity": "public"
+  },
+  "outputs": {
+    "schema_ref": "lode://schema/site-skill/github/trending/daily-top5/output@1.0.0",
+    "result_kind": "github_trending_daily_top5",
+    "completeness": "required"
+  },
+  "preconditions": [
+    "current_target_is_daily_unfiltered_trending"
+  ],
+  "verification": {
+    "post_check_ref": "lode://check/site-skill/github/trending/daily-top5@1.0.0",
+    "required_evidence_refs": [
+      "snapshot_ref"
+    ]
+  },
+  "failure_recovery": {
+    "failure_classes": [
+      "invalid_contract",
+      "resource_unavailable",
+      "site_changed",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "repair_ref": "lode://reference/site-skill/github/trending/recovery@1.0.0",
+    "unknown_policy": "query_original_run_only"
+  },
+  "known_branches": [
+    "wrong_page",
+    "snapshot_incomplete",
+    "unlabeled_language",
+    "row_parse_ambiguous",
+    "daily_stars_missing"
+  ],
+  "data_handling": {
+    "input_sensitivity": "public",
+    "output_sensitivity": "public",
+    "external_egress": "none"
+  }
+}

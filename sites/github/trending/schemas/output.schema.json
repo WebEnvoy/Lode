@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-skill/github/trending/daily-top5/output@1.0.0",
+  "type": "object",
+  "required": ["result_kind", "status", "normalized", "source_refs", "evidence_refs"],
+  "properties": {
+    "result_kind": {"const": "github_trending_daily_top5"},
+    "status": {"enum": ["available", "partial"]},
+    "normalized": {
+      "type": "object",
+      "required": ["period", "requested_count", "rows", "completeness", "snapshot_coverage"],
+      "properties": {
+        "period": {"const": "daily"},
+        "requested_count": {"const": 5},
+        "rows": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "language", "language_state", "today_stars", "today_stars_state"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+              "url": {"type": "string", "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+              "language": {"type": ["string", "null"], "minLength": 1},
+              "language_state": {"enum": ["observed", "observed_absent", "unknown"]},
+              "today_stars": {"type": ["integer", "null"], "minimum": 0},
+              "today_stars_state": {"enum": ["observed", "unknown"]}
+            },
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {"properties": {"language_state": {"const": "observed"}}, "required": ["language_state"]},
+                "then": {"properties": {"language": {"type": "string"}}}
+              },
+              {
+                "if": {"properties": {"language_state": {"enum": ["observed_absent", "unknown"]}}, "required": ["language_state"]},
+                "then": {"properties": {"language": {"type": "null"}}}
+              },
+              {
+                "if": {"properties": {"today_stars_state": {"const": "observed"}}, "required": ["today_stars_state"]},
+                "then": {"properties": {"today_stars": {"type": "integer"}}}
+              },
+              {
+                "if": {"properties": {"today_stars_state": {"const": "unknown"}}, "required": ["today_stars_state"]},
+                "then": {"properties": {"today_stars": {"type": "null"}}}
+              }
+            ]
+          }
+        },
+        "completeness": {"enum": ["complete", "partial", "unknown"]},
+        "snapshot_coverage": {"enum": ["complete", "truncated", "omitted_on_continuation", "unavailable", "unknown"]}
+      },
+      "additionalProperties": false
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "source_kind"],
+        "properties": {
+          "ref_id": {"type": "string", "minLength": 1},
+          "source_kind": {"const": "harbor_page"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "evidence_kind", "producer", "redaction"],
+        "properties": {
+          "ref_id": {"type": "string", "minLength": 1},
+          "evidence_kind": {"const": "snapshot_ref"},
+          "producer": {"const": "harbor"},
+          "redaction": {"const": "summary_only"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "available"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "rows": {
+                "minItems": 5,
+                "maxItems": 5,
+                "items": {
+                  "properties": {
+                    "language_state": {"enum": ["observed", "observed_absent"]},
+                    "today_stars_state": {"const": "observed"}
+                  }
+                }
+              },
+              "completeness": {"const": "complete"},
+              "snapshot_coverage": {"const": "complete"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "partial"}}, "required": ["status"]},
+      "then": {"properties": {"normalized": {"properties": {"completeness": {"enum": ["partial", "unknown"]}}}}}
+    }
+  ]
+}

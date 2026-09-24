@@ -1,0 +1,176 @@
+{
+  "manifest_version": "lode.site-skill-package.manifest.v1",
+  "package_type": "site-skill",
+  "package_ref": "lode://site-skill/github/trending",
+  "revision_ref": "lode://site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+  "version": "1.0.0",
+  "lifecycle": "experimental",
+  "site": {
+    "site_id": "github",
+    "supported_origins": [
+      "https://github.com"
+    ]
+  },
+  "source": {
+    "repository": "WebEnvoy/Lode",
+    "package_path": "sites/github/trending",
+    "commit": "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+    "source_ref": "lode://source/site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0"
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "lock_ref": "lode://lock/site-skill/github/trending@1.0.0"
+  },
+  "integrity": {
+    "files": [
+      {
+        "path": "SKILL.md",
+        "role": "entrypoint",
+        "bytes": 1312,
+        "sha256": "sha256:fbf75beae35a2d17353ccd73e0e439beeab5aa448e202895c13b47363c1e0513"
+      },
+      {
+        "path": "capabilities/managed-page-snapshot.json",
+        "role": "capability_declaration",
+        "bytes": 378,
+        "sha256": "sha256:0366c6c32d0a36a98d8bd4cda685ef929cde06ad0f4b8238b78f9f1044927527"
+      },
+      {
+        "path": "checks/post-check.json",
+        "role": "post_check",
+        "bytes": 587,
+        "sha256": "sha256:43f7ecc9b5aa00896ad0ba37f400efc24dbc338cc10b44b116e3f6ab5729c191"
+      },
+      {
+        "path": "package-lock.json",
+        "role": "package_lock",
+        "bytes": 486,
+        "sha256": "sha256:e8cc219dc7eb2994658253844c4ebfe87d6cca28eb1a3fcf96dbe40337bfb7b3"
+      },
+      {
+        "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
+        "role": "license_notice",
+        "bytes": 10760,
+        "sha256": "sha256:0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54"
+      },
+      {
+        "path": "references/opencli-source-mapping.md",
+        "role": "source_mapping",
+        "bytes": 5211,
+        "sha256": "sha256:2cdbab119afe96f02ee50decb29067c09f0ae35eb73d5bebf032eac39b1f64e5"
+      },
+      {
+        "path": "references/recovery.md",
+        "role": "repair_guidance",
+        "bytes": 841,
+        "sha256": "sha256:59f3ad65c89038d350abea2a281cd43b50a9376a9d61559151d0d081049b39df"
+      },
+      {
+        "path": "schemas/input.schema.json",
+        "role": "input_schema",
+        "bytes": 231,
+        "sha256": "sha256:54521fb2fb022bfd0687b7675e2224c173d31e77ce0b7d0ae8ac55bb525f54bf"
+      },
+      {
+        "path": "schemas/output.schema.json",
+        "role": "output_schema",
+        "bytes": 4464,
+        "sha256": "sha256:26dc857f2aff4588a65a1f3fae1e05a26c5ca5741d04b28abb2243b258680b3d"
+      },
+      {
+        "path": "scripts/read-daily-trending-top5.mjs",
+        "role": "script_source",
+        "bytes": 6146,
+        "sha256": "sha256:d73b66d5711ddd5a4e9295d8df4677f431b62d3f44b513698e095a2a31ffb0ab"
+      },
+      {
+        "path": "tasks/read-daily-trending-top5.json",
+        "role": "task_declaration",
+        "bytes": 2085,
+        "sha256": "sha256:3f52cc01c6f0e22f9668744c98f60f6dfa4040fccf58c75d45bfe84810d3668e"
+      }
+    ],
+    "package_digest": "sha256:3cd5b0148d264eb882f403b5ff22f1f642be1bee510c7200489c7f1c5a4fd821"
+  },
+  "compatibility": {
+    "package_contract": "lode.site-skill-package/v1",
+    "execution_contract": "webenvoy.site-skill-execution/v1",
+    "required_capabilities": [
+      {
+        "ref": "lode://site-capability/github/managed-page-snapshot@1.0.0",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "role": "capability_declaration",
+      "path": "capabilities/managed-page-snapshot.json",
+      "capability_ref": "lode://site-capability/github/managed-page-snapshot@1.0.0"
+    },
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "schema_ref": "lode://schema/site-skill/github/trending/daily-top5/input@1.0.0"
+    },
+    {
+      "role": "output_schema",
+      "path": "schemas/output.schema.json",
+      "schema_ref": "lode://schema/site-skill/github/trending/daily-top5/output@1.0.0"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "check_ref": "lode://check/site-skill/github/trending/daily-top5@1.0.0"
+    },
+    {
+      "role": "repair_guidance",
+      "path": "references/recovery.md",
+      "reference_ref": "lode://reference/site-skill/github/trending/recovery@1.0.0"
+    }
+  ],
+  "scripts": [
+    {
+      "script_ref": "lode://script/site-skill/github/trending/read-daily-top5@1.0.0",
+      "path": "scripts/read-daily-trending-top5.mjs",
+      "source_commit": "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+      "version": "1.0.0",
+      "sha256": "sha256:d73b66d5711ddd5a4e9295d8df4677f431b62d3f44b513698e095a2a31ffb0ab",
+      "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+      "entrypoint": "run",
+      "input_schema_ref": "lode://schema/site-skill/github/trending/daily-top5/input@1.0.0",
+      "output_schema_ref": "lode://schema/site-skill/github/trending/daily-top5/output@1.0.0",
+      "capability_refs": [
+        "lode://site-capability/github/managed-page-snapshot@1.0.0"
+      ],
+      "action": "read",
+      "broker": "webenvoy.site-skill-broker/v1",
+      "broker_capabilities": [
+        "runtime.invoke",
+        "output.write"
+      ],
+      "target_binding": {
+        "target_type": "web_page",
+        "requires_current_page": true,
+        "requires_fresh_observation": true
+      },
+      "timeout_ms": 10000,
+      "cancel": "cooperative",
+      "data_handling": {
+        "input_sensitivity": "public",
+        "output_sensitivity": "public",
+        "external_egress": "none"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_ref": "read-daily-trending-top5",
+      "path": "tasks/read-daily-trending-top5.json"
+    }
+  ],
+  "validation": {
+    "runtime_execution": "not_claimed",
+    "live_evidence": "not_claimed"
+  }
+}

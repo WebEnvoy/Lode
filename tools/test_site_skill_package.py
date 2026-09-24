@@ -77,6 +77,17 @@ class ControlledSiteSkillPackageTests(unittest.TestCase):
                     self.assertTrue(report.errors)
                     self.assertTrue(any(error["code"] == "invalid_contract" for error in report.errors))
 
+    def test_controlled_local_still_rejects_unreviewed_script_assets(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="lode-site-skill-script-") as directory:
+            package_root = Path(directory) / "package"
+            shutil.copytree(PACKAGE, package_root)
+            scripts = package_root / "scripts"
+            scripts.mkdir()
+            (scripts / "unreviewed.mjs").write_text("export async function run() {}\n", encoding="utf-8")
+            report = validate_package(package_root)
+            self.assertTrue(report.errors)
+            self.assertTrue(any(error["code"] == "invalid_contract" for error in report.errors))
+
 
 if __name__ == "__main__":
     unittest.main()

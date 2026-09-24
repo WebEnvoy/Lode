@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline validator for a single Lode site-capability package."""
+"""Offline validator for registered Lode site-capability and site-skill packages."""
 
 from __future__ import annotations
 
@@ -25,6 +25,32 @@ CONTROLLED_SITE_SKILL_FILES = {
     "schemas/input.schema.json",
     "schemas/output.schema.json",
     "tasks/read-page-summary.json",
+}
+GITHUB_TRENDING_SITE_SKILL_PACKAGE_REF = "lode://site-skill/github/trending"
+GITHUB_TRENDING_SITE_SKILL_CAPABILITY_REF = "lode://site-capability/github/managed-page-snapshot@1.0.0"
+GITHUB_TRENDING_SITE_SKILL_LOCK_REF = "lode://lock/site-skill/github/trending@1.0.0"
+GITHUB_TRENDING_SITE_SKILL_TASK_REF = "read-daily-trending-top5"
+GITHUB_TRENDING_SITE_SKILL_SCRIPT_REF = "lode://script/site-skill/github/trending/read-daily-top5@1.0.0"
+GITHUB_TRENDING_SITE_SKILL_SOURCE_COMMIT = "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0"
+GITHUB_TRENDING_SITE_SKILL_MANIFEST_SHA256 = "21658abca53ee1e28c8504be88db41a48fc7c0b82a73615f8e039973ec18a628"
+GITHUB_TRENDING_SITE_SKILL_PACKAGE_DIGEST = "sha256:3cd5b0148d264eb882f403b5ff22f1f642be1bee510c7200489c7f1c5a4fd821"
+GITHUB_TRENDING_SITE_SKILL_SCRIPT_SHA256 = "sha256:d73b66d5711ddd5a4e9295d8df4677f431b62d3f44b513698e095a2a31ffb0ab"
+GITHUB_TRENDING_OPENCLI_COMMIT = "8271afc67e8504bda94c147f446ee29775d08274"
+GITHUB_TRENDING_OPENCLI_SOURCE_SHA256 = "0efc684322b8a70cac358ea3cdccc24bebf105a8d09e7fb6aa6c170e1fd72a32"
+GITHUB_TRENDING_OPENCLI_PACKAGE_SHA256 = "f151c56b14d1a240855ba2330ba2885b5777f4bd45797142c8f719c325c600f0"
+GITHUB_TRENDING_OPENCLI_LICENSE_SHA256 = "0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54"
+GITHUB_TRENDING_SITE_SKILL_FILES = {
+    "SKILL.md",
+    "capabilities/managed-page-snapshot.json",
+    "checks/post-check.json",
+    "package-lock.json",
+    "references/OpenCLI-Apache-2.0-LICENSE.txt",
+    "references/opencli-source-mapping.md",
+    "references/recovery.md",
+    "schemas/input.schema.json",
+    "schemas/output.schema.json",
+    "scripts/read-daily-trending-top5.mjs",
+    "tasks/read-daily-trending-top5.json",
 }
 SUPPORTED_LOCAL_REGISTRY_VERSION = "lode.local-package-index.v0"
 SUPPORTED_PACKAGE_LOCK_VERSION = "lode.package-lock.v0"
@@ -1991,7 +2017,12 @@ def _walk_json_values(value: Any) -> list[Any]:
     return values
 
 
-def validate_site_skill_integrity(report: Report, root: Path, manifest: dict[str, Any]) -> set[str]:
+def validate_site_skill_integrity(
+    report: Report,
+    root: Path,
+    manifest: dict[str, Any],
+    expected_files: set[str] | None = CONTROLLED_SITE_SKILL_FILES,
+) -> set[str]:
     integrity = manifest.get("integrity") if isinstance(manifest.get("integrity"), dict) else {}
     require_keys(report, integrity, ["package_digest", "files"], "manifest.json#integrity")
     records = integrity.get("files")
@@ -2036,8 +2067,8 @@ def validate_site_skill_integrity(report: Report, root: Path, manifest: dict[str
     actual_files = _site_skill_package_files(report, root)
     if actual_files != declared:
         add_error(report, "invalid_contract", "manifest.json#integrity.files", f"Integrity file set differs from package files: missing={sorted(actual_files - declared)}, extra={sorted(declared - actual_files)}.", "Pin every ordinary package file and remove undeclared files.")
-    if actual_files != CONTROLLED_SITE_SKILL_FILES:
-        add_error(report, "invalid_contract", "manifest.json#integrity.files", f"Controlled package contains an unexpected file set: missing={sorted(CONTROLLED_SITE_SKILL_FILES - actual_files)}, extra={sorted(actual_files - CONTROLLED_SITE_SKILL_FILES)}.", "Keep the controlled fixture package limited to its declared knowledge, task, capability, schema, and check files.")
+    if expected_files is not None and actual_files != expected_files:
+        add_error(report, "invalid_contract", "manifest.json#integrity.files", f"Site-skill package contains an unexpected file set: missing={sorted(expected_files - actual_files)}, extra={sorted(actual_files - expected_files)}.", "Keep the package limited to its declared, integrity-pinned assets.")
     canonical_manifest = _site_skill_canonical_manifest(report, manifest)
     digest = integrity.get("package_digest")
     if not isinstance(digest, str) or not digest.startswith("sha256:") or len(digest) != 71 or any(ch not in "0123456789abcdef" for ch in digest[7:]):
@@ -2050,11 +2081,17 @@ def validate_site_skill_integrity(report: Report, root: Path, manifest: dict[str
     return declared
 
 
-def validate_site_skill_package_lock(report: Report, root: Path, manifest: dict[str, Any], integrity_files: set[str]) -> dict[str, Any] | None:
+def validate_site_skill_package_lock(
+    report: Report,
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_files: set[str],
+    expected_lock_ref: str = CONTROLLED_SITE_SKILL_LOCK_REF,
+) -> dict[str, Any] | None:
     lock_locator = manifest.get("package_lock") if isinstance(manifest.get("package_lock"), dict) else {}
     require_keys(report, lock_locator, ["path", "lock_ref"], "manifest.json#package_lock")
-    if lock_locator.get("lock_ref") != CONTROLLED_SITE_SKILL_LOCK_REF:
-        add_error(report, "invalid_contract", "manifest.json#package_lock.lock_ref", "Controlled package lock ref must use the fixed site-skill package identity.", "Keep the package lock ref stable for this package version.")
+    if lock_locator.get("lock_ref") != expected_lock_ref:
+        add_error(report, "invalid_contract", "manifest.json#package_lock.lock_ref", "Package lock ref must use the fixed site-skill package identity.", "Keep the package lock ref stable for this package version.")
     if lock_locator.get("path") != "package-lock.json":
         add_error(report, "invalid_contract", "manifest.json#package_lock.path", "Controlled package lock must use its fixed package-local path.", "Use package-lock.json as the lock locator.")
     lock_path = _site_skill_path(root, lock_locator.get("path"), "manifest.json#package_lock.path")
@@ -2259,11 +2296,289 @@ def validate_site_skill_registry_entry(report: Report, repo_root: Path, package_
         add_error(report, "invalid_contract", f"{entry_path}.manifest_path", "Registry manifest_path must point at the package manifest.", "Use the package-relative manifest locator.")
 
 
+def validate_github_trending_site_skill_package(
+    root: Path,
+    registry_index: Path | None,
+    report: Report,
+    manifest: dict[str, Any],
+) -> Report:
+    package_ref = GITHUB_TRENDING_SITE_SKILL_PACKAGE_REF
+    capability_ref = GITHUB_TRENDING_SITE_SKILL_CAPABILITY_REF
+    lock_ref = GITHUB_TRENDING_SITE_SKILL_LOCK_REF
+    task_ref = GITHUB_TRENDING_SITE_SKILL_TASK_REF
+    source_commit = GITHUB_TRENDING_SITE_SKILL_SOURCE_COMMIT
+    source_ref = f"lode://source/site-skill/github/trending@1.0.0#{source_commit}"
+    script_ref = GITHUB_TRENDING_SITE_SKILL_SCRIPT_REF
+    input_ref = "lode://schema/site-skill/github/trending/daily-top5/input@1.0.0"
+    output_ref = "lode://schema/site-skill/github/trending/daily-top5/output@1.0.0"
+    post_check_ref = "lode://check/site-skill/github/trending/daily-top5@1.0.0"
+    recovery_ref = "lode://reference/site-skill/github/trending/recovery@1.0.0"
+    script_path = "scripts/read-daily-trending-top5.mjs"
+
+    report.package_ref = manifest.get("package_ref")
+    expected_manifest_keys = {
+        "manifest_version", "package_type", "package_ref", "revision_ref", "version", "lifecycle", "site", "source",
+        "package_lock", "integrity", "compatibility", "assets", "scripts", "tasks", "validation",
+    }
+    if set(manifest) != expected_manifest_keys:
+        add_error(report, "invalid_contract", "manifest.json", "GitHub Trending manifest has missing or unsupported fields.", "Keep the fixed site-skill manifest shape and declare every asset explicitly.")
+    manifest_bytes = (root / "manifest.json").read_bytes() if (root / "manifest.json").is_file() else b""
+    if hashlib.sha256(manifest_bytes).hexdigest() != GITHUB_TRENDING_SITE_SKILL_MANIFEST_SHA256:
+        add_error(report, "invalid_contract", "manifest.json", "Raw manifest bytes do not match the fixed GitHub Trending revision.", "Create a new package revision and update the explicit validator and local index pins together.")
+    if manifest.get("manifest_version") != SUPPORTED_SITE_SKILL_MANIFEST_VERSION or manifest.get("package_type") != "site-skill":
+        add_error(report, "unsupported_version", "manifest.json", "Unsupported site-skill package manifest.", f"Use `{SUPPORTED_SITE_SKILL_MANIFEST_VERSION}` with package_type site-skill.")
+    if manifest.get("package_ref") != package_ref or manifest.get("version") != "1.0.0" or manifest.get("lifecycle") != "experimental":
+        add_error(report, "invalid_contract", "manifest.json", "GitHub Trending package identity or lifecycle does not match the fixed candidate.", "Keep the package at its pinned experimental identity.")
+    expected_revision = f"{package_ref}@1.0.0#{source_commit}"
+    if manifest.get("revision_ref") != expected_revision:
+        add_error(report, "invalid_contract", "manifest.json#revision_ref", "Revision ref does not bind the fixed Lode source commit.", "Rebuild revision_ref from the package identity, version, and immutable source commit.")
+    site = manifest.get("site") if isinstance(manifest.get("site"), dict) else {}
+    if site != {"site_id": "github", "supported_origins": ["https://github.com"]}:
+        add_error(report, "invalid_contract", "manifest.json#site", "Site applicability must be limited to github.com.", "Do not add an unreviewed origin or AccountSystem requirement to the public task.")
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    expected_source = {
+        "repository": "WebEnvoy/Lode",
+        "package_path": "sites/github/trending",
+        "commit": source_commit,
+        "source_ref": source_ref,
+    }
+    if source != expected_source:
+        add_error(report, "invalid_contract", "manifest.json#source", "Source metadata must identify the fixed Lode raw source-assets commit.", "Keep the upstream OpenCLI pin in the conversion reference and the package source pin in Lode.")
+    compatibility = manifest.get("compatibility") if isinstance(manifest.get("compatibility"), dict) else {}
+    if compatibility != {
+        "package_contract": "lode.site-skill-package/v1",
+        "execution_contract": "webenvoy.site-skill-execution/v1",
+        "required_capabilities": [{"ref": capability_ref, "version": "1.0.0"}],
+    }:
+        add_error(report, "invalid_contract", "manifest.json#compatibility", "Package compatibility refs do not match the fixed managed snapshot capability.", "Declare only the accepted versioned managed-page-snapshot capability.")
+
+    actual_files = validate_site_skill_integrity(report, root, manifest, GITHUB_TRENDING_SITE_SKILL_FILES)
+    if nested_get(manifest, ["integrity", "package_digest"]) != GITHUB_TRENDING_SITE_SKILL_PACKAGE_DIGEST:
+        add_error(report, "invalid_contract", "manifest.json#integrity.package_digest", "Package digest does not match the fixed GitHub Trending revision.", "Create a new package revision and update the explicit validator and local index pins together.")
+    lock = validate_site_skill_package_lock(report, root, manifest, actual_files, lock_ref)
+    package_lock = manifest.get("package_lock") if isinstance(manifest.get("package_lock"), dict) else {}
+    if lock and lock.get("capability_ref") != capability_ref:
+        add_error(report, "invalid_contract", "package-lock.json#capability_ref", "Package lock capability ref does not match the pinned declaration.", "Keep the package lock bound to the managed snapshot capability.")
+
+    assets = manifest.get("assets") if isinstance(manifest.get("assets"), list) else []
+    expected_assets = [
+        {"role": "capability_declaration", "path": "capabilities/managed-page-snapshot.json", "capability_ref": capability_ref},
+        {"role": "input_schema", "path": "schemas/input.schema.json", "schema_ref": input_ref},
+        {"role": "output_schema", "path": "schemas/output.schema.json", "schema_ref": output_ref},
+        {"role": "post_check", "path": "checks/post-check.json", "check_ref": post_check_ref},
+        {"role": "repair_guidance", "path": "references/recovery.md", "reference_ref": recovery_ref},
+    ]
+    if assets != expected_assets:
+        add_error(report, "invalid_contract", "manifest.json#assets", "GitHub Trending package assets differ from the fixed task contract.", "Keep one pinned capability, each required schema/check, and the recovery reference.")
+    integrity_paths = {record.get("path") for record in manifest.get("integrity", {}).get("files", []) if isinstance(record, dict)} if isinstance(manifest.get("integrity"), dict) else set()
+    for index, asset in enumerate(assets):
+        if not isinstance(asset, dict):
+            add_error(report, "invalid_contract", f"manifest.json#assets[{index}]", "Asset locator must be an object.", "Declare each package asset with a typed reference.")
+            continue
+        asset_path = _site_skill_path(root, asset.get("path"), f"manifest.json#assets[{index}].path")
+        if asset_path is None or asset.get("path") not in integrity_paths:
+            add_error(report, "invalid_contract", f"manifest.json#assets[{index}].path", "Asset must be a safe integrity-pinned package-local file.", "Pin every referenced asset in integrity.files.")
+
+    capability = _site_skill_json(report, root, root / "capabilities/managed-page-snapshot.json", "capability_declaration", "capabilities/managed-page-snapshot.json")
+    expected_capability = {
+        "capability_ref": capability_ref,
+        "capability_id": "managed-page-snapshot",
+        "version": "1.0.0",
+        "source_ref": source_ref,
+        "lock_ref": lock_ref,
+        "operation_id": "instance.snapshot",
+        "action": "read",
+    }
+    if capability != expected_capability:
+        add_error(report, "invalid_contract", "capabilities/managed-page-snapshot.json", "Capability declaration must pin the accepted instance.snapshot/read operation.", "Keep capability, source, and lock refs aligned with the package.")
+
+    scripts = manifest.get("scripts") if isinstance(manifest.get("scripts"), list) else []
+    if len(scripts) != 1 or not isinstance(scripts[0], dict):
+        add_error(report, "invalid_contract", "manifest.json#scripts", "Package must declare exactly one fixed managed script.", "Declare the single reviewed OpenCLI-derived read script.")
+        script = {}
+    else:
+        script = scripts[0]
+    script_hash = "sha256:" + hashlib.sha256((root / script_path).read_bytes()).hexdigest() if (root / script_path).is_file() else None
+    expected_script = {
+        "script_ref": script_ref,
+        "path": script_path,
+        "source_commit": source_commit,
+        "version": "1.0.0",
+        "sha256": GITHUB_TRENDING_SITE_SKILL_SCRIPT_SHA256,
+        "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+        "entrypoint": "run",
+        "input_schema_ref": input_ref,
+        "output_schema_ref": output_ref,
+        "capability_refs": [capability_ref],
+        "action": "read",
+        "broker": "webenvoy.site-skill-broker/v1",
+        "broker_capabilities": ["runtime.invoke", "output.write"],
+        "target_binding": {"target_type": "web_page", "requires_current_page": True, "requires_fresh_observation": True},
+        "timeout_ms": 10000,
+        "cancel": "cooperative",
+        "data_handling": {"input_sensitivity": "public", "output_sensitivity": "public", "external_egress": "none"},
+    }
+    if script != expected_script:
+        add_error(report, "invalid_contract", "manifest.json#scripts[0]", "Script declaration does not match the exact reviewed script ABI, source, and capability.", "Keep every script field aligned with the pinned package bytes and task.")
+    if script_hash != GITHUB_TRENDING_SITE_SKILL_SCRIPT_SHA256:
+        add_error(report, "invalid_contract", script_path, "Script bytes do not match the fixed reviewed source hash.", "Create a new package revision and repeat source, code, and runtime admission.")
+    if script_hash is None or script.get("path") not in actual_files:
+        add_error(report, "asset_missing", "manifest.json#scripts[0].path", "Script source must be a present integrity-pinned file.", "Restore the fixed script source and include it in integrity.files.")
+    else:
+        script_text = (root / script_path).read_text(encoding="utf-8")
+        forbidden = ["\nimport ", "export default", "fetch(", "eval(", "require(", "child_process", "document."]
+        if any(token in script_text for token in forbidden) or script_text.count("broker.runtime.invoke(") != 1 or script_text.count("broker.output.write(") != 1:
+            add_error(report, "invalid_contract", script_path, "Script source exceeds the fixed broker-only read ABI.", "Use one snapshot invoke and one output write; remove imports, raw network, DOM, eval, and process access.")
+
+    task_locators = manifest.get("tasks") if isinstance(manifest.get("tasks"), list) else []
+    if task_locators != [{"task_ref": task_ref, "path": "tasks/read-daily-trending-top5.json"}]:
+        add_error(report, "invalid_contract", "manifest.json#tasks", "Package must expose only the fixed daily Trending task.", "Keep the package's single bounded top-five task ref.")
+    task = _site_skill_json(report, root, root / "tasks/read-daily-trending-top5.json", "task_declaration", "tasks/read-daily-trending-top5.json")
+    entrypoint = {
+        "script_ref": script_ref,
+        "script_version": "1.0.0",
+        "script_sha256": script_hash,
+        "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+        "broker": "webenvoy.site-skill-broker/v1",
+        "capability_refs": [capability_ref],
+    }
+    if isinstance(task, dict):
+        required_task_keys = {
+            "task_ref", "version", "title", "intent", "operation_id", "action", "applicability", "entrypoint", "inputs", "outputs",
+            "preconditions", "verification", "failure_recovery", "known_branches", "data_handling",
+        }
+        if set(task) != required_task_keys:
+            add_error(report, "invalid_contract", "tasks/read-daily-trending-top5.json", "Task declaration has missing or unsupported fields.", "Keep the fixed bounded task contract.")
+        task_expectations = {
+            "task_ref": task_ref,
+            "version": "1.0.0",
+            "title": "Read the first five daily GitHub Trending repositories",
+            "intent": "Return the first five repositories on the current public daily GitHub Trending page with their name, URL, language, and stars today.",
+            "operation_id": "instance.snapshot",
+            "action": "read",
+            "applicability": {"origins": ["https://github.com"], "target_type": "web_page"},
+            "entrypoint": entrypoint,
+            "inputs": {"schema_ref": input_ref, "carrier": "none", "max_bytes": 0, "sensitivity": "public"},
+            "outputs": {"schema_ref": output_ref, "result_kind": "github_trending_daily_top5", "completeness": "required"},
+            "preconditions": ["current_target_is_daily_unfiltered_trending"],
+            "verification": {"post_check_ref": post_check_ref, "required_evidence_refs": ["snapshot_ref"]},
+            "known_branches": ["wrong_page", "snapshot_incomplete", "unlabeled_language", "row_parse_ambiguous", "daily_stars_missing"],
+            "failure_recovery": {
+                "failure_classes": ["invalid_contract", "resource_unavailable", "site_changed", "post_check_failed", "evidence_expired"],
+                "repair_ref": recovery_ref,
+                "unknown_policy": "query_original_run_only",
+            },
+            "data_handling": {"input_sensitivity": "public", "output_sensitivity": "public", "external_egress": "none"},
+        }
+        for field, expected in task_expectations.items():
+            if task.get(field) != expected:
+                add_error(report, "invalid_contract", f"tasks/read-daily-trending-top5.json#{field}", f"Task `{field}` does not match the fixed package contract.", "Keep the task, schema, capability, recovery, and evidence refs aligned.")
+        if not task_locators or not isinstance(task_locators[0], dict) or task.get("task_ref") != task_locators[0].get("task_ref"):
+            add_error(report, "invalid_contract", "manifest.json#tasks[0].task_ref", "Task locator ref does not match the task declaration.", "Keep the manifest task locator and task_ref identical.")
+
+    schema_assets: dict[str, dict[str, Any]] = {}
+    for role, expected_path, expected_ref in [
+        ("input_schema", "schemas/input.schema.json", input_ref),
+        ("output_schema", "schemas/output.schema.json", output_ref),
+    ]:
+        schema_path = _site_skill_path(root, expected_path, f"manifest.json#assets.{role}.path")
+        if schema_path is None or expected_path not in integrity_paths:
+            add_error(report, "asset_missing", f"manifest.json#assets.{role}", "Schema must be a safe, integrity-pinned package asset.", "Restore and pin the task schema.")
+            continue
+        schema = _site_skill_json(report, root, schema_path, role, expected_path)
+        if not isinstance(schema, dict):
+            continue
+        if schema.get("$id") != expected_ref or schema.get("type") != "object" or schema.get("additionalProperties") is not False:
+            add_error(report, "invalid_contract", expected_path, "Schema identity or strict object boundary does not match its task ref.", "Use the pinned schema ref and reject undeclared properties.")
+        if role == "input_schema" and (schema.get("required") != [] or schema.get("properties") != {}):
+            add_error(report, "invalid_contract", expected_path, "Task has no caller input and its input schema must accept only an empty object.", "Keep the carrier-none input schema empty.")
+        try:
+            import jsonschema
+            jsonschema.Draft202012Validator.check_schema(schema)
+        except ImportError as exc:
+            add_error(report, "invalid_contract", expected_path, f"Schema validation is unavailable: {exc}", "Install requirements-validator.txt.")
+        except jsonschema.SchemaError as exc:
+            add_error(report, "invalid_contract", expected_path, f"Invalid JSON Schema: {exc}", "Fix the pinned schema before package admission.")
+        schema_assets[role] = schema
+    output_schema = schema_assets.get("output_schema", {})
+    output_properties = output_schema.get("properties") if isinstance(output_schema.get("properties"), dict) else {}
+    if output_properties.get("result_kind") != {"const": "github_trending_daily_top5"} or output_properties.get("status") != {"enum": ["available", "partial"]}:
+        add_error(report, "invalid_contract", "schemas/output.schema.json", "Output schema must preserve the fixed result kind and partial state.", "Require schema-constrained available/partial results.")
+    normalized = output_properties.get("normalized") if isinstance(output_properties.get("normalized"), dict) else {}
+    normalized_props = normalized.get("properties") if isinstance(normalized.get("properties"), dict) else {}
+    if not {"period", "requested_count", "rows", "completeness", "snapshot_coverage"}.issubset(set(normalized_props)):
+        add_error(report, "invalid_contract", "schemas/output.schema.json#normalized", "Output schema must require the top-five fields and coverage state.", "Keep completeness, coverage, and each requested row explicit.")
+
+    post_check = _site_skill_json(report, root, root / "checks/post-check.json", "post_check", "checks/post-check.json")
+    expected_check = {
+        "schema_version": "lode.post-check.v0",
+        "check_ref": post_check_ref,
+        "requirements": [{
+            "requirement_id": "daily-trending-top-five",
+            "required_status": "available",
+            "required_normalized_fields": ["period", "requested_count", "rows", "completeness", "snapshot_coverage"],
+            "expected_normalized_fields": {"period": "daily", "requested_count": 5, "completeness": "complete", "snapshot_coverage": "complete"},
+            "required_evidence_refs": ["snapshot_ref"],
+        }],
+    }
+    if post_check != expected_check:
+        add_error(report, "post_check_failed", "checks/post-check.json", "Post-check must require a complete daily top-five result and snapshot evidence.", "Keep the success condition tied to all five observed rows and complete coverage.")
+
+    mapping_path = root / "references/opencli-source-mapping.md"
+    license_path = root / "references/OpenCLI-Apache-2.0-LICENSE.txt"
+    if mapping_path.is_file():
+        mapping_text = mapping_path.read_text(encoding="utf-8")
+        for fact in [
+            "jackwener/OpenCLI", GITHUB_TRENDING_OPENCLI_COMMIT, "@jackwener/opencli` `1.8.8",
+            "clis/github-trending/repos.js", GITHUB_TRENDING_OPENCLI_SOURCE_SHA256,
+            GITHUB_TRENDING_OPENCLI_PACKAGE_SHA256, "Apache-2.0", GITHUB_TRENDING_OPENCLI_LICENSE_SHA256,
+        ]:
+            if fact not in mapping_text:
+                add_error(report, "invalid_contract", "references/opencli-source-mapping.md", f"Fixed OpenCLI provenance is missing `{fact}`.", "Keep the upstream repo, commit, source bytes, version, and license pins together.")
+    else:
+        add_error(report, "asset_missing", "references/opencli-source-mapping.md", "OpenCLI source mapping is missing.", "Restore the integrity-pinned source mapping.")
+    if not license_path.is_file() or "sha256:" + hashlib.sha256(license_path.read_bytes()).hexdigest() != "sha256:" + GITHUB_TRENDING_OPENCLI_LICENSE_SHA256:
+        add_error(report, "invalid_contract", "references/OpenCLI-Apache-2.0-LICENSE.txt", "Bundled OpenCLI license notice does not match its fixed upstream bytes.", "Restore the Apache-2.0 license file from the pinned OpenCLI commit.")
+
+    validation = manifest.get("validation") if isinstance(manifest.get("validation"), dict) else {}
+    if validation != {"runtime_execution": "not_claimed", "live_evidence": "not_claimed"}:
+        add_error(report, "invalid_contract", "manifest.json#validation", "Package must not claim live package execution or evidence.", "Keep package-level live execution unclaimed until an exact managed Run is verified.")
+
+    scan_forbidden_keys(report, manifest, "manifest.json")
+    for file_path in actual_files:
+        if file_path.endswith(".json"):
+            value = _site_skill_json(report, root, root / file_path, "pinned_asset", file_path)
+            if value is not None:
+                scan_forbidden_keys(report, value, file_path)
+
+    registry_path = registry_index or discover_local_registry(root)
+    if registry_path is None:
+        add_error(report, "registry_unavailable", "registry/local-packages.json", "A repo-local package index is required for formal site-skill resolution.", "Add one index entry for the fixed package revision.")
+    else:
+        repo_root = discover_repo_root(registry_path.parent) or registry_path.parent
+        index_path = rel(repo_root, registry_path)
+        index = _site_skill_json(report, repo_root, registry_path, "local_registry_index", index_path)
+        if isinstance(index, dict):
+            entries = index.get("entries")
+            matches = [(idx, entry) for idx, entry in enumerate(entries) if isinstance(entry, dict) and entry.get("package_ref") == package_ref] if isinstance(entries, list) else []
+            if len(matches) != 1:
+                add_error(report, "registry_unavailable", index_path, "Local package index must contain exactly one entry for this GitHub site-skill package.", "Add one repo-local manifest locator for the package.")
+            else:
+                index_number, entry = matches[0]
+                task_refs = [task_ref]
+                validate_site_skill_registry_entry(report, repo_root, root, index_path, index_number, entry, manifest, task_refs)
+        elif index is not None:
+            add_error(report, "invalid_contract", index_path, "Local package index must be a JSON object.", "Keep the index as one JSON object.")
+    return report
+
+
 def validate_site_skill_package(root: Path, registry_index: Path | None, report: Report, manifest: dict[str, Any]) -> Report:
     manifest = _site_skill_json(report, root, root / "manifest.json", "manifest", "manifest.json")
     if not isinstance(manifest, dict):
         return report
     report.package_ref = manifest.get("package_ref")
+    if manifest.get("package_ref") == GITHUB_TRENDING_SITE_SKILL_PACKAGE_REF:
+        return validate_github_trending_site_skill_package(root, registry_index, report, manifest)
     required = ["manifest_version", "package_type", "package_ref", "revision_ref", "version", "lifecycle", "site", "source", "package_lock", "integrity", "compatibility", "assets", "tasks"]
     require_keys(report, manifest, required, "manifest.json")
     if manifest.get("manifest_version") != SUPPORTED_SITE_SKILL_MANIFEST_VERSION or manifest.get("package_type") != "site-skill":

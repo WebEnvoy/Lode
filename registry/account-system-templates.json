@@ -1,0 +1,12 @@
+{
+  "schema_version": "lode.account-system-template-index.v1",
+  "index_id": "lode.account-system-templates",
+  "entries": [
+    {
+      "template_ref": "lode://account-system/github@1.0.0",
+      "version": "1.0.0",
+      "path": "account-systems/github/1.0.0.json",
+      "sha256": "sha256:8b022fc329a6f75887e465ab561c83ba74d2ab2af1ef0e51a41f3d06b1b4c777"
+    }
+  ]
+}
