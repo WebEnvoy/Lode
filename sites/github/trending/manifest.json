@@ -2,7 +2,7 @@
   "manifest_version": "lode.site-skill-package.manifest.v1",
   "package_type": "site-skill",
   "package_ref": "lode://site-skill/github/trending",
-  "revision_ref": "lode://site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+  "revision_ref": "lode://site-skill/github/trending@1.0.0#0dcd6232cdfd9c88982792d2ce88a39d528a6433",
   "version": "1.0.0",
   "lifecycle": "experimental",
   "site": {
@@ -14,8 +14,8 @@
   "source": {
     "repository": "WebEnvoy/Lode",
     "package_path": "sites/github/trending",
-    "commit": "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
-    "source_ref": "lode://source/site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0"
+    "commit": "0dcd6232cdfd9c88982792d2ce88a39d528a6433",
+    "source_ref": "lode://source/site-skill/github/trending@1.0.0#0dcd6232cdfd9c88982792d2ce88a39d528a6433"
   },
   "package_lock": {
     "path": "package-lock.json",
@@ -33,7 +33,7 @@
         "path": "capabilities/managed-page-snapshot.json",
         "role": "capability_declaration",
         "bytes": 378,
-        "sha256": "sha256:0366c6c32d0a36a98d8bd4cda685ef929cde06ad0f4b8238b78f9f1044927527"
+        "sha256": "sha256:a1b73edd05af8a9a684b7ad8cae66128c23f024ad99cb7a0c380fa8d290c8e29"
       },
       {
         "path": "checks/post-check.json",
@@ -45,7 +45,7 @@
         "path": "package-lock.json",
         "role": "package_lock",
         "bytes": 486,
-        "sha256": "sha256:e8cc219dc7eb2994658253844c4ebfe87d6cca28eb1a3fcf96dbe40337bfb7b3"
+        "sha256": "sha256:f8602db6afa7ba9d27d36cb1af42acac6cda3b7ebc3eb715c219be5977e3161d"
       },
       {
         "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
@@ -90,7 +90,7 @@
         "sha256": "sha256:3f52cc01c6f0e22f9668744c98f60f6dfa4040fccf58c75d45bfe84810d3668e"
       }
     ],
-    "package_digest": "sha256:3cd5b0148d264eb882f403b5ff22f1f642be1bee510c7200489c7f1c5a4fd821"
+    "package_digest": "sha256:54333c70f2e69dd1fe94c938280d37465438cc6aed9c1edd1aa985f530704b52"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -133,7 +133,7 @@
     {
       "script_ref": "lode://script/site-skill/github/trending/read-daily-top5@1.0.0",
       "path": "scripts/read-daily-trending-top5.mjs",
-      "source_commit": "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+      "source_commit": "0dcd6232cdfd9c88982792d2ce88a39d528a6433",
       "version": "1.0.0",
       "sha256": "sha256:d73b66d5711ddd5a4e9295d8df4677f431b62d3f44b513698e095a2a31ffb0ab",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",

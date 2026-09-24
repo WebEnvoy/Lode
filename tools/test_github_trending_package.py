@@ -19,7 +19,7 @@ from tools.lode_validate_package import GITHUB_TRENDING_SITE_SKILL_SCRIPT_SHA256
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "sites/github/trending"
-SOURCE_COMMIT = "d185a2ac2c85a659d06b3e0e4424bf00c83d7db0"
+SOURCE_COMMIT = "0dcd6232cdfd9c88982792d2ce88a39d528a6433"
 OPENCLI_COMMIT = "8271afc67e8504bda94c147f446ee29775d08274"
 CAPABILITY_REF = "lode://site-capability/github/managed-page-snapshot@1.0.0"
 SCRIPT_REF = "lode://script/site-skill/github/trending/read-daily-top5@1.0.0"
@@ -35,6 +35,41 @@ def load_json(path: Path) -> dict[str, object]:
 
 def canonical_bytes(value: object) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+
+def source_comparison_bytes(relative_path: str, data: bytes) -> bytes:
+    generated_fields = {
+        "capabilities/managed-page-snapshot.json": {"source_ref"},
+        "package-lock.json": {"source_ref", "revision_ref"},
+    }.get(relative_path)
+    if generated_fields is None:
+        return data
+    value = json.loads(data)
+    for field in generated_fields:
+        value[field] = "<generated-source-pin>"
+    return canonical_bytes(value)
+
+
+def source_repository_for_commit(commit: str) -> Path | None:
+    candidates = [ROOT, ROOT / ".provenance/controlled-local-source"]
+    for repository in candidates:
+        if not repository.exists():
+            continue
+        git_prefix = ["git", "-C", str(repository)]
+        object_exists = subprocess.run(
+            [*git_prefix, "cat-file", "-e", f"{commit}^{{commit}}"], capture_output=True, check=False
+        )
+        if object_exists.returncode != 0:
+            continue
+        reachable_refs = subprocess.run(
+            [*git_prefix, "for-each-ref", f"--contains={commit}", "--format=%(refname)"], capture_output=True, text=True, check=False
+        )
+        reachable_from_head = subprocess.run(
+            [*git_prefix, "merge-base", "--is-ancestor", commit, "HEAD"], capture_output=True, check=False
+        )
+        if reachable_refs.returncode == 0 and (reachable_refs.stdout.strip() or reachable_from_head.returncode == 0):
+            return repository
+    return None
 
 
 class GitHubTrendingPackageTests(unittest.TestCase):
@@ -179,6 +214,47 @@ class GitHubTrendingPackageTests(unittest.TestCase):
             temporary_index.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
             report = validate_package(PACKAGE, temporary_index)
         self.assertTrue(report.errors)
+
+    def test_all_registered_site_skill_sources_exist_and_match_their_assets(self) -> None:
+        index = load_json(ROOT / "registry/local-packages.json")
+        entries = index.get("entries")
+        self.assertIsInstance(entries, list)
+        site_skill_entries = [entry for entry in entries if isinstance(entry, dict) and entry.get("package_type") == "site-skill"]
+        self.assertTrue(site_skill_entries)
+
+        for entry in site_skill_entries:
+            package_root = ROOT / entry["package_path"]
+            manifest = load_json(package_root / "manifest.json")
+            source = manifest.get("source")
+            self.assertIsInstance(source, dict)
+            commit = source.get("commit")
+            package_path = source.get("package_path")
+            self.assertIsInstance(commit, str)
+            self.assertEqual(40, len(commit))
+            self.assertEqual(str(package_root.relative_to(ROOT)), package_path)
+
+            source_repository = source_repository_for_commit(commit)
+            self.assertIsNotNone(source_repository, f"source commit is missing or unreachable: {commit}")
+            assert source_repository is not None
+            git_prefix = ["git", "-C", str(source_repository)]
+            source_tree = subprocess.run(
+                [*git_prefix, "cat-file", "-e", f"{commit}:{package_path}"], capture_output=True, text=True, check=False
+            )
+            self.assertEqual(0, source_tree.returncode, f"source package path is absent at {commit}: {package_path}")
+
+            for record in manifest["integrity"]["files"]:
+                relative_path = record["path"]
+                source_object = f"{commit}:{package_path}/{relative_path}"
+                source_file = subprocess.run(
+                    [*git_prefix, "show", source_object], capture_output=True, check=False
+                )
+                self.assertEqual(0, source_file.returncode, f"source asset is absent: {source_object}")
+                current_bytes = (package_root / relative_path).read_bytes()
+                self.assertEqual(
+                    source_comparison_bytes(relative_path, source_file.stdout),
+                    source_comparison_bytes(relative_path, current_bytes),
+                    f"source asset differs from its pinned commit: {source_object}",
+                )
 
 
 if __name__ == "__main__":

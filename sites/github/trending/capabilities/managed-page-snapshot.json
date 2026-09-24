@@ -2,7 +2,7 @@
   "capability_ref": "lode://site-capability/github/managed-page-snapshot@1.0.0",
   "capability_id": "managed-page-snapshot",
   "version": "1.0.0",
-  "source_ref": "lode://source/site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+  "source_ref": "lode://source/site-skill/github/trending@1.0.0#0dcd6232cdfd9c88982792d2ce88a39d528a6433",
   "lock_ref": "lode://lock/site-skill/github/trending@1.0.0",
   "operation_id": "instance.snapshot",
   "action": "read"
