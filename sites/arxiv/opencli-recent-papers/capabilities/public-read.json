@@ -2,7 +2,7 @@
   "capability_ref": "lode://site-capability/arxiv/opencli-recent-papers@0.1.0",
   "capability_id": "opencli-recent-papers",
   "version": "0.1.0",
-  "source_ref": "lode://source/site-skill/arxiv/opencli-recent-papers@0.1.0#997eef09a7116ec70216383d36e4b5be802e9126",
+  "source_ref": "lode://source/site-skill/arxiv/opencli-recent-papers@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8",
   "lock_ref": "lode://lock/site-skill/arxiv/opencli-recent-papers@0.1.0",
   "operation_id": "network.public_read",
   "action": "read"
