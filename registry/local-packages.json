@@ -2214,6 +2214,39 @@
       "task_refs": [
         "read-daily-trending-top5"
       ]
+    },
+    {
+      "package_ref": "lode://site-skill/github/opencli-trending-repos",
+      "package_type": "site-skill",
+      "package_path": "sites/github/opencli-trending-repos",
+      "manifest_path": "sites/github/opencli-trending-repos/manifest.json",
+      "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "package_digest": "sha256:41353b30c66961d9a2b8336176a4944540702b53c09197a3af48c02b501d3438",
+      "task_refs": [
+        "read-trending-repositories"
+      ]
+    },
+    {
+      "package_ref": "lode://site-skill/devto/opencli-latest-articles",
+      "package_type": "site-skill",
+      "package_path": "sites/devto/opencli-latest-articles",
+      "manifest_path": "sites/devto/opencli-latest-articles/manifest.json",
+      "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "package_digest": "sha256:679272f3dc2c3ecc5f59cbf23001c8454e249818392872982969410106311d5f",
+      "task_refs": [
+        "read-latest-articles-page"
+      ]
+    },
+    {
+      "package_ref": "lode://site-skill/arxiv/opencli-recent-papers",
+      "package_type": "site-skill",
+      "package_path": "sites/arxiv/opencli-recent-papers",
+      "manifest_path": "sites/arxiv/opencli-recent-papers/manifest.json",
+      "revision_ref": "lode://site-skill/arxiv/opencli-recent-papers@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "package_digest": "sha256:1a9b370c5ffb25647ce78dfba127a09ba5254b813830d5589bfc42b23747ff11",
+      "task_refs": [
+        "read-recent-category-papers"
+      ]
     }
   ],
   "non_goals": [

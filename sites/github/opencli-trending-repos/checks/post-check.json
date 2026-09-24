@@ -1,0 +1,23 @@
+{
+  "schema_version": "lode.post-check.v0",
+  "check_ref": "lode://check/site-skill/github/opencli-trending-repos/post-check@0.1.0",
+  "requirements": [
+    {
+      "requirement_id": "public-response-and-complete-request-scope",
+      "required_status": "available",
+      "required_normalized_fields": [
+        "parameters",
+        "records",
+        "completeness",
+        "pagination"
+      ],
+      "expected_normalized_fields": {
+        "completeness": "complete",
+        "pagination.completeness": "complete"
+      },
+      "required_evidence_refs": [
+        "public_http_response"
+      ]
+    }
+  ]
+}

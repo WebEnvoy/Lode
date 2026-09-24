@@ -1,0 +1,93 @@
+{
+  "task_ref": "read-latest-articles-page",
+  "version": "0.1.0",
+  "title": "DEV.to latest articles",
+  "intent": "Read public DEV.to latest articles data using the pinned OpenCLI 1.8.8 adapter semantics.",
+  "operation_id": "network.public_read",
+  "action": "read",
+  "applicability": {
+    "origins": [
+      "https://dev.to"
+    ],
+    "target_type": "public_http_origin"
+  },
+  "entrypoint": {
+    "script_ref": "lode://script/site-skill/devto/opencli-latest-articles/read-latest-articles-page@0.1.0",
+    "script_version": "0.1.0",
+    "script_sha256": "sha256:60029051770114860dc19aec4bf1b81173f699ea1160d294afc34043c4f85214",
+    "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+    "broker": "webenvoy.site-skill-broker/v1.1",
+    "capability_refs": [
+      "lode://site-capability/devto/opencli-latest-articles@0.1.0"
+    ]
+  },
+  "network_read": {
+    "transport": "program_anonymous_https",
+    "origin": "https://dev.to",
+    "pathname": "/api/articles/latest",
+    "allow_one_path_segment": false,
+    "query_keys": [
+      "per_page",
+      "page"
+    ],
+    "headers": {
+      "accept": "application/json"
+    },
+    "content_types": [
+      "application/json"
+    ],
+    "max_response_bytes": 4194304,
+    "max_redirects": 2,
+    "timeout_ms": 10000
+  },
+  "inputs": {
+    "schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/input@0.1.0",
+    "carrier": "webenvoy.managed-task-inline/v1",
+    "max_bytes": 4096,
+    "content_type": "application/json",
+    "sensitivity": "public"
+  },
+  "outputs": {
+    "schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/output@0.1.0",
+    "result_kind": "opencli_devto_latest_articles",
+    "completeness": "required"
+  },
+  "preconditions": [
+    "anonymous_https_origin_allowed",
+    "pinned_adapter_code_admitted"
+  ],
+  "verification": {
+    "post_check_ref": "lode://check/site-skill/devto/opencli-latest-articles/post-check@0.1.0",
+    "required_evidence_refs": [
+      "public_http_response"
+    ]
+  },
+  "known_branches": [
+    "invalid_input",
+    "not_dispatched",
+    "redirect_refused",
+    "http_non_2xx",
+    "response_too_large",
+    "unexpected_content_type",
+    "empty_result",
+    "partial_result",
+    "unknown_outcome"
+  ],
+  "failure_recovery": {
+    "failure_classes": [
+      "invalid_contract",
+      "resource_unavailable",
+      "site_changed",
+      "empty_result",
+      "post_check_failed",
+      "evidence_expired"
+    ],
+    "repair_ref": "lode://reference/site-skill/devto/opencli-latest-articles/recovery@0.1.0",
+    "unknown_policy": "query_original_run_only"
+  },
+  "data_handling": {
+    "input_sensitivity": "public",
+    "output_sensitivity": "public",
+    "external_egress": "declared"
+  }
+}

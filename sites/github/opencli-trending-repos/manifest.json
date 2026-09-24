@@ -1,0 +1,181 @@
+{
+  "manifest_version": "lode.site-skill-package.manifest.v1",
+  "package_type": "site-skill",
+  "package_ref": "lode://site-skill/github/opencli-trending-repos",
+  "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+  "version": "0.1.0",
+  "lifecycle": "proposed",
+  "site": {
+    "site_id": "github",
+    "supported_origins": [
+      "https://github.com"
+    ]
+  },
+  "source": {
+    "repository": "WebEnvoy/Lode",
+    "package_path": "sites/github/opencli-trending-repos",
+    "commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+    "source_ref": "lode://source/site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1"
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "lock_ref": "lode://lock/site-skill/github/opencli-trending-repos@0.1.0"
+  },
+  "integrity": {
+    "files": [
+      {
+        "path": "SKILL.md",
+        "role": "entrypoint",
+        "bytes": 989,
+        "sha256": "sha256:b3e2495c0c240a6425bb68b29abb66c4d2d6a2b2141958418e459987feb5e43e"
+      },
+      {
+        "path": "capabilities/public-read.json",
+        "role": "capability_declaration",
+        "bytes": 410,
+        "sha256": "sha256:b160082d85c48faa07df1c588e135f65d06cf01cff765b3280007cab65544bae"
+      },
+      {
+        "path": "checks/post-check.json",
+        "role": "post_check",
+        "bytes": 614,
+        "sha256": "sha256:dd5a1386c89f675f07492ff38aee424f10bc464be44aebde45dc08ae07eb7e5e"
+      },
+      {
+        "path": "fixtures/README.md",
+        "role": "fixture_index",
+        "bytes": 268,
+        "sha256": "sha256:5988b7e3e9c33191b6fe7784895cc20e7cbffdbc61ca28f8a8cf244815123621"
+      },
+      {
+        "path": "package-lock.json",
+        "role": "package_lock",
+        "bytes": 543,
+        "sha256": "sha256:165bacf446d2e197387434c7bd8cba3604269f066378c9cdbca1d3b7e235f420"
+      },
+      {
+        "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
+        "role": "license_notice",
+        "bytes": 10760,
+        "sha256": "sha256:0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54"
+      },
+      {
+        "path": "references/opencli-source-mapping.md",
+        "role": "source_mapping",
+        "bytes": 4330,
+        "sha256": "sha256:8cdefbb9e6422565cc989d33e8068f0671e7b1275d0d483dee697e533a628529"
+      },
+      {
+        "path": "references/recovery.md",
+        "role": "repair_guidance",
+        "bytes": 510,
+        "sha256": "sha256:c49184707fa5921a259010cb299ee361a560a3aa99562ec87b8af34487a48120"
+      },
+      {
+        "path": "schemas/input.schema.json",
+        "role": "input_schema",
+        "bytes": 808,
+        "sha256": "sha256:38c8d884f7f517ac9fae6540bbd1013d93094aa784cc269a402b08792f13cd95"
+      },
+      {
+        "path": "schemas/output.schema.json",
+        "role": "output_schema",
+        "bytes": 6884,
+        "sha256": "sha256:cdf191ecaf74863b1262c8724b8d33fed1d10339c1701d4838f5407d8327a218"
+      },
+      {
+        "path": "scripts/opencli-adapter.mjs",
+        "role": "script_source",
+        "bytes": 15740,
+        "sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43"
+      },
+      {
+        "path": "tasks/read-trending-repositories.json",
+        "role": "task_declaration",
+        "bytes": 2786,
+        "sha256": "sha256:032489b92e003987e49538e1c84e6ae39e49742ccc865d80d2dc8c4d0dbd1c82"
+      }
+    ],
+    "package_digest": "sha256:41353b30c66961d9a2b8336176a4944540702b53c09197a3af48c02b501d3438"
+  },
+  "compatibility": {
+    "package_contract": "lode.site-skill-package/v1",
+    "execution_contract": "webenvoy.site-skill-execution/v1",
+    "required_capabilities": [
+      {
+        "ref": "lode://site-capability/github/opencli-trending-repos@0.1.0",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "role": "capability_declaration",
+      "path": "capabilities/public-read.json",
+      "capability_ref": "lode://site-capability/github/opencli-trending-repos@0.1.0"
+    },
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "schema_ref": "lode://schema/site-skill/github/opencli-trending-repos/input@0.1.0"
+    },
+    {
+      "role": "output_schema",
+      "path": "schemas/output.schema.json",
+      "schema_ref": "lode://schema/site-skill/github/opencli-trending-repos/output@0.1.0"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "check_ref": "lode://check/site-skill/github/opencli-trending-repos/post-check@0.1.0"
+    },
+    {
+      "role": "repair_guidance",
+      "path": "references/recovery.md",
+      "reference_ref": "lode://reference/site-skill/github/opencli-trending-repos/recovery@0.1.0"
+    }
+  ],
+  "scripts": [
+    {
+      "script_ref": "lode://script/site-skill/github/opencli-trending-repos/read-trending-repositories@0.1.0",
+      "path": "scripts/opencli-adapter.mjs",
+      "source_commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "version": "0.1.0",
+      "sha256": "sha256:ad169cd4f55a2a6445e541f3f58ee4af4fb51594a84d4d67f0f1c8c79e3d6d43",
+      "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+      "entrypoint": "run",
+      "input_schema_ref": "lode://schema/site-skill/github/opencli-trending-repos/input@0.1.0",
+      "output_schema_ref": "lode://schema/site-skill/github/opencli-trending-repos/output@0.1.0",
+      "capability_refs": [
+        "lode://site-capability/github/opencli-trending-repos@0.1.0"
+      ],
+      "action": "read",
+      "broker": "webenvoy.site-skill-broker/v1.1",
+      "broker_capabilities": [
+        "network.read",
+        "output.write"
+      ],
+      "target_binding": {
+        "target_type": "public_http_origin",
+        "requires_profile_origin_grant": true
+      },
+      "timeout_ms": 10000,
+      "cancel": "cooperative",
+      "data_handling": {
+        "input_sensitivity": "public",
+        "output_sensitivity": "public",
+        "external_egress": "declared"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_ref": "read-trending-repositories",
+      "path": "tasks/read-trending-repositories.json"
+    }
+  ],
+  "validation": {
+    "runtime_execution": "not_claimed",
+    "live_evidence": "not_claimed"
+  }
+}

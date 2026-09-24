@@ -1,0 +1,12 @@
+[
+  {
+    "id": 7654321,
+    "title": "A bounded public API example",
+    "user": {"username": "sample-author"},
+    "tag_list": "javascript, tools",
+    "public_reactions_count": 12,
+    "comments_count": 3,
+    "published_at": "2026-09-25T08:15:00Z",
+    "url": "https://dev.to/sample-author/bounded-public-api-example"
+  }
+]

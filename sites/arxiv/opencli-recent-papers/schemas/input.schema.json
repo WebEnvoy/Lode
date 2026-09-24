@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-skill/arxiv/opencli-recent-papers/input@0.1.0",
+  "type": "object",
+  "required": [
+    "category"
+  ],
+  "properties": {
+    "category": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z]+(?:-[a-z]+)*(?:\\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)?$"
+    },
+    "limit": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        {
+          "type": "string",
+          "pattern": "^([1-9]|[1-4][0-9]|50)$"
+        }
+      ],
+      "default": 10
+    }
+  },
+  "additionalProperties": false
+}

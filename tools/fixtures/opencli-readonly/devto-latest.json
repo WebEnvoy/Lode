@@ -1,0 +1,20 @@
+[
+  {
+    "id": 123,
+    "title": "Hello & world",
+    "user": {"username": "alice"},
+    "tag_list": ["node", "ai"],
+    "public_reactions_count": 4,
+    "comments_count": 2,
+    "published_at": "2026-09-25T10:11:12Z",
+    "url": "https://dev.to/alice/hello-world"
+  },
+  {
+    "id": null,
+    "title": null,
+    "public_reactions_count": null,
+    "comments_count": "3",
+    "published_at": "bad",
+    "url": null
+  }
+]

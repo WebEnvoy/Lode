@@ -6,9 +6,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 
 SUPPORTED_MANIFEST_VERSION = "lode.site-capability.manifest.v0"
@@ -2572,11 +2574,214 @@ def validate_github_trending_site_skill_package(
     return report
 
 
+def validate_public_read_site_skill_candidate(
+    root: Path, registry_index: Path | None, report: Report, manifest: dict[str, Any]
+) -> Report:
+    """Validate common package pins and the bounded v1.1 public-read boundary."""
+    report.package_ref = package_ref = manifest.get("package_ref")
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    version, commit, package_path = manifest.get("version"), source.get("commit"), source.get("package_path")
+    lock_locator = manifest.get("package_lock") if isinstance(manifest.get("package_lock"), dict) else {}
+    lock_ref = lock_locator.get("lock_ref")
+
+    def reject(path: str, message: str) -> None:
+        add_error(report, "invalid_contract", path, message, "Keep this proposed task within the existing managed anonymous-read boundary.")
+
+    require_keys(report, manifest, [
+        "manifest_version", "package_type", "package_ref", "revision_ref", "version", "lifecycle",
+        "site", "source", "package_lock", "integrity", "compatibility", "assets", "scripts", "tasks", "validation",
+    ], "manifest.json")
+    if manifest.get("manifest_version") != SUPPORTED_SITE_SKILL_MANIFEST_VERSION or manifest.get("package_type") != "site-skill":
+        add_error(report, "unsupported_version", "manifest.json", "Unsupported site-skill manifest.", "Use the existing site-skill package v1 contract.")
+    if not isinstance(package_ref, str) or not package_ref.startswith("lode://site-skill/") or not isinstance(version, str) or manifest.get("lifecycle") != "proposed":
+        reject("manifest.json", "Candidate identity must remain a proposed site-skill package.")
+    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        reject("manifest.json#source.commit", "Source must pin a full immutable Lode commit.")
+    elif manifest.get("revision_ref") != f"{package_ref}@{version}#{commit}":
+        reject("manifest.json#revision_ref", "Revision must bind package identity, version, and source commit.")
+    if source.get("repository") != "WebEnvoy/Lode" or not isinstance(package_path, str):
+        reject("manifest.json#source", "Source must identify this package in WebEnvoy/Lode.")
+    else:
+        repo_root = discover_repo_root(root) or root
+        if (repo_root / package_path).resolve() != root.resolve():
+            reject("manifest.json#source.package_path", "Source path must resolve to this package directory.")
+
+    pinned = validate_site_skill_integrity(report, root, manifest, None)
+    lock = validate_site_skill_package_lock(report, root, manifest, pinned, str(lock_ref or ""))
+    compatibility = manifest.get("compatibility") if isinstance(manifest.get("compatibility"), dict) else {}
+    if compatibility.get("package_contract") != "lode.site-skill-package/v1" or compatibility.get("execution_contract") != "webenvoy.site-skill-execution/v1":
+        reject("manifest.json#compatibility", "Candidate must use the existing package and execution contracts.")
+
+    assets = manifest.get("assets") if isinstance(manifest.get("assets"), list) else []
+    def asset(role: str) -> dict[str, Any]:
+        rows = [item for item in assets if isinstance(item, dict) and item.get("role") == role]
+        if len(rows) != 1:
+            reject("manifest.json#assets", f"Expected one {role} asset locator.")
+            return {}
+        item = rows[0]
+        if item.get("path") not in pinned or _site_skill_path(root, item.get("path"), f"manifest.json#assets.{role}.path") is None:
+            reject(f"manifest.json#assets.{role}", "Asset path must be safe and integrity-pinned.")
+            return {}
+        return item
+
+    task_locators = manifest.get("tasks") if isinstance(manifest.get("tasks"), list) else []
+    if len(task_locators) != 1 or not isinstance(task_locators[0], dict):
+        reject("manifest.json#tasks", "Candidate must expose exactly one task.")
+        return report
+    task_ref, task_path_value = task_locators[0].get("task_ref"), task_locators[0].get("path")
+    task_path = _site_skill_path(root, task_path_value, "manifest.json#tasks.path")
+    if not isinstance(task_ref, str) or task_path is None or task_path_value not in pinned:
+        reject("manifest.json#tasks", "Task must resolve to one integrity-pinned file.")
+        return report
+    task = _site_skill_json(report, root, task_path, "task_declaration", str(task_path_value))
+    if not isinstance(task, dict):
+        return report
+    if task.get("task_ref") != task_ref or task.get("version") != version or task.get("operation_id") != "network.public_read" or task.get("action") != "read":
+        reject("tasks", "Task must bind the package version to network.public_read/read.")
+
+    applicability = task.get("applicability") if isinstance(task.get("applicability"), dict) else {}
+    origins = applicability.get("origins")
+    origin = origins[0] if isinstance(origins, list) and len(origins) == 1 else None
+    try:
+        parsed = urlsplit(origin) if isinstance(origin, str) else None
+    except ValueError:
+        parsed = None
+    site = manifest.get("site") if isinstance(manifest.get("site"), dict) else {}
+    if applicability.get("target_type") != "public_http_origin" or site.get("supported_origins") != [origin] or parsed is None or parsed.scheme != "https" or not parsed.hostname or parsed.username is not None or parsed.password is not None or parsed.path not in ("", "/") or parsed.query or parsed.fragment:
+        reject("tasks#applicability", "Task must bind one exact credential-free HTTPS origin.")
+
+    network = task.get("network_read") if isinstance(task.get("network_read"), dict) else {}
+    query, headers, types = network.get("query_keys"), network.get("headers"), network.get("content_types")
+    pathname, size, timeout = network.get("pathname"), network.get("max_response_bytes"), network.get("timeout_ms")
+    path_ok = isinstance(pathname, str) and pathname.startswith("/") and not any(x in pathname for x in ("?", "#", "//", "\\", "\x00")) and all(x not in {".", ".."} for x in pathname.split("/"))
+    credential_query_names = {"access_token", "api_key", "auth", "cookie", "key", "password", "secret", "session", "token"}
+    query_ok = isinstance(query, list) and all(isinstance(x, str) and re.fullmatch(r"[A-Za-z0-9_-]+", x) and x.lower() not in credential_query_names for x in query) and len(query) == len(set(query))
+    headers_ok = isinstance(headers, dict) and set(headers) <= {"accept", "user-agent"} and all(isinstance(v, str) and v and len(v) <= 256 and "\r" not in v and "\n" not in v for v in headers.values())
+    if (
+        set(network) != {"transport", "origin", "pathname", "allow_one_path_segment", "query_keys", "headers", "content_types", "max_response_bytes", "max_redirects", "timeout_ms"}
+        or network.get("transport") != "program_anonymous_https" or network.get("origin") != origin or not path_ok
+        or not isinstance(network.get("allow_one_path_segment"), bool) or not query_ok or not headers_ok
+        or not isinstance(types, list) or not types or not all(isinstance(x, str) and re.fullmatch(r"[a-z0-9.+-]+/[a-z0-9.+-]+", x) for x in types)
+        or isinstance(size, bool) or not isinstance(size, int) or not 0 < size <= 4 * 1024 * 1024
+        or network.get("max_redirects") != 2 or isinstance(timeout, bool) or not isinstance(timeout, int) or not 0 < timeout <= 30000
+    ):
+        reject("tasks#network_read", "Anonymous read must pin HTTPS origin/path/query/headers, MIME, size, redirects, and timeout.")
+    inputs = task.get("inputs") if isinstance(task.get("inputs"), dict) else {}
+    handling = task.get("data_handling") if isinstance(task.get("data_handling"), dict) else {}
+    recovery = task.get("failure_recovery") if isinstance(task.get("failure_recovery"), dict) else {}
+    if inputs.get("carrier") != "webenvoy.managed-task-inline/v1" or isinstance(inputs.get("max_bytes"), bool) or not isinstance(inputs.get("max_bytes"), int) or not 0 < inputs["max_bytes"] <= 65536:
+        reject("tasks#inputs", "Inputs must use the bounded managed inline carrier.")
+    if handling.get("external_egress") != "declared" or recovery.get("unknown_policy") != "query_original_run_only":
+        reject("tasks", "External egress must be declared and unknown results must query the original Run.")
+
+    scripts = manifest.get("scripts") if isinstance(manifest.get("scripts"), list) else []
+    script = scripts[0] if len(scripts) == 1 and isinstance(scripts[0], dict) else {}
+    entrypoint = task.get("entrypoint") if isinstance(task.get("entrypoint"), dict) else {}
+    script_path_value = script.get("path")
+    script_path = _site_skill_path(root, script_path_value, "manifest.json#scripts.path")
+    script_bytes = script_path.read_bytes() if script_path and script_path_value in pinned else b""
+    script_hash = "sha256:" + hashlib.sha256(script_bytes).hexdigest()
+    capability_refs = script.get("capability_refs")
+    script_handling = script.get("data_handling") if isinstance(script.get("data_handling"), dict) else {}
+    if len(scripts) != 1 or script_path is None or script_path_value not in pinned or script.get("sha256") != script_hash or script.get("broker") != "webenvoy.site-skill-broker/v1.1" or script.get("broker_capabilities") != ["network.read", "output.write"] or script.get("runtime_kind") != "webenvoy.site-skill-script-abi/v1" or script.get("entrypoint") != "run" or script.get("action") != "read" or script.get("target_binding") != {"target_type": "public_http_origin", "requires_profile_origin_grant": True} or script_handling.get("external_egress") != "declared" or entrypoint.get("script_ref") != script.get("script_ref") or entrypoint.get("script_sha256") != script_hash or entrypoint.get("broker") != script.get("broker") or entrypoint.get("capability_refs") != capability_refs:
+        reject("manifest.json#scripts", "Task/script refs and exact network.read/output.write v1.1 broker boundary must agree.")
+
+    cap_locator = asset("capability_declaration")
+    cap_path = _site_skill_path(root, cap_locator.get("path"), "manifest.json#assets.capability_declaration.path")
+    cap = _site_skill_json(report, root, cap_path, "capability_declaration", str(cap_locator.get("path"))) if cap_path else None
+    cap_ref = cap_locator.get("capability_ref")
+    if not isinstance(cap, dict) or cap.get("capability_ref") != cap_ref or cap.get("operation_id") != task.get("operation_id") or cap.get("action") != task.get("action") or cap.get("source_ref") != source.get("source_ref") or cap.get("lock_ref") != lock_ref or capability_refs != [cap_ref] or lock is None or lock.get("capability_ref") != cap_ref or compatibility.get("required_capabilities") != [{"ref": cap_ref, "version": cap.get("version") if isinstance(cap, dict) else None}]:
+        reject("manifest.json#assets.capability_declaration", "Task, script, package lock, and single capability ref must agree.")
+
+    schemas: dict[str, dict[str, Any]] = {}
+    outputs = task.get("outputs") if isinstance(task.get("outputs"), dict) else {}
+    for role, ref in (("input_schema", inputs.get("schema_ref")), ("output_schema", outputs.get("schema_ref"))):
+        locator = asset(role)
+        if locator.get("schema_ref") != ref:
+            reject(f"manifest.json#assets.{role}", "Task schema ref must match its manifest locator.")
+        path_value = _site_skill_path(root, locator.get("path"), f"manifest.json#assets.{role}.path")
+        schema = _site_skill_json(report, root, path_value, role, str(locator.get("path"))) if path_value else None
+        if not isinstance(schema, dict) or schema.get("$id") != ref or schema.get("type") != "object" or schema.get("additionalProperties") is not False:
+            reject(str(locator.get("path", role)), "Schema must match its task ref and reject unknown root fields.")
+        else:
+            try:
+                import jsonschema
+                jsonschema.Draft202012Validator.check_schema(schema)
+            except (ImportError, jsonschema.SchemaError) as exc:
+                reject(str(locator.get("path", role)), f"JSON Schema is invalid or validator unavailable: {exc}.")
+            schemas[role] = schema
+    output = schemas.get("output_schema", {})
+    props = output.get("properties") if isinstance(output.get("properties"), dict) else {}
+    normalized = props.get("normalized") if isinstance(props.get("normalized"), dict) else {}
+    normalized_props = normalized.get("properties") if isinstance(normalized.get("properties"), dict) else {}
+    records = normalized_props.get("records") if isinstance(normalized_props.get("records"), dict) else {}
+    if records.get("type") != "array" or records.get("minItems", 0) > 0:
+        reject("schemas/output.schema.json#normalized.records", "A verified empty collection must remain representable.")
+    for field, key in (("source_refs", "source_kind"), ("evidence_refs", "evidence_kind")):
+        array = props.get(field) if isinstance(props.get(field), dict) else {}
+        item = array.get("items") if isinstance(array.get("items"), dict) else {}
+        fields = item.get("properties") if isinstance(item.get("properties"), dict) else {}
+        ref_kind = fields.get(key) if isinstance(fields.get(key), dict) else {}
+        if array.get("type") != "array" or array.get("minItems") != 1 or array.get("maxItems") != 1 or ref_kind.get("const") != "public_http_response":
+            reject(f"schemas/output.schema.json#{field}", "Output must bind one opaque public HTTP response ref.")
+
+    check_locator = asset("post_check")
+    verification = task.get("verification") if isinstance(task.get("verification"), dict) else {}
+    check_path = _site_skill_path(root, check_locator.get("path"), "manifest.json#assets.post_check.path")
+    check = _site_skill_json(report, root, check_path, "post_check", str(check_locator.get("path"))) if check_path else None
+    requirements = check.get("requirements") if isinstance(check, dict) else None
+    if not isinstance(check, dict) or check.get("schema_version") != "lode.post-check.v0" or check.get("check_ref") != verification.get("post_check_ref") or check_locator.get("check_ref") != verification.get("post_check_ref") or not isinstance(requirements, list) or not any(isinstance(x, dict) and x.get("required_status") == "available" and "public_http_response" in x.get("required_evidence_refs", []) and isinstance(x.get("expected_normalized_fields"), dict) and x["expected_normalized_fields"].get("completeness") == "complete" for x in requirements):
+        add_error(report, "post_check_failed", "checks/post-check.json", "Post-check must require a complete available result and public-response evidence.", "Retain task-specific business checks.")
+    recovery_locator = asset("repair_guidance")
+    if recovery_locator.get("reference_ref") != recovery.get("repair_ref"):
+        reject("manifest.json#assets.repair_guidance", "Failure recovery must resolve to the integrity-pinned guidance asset.")
+
+    scan_forbidden_keys(report, manifest, "manifest.json")
+    for relative in pinned:
+        if relative.endswith(".json"):
+            value = _site_skill_json(report, root, root / relative, "pinned_asset", relative)
+            if value is not None:
+                scan_forbidden_keys(report, value, relative)
+    registry = registry_index or discover_local_registry(root)
+    if not registry:
+        add_error(report, "registry_unavailable", "registry/local-packages.json", "Existing local registry is required for discovery.", "Use the repo-local Lode package index.")
+    else:
+        repo_root = discover_repo_root(registry.parent) or registry.parent
+        index_path = rel(repo_root, registry)
+        index = _site_skill_json(report, repo_root, registry, "local_registry_index", index_path)
+        entries = index.get("entries") if isinstance(index, dict) else None
+        matches = [(i, x) for i, x in enumerate(entries) if isinstance(x, dict) and x.get("package_ref") == package_ref] if isinstance(entries, list) else []
+        if len(matches) != 1:
+            add_error(report, "registry_unavailable", index_path, "Existing registry must contain exactly one candidate locator.", "Keep one proposed package entry in the current index.")
+        else:
+            idx, entry = matches[0]
+            validate_site_skill_registry_entry(report, repo_root, root, index_path, idx, entry, manifest, [task_ref])
+    add_warning(report, "candidate_contract_pending", "manifest.json#validation", "Structural checks do not accept the WebEnvoy v1.1 contract or authorize admission, install, enablement, or execution.", "Complete cross-repository contract acceptance and runtime evidence separately.")
+    return report
+def declares_public_read_task(root: Path, manifest: dict[str, Any]) -> bool:
+    tasks = manifest.get("tasks") if isinstance(manifest.get("tasks"), list) else []
+    for locator in tasks:
+        if not isinstance(locator, dict):
+            continue
+        path = _site_skill_path(root, locator.get("path"), "manifest.json#tasks.path")
+        if path is None:
+            continue
+        try:
+            task = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        if isinstance(task, dict) and task.get("operation_id") == "network.public_read":
+            return True
+    return False
+
+
 def validate_site_skill_package(root: Path, registry_index: Path | None, report: Report, manifest: dict[str, Any]) -> Report:
     manifest = _site_skill_json(report, root, root / "manifest.json", "manifest", "manifest.json")
     if not isinstance(manifest, dict):
         return report
     report.package_ref = manifest.get("package_ref")
+    if declares_public_read_task(root, manifest):
+        return validate_public_read_site_skill_candidate(root, registry_index, report, manifest)
     if manifest.get("package_ref") == GITHUB_TRENDING_SITE_SKILL_PACKAGE_REF:
         return validate_github_trending_site_skill_package(root, registry_index, report, manifest)
     required = ["manifest_version", "package_type", "package_ref", "revision_ref", "version", "lifecycle", "site", "source", "package_lock", "integrity", "compatibility", "assets", "tasks"]

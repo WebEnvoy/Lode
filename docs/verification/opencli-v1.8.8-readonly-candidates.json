@@ -1,0 +1,1139 @@
+{
+  "report_kind": "lode.opencli-static-compatibility-candidates/v1",
+  "scope": "fixed-source static review and offline semantics; not a package admission or runtime contract",
+  "source": {
+    "repository": "jackwener/OpenCLI",
+    "package_name": "@jackwener/opencli",
+    "version": "1.8.8",
+    "commit": "8271afc67e8504bda94c147f446ee29775d08274",
+    "license": "Apache-2.0",
+    "license_file": "third_party/opencli-1.8.8/LICENSE",
+    "notice_file": null,
+    "package_json_sha256": "f151c56b14d1a240855ba2330ba2885b5777f4bd45797142c8f719c325c600f0",
+    "license_sha256": "0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54",
+    "package_dependencies": {
+      "@mozilla/readability": "^0.6.0",
+      "cli-table3": "^0.6.5",
+      "commander": "^14.0.3",
+      "js-yaml": "^4.3.1",
+      "turndown": "^7.2.2",
+      "turndown-plugin-gfm": "^1.0.2",
+      "undici": "7.29.0",
+      "ws": "^8.18.0"
+    },
+    "package_lifecycle_hooks_present_but_never_run": [
+      "postinstall",
+      "prepare",
+      "prepublishOnly",
+      "preuninstall"
+    ],
+    "install_hooks_run": false,
+    "network_used_during_inspection": false,
+    "upstream_code_executed_during_inspection": false
+  },
+  "positive_candidates": [
+    {
+      "id": "github-trending-html",
+      "selection_reason": "The first sample checks whether the existing raw HTML parser and parameter semantics can be retained behind a managed anonymous response body. It is a new OpenCLI candidate and does not replace the existing daily-top5 snapshot package.",
+      "opencli_registration": {
+        "site": "github-trending",
+        "name": "repos",
+        "access": "read",
+        "domain": "github.com",
+        "strategy": "Strategy.PUBLIC",
+        "browser": false,
+        "arguments": [
+          {
+            "name": "since",
+            "type": "string",
+            "default": "daily",
+            "help": "Time range: daily / weekly / monthly"
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "default": "",
+            "help": "Filter by programming language slug, e.g. python, rust, \"c++\""
+          },
+          {
+            "name": "limit",
+            "type": "int",
+            "default": 25,
+            "help": "Number of repositories to return (max 25)"
+          }
+        ],
+        "columns_as_field_name_clues_only": [
+          "rank",
+          "repo",
+          "description",
+          "language",
+          "stars",
+          "forks",
+          "starsSince",
+          "url"
+        ],
+        "source_imports_by_file": {
+          "third_party/opencli-1.8.8/clis/github-trending/repos.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors"
+          ]
+        }
+      },
+      "files": [
+        {
+          "path": "clis/github-trending/repos.js",
+          "sha256": "0efc684322b8a70cac358ea3cdccc24bebf105a8d09e7fb6aa6c170e1fd72a32",
+          "bytes": 6490
+        }
+      ],
+      "parser": "parseTrendingHtml",
+      "response_kind": "text/html",
+      "request_candidate": {
+        "method": "GET",
+        "origin": "https://github.com",
+        "path_template": "/trending/{encoded-language?}",
+        "query": {
+          "since": "daily|weekly|monthly"
+        },
+        "accept": "text/html",
+        "user_agent": "Mozilla/5.0 (compatible; opencli/github-trending)",
+        "evidence": [
+          "new URL(`https://github.com${path}`)",
+          "url.searchParams.set('since', since)",
+          "Accept: 'text/html'",
+          "'User-Agent': 'Mozilla/5.0 (compatible; opencli/github-trending)'"
+        ]
+      },
+      "request_evidence": [
+        {
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 131,
+          "text": "new URL(`https://github.com${path}`)"
+        },
+        {
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 132,
+          "text": "url.searchParams.set('since', since)"
+        },
+        {
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 139,
+          "text": "Accept: 'text/html'"
+        },
+        {
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 138,
+          "text": "'User-Agent': 'Mozilla/5.0 (compatible; opencli/github-trending)'"
+        }
+      ],
+      "input_schema_draft": {
+        "type": "object",
+        "properties": {
+          "since": {
+            "type": "string",
+            "default": "daily",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "default": ""
+          },
+          "limit": {
+            "type": "integer",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 25
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "input_argument_semantics": [
+        {
+          "name": "since",
+          "type": "string",
+          "required": false,
+          "default": "daily",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "evidence": "const SINCE = {"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "evidence": "const language = String(args.language ?? '').trim()"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false,
+          "default": 25,
+          "minimum": 1,
+          "maximum": 25,
+          "evidence": "if (n > 25)"
+        }
+      ],
+      "input_evidence": [
+        {
+          "field": "since",
+          "text": "const SINCE = {"
+        },
+        {
+          "field": "language",
+          "text": "const language = String(args.language ?? '').trim()"
+        },
+        {
+          "field": "limit",
+          "text": "if (n > 25)"
+        }
+      ],
+      "output_schema_draft": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "rank": {
+              "type": "integer"
+            },
+            "repo": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "language": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "stars": {
+              "type": "integer"
+            },
+            "forks": {
+              "type": "integer"
+            },
+            "starsSince": {
+              "type": "integer"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rank",
+            "repo",
+            "description",
+            "language",
+            "stars",
+            "forks",
+            "starsSince",
+            "url"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "output_field_semantics": [
+        {
+          "name": "rank",
+          "type": "integer",
+          "meaning": "One-based position in the returned rows.",
+          "missing": "Computed from returned array index.",
+          "evidence": "rank: index + 1"
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "meaning": "owner/name repository identity.",
+          "missing": "Missing or malformed repository link throws parser-drift error.",
+          "evidence": "const repo = decodeHtmlEntities(nameMatch[1]).trim()"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "meaning": "Repository description with tags and whitespace normalized.",
+          "missing": "Absent paragraph becomes empty string; present empty paragraph is also empty string.",
+          "evidence": "const description = descMatch"
+        },
+        {
+          "name": "language",
+          "type": [
+            "string",
+            "null"
+          ],
+          "meaning": "Programming language text.",
+          "missing": "Missing span becomes null; empty span becomes empty string.",
+          "evidence": "const language = langMatch ?"
+        },
+        {
+          "name": "stars",
+          "type": "integer",
+          "meaning": "Repository star count after comma/whitespace removal.",
+          "missing": "Missing or nonnumeric count throws parser-drift error.",
+          "evidence": "stars: assertCount(starsMatch"
+        },
+        {
+          "name": "forks",
+          "type": "integer",
+          "meaning": "Repository fork count after comma/whitespace removal.",
+          "missing": "Missing or nonnumeric count throws parser-drift error.",
+          "evidence": "forks: assertCount(forksMatch"
+        },
+        {
+          "name": "starsSince",
+          "type": "integer",
+          "meaning": "Stars attributed to the selected daily/weekly/monthly period.",
+          "missing": "Missing or nonnumeric count throws parser-drift error.",
+          "evidence": "starsSince: assertCount(sinceMatch?.[1]"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "meaning": "Canonical GitHub repository URL derived from owner/name.",
+          "missing": "Derived from a validated repository identity.",
+          "evidence": "url: `https://github.com/${repo}`"
+        }
+      ],
+      "output_field_evidence": [
+        {
+          "field": "rank",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 158,
+          "text": "rank: index + 1"
+        },
+        {
+          "field": "repo",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 67,
+          "text": "const repo = decodeHtmlEntities(nameMatch[1]).trim()"
+        },
+        {
+          "field": "description",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 73,
+          "text": "const description = descMatch"
+        },
+        {
+          "field": "language",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 78,
+          "text": "const language = langMatch ?"
+        },
+        {
+          "field": "stars",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 89,
+          "text": "stars: assertCount(starsMatch"
+        },
+        {
+          "field": "forks",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 90,
+          "text": "forks: assertCount(forksMatch"
+        },
+        {
+          "field": "starsSince",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 91,
+          "text": "starsSince: assertCount(sinceMatch?.[1]"
+        },
+        {
+          "field": "url",
+          "path": "third_party/opencli-1.8.8/clis/github-trending/repos.js",
+          "line": 92,
+          "text": "url: `https://github.com/${repo}`"
+        }
+      ],
+      "pagination_semantics": "One page; `limit` slices returned rows and the source provides no continuation token or completeness signal.",
+      "limitations": [
+        "OpenCLI columns are treated only as field-name clues; field types and missing-value behavior above are separately tied to parser expressions.",
+        "The source does not expose response truncation or page-completeness facts; a managed broker must fail closed when body completeness is unknown.",
+        "`Strategy.PUBLIC` and `access: read` are declarations, not authorization or network-safety evidence."
+      ],
+      "source_reuse": {
+        "original_parser_and_mapping_source_changed": false,
+        "business_logic_reimplemented": false,
+        "files": [
+          {
+            "path": "clis/github-trending/repos.js",
+            "sha256": "0efc684322b8a70cac358ea3cdccc24bebf105a8d09e7fb6aa6c170e1fd72a32",
+            "bytes": 6490
+          }
+        ]
+      },
+      "module_effects_review": {
+        "inspector_imported_or_executed_upstream_modules": false,
+        "declared_imports": {
+          "third_party/opencli-1.8.8/clis/github-trending/repos.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors"
+          ]
+        },
+        "external_import_top_level_effects": "unknown; the OpenCLI registry/errors modules are not part of the selected source snapshot and were not imported or executed",
+        "local_import_top_level_effects": "arXiv utils.js source is bundled and evaluated only in the offline harness; external effects from its original errors import are unknown",
+        "reuse_disposition": "manual review is required for every new adapter; this report does not infer safety from the marker scan"
+      },
+      "webenvoy_candidate_requirements": [
+        "Accepted task declaration for anonymous HTTPS reads with exact origin/path/query/header and response limits.",
+        "Accepted managed broker operation and redirect revalidation; do not use script-native fetch.",
+        "Accepted completeness/error projection for body truncation, malformed response, refusal, timeout and cancellation."
+      ],
+      "package_status": "three proposed Lode package candidates are generated and locatable in the existing registry; no code admission, install, enablement, or execution is claimed"
+    },
+    {
+      "id": "devto-latest-json",
+      "selection_reason": "This second positive sample exercises public JSON parsing and user-controlled pagination on a different site, without page/browser state.",
+      "opencli_registration": {
+        "site": "devto",
+        "name": "latest",
+        "access": "read",
+        "domain": "dev.to",
+        "strategy": "Strategy.PUBLIC",
+        "browser": false,
+        "arguments": [
+          {
+            "name": "limit",
+            "type": "int",
+            "default": 20,
+            "help": "Articles per page (1-100)"
+          },
+          {
+            "name": "page",
+            "type": "int",
+            "default": 1,
+            "help": "Page number (1-based)"
+          }
+        ],
+        "columns_as_field_name_clues_only": [
+          "rank",
+          "id",
+          "title",
+          "author",
+          "tags",
+          "reactions",
+          "comments",
+          "published",
+          "url"
+        ],
+        "source_imports_by_file": {
+          "third_party/opencli-1.8.8/clis/devto/latest.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors"
+          ]
+        }
+      },
+      "files": [
+        {
+          "path": "clis/devto/latest.js",
+          "sha256": "6b7290772a6f0c22bcbfc3b6da1f331c42d0c58bbb636ab9e1840b274f527302",
+          "bytes": 3104
+        }
+      ],
+      "parser": "inline JSON mapping in cli.func",
+      "response_kind": "application/json",
+      "request_candidate": {
+        "method": "GET",
+        "origin": "https://dev.to",
+        "path_template": "/api/articles/latest",
+        "query": {
+          "per_page": "limit (1..100)",
+          "page": "page (1..1000)"
+        },
+        "accept": "application/json",
+        "user_agent": null,
+        "evidence": [
+          "https://dev.to/api/articles/latest?per_page=${limit}&page=${page}",
+          "headers: { accept: 'application/json' }"
+        ]
+      },
+      "request_evidence": [
+        {
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 37,
+          "text": "https://dev.to/api/articles/latest?per_page=${limit}&page=${page}"
+        },
+        {
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 40,
+          "text": "headers: { accept: 'application/json' }"
+        }
+      ],
+      "input_schema_draft": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "page": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "input_argument_semantics": [
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false,
+          "default": 20,
+          "minimum": 1,
+          "maximum": 100,
+          "evidence": "requireBoundedInt(args.limit, 20, 100)"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false,
+          "default": 1,
+          "minimum": 1,
+          "maximum": 1000,
+          "evidence": "requireBoundedInt(args.page, 1, 1000)"
+        }
+      ],
+      "input_evidence": [
+        {
+          "field": "limit",
+          "text": "requireBoundedInt(args.limit, 20, 100)"
+        },
+        {
+          "field": "page",
+          "text": "requireBoundedInt(args.page, 1, 1000)"
+        }
+      ],
+      "output_schema_draft": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "rank": {
+              "type": "integer"
+            },
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "string"
+            },
+            "reactions": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "comments": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "published": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rank",
+            "id",
+            "title",
+            "author",
+            "tags",
+            "reactions",
+            "comments",
+            "published",
+            "url"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "output_field_semantics": [
+        {
+          "name": "rank",
+          "type": "integer",
+          "meaning": "One-based page-relative position offset by the requested page.",
+          "missing": "Computed from input page/limit and array index.",
+          "evidence": "rank: (page - 1) * limit + i + 1"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "meaning": "Article id converted to string.",
+          "missing": "Nullish id becomes empty string.",
+          "evidence": "id: item.id != null ? String(item.id) : ''"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "meaning": "Article title converted to string.",
+          "missing": "Nullish title becomes empty string.",
+          "evidence": "title: String(item.title ?? '')"
+        },
+        {
+          "name": "author",
+          "type": "string",
+          "meaning": "Author username.",
+          "missing": "Missing nested user/username becomes empty string.",
+          "evidence": "author: String(item?.user?.username ?? '')"
+        },
+        {
+          "name": "tags",
+          "type": "string",
+          "meaning": "Comma-separated tag string.",
+          "missing": "Nullish tag_list becomes empty string; arrays stringify then commas normalize.",
+          "evidence": "tags: String(item.tag_list ?? '')"
+        },
+        {
+          "name": "reactions",
+          "type": [
+            "number",
+            "null"
+          ],
+          "meaning": "Public reaction count converted with Number().",
+          "missing": "Nullish becomes null; nonnumeric present values can produce NaN and need result validation.",
+          "evidence": "reactions: item.public_reactions_count != null ? Number(item.public_reactions_count) : null"
+        },
+        {
+          "name": "comments",
+          "type": [
+            "number",
+            "null"
+          ],
+          "meaning": "Comment count converted with Number().",
+          "missing": "Nullish becomes null; nonnumeric present values can produce NaN and need result validation.",
+          "evidence": "comments: item.comments_count != null ? Number(item.comments_count) : null"
+        },
+        {
+          "name": "published",
+          "type": "string",
+          "meaning": "First ten characters of published_at.",
+          "missing": "Nullish becomes empty string; malformed but present strings are sliced without date validation.",
+          "evidence": "published: String(item.published_at ?? '').slice(0, 10)"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "meaning": "Article URL converted to string.",
+          "missing": "Nullish becomes empty string.",
+          "evidence": "url: String(item.url ?? '')"
+        }
+      ],
+      "output_field_evidence": [
+        {
+          "field": "rank",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 63,
+          "text": "rank: (page - 1) * limit + i + 1"
+        },
+        {
+          "field": "id",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 64,
+          "text": "id: item.id != null ? String(item.id) : ''"
+        },
+        {
+          "field": "title",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 65,
+          "text": "title: String(item.title ?? '')"
+        },
+        {
+          "field": "author",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 66,
+          "text": "author: String(item?.user?.username ?? '')"
+        },
+        {
+          "field": "tags",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 67,
+          "text": "tags: String(item.tag_list ?? '')"
+        },
+        {
+          "field": "reactions",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 68,
+          "text": "reactions: item.public_reactions_count != null ? Number(item.public_reactions_count) : null"
+        },
+        {
+          "field": "comments",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 69,
+          "text": "comments: item.comments_count != null ? Number(item.comments_count) : null"
+        },
+        {
+          "field": "published",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 70,
+          "text": "published: String(item.published_at ?? '').slice(0, 10)"
+        },
+        {
+          "field": "url",
+          "path": "third_party/opencli-1.8.8/clis/devto/latest.js",
+          "line": 71,
+          "text": "url: String(item.url ?? '')"
+        }
+      ],
+      "pagination_semantics": "One requested page; `rank` is offset by `(page - 1) * limit`; no next-page or total-count signal is consumed.",
+      "limitations": [
+        "A non-array JSON body becomes an empty list and then EmptyResultError; it is not evidence of a valid empty page.",
+        "The source does not consume a continuation link or total; one-page output cannot claim the full feed is complete.",
+        "`Strategy.PUBLIC` and `access: read` are declarations, not authorization or network-safety evidence."
+      ],
+      "source_reuse": {
+        "original_parser_and_mapping_source_changed": false,
+        "business_logic_reimplemented": false,
+        "files": [
+          {
+            "path": "clis/devto/latest.js",
+            "sha256": "6b7290772a6f0c22bcbfc3b6da1f331c42d0c58bbb636ab9e1840b274f527302",
+            "bytes": 3104
+          }
+        ]
+      },
+      "module_effects_review": {
+        "inspector_imported_or_executed_upstream_modules": false,
+        "declared_imports": {
+          "third_party/opencli-1.8.8/clis/devto/latest.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors"
+          ]
+        },
+        "external_import_top_level_effects": "unknown; the OpenCLI registry/errors modules are not part of the selected source snapshot and were not imported or executed",
+        "local_import_top_level_effects": "arXiv utils.js source is bundled and evaluated only in the offline harness; external effects from its original errors import are unknown",
+        "reuse_disposition": "manual review is required for every new adapter; this report does not infer safety from the marker scan"
+      },
+      "webenvoy_candidate_requirements": [
+        "Accepted task declaration for anonymous HTTPS reads with exact origin/path/query/header and response limits.",
+        "Accepted managed broker operation and redirect revalidation; do not use script-native fetch.",
+        "Accepted completeness/error projection for body truncation, malformed response, refusal, timeout and cancellation."
+      ],
+      "package_status": "three proposed Lode package candidates are generated and locatable in the existing registry; no code admission, install, enablement, or execution is claimed"
+    },
+    {
+      "id": "arxiv-recent-atom",
+      "selection_reason": "Selected before shared implementation to test a third site and an Atom/XML parser with a statically imported local helper; it reveals module-packaging cost without requiring a site-specific Runtime branch.",
+      "opencli_registration": {
+        "site": "arxiv",
+        "name": "recent",
+        "access": "read",
+        "domain": null,
+        "strategy": "Strategy.PUBLIC",
+        "browser": false,
+        "arguments": [
+          {
+            "name": "category",
+            "positional": true,
+            "required": true,
+            "help": "arXiv category (e.g. cs.CL, cs.LG, math.PR, q-bio.NC)"
+          },
+          {
+            "name": "limit",
+            "type": "int",
+            "default": 10,
+            "help": "Max results (max 50)"
+          }
+        ],
+        "columns_as_field_name_clues_only": [
+          "id",
+          "title",
+          "authors",
+          "published",
+          "primary_category",
+          "url"
+        ],
+        "source_imports_by_file": {
+          "third_party/opencli-1.8.8/clis/arxiv/recent.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors",
+            "./utils.js"
+          ],
+          "third_party/opencli-1.8.8/clis/arxiv/utils.js": [
+            "@jackwener/opencli/errors"
+          ]
+        }
+      },
+      "files": [
+        {
+          "path": "clis/arxiv/recent.js",
+          "sha256": "59e2b9efb159ee7277ba284beaaae4119b8cd931967ad328499ced6bb9deafaa",
+          "bytes": 1488
+        },
+        {
+          "path": "clis/arxiv/utils.js",
+          "sha256": "08518cd096e6c127bd1cebe83e6d1d6551bc3de2d1781bd1b7d9249f31e74708",
+          "bytes": 4342
+        }
+      ],
+      "parser": "parseEntries in arxiv/utils.js",
+      "response_kind": "application/atom+xml",
+      "request_candidate": {
+        "method": "GET",
+        "origin": "https://export.arxiv.org",
+        "path_template": "/api/query",
+        "query": {
+          "search_query": "cat:{validated-category}",
+          "max_results": "limit (1..50)",
+          "sortBy": "submittedDate",
+          "sortOrder": "descending"
+        },
+        "accept": null,
+        "user_agent": null,
+        "evidence": [
+          "export const ARXIV_BASE = 'https://export.arxiv.org/api/query'",
+          "${ARXIV_BASE}?${params}"
+        ]
+      },
+      "request_evidence": [
+        {
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 8,
+          "text": "export const ARXIV_BASE = 'https://export.arxiv.org/api/query'"
+        },
+        {
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 11,
+          "text": "${ARXIV_BASE}?${params}"
+        }
+      ],
+      "input_schema_draft": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "pattern": "^[a-z]+(?:-[a-z]+)*(?:\\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)?$"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "additionalProperties": false
+      },
+      "input_argument_semantics": [
+        {
+          "name": "category",
+          "type": "string",
+          "required": true,
+          "positional": true,
+          "pattern": "^[a-z]+(?:-[a-z]+)*(?:\\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)?$",
+          "evidence": "ARXIV_CATEGORY_PATTERN"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false,
+          "default": 10,
+          "minimum": 1,
+          "maximum": 50,
+          "evidence": "normalizeArxivLimit(args.limit, 10, 50)"
+        }
+      ],
+      "input_evidence": [
+        {
+          "field": "category",
+          "text": "ARXIV_CATEGORY_PATTERN"
+        },
+        {
+          "field": "limit",
+          "text": "normalizeArxivLimit(args.limit, 10, 50)"
+        }
+      ],
+      "output_schema_draft": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "authors": {
+              "type": "string"
+            },
+            "published": {
+              "type": "string"
+            },
+            "primary_category": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "authors",
+            "published",
+            "primary_category",
+            "url"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "output_field_semantics": [
+        {
+          "name": "id",
+          "type": "string",
+          "meaning": "arXiv id with URL prefix and vN suffix removed.",
+          "missing": "Missing id becomes empty string and then yields an abs URL with an empty id.",
+          "evidence": "id: arxivId"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "meaning": "Whitespace-collapsed title with a small fixed XML entity set decoded.",
+          "missing": "Missing title becomes empty string.",
+          "evidence": "title: decodeEntities(extract(e, 'title').replace(/\\s+/g, ' '))"
+        },
+        {
+          "name": "authors",
+          "type": "string",
+          "meaning": "All name elements joined with comma+space.",
+          "missing": "No authors becomes empty string.",
+          "evidence": "authors: decodeEntities(extractAll(e, 'name').join(', '))"
+        },
+        {
+          "name": "published",
+          "type": "string",
+          "meaning": "First ten characters of published element.",
+          "missing": "Missing published becomes empty string; date syntax is not validated.",
+          "evidence": "published: extract(e, 'published').slice(0, 10)"
+        },
+        {
+          "name": "primary_category",
+          "type": "string",
+          "meaning": "term attribute on arxiv:primary_category.",
+          "missing": "Missing attribute becomes empty string.",
+          "evidence": "primary_category: extractAttr(e, 'arxiv:primary_category', 'term')"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "meaning": "Abstract URL derived from normalized arXiv id.",
+          "missing": "Derived even when the normalized id is empty.",
+          "evidence": "url: `https://arxiv.org/abs/${arxivId}`"
+        }
+      ],
+      "output_field_evidence": [
+        {
+          "field": "id",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 98,
+          "text": "id: arxivId"
+        },
+        {
+          "field": "title",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 99,
+          "text": "title: decodeEntities(extract(e, 'title').replace(/\\s+/g, ' '))"
+        },
+        {
+          "field": "authors",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 100,
+          "text": "authors: decodeEntities(extractAll(e, 'name').join(', '))"
+        },
+        {
+          "field": "published",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 102,
+          "text": "published: extract(e, 'published').slice(0, 10)"
+        },
+        {
+          "field": "primary_category",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 104,
+          "text": "primary_category: extractAttr(e, 'arxiv:primary_category', 'term')"
+        },
+        {
+          "field": "url",
+          "path": "third_party/opencli-1.8.8/clis/arxiv/utils.js",
+          "line": 108,
+          "text": "url: `https://arxiv.org/abs/${arxivId}`"
+        }
+      ],
+      "pagination_semantics": "One query with max_results and descending submitted date; no start offset or continuation token is consumed.",
+      "limitations": [
+        "The candidate deterministically bundles the two pinned source files and preserves the helper/parser bodies; external errors-module top-level behavior remains unknown, and no general importer or arbitrary-module execution is claimed.",
+        "The regex parser can return earlier complete entries from truncated XML and does not report truncation; no completeness claim is safe without broker/body completeness evidence.",
+        "Malformed XML without entries and a valid empty feed both become EmptyResultError at the adapter boundary.",
+        "The source does not set Accept or User-Agent; a fixed WebEnvoy transport header would be a disclosed wrapper change.",
+        "`Strategy.PUBLIC` and `access: read` are declarations, not authorization or network-safety evidence."
+      ],
+      "source_reuse": {
+        "original_parser_and_mapping_source_changed": false,
+        "business_logic_reimplemented": false,
+        "files": [
+          {
+            "path": "clis/arxiv/recent.js",
+            "sha256": "59e2b9efb159ee7277ba284beaaae4119b8cd931967ad328499ced6bb9deafaa",
+            "bytes": 1488
+          },
+          {
+            "path": "clis/arxiv/utils.js",
+            "sha256": "08518cd096e6c127bd1cebe83e6d1d6551bc3de2d1781bd1b7d9249f31e74708",
+            "bytes": 4342
+          }
+        ]
+      },
+      "module_effects_review": {
+        "inspector_imported_or_executed_upstream_modules": false,
+        "declared_imports": {
+          "third_party/opencli-1.8.8/clis/arxiv/recent.js": [
+            "@jackwener/opencli/registry",
+            "@jackwener/opencli/errors",
+            "./utils.js"
+          ],
+          "third_party/opencli-1.8.8/clis/arxiv/utils.js": [
+            "@jackwener/opencli/errors"
+          ]
+        },
+        "external_import_top_level_effects": "unknown; the OpenCLI registry/errors modules are not part of the selected source snapshot and were not imported or executed",
+        "local_import_top_level_effects": "arXiv utils.js source is bundled and evaluated only in the offline harness; external effects from its original errors import are unknown",
+        "reuse_disposition": "manual review is required for every new adapter; this report does not infer safety from the marker scan"
+      },
+      "webenvoy_candidate_requirements": [
+        "Accepted task declaration for anonymous HTTPS reads with exact origin/path/query/header and response limits.",
+        "Accepted managed broker operation and redirect revalidation; do not use script-native fetch.",
+        "Accepted completeness/error projection for body truncation, malformed response, refusal, timeout and cancellation."
+      ],
+      "package_status": "three proposed Lode package candidates are generated and locatable in the existing registry; no code admission, install, enablement, or execution is claimed"
+    }
+  ],
+  "negative_samples": [
+    {
+      "id": "cookie-download",
+      "path": "clis/1688/download.js",
+      "sha256": "b3a0c69c32b557a7b1dd00b93eb466752d5ffbc6da40065dfebc1d6d27b25795",
+      "classification": "reject_cookie_and_local_download_dependency",
+      "markers": [
+        "browser_credentials"
+      ],
+      "evidence": [
+        {
+          "line": 63,
+          "text": "page.getCookies"
+        },
+        {
+          "line": 2,
+          "text": "formatCookieHeader"
+        },
+        {
+          "line": 3,
+          "text": "downloadMedia"
+        }
+      ],
+      "executed": false
+    },
+    {
+      "id": "raw-cdp",
+      "path": "src/browser/cdp.ts",
+      "sha256": "7771ad8fe31e208cc751cdf02b09ef2dc2a5fb75336b8129ed677c4bdf2f0f7f",
+      "classification": "reject_raw_cdp_method_dispatch",
+      "markers": [
+        "raw_protocol",
+        "process_environment"
+      ],
+      "evidence": [
+        {
+          "line": 456,
+          "text": "async cdp(method: string, params: Record<string, unknown>"
+        },
+        {
+          "line": 457,
+          "text": "return this.bridge.send(method, params)"
+        }
+      ],
+      "executed": false
+    },
+    {
+      "id": "local-process-and-credentials",
+      "path": "clis/spotify/spotify.js",
+      "sha256": "4f2ecef8a7b67598b7b4a21e451a649e3e0fcd7e2c8aaab9e6913f90a335a0ab",
+      "classification": "reject_credentials_local_files_and_process_execution",
+      "markers": [
+        "local_process",
+        "filesystem"
+      ],
+      "evidence": [
+        {
+          "line": 7,
+          "text": "from 'child_process'"
+        },
+        {
+          "line": 103,
+          "text": "execFile("
+        },
+        {
+          "line": 18,
+          "text": "readFileSync("
+        },
+        {
+          "line": 43,
+          "text": "writeFileSync("
+        },
+        {
+          "line": 83,
+          "text": "Bearer ${token}"
+        }
+      ],
+      "executed": false
+    }
+  ],
+  "inspection_constraints": {
+    "source_read_mode": "UTF-8 bytes only",
+    "upstream_modules_imported": false,
+    "upstream_code_executed_by_inspector": false,
+    "install_hooks_run": false,
+    "network_requests_made": false,
+    "registry_write_attempted_by_inspector": false,
+    "marker_scan_is_general_security_proof": false
+  },
+  "shared_execution_gap": [
+    "The adapters use global fetch; the proposed WebEnvoy network.public_read and broker/v1.1 fields remain a cross-repository candidate until accepted and implemented.",
+    "The Lode package candidates declare only the pinned anonymous HTTPS request policy and do not grant owner approval, code admission, installation, enablement, or runtime access."
+  ],
+  "reuse_assessment": {
+    "upstream_parser_and_parameter_logic_rewritten": false,
+    "third_sample": "arxiv-recent-atom",
+    "third_sample_requires_generator_logic": true,
+    "third_sample_specific_work": [
+      "Bundle a second, statically imported upstream source file while preserving the helper/parser body.",
+      "Add Atom feed envelope, totalResults, entry-count, URL, and confirmed-empty checks to the shared wrapper."
+    ],
+    "site_specific_webenvoy_runtime_branch_added": false,
+    "declaration_fixture_only_reuse_goal_met": false,
+    "time_or_cost_measurement": "not recorded"
+  }
+}

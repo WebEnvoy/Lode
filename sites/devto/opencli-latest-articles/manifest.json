@@ -1,0 +1,181 @@
+{
+  "manifest_version": "lode.site-skill-package.manifest.v1",
+  "package_type": "site-skill",
+  "package_ref": "lode://site-skill/devto/opencli-latest-articles",
+  "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+  "version": "0.1.0",
+  "lifecycle": "proposed",
+  "site": {
+    "site_id": "devto",
+    "supported_origins": [
+      "https://dev.to"
+    ]
+  },
+  "source": {
+    "repository": "WebEnvoy/Lode",
+    "package_path": "sites/devto/opencli-latest-articles",
+    "commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+    "source_ref": "lode://source/site-skill/devto/opencli-latest-articles@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1"
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "lock_ref": "lode://lock/site-skill/devto/opencli-latest-articles@0.1.0"
+  },
+  "integrity": {
+    "files": [
+      {
+        "path": "SKILL.md",
+        "role": "entrypoint",
+        "bytes": 969,
+        "sha256": "sha256:84b5437dad029cc7759c4f248727f28fde4025918a61fc64e829289d147913d9"
+      },
+      {
+        "path": "capabilities/public-read.json",
+        "role": "capability_declaration",
+        "bytes": 411,
+        "sha256": "sha256:a70821e8c2dc4a3579fdfe5b169ec53ea0e9b08c92b68500eeec2aa0317ee21c"
+      },
+      {
+        "path": "checks/post-check.json",
+        "role": "post_check",
+        "bytes": 614,
+        "sha256": "sha256:682e7a94e05dfef787052e31dff83e98a666ec19a74b2d25560dc6281d9d7e5c"
+      },
+      {
+        "path": "fixtures/README.md",
+        "role": "fixture_index",
+        "bytes": 303,
+        "sha256": "sha256:3e4ff5a6990a1fb6205e790a02ea8ef618168edc5a1fe0e9d88bf589ed95b1cd"
+      },
+      {
+        "path": "package-lock.json",
+        "role": "package_lock",
+        "bytes": 543,
+        "sha256": "sha256:4b7cc1dde53e92f9ed1631dccb80f35226683129be3903f1ad4cb894c337ef01"
+      },
+      {
+        "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
+        "role": "license_notice",
+        "bytes": 10760,
+        "sha256": "sha256:0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54"
+      },
+      {
+        "path": "references/opencli-source-mapping.md",
+        "role": "source_mapping",
+        "bytes": 4212,
+        "sha256": "sha256:31fbc6f6ab4c0040c62588520981889352e9693a511b5f08bdb0d93c21f0e71c"
+      },
+      {
+        "path": "references/recovery.md",
+        "role": "repair_guidance",
+        "bytes": 504,
+        "sha256": "sha256:db21767cd4e517b0c2600cdb70d543cb50d9e2635cbc1ea179f2960928c45a0c"
+      },
+      {
+        "path": "schemas/input.schema.json",
+        "role": "input_schema",
+        "bytes": 763,
+        "sha256": "sha256:57a563d525c6befa8f3f42d16a2282b61e471d5ea7eb3c361c0c545bef0ef7aa"
+      },
+      {
+        "path": "schemas/output.schema.json",
+        "role": "output_schema",
+        "bytes": 6750,
+        "sha256": "sha256:d4e14a210a462fdf7e0fc95c687aa60fd451a06ed458abbbd76e3f897babffbf"
+      },
+      {
+        "path": "scripts/opencli-adapter.mjs",
+        "role": "script_source",
+        "bytes": 12166,
+        "sha256": "sha256:60029051770114860dc19aec4bf1b81173f699ea1160d294afc34043c4f85214"
+      },
+      {
+        "path": "tasks/read-latest-articles-page.json",
+        "role": "task_declaration",
+        "bytes": 2727,
+        "sha256": "sha256:87f6e6a45e3f6be89f7b21162b5cf69fad72f495d4f03ba4505f4fb194f57307"
+      }
+    ],
+    "package_digest": "sha256:679272f3dc2c3ecc5f59cbf23001c8454e249818392872982969410106311d5f"
+  },
+  "compatibility": {
+    "package_contract": "lode.site-skill-package/v1",
+    "execution_contract": "webenvoy.site-skill-execution/v1",
+    "required_capabilities": [
+      {
+        "ref": "lode://site-capability/devto/opencli-latest-articles@0.1.0",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "role": "capability_declaration",
+      "path": "capabilities/public-read.json",
+      "capability_ref": "lode://site-capability/devto/opencli-latest-articles@0.1.0"
+    },
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/input@0.1.0"
+    },
+    {
+      "role": "output_schema",
+      "path": "schemas/output.schema.json",
+      "schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/output@0.1.0"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "check_ref": "lode://check/site-skill/devto/opencli-latest-articles/post-check@0.1.0"
+    },
+    {
+      "role": "repair_guidance",
+      "path": "references/recovery.md",
+      "reference_ref": "lode://reference/site-skill/devto/opencli-latest-articles/recovery@0.1.0"
+    }
+  ],
+  "scripts": [
+    {
+      "script_ref": "lode://script/site-skill/devto/opencli-latest-articles/read-latest-articles-page@0.1.0",
+      "path": "scripts/opencli-adapter.mjs",
+      "source_commit": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+      "version": "0.1.0",
+      "sha256": "sha256:60029051770114860dc19aec4bf1b81173f699ea1160d294afc34043c4f85214",
+      "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+      "entrypoint": "run",
+      "input_schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/input@0.1.0",
+      "output_schema_ref": "lode://schema/site-skill/devto/opencli-latest-articles/output@0.1.0",
+      "capability_refs": [
+        "lode://site-capability/devto/opencli-latest-articles@0.1.0"
+      ],
+      "action": "read",
+      "broker": "webenvoy.site-skill-broker/v1.1",
+      "broker_capabilities": [
+        "network.read",
+        "output.write"
+      ],
+      "target_binding": {
+        "target_type": "public_http_origin",
+        "requires_profile_origin_grant": true
+      },
+      "timeout_ms": 10000,
+      "cancel": "cooperative",
+      "data_handling": {
+        "input_sensitivity": "public",
+        "output_sensitivity": "public",
+        "external_egress": "declared"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_ref": "read-latest-articles-page",
+      "path": "tasks/read-latest-articles-page.json"
+    }
+  ],
+  "validation": {
+    "runtime_execution": "not_claimed",
+    "live_evidence": "not_claimed"
+  }
+}

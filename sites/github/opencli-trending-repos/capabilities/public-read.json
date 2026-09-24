@@ -1,0 +1,9 @@
+{
+  "capability_ref": "lode://site-capability/github/opencli-trending-repos@0.1.0",
+  "capability_id": "opencli-trending-repos",
+  "version": "0.1.0",
+  "source_ref": "lode://source/site-skill/github/opencli-trending-repos@0.1.0#9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+  "lock_ref": "lode://lock/site-skill/github/opencli-trending-repos@0.1.0",
+  "operation_id": "network.public_read",
+  "action": "read"
+}
