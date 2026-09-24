@@ -15,6 +15,7 @@ Lode 是 WebEnvoy 的网站能力资产真相源。
 Lode 负责沉淀和维护：
 
 - 站点知识；
+- AccountSystem 公共模板（本地定义由 WebEnvoy Core 唯一维护）；
 - 站点能力；
 - 原子动作；
 - 任务封装；
@@ -55,6 +56,8 @@ Lode 不管理浏览器运行现场，不保存账号凭据、会话状态、具
 - [愿景](VISION.md)
 - [路线图](ROADMAP.md)
 - [架构决策记录](docs/adr/0001-record-architecture-decisions.md)
+- [AccountSystem 公共模板 V1](docs/contracts/account-system-template-v1.md)
+- [GitHub Trending OpenCLI 转化样例](sites/github/trending/references/opencli-source-mapping.md)
 - [小红书与 BOSS 站点知识吸收边界](docs/adr/0006-xhs-boss-site-knowledge-selection.md)
 - [小红书只读能力包合同](docs/contracts/xiaohongshu-read-capabilities.md)
 - [BOSS 直聘只读能力包合同](docs/contracts/boss-read-capabilities.md)

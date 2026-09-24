@@ -19,6 +19,10 @@ jobs:
           persist-credentials: false
       - name: Install validator dependency
         run: python3 -m pip install --requirement requirements-validator.txt
+      - name: Set up Node.js for the fixed managed script fixture
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Validate package, schema, lock, and hash contracts
         run: |
           python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json
@@ -29,7 +33,7 @@ jobs:
       - name: Validate runtime boundary
         run: python3 tools/validate_runtime_boundary_contract.py
       - name: Run unit tests
-        run: python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations tools.test_site_skill_package
+        run: python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations tools.test_site_skill_package tools.test_account_system_templates tools.test_github_trending_package
       - name: Check JSON, YAML, and Markdown files
         shell: bash
         run: |

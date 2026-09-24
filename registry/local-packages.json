@@ -2203,6 +2203,17 @@
       "task_refs": [
         "read-page-summary"
       ]
+    },
+    {
+      "package_ref": "lode://site-skill/github/trending",
+      "package_type": "site-skill",
+      "package_path": "sites/github/trending",
+      "manifest_path": "sites/github/trending/manifest.json",
+      "revision_ref": "lode://site-skill/github/trending@1.0.0#d185a2ac2c85a659d06b3e0e4424bf00c83d7db0",
+      "package_digest": "sha256:3cd5b0148d264eb882f403b5ff22f1f642be1bee510c7200489c7f1c5a4fd821",
+      "task_refs": [
+        "read-daily-trending-top5"
+      ]
     }
   ],
   "non_goals": [

@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/account-system-template/v1",
+  "title": "Lode AccountSystem public template v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "template_ref",
+    "account_system_id",
+    "version",
+    "display_name",
+    "related_domains",
+    "products",
+    "login_entry",
+    "admin_entry_points",
+    "known_shared_login_relationships",
+    "source"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "lode.account-system-template.v1"
+    },
+    "template_ref": {
+      "type": "string",
+      "pattern": "^lode://account-system/[a-z0-9][a-z0-9._-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "account_system_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "related_domains": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "format": "hostname"
+      }
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "login_entry": {
+      "$ref": "#/$defs/entryPoint"
+    },
+    "admin_entry_points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entryPoint"
+      }
+    },
+    "identity_method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method_ref", "description", "evidence_refs"],
+      "properties": {
+        "method_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "known_shared_login_relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["system_ref", "relationship", "evidence_refs"],
+        "properties": {
+          "system_ref": {
+            "type": "string",
+            "pattern": "^lode://account-system/[a-z0-9][a-z0-9._-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
+          },
+          "relationship": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publisher", "repository", "path", "version", "evidence_refs"],
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "entryPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    }
+  }
+}

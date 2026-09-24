@@ -1,0 +1,34 @@
+{
+  "schema_version": "lode.account-system-template.v1",
+  "template_ref": "lode://account-system/github@1.0.0",
+  "account_system_id": "github",
+  "version": "1.0.0",
+  "display_name": "GitHub",
+  "related_domains": [
+    "github.com"
+  ],
+  "products": [
+    "GitHub.com"
+  ],
+  "login_entry": {
+    "label": "GitHub sign in",
+    "url": "https://github.com/login"
+  },
+  "admin_entry_points": [
+    {
+      "label": "GitHub profile settings",
+      "url": "https://github.com/settings/profile"
+    }
+  ],
+  "known_shared_login_relationships": [],
+  "source": {
+    "publisher": "WebEnvoy",
+    "repository": "WebEnvoy/Lode",
+    "path": "account-systems/github/1.0.0.json",
+    "version": "1.0.0",
+    "evidence_refs": [
+      "https://github.com/login",
+      "https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github"
+    ]
+  }
+}

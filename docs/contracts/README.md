@@ -6,6 +6,7 @@
 | --- | --- |
 | 站点 SKILL 包、固定任务、完整性、依赖与历史引用 | [Site SKILL Package V1](site-skill-package-v1.md)；经独立审查并合入 main 后作为 Accepted 实施基线，不表示 Runtime 执行或站点验收完成。 |
 | 站点探索、外部导入、OpenCLI 转化、验证与修复流程 | [Site asset authoring/import V1](site-asset-authoring-import-v1.md)；作者流程 companion，不定义新 manifest/wire/tool，也不表示已有 CLI、Runtime 或 live site 验收。 |
+| AccountSystem 公共模板资产格式与 provenance | [AccountSystem Public Template V1](account-system-template-v1.md)；由 canonical 产品规范拥有 AccountSystem 语义，Lode 只拥有公共模板文件形状，不拥有用户本地定义。 |
 | 能力包最小格式、生命周期、资源需求边界 | [ADR 0002](../adr/0002-capability-package-minimum-format.md) |
 | input/output/source schema、fixture、post-check、validator 报告边界 | [ADR 0003](../adr/0003-schema-fixtures-and-post-check.md) |
 | asset taxonomy、workflow package、registry / version / invalidation 边界 | [ADR 0004](../adr/0004-asset-types-and-registry.md) |
