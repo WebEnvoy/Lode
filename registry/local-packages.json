@@ -2220,8 +2220,8 @@
       "package_type": "site-skill",
       "package_path": "sites/github/opencli-trending-repos",
       "manifest_path": "sites/github/opencli-trending-repos/manifest.json",
-      "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8",
-      "package_digest": "sha256:e57152c4eb4c4c8f761d3d118b24e25e6d9193fa29e8aef3b67c2774fd76e4be",
+      "revision_ref": "lode://site-skill/github/opencli-trending-repos@0.1.0#464c7210b2efb79314292848781b472741bb996b",
+      "package_digest": "sha256:2d6fbc1df2dfced60203a095ca2b263964c35948bba11943c0fd31718800cb94",
       "task_refs": [
         "read-trending-repositories"
       ]
@@ -2231,8 +2231,8 @@
       "package_type": "site-skill",
       "package_path": "sites/devto/opencli-latest-articles",
       "manifest_path": "sites/devto/opencli-latest-articles/manifest.json",
-      "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8",
-      "package_digest": "sha256:e2518e449abcb1689a62f8fe4a2253e3039a4f6f8ebfa09d5bc4ae408d15cea2",
+      "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#464c7210b2efb79314292848781b472741bb996b",
+      "package_digest": "sha256:74849c07201a9c9358af9350af2f59b13503025604e6b5a95f5ffa9c2ba6632f",
       "task_refs": [
         "read-latest-articles-page"
       ]
@@ -2242,8 +2242,8 @@
       "package_type": "site-skill",
       "package_path": "sites/arxiv/opencli-recent-papers",
       "manifest_path": "sites/arxiv/opencli-recent-papers/manifest.json",
-      "revision_ref": "lode://site-skill/arxiv/opencli-recent-papers@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8",
-      "package_digest": "sha256:cd5ca488899beb0c7511d6b3ad1137f3531f775ba68ea6ac8bb5a66b37727328",
+      "revision_ref": "lode://site-skill/arxiv/opencli-recent-papers@0.1.0#464c7210b2efb79314292848781b472741bb996b",
+      "package_digest": "sha256:796cc025c55a267c1bc6d621596180ffb9c1e1c339228bcfd9f18c4254e2466e",
       "task_refs": [
         "read-recent-category-papers"
       ]

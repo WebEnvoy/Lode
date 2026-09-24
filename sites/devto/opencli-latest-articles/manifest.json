@@ -2,7 +2,7 @@
   "manifest_version": "lode.site-skill-package.manifest.v1",
   "package_type": "site-skill",
   "package_ref": "lode://site-skill/devto/opencli-latest-articles",
-  "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8",
+  "revision_ref": "lode://site-skill/devto/opencli-latest-articles@0.1.0#464c7210b2efb79314292848781b472741bb996b",
   "version": "0.1.0",
   "lifecycle": "proposed",
   "site": {
@@ -14,8 +14,8 @@
   "source": {
     "repository": "WebEnvoy/Lode",
     "package_path": "sites/devto/opencli-latest-articles",
-    "commit": "464c721d2261814c4b6d15cbba9ca716496977a8",
-    "source_ref": "lode://source/site-skill/devto/opencli-latest-articles@0.1.0#464c721d2261814c4b6d15cbba9ca716496977a8"
+    "commit": "464c7210b2efb79314292848781b472741bb996b",
+    "source_ref": "lode://source/site-skill/devto/opencli-latest-articles@0.1.0#464c7210b2efb79314292848781b472741bb996b"
   },
   "package_lock": {
     "path": "package-lock.json",
@@ -33,7 +33,7 @@
         "path": "capabilities/public-read.json",
         "role": "capability_declaration",
         "bytes": 411,
-        "sha256": "sha256:55b8d8ac4539e3e3777edbe4016515396a86b8c7c75c13141fc64c10e0866312"
+        "sha256": "sha256:62a88a873dcaf2b9fef6082cf5ec986f689c09e81f4ea3ef46901e86c882e588"
       },
       {
         "path": "checks/post-check.json",
@@ -51,7 +51,7 @@
         "path": "package-lock.json",
         "role": "package_lock",
         "bytes": 543,
-        "sha256": "sha256:863f473182537e68bafcedbcb72d577f08bcbd8985c0cdee8c8ebb16984cf472"
+        "sha256": "sha256:2cbbaba42d1a374a4af8ba33cee0f3e43cffc5ccd0f001e94c564923ef9d65c8"
       },
       {
         "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
@@ -96,7 +96,7 @@
         "sha256": "sha256:e269d1ed450b042562a43c6dd981e14b2dff06bd31c32b4f9d320c00f62c54fb"
       }
     ],
-    "package_digest": "sha256:e2518e449abcb1689a62f8fe4a2253e3039a4f6f8ebfa09d5bc4ae408d15cea2"
+    "package_digest": "sha256:74849c07201a9c9358af9350af2f59b13503025604e6b5a95f5ffa9c2ba6632f"
   },
   "compatibility": {
     "package_contract": "lode.site-skill-package/v1",
@@ -139,7 +139,7 @@
     {
       "script_ref": "lode://script/site-skill/devto/opencli-latest-articles/read-latest-articles-page@0.1.0",
       "path": "scripts/opencli-adapter.mjs",
-      "source_commit": "464c721d2261814c4b6d15cbba9ca716496977a8",
+      "source_commit": "464c7210b2efb79314292848781b472741bb996b",
       "version": "0.1.0",
       "sha256": "sha256:f75defbb7b42171e39e1f90f17976c9ffda6dcff449ca173132b1bdaf0bb4380",
       "runtime_kind": "webenvoy.site-skill-script-abi/v1",
