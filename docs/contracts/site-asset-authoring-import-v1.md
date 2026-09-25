@@ -4,7 +4,11 @@
 
 本指南把站点探索或外部材料整理为固定的 Lode 候选。包身份、manifest、版本、来源 commit、digest、任务声明和输出合同仍由 [Site SKILL Package V1](site-skill-package-v1.md) 唯一拥有。受管来源准入、安装、启用和选择沿 WebEnvoy [Managed SKILL Library Lifecycle V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/skill-library-lifecycle-v1.md)；真实现场、任务授权、执行结果和恢复沿 [Site SKILL Execution V1](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/site-skill-execution-v1.md)。
 
-本指南只规定可审查的人工创作链，不新增 manifest 字段、package type、CLI、registry、运行权限、状态机或自动修复器。引用、草稿、离线检查和报告不等于 source admission、code admission、安装启用或站点通过。
+本指南规定可审查的人工创作链；不新增 package type、面向用户的 CLI、registry、运行权限、状态机或自动修复器。引用、草稿、离线检查和报告不等于 source admission、code admission、安装启用或站点通过。
+
+2026-09 增量实现说明：仓库提供开发者工具
+[`tools/opencli_readonly_candidates.py`](../../tools/opencli_readonly_candidates.py)，用于检查固定、已 pin 的 OpenCLI adapter 源文件并生成可回读的静态候选报告；以及
+[`tools/generate_opencli_site_skill_candidates.py`](../../tools/generate_opencli_site_skill_candidates.py)，用于从已审查源文件确定性地产生三个 Lode 格式候选包。两者都不是面向用户的 Lode CLI、安装器或 OpenCLI Runtime；只读 vendored UTF-8 源文件和固定 JSON，不 import/执行上游模块、不运行 hook、不访问网络。报告和候选包包含来源及文件摘要、静态命令参数、columns 线索、输入/输出语义草稿、请求策略、schema、check、fixture 引用和未决边界。静态 marker scan 只是选定样本的审查提示，不是通用安全证明；未知依赖模块的顶层行为明确保持未知。生成器不修改 registry，也不会准入、安装、启用或执行；本 PR 仅在人工核对包身份和摘要后，将三个 `proposed` locator 加到现有本地 registry，以便 WebEnvoy owner source-admission 流程解析。`lifecycle: proposed` 不是信任或执行许可；validator warning、owner source/code admission、安装、显式启用和真实执行是独立事实。候选 `network.public_read` / `network.read` 字段仍待 WebEnvoy #594 合同与实现接受；官方 Lode validator 复用通用 integrity、lock、schema、post-check 和 registry 校验，再检查该 broker v1.1 public-read 候选的窄安全边界。生成器的精确字节对照由 Lode 测试负责，不另立包白名单。validator warning 仍表示跨仓合同待接受，不会把包变为可执行资产。既有 Site SKILL Package V1、已接受的 WebEnvoy operation/broker contract 和既有包状态不因候选改变。固定样例及离线行为核对见 [OpenCLI v1.8.8 公共只读候选报告](../verification/opencli-v1.8.8-readonly-candidates.md)。
 
 ## 1. 从站点探索形成候选
 

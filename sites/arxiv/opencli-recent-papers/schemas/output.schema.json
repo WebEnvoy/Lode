@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lode://schema/site-skill/arxiv/opencli-recent-papers/output@0.1.0",
+  "type": "object",
+  "required": [
+    "result_kind",
+    "status",
+    "normalized",
+    "source_refs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "result_kind": {
+      "const": "opencli_arxiv_recent_papers"
+    },
+    "status": {
+      "enum": [
+        "available",
+        "partial"
+      ]
+    },
+    "normalized": {
+      "type": "object",
+      "required": [
+        "parameters",
+        "records",
+        "completeness",
+        "pagination"
+      ],
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[a-z]+(?:-[a-z]+)*(?:\\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)?$"
+            },
+            "limit": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 50
+                },
+                {
+                  "type": "string",
+                  "pattern": "^([1-9]|[1-4][0-9]|50)$"
+                }
+              ],
+              "default": 10
+            }
+          },
+          "additionalProperties": false
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "authors",
+              "published",
+              "primary_category",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "authors": {
+                "type": "string"
+              },
+              "published": {
+                "type": "string"
+              },
+              "primary_category": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "unknown"
+          ]
+        },
+        "pagination": {
+          "type": "object",
+          "required": [
+            "mode",
+            "has_more",
+            "completeness"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "top_n",
+                "requested_page",
+                "max_results"
+              ]
+            },
+            "has_more": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "completeness": {
+              "enum": [
+                "complete",
+                "unknown"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "completeness": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "completeness"
+            ]
+          },
+          "then": {
+            "properties": {
+              "pagination": {
+                "properties": {
+                  "completeness": {
+                    "const": "complete"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "ref_id",
+          "source_kind"
+        ],
+        "properties": {
+          "ref_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_kind": {
+            "const": "public_http_response"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "ref_id",
+          "evidence_kind",
+          "producer",
+          "redaction"
+        ],
+        "properties": {
+          "ref_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_kind": {
+            "const": "public_http_response"
+          },
+          "producer": {
+            "const": "core"
+          },
+          "redaction": {
+            "const": "summary_only"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "available"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "completeness": {
+                "const": "complete"
+              },
+              "pagination": {
+                "properties": {
+                  "completeness": {
+                    "const": "complete"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "partial"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "normalized": {
+            "properties": {
+              "completeness": {
+                "const": "unknown"
+              },
+              "pagination": {
+                "properties": {
+                  "completeness": {
+                    "const": "unknown"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

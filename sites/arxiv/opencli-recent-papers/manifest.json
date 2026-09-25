@@ -1,0 +1,181 @@
+{
+  "manifest_version": "lode.site-skill-package.manifest.v1",
+  "package_type": "site-skill",
+  "package_ref": "lode://site-skill/arxiv/opencli-recent-papers",
+  "revision_ref": "lode://site-skill/arxiv/opencli-recent-papers@0.1.0#464c7210b2efb79314292848781b472741bb996b",
+  "version": "0.1.0",
+  "lifecycle": "proposed",
+  "site": {
+    "site_id": "arxiv",
+    "supported_origins": [
+      "https://export.arxiv.org"
+    ]
+  },
+  "source": {
+    "repository": "WebEnvoy/Lode",
+    "package_path": "sites/arxiv/opencli-recent-papers",
+    "commit": "464c7210b2efb79314292848781b472741bb996b",
+    "source_ref": "lode://source/site-skill/arxiv/opencli-recent-papers@0.1.0#464c7210b2efb79314292848781b472741bb996b"
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "lock_ref": "lode://lock/site-skill/arxiv/opencli-recent-papers@0.1.0"
+  },
+  "integrity": {
+    "files": [
+      {
+        "path": "SKILL.md",
+        "role": "entrypoint",
+        "bytes": 990,
+        "sha256": "sha256:7818cd8ae2d2223de98f0ec0eeb6d33b7d4dbe79bab95988f75215024e60a94e"
+      },
+      {
+        "path": "capabilities/public-read.json",
+        "role": "capability_declaration",
+        "bytes": 403,
+        "sha256": "sha256:21dc593461ff30f857a645e17e7e4e2819770b0a77b5f20d288cc9c2eeabee06"
+      },
+      {
+        "path": "checks/post-check.json",
+        "role": "post_check",
+        "bytes": 565,
+        "sha256": "sha256:2ed5393c2e6f2ceaee88e12527cc3ea87c176583cb03fdfc3af5e369ad43f159"
+      },
+      {
+        "path": "fixtures/README.md",
+        "role": "fixture_index",
+        "bytes": 265,
+        "sha256": "sha256:5d534ab35edca2898336735d4360e90c0f0a7a785e75421cb2fcbfcd18790d99"
+      },
+      {
+        "path": "package-lock.json",
+        "role": "package_lock",
+        "bytes": 533,
+        "sha256": "sha256:9ca761e0e3d219b2c461d2a62366ae9458915d34d6953f4ebc8b89887c265148"
+      },
+      {
+        "path": "references/OpenCLI-Apache-2.0-LICENSE.txt",
+        "role": "license_notice",
+        "bytes": 10760,
+        "sha256": "sha256:0210b8b66cf00358242cb921ba2be3a46dfe0190159b1b952388a3880ce1ff54"
+      },
+      {
+        "path": "references/opencli-source-mapping.md",
+        "role": "source_mapping",
+        "bytes": 4814,
+        "sha256": "sha256:0e633e28537a12ee0c11fe837c8f78a5816000ecefb06ff7c2f43ab09ddff5a9"
+      },
+      {
+        "path": "references/recovery.md",
+        "role": "repair_guidance",
+        "bytes": 513,
+        "sha256": "sha256:03f9a5eff56a12341f7ebfef7d33d532def47ec7ab3136dd24e2c8c6b55e5328"
+      },
+      {
+        "path": "schemas/input.schema.json",
+        "role": "input_schema",
+        "bytes": 685,
+        "sha256": "sha256:ffc5ed131f2f740179e51c381ef6e9a4df78a4c44332590617bc33d594eff9e6"
+      },
+      {
+        "path": "schemas/output.schema.json",
+        "role": "output_schema",
+        "bytes": 5999,
+        "sha256": "sha256:c385eabe17db586f4ad2032c51cb8cf192dd45dd72a1f5d4b1765a2cb7473fca"
+      },
+      {
+        "path": "scripts/opencli-adapter.mjs",
+        "role": "script_source",
+        "bytes": 15321,
+        "sha256": "sha256:1b92606157a9e96de9063006a5b82d602d9a630bcdcf765fe10da6668c00f026"
+      },
+      {
+        "path": "tasks/read-recent-category-papers.json",
+        "role": "task_declaration",
+        "bytes": 2787,
+        "sha256": "sha256:a83e4217372cd1e14f0b4c96a4195745d53a493bd770e5e82a79859808e80e4b"
+      }
+    ],
+    "package_digest": "sha256:796cc025c55a267c1bc6d621596180ffb9c1e1c339228bcfd9f18c4254e2466e"
+  },
+  "compatibility": {
+    "package_contract": "lode.site-skill-package/v1",
+    "execution_contract": "webenvoy.site-skill-execution/v1",
+    "required_capabilities": [
+      {
+        "ref": "lode://site-capability/arxiv/opencli-recent-papers@0.1.0",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "role": "capability_declaration",
+      "path": "capabilities/public-read.json",
+      "capability_ref": "lode://site-capability/arxiv/opencli-recent-papers@0.1.0"
+    },
+    {
+      "role": "input_schema",
+      "path": "schemas/input.schema.json",
+      "schema_ref": "lode://schema/site-skill/arxiv/opencli-recent-papers/input@0.1.0"
+    },
+    {
+      "role": "output_schema",
+      "path": "schemas/output.schema.json",
+      "schema_ref": "lode://schema/site-skill/arxiv/opencli-recent-papers/output@0.1.0"
+    },
+    {
+      "role": "post_check",
+      "path": "checks/post-check.json",
+      "check_ref": "lode://check/site-skill/arxiv/opencli-recent-papers/post-check@0.1.0"
+    },
+    {
+      "role": "repair_guidance",
+      "path": "references/recovery.md",
+      "reference_ref": "lode://reference/site-skill/arxiv/opencli-recent-papers/recovery@0.1.0"
+    }
+  ],
+  "scripts": [
+    {
+      "script_ref": "lode://script/site-skill/arxiv/opencli-recent-papers/read-recent-category-papers@0.1.0",
+      "path": "scripts/opencli-adapter.mjs",
+      "source_commit": "464c7210b2efb79314292848781b472741bb996b",
+      "version": "0.1.0",
+      "sha256": "sha256:1b92606157a9e96de9063006a5b82d602d9a630bcdcf765fe10da6668c00f026",
+      "runtime_kind": "webenvoy.site-skill-script-abi/v1",
+      "entrypoint": "run",
+      "input_schema_ref": "lode://schema/site-skill/arxiv/opencli-recent-papers/input@0.1.0",
+      "output_schema_ref": "lode://schema/site-skill/arxiv/opencli-recent-papers/output@0.1.0",
+      "capability_refs": [
+        "lode://site-capability/arxiv/opencli-recent-papers@0.1.0"
+      ],
+      "action": "read",
+      "broker": "webenvoy.site-skill-broker/v1.1",
+      "broker_capabilities": [
+        "network.read",
+        "output.write"
+      ],
+      "target_binding": {
+        "target_type": "public_http_origin",
+        "requires_profile_origin_grant": true
+      },
+      "timeout_ms": 20000,
+      "cancel": "cooperative",
+      "data_handling": {
+        "input_sensitivity": "public",
+        "output_sensitivity": "public",
+        "external_egress": "declared"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_ref": "read-recent-category-papers",
+      "path": "tasks/read-recent-category-papers.json"
+    }
+  ],
+  "validation": {
+    "runtime_execution": "not_claimed",
+    "live_evidence": "not_claimed"
+  }
+}

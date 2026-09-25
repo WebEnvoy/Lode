@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <opensearch:totalResults>2</opensearch:totalResults>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12345v2</id>
+    <title> A &amp; B   Parser </title>
+    <author><name>Alice Example</name></author>
+    <author><name>Bob Example</name></author>
+    <published>2026-09-25T10:00:00Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <category term="cs.CL"/>
+    <link rel="related" href="https://arxiv.org/pdf/2609.12345v2"/>
+  </entry>
+  <entry>
+    <id>https://arxiv.org/abs/2609.12346</id>
+    <title>Missing fields</title>
+  </entry>
+</feed>

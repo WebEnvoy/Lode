@@ -40,6 +40,7 @@ def canonical_bytes(value: object) -> bytes:
 def source_comparison_bytes(relative_path: str, data: bytes) -> bytes:
     generated_fields = {
         "capabilities/managed-page-snapshot.json": {"source_ref"},
+        "capabilities/public-read.json": {"source_ref"},
         "package-lock.json": {"source_ref", "revision_ref"},
     }.get(relative_path)
     if generated_fields is None:
