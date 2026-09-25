@@ -225,7 +225,18 @@ class ProposedPackageTests(unittest.TestCase):
         self.assertTrue(all(sample["executed"] is False for sample in report["negative_samples"]))
         self.assertFalse(report["reuse_assessment"]["declaration_fixture_only_reuse_goal_met"])
         self.assertTrue(report["reuse_assessment"]["third_sample_requires_generator_logic"])
-        self.assertEqual(report["reuse_assessment"]["time_or_cost_measurement"], "not recorded")
+        measurement = report["reuse_assessment"]["time_or_cost_measurement"]
+        sample_ids = {sample["id"] for sample in report["positive_candidates"]}
+        self.assertEqual(measurement["status"], "partial_retrospective_evidence")
+        self.assertEqual({item["sample_id"] for item in measurement["per_sample_generic_changes"]}, sample_ids)
+        self.assertEqual({item["sample_id"] for item in measurement["per_sample_call_evidence"]}, sample_ids)
+        self.assertIn("没有逐样本", measurement["command_scope"])
+        self.assertIsNone(measurement["manual_work"]["active_human_minutes"])
+        self.assertTrue(all(item["http_attempt_count"] is None for item in measurement["per_sample_call_evidence"]))
+        self.assertTrue(all(item["sample_elapsed_seconds"] is None for item in measurement["per_sample_call_evidence"]))
+        self.assertEqual(measurement["commit_span"]["elapsed_seconds"], 7654)
+        self.assertEqual(measurement["ci_runs"][0]["elapsed_seconds"], 15)
+        self.assertEqual(measurement["ci_runs"][1]["elapsed_seconds"], 6)
 
     def test_official_validator_rejects_public_read_scope_and_broker_mutations(self) -> None:
         sample = generator.SAMPLES[0]

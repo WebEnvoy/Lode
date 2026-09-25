@@ -517,13 +517,99 @@ def build_report() -> dict[str, Any]:
             ],
             "site_specific_webenvoy_runtime_branch_added": False,
             "declaration_fixture_only_reuse_goal_met": False,
-            "time_or_cost_measurement": "not recorded",
+            "time_or_cost_measurement": {
+                "status": "partial_retrospective_evidence",
+                "commit_span": {
+                    "base": "9cc0822c6ba0d6e38300b2c61416cee3a138e1e1",
+                    "first_feature_commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
+                    "first_feature_committed_at_utc": "2026-09-24T18:41:08Z",
+                    "evidence_head_before_closure": "07a05de76aea9b8c5fa8fafa86ebc4ffcc2d50f3",
+                    "evidence_head_committed_at_utc": "2026-09-24T20:48:42Z",
+                    "elapsed_seconds": 7654,
+                    "interpretation": "仅为提交时间戳跨度，包含空档，不代表实际人力投入或逐样本用时。",
+                },
+                "shared_generic_code": {
+                    "added_lines_from_base": {
+                        "tools/generate_opencli_site_skill_candidates.py": 830,
+                        "tools/opencli_readonly_candidates.py": 658,
+                    },
+                    "initial_shared_commit": "40e9c7dd7a21e4de6f4c129e77bcc105f7b1456e",
+                    "attribution_limit": "首个 generator 和 inspector 提交同时加入三个样本；Git 无法将其共享基线行数逐样本拆分。",
+                },
+                "per_sample_generic_changes": [
+                    {
+                        "sample_id": "github-trending-html",
+                        "change": "原 parser 调用 `new URL`。提交 `7fda92b709521440a0935b26099681a92ec2d34e` 在共享 generator 中加入受限 URL 兼容层（+53/−1 行）。",
+                    },
+                    {
+                        "sample_id": "devto-latest-json",
+                        "change": "同一 runner 上的 User-Agent 对照诊断促成提交 `464c7210b2efb79314292848781b472741bb996b`，在共享 broker wrapper 中保留 Node fetch 的有效默认值（generator +23/−5 行）；arXiv 也使用该共享逻辑。",
+                    },
+                    {
+                        "sample_id": "arxiv-recent-atom",
+                        "change": "该 adapter 需要 bundle 两个固定源文件，并在共享 wrapper 中增加 Atom envelope、totalResults、entry 数量、URL 和已确认空集检查。这些逻辑与三个样本一同进入首个共享提交，因此 Git 无法分出该样本的独立行数。",
+                    },
+                ],
+                "manual_work": {
+                    "documented_manual_decision": "WebEnvoy #594 记录了在共享层实施前确定三样本集合。",
+                    "per_sample_manual_step_count": None,
+                    "active_human_minutes": None,
+                    "reason": "Git 提交和 CI 日志没有记录逐样本人工操作或实际耗时。",
+                },
+                "command_scope": "以下 Lode 命令均针对三个样本的合并候选各运行一次；没有逐样本命令用时记录。",
+                "commands": [
+                    "python3 tools/opencli_readonly_candidates.py --check",
+                    "python3 tools/generate_opencli_site_skill_candidates.py --check",
+                    "node --experimental-vm-modules tools/test_opencli_readonly_semantics.mjs",
+                    "python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json",
+                    "python3 tools/validate_runtime_boundary_contract.py",
+                    "python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations tools.test_site_skill_package tools.test_account_system_templates tools.test_github_trending_package tools.test_opencli_site_skill_candidates",
+                    "make py-compile",
+                ],
+                "ci_runs": [
+                    {
+                        "run_id": 36057395414,
+                        "head": "07a05de76aea9b8c5fa8fafa86ebc4ffcc2d50f3",
+                        "elapsed_seconds": 15,
+                        "url": "https://github.com/WebEnvoy/Lode/actions/runs/36057395414",
+                    },
+                    {
+                        "run_id": 36057395214,
+                        "head": "07a05de76aea9b8c5fa8fafa86ebc4ffcc2d50f3",
+                        "elapsed_seconds": 6,
+                        "url": "https://github.com/WebEnvoy/Lode/actions/runs/36057395214",
+                    },
+                    {
+                        "run_id": 36056193155,
+                        "lode_package_commit": "c71dba07770466ebde7e02435bc70da8b676d70a",
+                        "job_elapsed_seconds": 173,
+                        "three_sample_execution_step_seconds": 101,
+                        "installed_plugin_model_agent": False,
+                        "url": "https://github.com/WebEnvoy/WebEnvoy/actions/runs/36056193155",
+                    },
+                ],
+                "per_sample_call_evidence": [
+                    {
+                        "sample_id": sample_id,
+                        "managed_run_count": 1,
+                        "independent_detail_request_recorded": True,
+                        "independent_detail_status": 200,
+                        "independent_detail_record_count": 2,
+                        "http_attempt_count": None,
+                        "sample_elapsed_seconds": None,
+                    }
+                    for sample_id in ("github-trending-html", "devto-latest-json", "arxiv-recent-atom")
+                ],
+                "call_measurement_limit": "正式安装验收 artifact 为每个样本记录一个脚本客户端 managed Run 和一个独立成功的公开详情请求；未记录底层 broker HTTP 尝试/重试或逐样本用时。",
+                "prospective_measurement": "下一个 adapter 只需增加一条同时记录的样本记录：样本触发的共享代码路径/提交、人工操作、实际人力分钟数、验证命令和 CI 用时、managed Run 数与 broker HTTP 尝试数；共享改动只归到首个触发它的样本。",
+            },
         },
     }
 
 
 def render_markdown(report: dict[str, Any]) -> str:
     source = report["source"]
+    measurement = report["reuse_assessment"]["time_or_cost_measurement"]
     lines = [
         "# OpenCLI v1.8.8 公共只读兼容候选",
         "",
@@ -609,7 +695,32 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "## 复用结果与待补合同",
         "",
-        "三个正向样本覆盖 GitHub HTML、DEV.to JSON、arXiv Atom/XML。上游参数处理和 parser 函数体保持原样，wrapper 将原 fetch 映射到候选 broker，并补有界完整性检查。第三个样本没有新增 WebEnvoy 站点专属 Runtime 分支，但确实需要改动 Lode 生成器：支持 arXiv 两文件静态 bundle，并加入 Atom envelope、totalResults、entry 数量及明确空集检查。因此“第三样本只需声明/schema/check/fixture”的复用目标未达到；没有记录耗时或成本，不能据此声称接入提效。",
+        "三个正向样本覆盖 GitHub HTML、DEV.to JSON、arXiv Atom/XML。上游参数处理和 parser 函数体保持原样，wrapper 将原 fetch 映射到候选 broker，并补有界完整性检查。第三个样本没有新增 WebEnvoy 站点专属 Runtime 分支，但确实需要改动 Lode 生成器：支持 arXiv 两文件静态 bundle，并加入 Atom envelope、totalResults、entry 数量及明确空集检查。因此“第三样本只需声明/schema/check/fixture”的复用目标未达到。",
+        "",
+        "## 工程接入成本证据",
+        "",
+        f"Git 对 PR base `{measurement['commit_span']['base'][:7]}` 到报告证据快照 HEAD `{measurement['commit_span']['evidence_head_before_closure'][:7]}` 记录了共享 generator 新增 830 行、静态 inspector/report 新增 658 行；两者与全部样本在 `{measurement['shared_generic_code']['initial_shared_commit'][:7]}` 同时加入，无法从提交历史逐样本拆分。首个实现提交到证据快照的提交时间跨度为 7,654 秒；它包含空档，不是人力耗时。",
+        "",
+        "| 样本 | 可归因的通用改动 |",
+        "| --- | --- |",
+    ])
+    for item in measurement["per_sample_generic_changes"]:
+        lines.append(f"| `{item['sample_id']}` | {item['change']} |")
+    lines.extend([
+        "",
+        f"人工记录只有[实施前确定固定样本](https://github.com/WebEnvoy/WebEnvoy/issues/594#issuecomment-5818817624)这一项；逐样本人工动作和主动人力分钟数均未记录。[Lode exact-head `lode-ci`]({measurement['ci_runs'][0]['url']}) 用时 15 秒，[`py-compile`]({measurement['ci_runs'][1]['url']}) 用时 6 秒。跨仓 [installed acceptance]({measurement['ci_runs'][2]['url']}) 的总 job 用时 173 秒，其中三样本执行步骤为 101 秒；该 run 使用 Lode 资产提交 `c71dba0`，且从该提交到证据快照 HEAD `{measurement['commit_span']['evidence_head_before_closure'][:7]}` 的 `registry`、`sites`、`account-systems` 无差异。以上都是 runner 或提交时间，不代表人工成本。",
+        "",
+        measurement["command_scope"],
+        "",
+        "CI 命令：",
+        "",
+    ])
+    lines.extend(f"- `{command}`" for command in measurement["commands"])
+    lines.extend([
+        "",
+        "跨仓 CI artifact 对每个样本记录一个脚本客户端 managed Run，以及一个独立公开详情请求（HTTP 200、2 条记录）。底层 broker HTTP 尝试/重试次数和单样本耗时没有采集；真实 Codex Plugin/SKILL 消费也不在该 artifact 中。",
+        "",
+        f"后续样本的最小测量：{measurement['prospective_measurement']}",
         "",
         "任何正式 Lode task 包都还需固定：任务绑定的 HTTPS origin/path/query/header、匿名请求策略、重定向逐跳复核、响应 MIME 与解压体积、预算/超时/取消、完整性事实和失败结果。脚本不能通过 Node `fetch` 自行访问网络；HTTP 2xx 不代表业务成功。",
         "",

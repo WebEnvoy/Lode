@@ -125,7 +125,35 @@ Selected before shared implementation to test a third site and an Atom/XML parse
 
 ## 复用结果与待补合同
 
-三个正向样本覆盖 GitHub HTML、DEV.to JSON、arXiv Atom/XML。上游参数处理和 parser 函数体保持原样，wrapper 将原 fetch 映射到候选 broker，并补有界完整性检查。第三个样本没有新增 WebEnvoy 站点专属 Runtime 分支，但确实需要改动 Lode 生成器：支持 arXiv 两文件静态 bundle，并加入 Atom envelope、totalResults、entry 数量及明确空集检查。因此“第三样本只需声明/schema/check/fixture”的复用目标未达到；没有记录耗时或成本，不能据此声称接入提效。
+三个正向样本覆盖 GitHub HTML、DEV.to JSON、arXiv Atom/XML。上游参数处理和 parser 函数体保持原样，wrapper 将原 fetch 映射到候选 broker，并补有界完整性检查。第三个样本没有新增 WebEnvoy 站点专属 Runtime 分支，但确实需要改动 Lode 生成器：支持 arXiv 两文件静态 bundle，并加入 Atom envelope、totalResults、entry 数量及明确空集检查。因此“第三样本只需声明/schema/check/fixture”的复用目标未达到。
+
+## 工程接入成本证据
+
+Git 对 PR base `9cc0822` 到报告证据快照 HEAD `07a05de` 记录了共享 generator 新增 830 行、静态 inspector/report 新增 658 行；两者与全部样本在 `40e9c7d` 同时加入，无法从提交历史逐样本拆分。首个实现提交到证据快照的提交时间跨度为 7,654 秒；它包含空档，不是人力耗时。
+
+| 样本 | 可归因的通用改动 |
+| --- | --- |
+| `github-trending-html` | 原 parser 调用 `new URL`。提交 `7fda92b709521440a0935b26099681a92ec2d34e` 在共享 generator 中加入受限 URL 兼容层（+53/−1 行）。 |
+| `devto-latest-json` | 同一 runner 上的 User-Agent 对照诊断促成提交 `464c7210b2efb79314292848781b472741bb996b`，在共享 broker wrapper 中保留 Node fetch 的有效默认值（generator +23/−5 行）；arXiv 也使用该共享逻辑。 |
+| `arxiv-recent-atom` | 该 adapter 需要 bundle 两个固定源文件，并在共享 wrapper 中增加 Atom envelope、totalResults、entry 数量、URL 和已确认空集检查。这些逻辑与三个样本一同进入首个共享提交，因此 Git 无法分出该样本的独立行数。 |
+
+人工记录只有[实施前确定固定样本](https://github.com/WebEnvoy/WebEnvoy/issues/594#issuecomment-5818817624)这一项；逐样本人工动作和主动人力分钟数均未记录。[Lode exact-head `lode-ci`](https://github.com/WebEnvoy/Lode/actions/runs/36057395414) 用时 15 秒，[`py-compile`](https://github.com/WebEnvoy/Lode/actions/runs/36057395214) 用时 6 秒。跨仓 [installed acceptance](https://github.com/WebEnvoy/WebEnvoy/actions/runs/36056193155) 的总 job 用时 173 秒，其中三样本执行步骤为 101 秒；该 run 使用 Lode 资产提交 `c71dba0`，且从该提交到证据快照 HEAD `07a05de` 的 `registry`、`sites`、`account-systems` 无差异。以上都是 runner 或提交时间，不代表人工成本。
+
+以下 Lode 命令均针对三个样本的合并候选各运行一次；没有逐样本命令用时记录。
+
+CI 命令：
+
+- `python3 tools/opencli_readonly_candidates.py --check`
+- `python3 tools/generate_opencli_site_skill_candidates.py --check`
+- `node --experimental-vm-modules tools/test_opencli_readonly_semantics.mjs`
+- `python3 tools/lode_validate_package.py --registry-index registry/local-packages.json --all --json`
+- `python3 tools/validate_runtime_boundary_contract.py`
+- `python3 -m unittest tools.test_action_declarations tools.test_result_view_declarations tools.test_site_skill_package tools.test_account_system_templates tools.test_github_trending_package tools.test_opencli_site_skill_candidates`
+- `make py-compile`
+
+跨仓 CI artifact 对每个样本记录一个脚本客户端 managed Run，以及一个独立公开详情请求（HTTP 200、2 条记录）。底层 broker HTTP 尝试/重试次数和单样本耗时没有采集；真实 Codex Plugin/SKILL 消费也不在该 artifact 中。
+
+后续样本的最小测量：下一个 adapter 只需增加一条同时记录的样本记录：样本触发的共享代码路径/提交、人工操作、实际人力分钟数、验证命令和 CI 用时、managed Run 数与 broker HTTP 尝试数；共享改动只归到首个触发它的样本。
 
 任何正式 Lode task 包都还需固定：任务绑定的 HTTPS origin/path/query/header、匿名请求策略、重定向逐跳复核、响应 MIME 与解压体积、预算/超时/取消、完整性事实和失败结果。脚本不能通过 Node `fetch` 自行访问网络；HTTP 2xx 不代表业务成功。
 
