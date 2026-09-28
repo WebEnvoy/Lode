@@ -18,8 +18,8 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Fetch pinned OpenCLI source history
-        run: git fetch --no-tags origin refs/pull/326/head
+      - name: Fetch pinned OpenCLI source commit
+        run: git fetch --no-tags origin 464c7210b2efb79314292848781b472741bb996b
       - name: Fetch historical controlled-local source history for provenance checks
         uses: actions/checkout@v4
         with:
